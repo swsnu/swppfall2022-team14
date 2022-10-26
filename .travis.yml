@@ -6,7 +6,7 @@ jobs:
   include:
     - language: python
       python: "3.9.5"
-      iaddons:
+      addons:
         sonarcloud:
           organization: swsnu
           token:
