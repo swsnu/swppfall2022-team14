@@ -2,7 +2,7 @@ import { useState, useEffect, SetStateAction, Dispatch, KeyboardEvent } from 're
 import { useNavigate } from 'react-router';
 import Modal from 'react-modal';
 import axios from 'axios';
-
+import './LoginModal.scss'
 import { toast } from 'react-toastify';
 
 interface prop {
@@ -11,17 +11,18 @@ interface prop {
 }
 
 const LoginModal = (props: prop) => {
-    const navigate = useNavigate();
 
     const { isOpen, setIsOpen } = props;
 
+    const [name, setName] = useState('');
     const [loginId, setLoginId] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [isLoginMode, setIsLoginMode] = useState(true)
     const onClickMode = () => {
-        setLoginId('')
-        setLoginPassword('')
-        setIsLoginMode(!isLoginMode)
+        setName('');
+        setLoginId('');
+        setLoginPassword('');
+        setIsLoginMode(!isLoginMode);
 
     }
 
@@ -32,7 +33,7 @@ const LoginModal = (props: prop) => {
         }
     };
 
-    const handleLoginButton = () => {
+    const onClickLogin = () => {
         if (loginId === '') {
             toast.error('아이디를 입력해주세요.');
         } else if (loginPassword === '') {
@@ -42,40 +43,40 @@ const LoginModal = (props: prop) => {
         }
     };
 
-    const handleRegister = () => {
-        navigate('/register');
+    const onClickRegister = () => {
+        //TODO : DO REGISTER
     };
 
-    const handleLost = () => {
-        navigate('/lost');
-    };
+
 
     return (
-        <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+        <Modal className='login-modal' isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
             <button onClick={() => setIsOpen(false)}>X</button>
-            <div>
-                {isLoginMode ? null
-                    : <div>
-                        Name
-                        <input onKeyPress={onKeyPress} onChange={(e) => setLoginId(e.target.value)} />
-                    </div>}
-
+            <div className='container'>
                 <div>
-                    ID
-                    <input onKeyPress={onKeyPress} onChange={(e) => setLoginId(e.target.value)} />
-                </div>
+                    {isLoginMode ? null
+                        : <div className='id'>
+                            Name
+                            <input className='input' value={name} onKeyPress={onKeyPress} onChange={(e) => setName(e.target.value)} />
+                        </div>}
+                    <div className='id'>
+                        ID
+                        <input className='input' value={loginId} onKeyPress={onKeyPress} onChange={(e) => setLoginId(e.target.value)} />
+                    </div>
+                    <div className='id'>
+                        Password
+                        <input className='input' value={loginPassword} onKeyPress={onKeyPress} onChange={(e) => setLoginPassword(e.target.value)} />
+                    </div>
 
-                <div>
-                    Password
-                    <input onKeyPress={onKeyPress} onChange={(e) => setLoginPassword(e.target.value)} />
-                </div>
+                    <div className='button'>
+                        {isLoginMode ? <button className='login' onClick={onClickLogin}>Login</button> : null}
+                        {!isLoginMode ? <button className='login' onClick={onClickRegister}>Register</button> : null}
+                    </div>
+                    <div onClick={onClickMode}>{isLoginMode ? "register" : "login"}</div>
 
-                <div>
-                    <button onClick={handleLoginButton}>{isLoginMode ? "login" : "register"}</button>
                 </div>
-                <div onClick={onClickMode}>{isLoginMode ? "register" : "login"}</div>
-
             </div>
+
         </Modal >
     );
 };
