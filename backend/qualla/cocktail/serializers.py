@@ -21,3 +21,7 @@ class CocktailListSerializer(serializers.ModelSerializer):
 
     def get_tags(self, obj):
         return ["this", "is", "so", "delicious"]
+
+class CustomCocktailListSerializer(CocktailListSerializer):
+    class Meta(CocktailListSerializer.Meta):
+        fields=CocktailListSerializer.Meta.fields + ('author_id',)
