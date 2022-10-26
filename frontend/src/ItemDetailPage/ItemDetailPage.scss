@@ -1,0 +1,54 @@
+.item-detail {
+    .title {
+        padding-top: 10px;
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-bottom: 50px;
+
+        .name {
+            float: left;
+        }
+
+        .rate {
+            float: right;
+        }
+
+        .rate-button {
+            float: right;
+            margin-right: 30px;
+        }
+    }
+
+    .content {
+        padding: 50px;
+        
+        .image {
+            float: left;
+            width: 30%;
+            margin-right: 20px;
+        }
+
+        .price {
+            text-align: right;
+            margin-right: 20px;
+        }
+    
+        .description {
+            .abv {
+                text-align: left;
+            }
+    
+            .description {
+                text-align: left;
+            }
+    
+            .recipe {
+                text-align: left;
+            }
+        }
+    }
+
+    .comments {
+
+    }
+}
