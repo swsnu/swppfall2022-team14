@@ -8,7 +8,7 @@ jobs:
       python: "3.9.5"
       addons:
         sonarcloud:
-          organization: swsnu
+          organization: swppfall2022-team14
           token:
             secure: "OBCk4xGzHy+XshgfAvNTfyuR/UldmVkn2R/QuqzT+f7ujHY7HN+P/JZyWusBB2bYQ8W058EAf8iEM9LXytY+OGTKBH+Wed6QPrW2aXulPH7T/FrCWJ3tAqQFvZrUBeSJke1PYcyX/+P04Or8IAqd3mRZ1j5kqR7cjDEcSmqO9SCHq0ssXP1t7HAYF625iqOkj8VNC1D4SXe5GEVLyVtVkdlU9erfvkme0J0OGQ3ICyNS+VRV28xBQArTFaR2Vw9pm/xBngOktlLCtdwM25AoBev5kLecUsWTRMLjI7o05Zfcj9a2B7OMyF2qPMaECi1sDTL9ptEZh/QKpSzCzf+wKnJ0k7ItsiTzydqudV/Yw2IBczvLtU8Nw08HIZ6f9L/Dqa5F76xRH2U2RQDMBSEypCr/zGeZzoNU2ZUKiA0vIV0hAH4pglFzdYyJZrCHH4kWa2vbIdqNtYoKdlc5Mm5V/Ea+Lbq1CbgJIt4dQfi1/H39Gm5cKzGGKIg2nuqx1tgdxWkuw3Z6FyVLZS5ZdG/MNlSeD0M4O4zjAQC+QaHIAgU4o3u+qJ1aC1806pvWqUX9yZaTTH0tFrei1Wm7fXjGN24uA3zJyT8w+eZj/siFzKLT/AHLUJt3kDJdU/IeZmGuIWUAFXmTDlw5w7Y8LLnKRNYS3sMITXNr75xVpL6jNjM="
       install:
