@@ -1,6 +1,8 @@
 import { useState } from "react"
+import { useNavigate } from "react-router"
 import Filter from "./Filter"
 import Item from "./Item"
+import LoginModal from "./LoginModal"
 
 interface CocktailType {
     id: number,
@@ -56,7 +58,7 @@ const InitPage = () => {
         }]
 
 
-
+    const navigate = useNavigate()
     const [input, setInput] = useState('')
     const [isStandard, setIsStandard] = useState(true)
     const onClickToggle = (isStandard: boolean) => {
@@ -66,12 +68,21 @@ const InitPage = () => {
     const onFilterClick = () => {
         setIsOpenFilter(!isOpenFilter)
     }
+    const onClickSearch = () => {
+        // TODO : give params with filter information
+        if (isStandard) navigate('/standard')
+        else navigate('/custom')
+    }
 
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
+    const onClickLogin = () => {
+        setIsLoginOpen(true)
+    }
 
     return <>
         <div style={{ border: "1px solid black", height: "100px" }}>
             로그인 버튼 있는 헤더
-            <button>로그인</button>
+            <button onClick={onClickLogin}>로그인</button>
         </div>
         <div style={{ border: "1px solid blue", height: "100px" }}>
             토글버튼 2개, 인풋필드, 필터버튼, 검색버튼
@@ -79,7 +90,7 @@ const InitPage = () => {
             <button onClick={() => onClickToggle(false)} disabled={!isStandard}>커스텀</button>
             <input placeholder="칵테일 이름 검색" value={input} onChange={(e) => setInput(e.target.value)} />
             <button onClick={onFilterClick}>FILTER</button>
-            <button>SEARCH</button>
+            <button onClick={onClickSearch}>SEARCH</button>
             {isOpenFilter ? <Filter /> : null}
         </div>
         <div style={{ border: "1px solid red", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -91,6 +102,7 @@ const InitPage = () => {
             </div>
         </div>
         <button>My Liqour</button>
+        <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
     </>
 }
 
