@@ -1,0 +1,46 @@
+.item-detail {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.title {
+    display: flex;
+
+    &__name {
+        width: 90%;
+        text-align: left;
+    }
+
+    &__name-input {
+        margin-left: 10px;
+        width: 200px;
+    }
+
+    &__confirm-button {
+        width: 10%;
+    }
+}
+
+.content {
+    margin-top: 50px;
+    display: flex;
+    
+    &__image {
+        width: 30%;
+        margin-right: 20px;
+    }
+
+    &__description-box {
+        width: 60%;
+    }
+
+    &__description {
+        text-align: left;
+    }
+
+    &__recipe {
+        text-align: left;
+    }
+}
