@@ -11,9 +11,11 @@ const Comment = (props: IProps) => {
         <div className='comment'>
             <div className='comment__content'>{props.content}</div>
             <div className='comment__author'>written by {props.author_name}</div>
-            {props.accessible && 
-                <button className='comment__edit-button'>Edit</button>
-            }
+            <div className='comment__button-box'>
+                <button className='comment__reply-button'>Reply</button>
+                {props.accessible && <button className='comment__edit-button'>Edit</button>}
+                {props.accessible && <button className='comment__delete-button'>Delete</button>}
+            </div>
         </div>
     )
 };
