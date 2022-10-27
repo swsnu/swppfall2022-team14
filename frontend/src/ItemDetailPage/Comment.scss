@@ -1,0 +1,31 @@
+.comment {
+    display: flex;
+
+    &__content {
+        width: 70%;
+        text-align: left;
+    }
+
+    &__author {
+        width: 15%;
+        text-align: left;
+    }
+
+    &__button-box {
+        display: flex;
+        width: 15%;
+        justify-content: space-between;
+    }
+
+    &__reply-button {
+
+    }
+
+    &__edit-button {
+
+    }
+
+    &__delete-button {
+
+    }
+}
