@@ -115,12 +115,48 @@
         text-align: left;
     }
 
+    &__ingredient-box {
+        margin-top: 50px;
+        text-align: left;
+    }
+
+    &__ingredient {
+        
+    }
+
+    &__ingredient-name {
+        
+    }
+
+    &__ingredient-input {
+        
+    }
+
+    &__ingredient-delete-button {
+        
+    }
+
+    &__ingredient-add-button {
+        
+    }
+
     &__recipe {
         margin-top: 50px;
         text-align: left;
     }
 
     &__recipe-input {
+        width: 100%;
+        height: 100px;
+        resize: none;
+    }
+
+    &__tag {
+        margin-top: 50px;
+        text-align: left;
+    }
+
+    &__tag-input {
         width: 100%;
         height: 100px;
         resize: none;
