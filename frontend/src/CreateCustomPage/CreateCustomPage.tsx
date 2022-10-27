@@ -1,14 +1,6 @@
-import { useState } from "react";
 import './CreateCustomPage.scss';
 
-interface Ingredient {
-    name: string;
-    amount?: number;
-}
-
 export default function CreateCustomPage() {
-    const [IngredientList, setIngredientList] = useState<Ingredient[]>([{ name: "", amount: undefined }]);
-
     return (
         <div className="item-detail">
             <div className="title">
@@ -24,34 +16,9 @@ export default function CreateCustomPage() {
                     src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"
                 />
                 <div className="content__description-box">
-                    <p className="content__abv">Expected 20% ABV</p>
-                    <div className='content__description'>
-                        Description:<br/>
-                        <textarea className='content__description-input' />
-                    </div>
-                    <div className="content__ingredient-box">
-                        Ingredient:
-                        {IngredientList.map((ingredient, idx) => {
-                            return (
-                                <div className="content__ingredient">
-                                    <input className="content__ingredient-name" />
-                                    <input className="content__ingredient-input" />
-                                    {IngredientList.length !== 1 && <button className="content__ingredient-delete-button">Delete</button>}
-                                    {IngredientList.length - 1 === idx && <button className="content__ingredient-add-button">Add</button>}
-                                </div>
-                            )
-                        })}
-                    </div>
-                    <div className='content__recipe'>
-                        Recipte:<br/>
-                        <textarea className='content__recipe-input' />
-                    </div>
-                    <div className='content__tag'>
-                        Tag:<br/>
-                        <textarea className='content__tag-input' />
-                    </div>
+                    <p className="content__description">This is a description. This is a description. This is a description. This is a description. This is a description. This is a description. This is a description. </p>
+                    <p className="content__recipe">This is a recipe. This is a recipe. This is a recipe. This is a recipe. This is a recipe. This is a recipe. This is a recipe. This is a recipe. This is a recipe. This is a recipe. </p>
                 </div>
-                <p className="content__price">Expected $8</p>
             </div>
         </div>
     )
