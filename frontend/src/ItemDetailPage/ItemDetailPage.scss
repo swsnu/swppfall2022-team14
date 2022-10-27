@@ -1,54 +1,60 @@
 .item-detail {
-    .title {
-        padding-top: 10px;
-        padding-left: 50px;
-        padding-right: 50px;
-        padding-bottom: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
 
-        .name {
-            float: left;
-        }
+.title {
+    display: flex;
 
-        .rate {
-            float: right;
-        }
-
-        .rate-button {
-            float: right;
-            margin-right: 30px;
-        }
+    &__name {
+        width: 80%;
+        text-align: left;
     }
 
-    .content {
-        padding: 50px;
-        
-        .image {
-            float: left;
-            width: 30%;
-            margin-right: 20px;
-        }
-
-        .price {
-            text-align: right;
-            margin-right: 20px;
-        }
-    
-        .description {
-            .abv {
-                text-align: left;
-            }
-    
-            .description {
-                text-align: left;
-            }
-    
-            .recipe {
-                text-align: left;
-            }
-        }
+    &__rate-button {
+        width: 10%;
+        text-align: left;
     }
 
-    .comments {
-
+    &__rate {
+        width: 10%;
+        text-align: right;
     }
+}
+
+.content {
+    margin-top: 50px;
+    display: flex;
+    
+    &__image {
+        width: 30%;
+        margin-right: 20px;
+    }
+
+    &__description-box {
+        width: 60%;
+    }
+
+    &__abv {
+        text-align: left;
+    }
+
+    &__description {
+        text-align: left;
+    }
+
+    &__recipe {
+        text-align: left;
+    }
+
+    &__price {
+        width: 10%;
+        text-align: right;
+    }
+}
+
+.comments {
+    margin-top: 20px;
 }
