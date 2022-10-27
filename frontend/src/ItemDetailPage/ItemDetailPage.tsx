@@ -20,8 +20,16 @@ export default function ItemDetailPage() {
     return (
         <div className="item-detail">
             <div className="title">
-                <div className="title__name">Kahlua Milk</div>
-                <div className="title__rate-button">rate button</div>
+                <div className="title__name">
+                    Kahlua Milk
+                    <button className="title__bookmark-button">
+                        bookmark
+                    </button>
+                    <div className="title__author">
+                        created by James
+                    </div>
+                </div>
+                <button className="title__rate-button">rate button</button>
                 <div className="title__rate">4.7 / 5.0</div>
             </div>
             <div className="content">
@@ -37,16 +45,26 @@ export default function ItemDetailPage() {
                 <p className="content__price">$8</p>
             </div>
             <div className="comments">
-                {dummyComments.map((comment) => {
-                    return (
-                        <Comment
-                            key={`${comment.id}_comment`}
-                            author_name={comment.author_name}
-                            content={comment.content}
-                            accessible={comment.accessible}
-                        />
-                    )
-                })}
+                <div className="comments__create">
+                    <textarea className="comments__input" />
+                    <div className="comments__add-box">
+                        <button className="comments__add">
+                            Add
+                        </button>
+                    </div>
+                </div>
+                <div className="comments_list">
+                    {dummyComments.map((comment) => {
+                        return (
+                            <Comment
+                                key={`${comment.id}_comment`}
+                                author_name={comment.author_name}
+                                content={comment.content}
+                                accessible={comment.accessible}
+                            />
+                        )
+                    })}
+                </div>
             </div>
         </div>
     )
