@@ -1,18 +1,17 @@
-import { useState, useEffect, SetStateAction, Dispatch, KeyboardEvent } from 'react';
-import { useNavigate } from 'react-router';
+import { useState, SetStateAction, Dispatch, KeyboardEvent } from 'react';
 import Modal from 'react-modal';
-import axios from 'axios';
 import './LoginModal.scss'
 import { toast } from 'react-toastify';
 
 interface prop {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
+    setLoginState: Dispatch<SetStateAction<boolean>>;
 }
 
 const LoginModal = (props: prop) => {
 
-    const { isOpen, setIsOpen } = props;
+    const { isOpen, setIsOpen, setLoginState } = props;
 
     const [name, setName] = useState('');
     const [loginId, setLoginId] = useState('');
@@ -40,18 +39,26 @@ const LoginModal = (props: prop) => {
             toast.error('비밀번호를 입력해주세요.');
         } else {
             // TODO : DO LOGIN
+            setLoginState(true)
+            setIsOpen(false)
         }
     };
 
     const onClickRegister = () => {
         //TODO : DO REGISTER
     };
+    const onClickClose = () => {
+        setName('');
+        setLoginId('');
+        setLoginPassword('');
+        setIsOpen(false)
+    }
 
 
 
     return (
         <Modal className='login-modal' isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-            <button onClick={() => setIsOpen(false)}>X</button>
+            <button onClick={onClickClose}>X</button>
             <div className='container'>
                 <div>
                     {isLoginMode ? null

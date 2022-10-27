@@ -1,22 +1,14 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
-import Filter from "./Filter"
-import Item from "./Item"
-import LoginModal from "./LoginModal"
+import Filter from "./Components/Filter"
+import Item from "./Components/Item"
 
-interface CocktailType {
-    id: number,
-    name: string,
-    image: string,
-    introduction: string,
-    recipe: string,
-    ABV: number,
-    price_per_glass: number
-    type: string,
-    author_id: number,
-    created_at: Date,
-    updated_at: Date
-}
+import "./InitPage.scss"
+import { CocktailType } from "./Components/Item"
+import LoginModal from "./Modals/LoginModal"
+import InitMyLiqourModal from "./Modals/InitMyLiqourModal"
+
+
 const InitPage = () => {
     const dummyCocktails: CocktailType[] =
         [{
@@ -30,7 +22,8 @@ const InitPage = () => {
             type: 'CS',
             author_id: 3,
             created_at: new Date(2022, 6, 17),
-            updated_at: new Date(2022, 7, 14)
+            updated_at: new Date(2022, 7, 14),
+            rate: 4.8
         }, {
             id: 2,
             name: 'name2',
@@ -42,7 +35,8 @@ const InitPage = () => {
             type: 'CS',
             author_id: 3,
             created_at: new Date(2022, 6, 17),
-            updated_at: new Date(2022, 7, 14)
+            updated_at: new Date(2022, 7, 14),
+            rate: 3.4
         }, {
             id: 3,
             name: 'name3',
@@ -54,8 +48,10 @@ const InitPage = () => {
             type: 'CS',
             author_id: 3,
             created_at: new Date(2022, 6, 17),
-            updated_at: new Date(2022, 7, 14)
+            updated_at: new Date(2022, 7, 14),
+            rate: 5.0
         }]
+    const [fakeLoginState, setFakeLoginState] = useState(false)
 
 
     const navigate = useNavigate()
@@ -68,24 +64,43 @@ const InitPage = () => {
     const onFilterClick = () => {
         setIsOpenFilter(!isOpenFilter)
     }
+    const [isOpenProfile, setisOpenProfile] = useState(false) // 프로필 클릭 시 나오는 버튼 handle
+    const onClickProfile = () => {
+        setisOpenProfile(!isOpenProfile)
+    }
+    // TODO : HANDLE LOGIN
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
+    const onClickLogin = () => {
+        setIsLoginOpen(true)
+    }
+    const [isInitMyLiqourOpen, setIsInitMyLiqourOpen] = useState(false);
+    const onClickMyLiqour = () => {
+        setIsInitMyLiqourOpen(true)
+    }
+    const onClicklogout = () => {
+        setFakeLoginState(false)
+    }
     const onClickSearch = () => {
         // TODO : give params with filter information
         if (isStandard) navigate('/standard')
         else navigate('/custom')
     }
 
-    const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const onClickLogin = () => {
-        setIsLoginOpen(true)
+    const onClickMyPage = () => {
+        navigate(`/mypage`)
     }
 
+
+
     return <>
-        <div style={{ border: "1px solid black", height: "100px" }}>
-            로그인 버튼 있는 헤더
-            <button onClick={onClickLogin}>로그인</button>
+        <div className="header">
+            {fakeLoginState ? <button onClick={onClickProfile}>내 프로필</button> : <button onClick={onClickLogin}>로그인</button>}
+            {fakeLoginState && isOpenProfile ? <div>
+                <button onClick={onClickMyPage}>My Page</button>
+                <button onClick={onClicklogout}>Logout</button>
+            </div> : null}
         </div>
-        <div style={{ border: "1px solid blue", height: "100px" }}>
-            토글버튼 2개, 인풋필드, 필터버튼, 검색버튼
+        <div className="nav">
             <button onClick={() => onClickToggle(true)} disabled={isStandard}>스탠다드</button>
             <button onClick={() => onClickToggle(false)} disabled={!isStandard}>커스텀</button>
             <input placeholder="칵테일 이름 검색" value={input} onChange={(e) => setInput(e.target.value)} />
@@ -93,16 +108,15 @@ const InitPage = () => {
             <button onClick={onClickSearch}>SEARCH</button>
             {isOpenFilter ? <Filter /> : null}
         </div>
-        <div style={{ border: "1px solid red", display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <div className="inner" style={{
-                border: "1px solid green", width: "1376px", display: "flex", flexWrap: "wrap",
-
-            }}>
-                {dummyCocktails.map((cocktail) => <Item key={cocktail.id} type={cocktail.type} id={cocktail.id} name={cocktail.name} image={cocktail.image} />)}
+        <div className="main">
+            <div className="main__inner">
+                {dummyCocktails.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
+                    name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
             </div>
         </div>
-        <button>My Liqour</button>
-        <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
+        <button onClick={onClickMyLiqour}>My Liqour</button>
+        <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} setLoginState={setFakeLoginState} />
+        <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
     </>
 }
 

@@ -1,0 +1,21 @@
+.item {
+    border: 1px solid black;
+    width: 197px;
+    height: 200px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 30px;
+
+    .item__image {
+        width: 100px;
+        height: 100px;
+    }
+
+    .item__name {
+        font-weight: bold;
+    }
+
+    .item__rate {
+        color: cornflowerblue;
+    }
+}
