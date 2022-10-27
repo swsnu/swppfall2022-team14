@@ -1,14 +1,14 @@
 import Modal from 'react-modal';
 import './AddIngredientModal.scss'
 
-export interface Ingredient {
+interface Ingredient {
     name: string;
 }
 
 interface IProps {
     isOpen: boolean;
     close: () => void;
-    addedIngredientList: Ingredient[];
+    addedIngredientList: String[];
     setNewIngrdient: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -29,12 +29,11 @@ const AddIngredientModal = (props: IProps) => {
         <Modal className="modal" isOpen={isOpen}>
             <div className="modal__ingredient-list">
                 {dummyIngredients.map((ingredient) => {
-                    const isAlreadyAdded = addedIngredientList.includes(ingredient);
                     return (
                         <button 
                             className='modal__ingredient'
                             onClick={() => onClickIngredient(ingredient)}
-                            disabled={isAlreadyAdded}
+                            disabled={addedIngredientList.includes(ingredient.name)}
                         >
                             {ingredient.name}
                         </button>

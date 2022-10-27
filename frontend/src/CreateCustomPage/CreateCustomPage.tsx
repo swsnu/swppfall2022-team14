@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddIngredientModal from "./Modals/AddIngredientModal"
 import './CreateCustomPage.scss';
 
@@ -8,24 +8,31 @@ export interface Ingredient {
 }
 
 export default function CreateCustomPage() {
-    const [ingredientList, setIngredientList] = useState<Ingredient[]>([{ name: "", amount: undefined }]);
+    const [ingredientList, setIngredientList] = useState<Ingredient[]>([]);
     const [isOpen, setOpen] = useState(false);
     const [newIngredient, setNewIngredient] = useState("");
-
-    const onClickIngredientAdd = () => {
-        setIngredientList([...ingredientList, { name: "", amount: undefined }]);
-    }
 
     const onClickIngredientDelete = (selectedIdx: number) => {
         setIngredientList(ingredientList.filter((_value, idx) => idx !== selectedIdx));
     };
 
-    const onClickCloseModal = () => {
+    useEffect(() => {
         if (newIngredient !== "") {
             setIngredientList([...ingredientList, { name: newIngredient, amount: undefined }]);
             setNewIngredient("");
         }
-        setOpen(false);
+    }, [newIngredient])
+
+    const onchangeAmount = (selectedIdx: number, changedAmount: string) => {
+        setIngredientList(
+            ingredientList.map((ingredient, idx) => {
+                if (idx != selectedIdx) {
+                    return ingredient;
+                } else {
+                    return { name: ingredient.name, amount: Number(changedAmount) };
+                }
+            })
+        );
     };
 
     return (
@@ -50,31 +57,28 @@ export default function CreateCustomPage() {
                     </div>
                     <div className="content__ingredient-box">
                         Ingredient:
-                        {ingredientList.map((ingredient, idx) => {
+                        {[...ingredientList, { name: "", amount: undefined }].map((ingredient, idx) => {
                             return (
                                 <div className="content__ingredient">
                                     <input 
                                         className="content__ingredient-name" 
-                                        onClick={() => setOpen(true)}
+                                        onClick={() => (idx === ingredientList.length) && setOpen(true)}
+                                        value={ingredient.name}
                                         readOnly
                                     />
                                     <AddIngredientModal 
                                         isOpen={isOpen} 
-                                        close={onClickCloseModal} 
-                                        addedIngredientList={ingredientList.map(() => { return { name: ingredient.name }; })}
+                                        close={() => setOpen(false)} 
+                                        addedIngredientList={ingredientList.map((ingredient) => { return ingredient.name })}
                                         setNewIngrdient={setNewIngredient}
                                     />
-                                    <input className="content__ingredient-input" />
-                                    {ingredientList.length !== 1 && 
+                                    <input 
+                                        className="content__ingredient-input" 
+                                        value={ingredient.amount ?? ""}
+                                        onChange={(event) => onchangeAmount(idx, event.target.value)}
+                                    />
+                                    {idx !== ingredientList.length && 
                                         <button className="content__ingredient-delete-button" onClick={() => onClickIngredientDelete(idx)}>Delete</button>}
-                                    {ingredientList.length - 1 === idx && 
-                                        <button 
-                                            className="content__ingredient-add-button" 
-                                            onClick={onClickIngredientAdd}
-                                            disabled={ingredient.name === ""}
-                                        >
-                                            Add
-                                        </button>}
                                 </div>
                             )
                         })}
