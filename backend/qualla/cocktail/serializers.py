@@ -1,3 +1,5 @@
+from email.policy import default
+from django.forms import models
 from rest_framework import serializers
 from cocktail.models import Cocktail
 import random
@@ -56,3 +58,22 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
 class CustomCocktailDetailSerializer(CocktailDetailSerializer):
     class Meta(CocktailDetailSerializer.Meta):
         fields=CocktailDetailSerializer.Meta.fields + ('author_id', 'created_at', 'updated_at',)
+
+class CocktailPostSerializer(serializers.ModelSerializer):
+    image = serializers.CharField(max_length=500, default="default_img.png")
+    ABV = serializers.FloatField(default=random.uniform(10.0, 50.0))
+    price_per_glass = serializers.FloatField(default=random.randint(10, 100)*1000)
+
+    class Meta:
+        model = Cocktail
+        fields = (
+            "name",
+            "image",
+            "introduction",
+            "recipe",
+            "ABV",
+            "price_per_glass",
+            "author_id",
+            "type"
+        )
+    
