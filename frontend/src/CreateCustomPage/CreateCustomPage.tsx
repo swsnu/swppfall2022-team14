@@ -11,10 +11,6 @@ export default function CreateCustomPage() {
     const [IngredientList, setIngredientList] = useState<Ingredient[]>([{ name: "", amount: undefined }]);
     const [isOpen, setOpen] = useState(false);
 
-    const openModal = () => {
-        setOpen(true);
-    };
-
     return (
         <div className="item-detail">
             <div className="title">
@@ -42,10 +38,14 @@ export default function CreateCustomPage() {
                                 <div className="content__ingredient">
                                     <input 
                                         className="content__ingredient-name" 
-                                        onClick={openModal}
+                                        onClick={() => setOpen(true)}
                                         readOnly
                                     />
-                                    <AddIngredientModal isOpen={isOpen} />
+                                    <AddIngredientModal 
+                                        isOpen={isOpen} 
+                                        close={() => setOpen(false)} 
+                                        addedIngredientList={IngredientList.map(() => {return {name: ""};})}
+                                    />
                                     <input className="content__ingredient-input" />
                                     {IngredientList.length !== 1 && <button className="content__ingredient-delete-button">Delete</button>}
                                     {IngredientList.length - 1 === idx && <button className="content__ingredient-add-button">Add</button>}
