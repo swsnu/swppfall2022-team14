@@ -1,0 +1,17 @@
+.comment {
+    display: flex;
+
+    &__content {
+        width: 70%;
+        text-align: left;
+    }
+
+    &__author {
+        width: 20%;
+        text-align: left;
+    }
+
+    &__edit-button {
+        width: 10%;
+    }
+}
