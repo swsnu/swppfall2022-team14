@@ -40,10 +40,6 @@
         text-align: left;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 117cab5 (feat: Add description, recipe input.)
     &__description-input {
         width: 100%;
         height: 100px;
@@ -51,7 +47,6 @@
     }
 
     &__abv {
-<<<<<<< HEAD
         text-align: left;
     }
 
@@ -106,65 +101,4 @@
         width: 10%;
         text-align: right;
     }
-=======
-    &__recipe {
-        text-align: left;
-    }
->>>>>>> 516551e (feat: Add title)
-=======
-        text-align: left;
-    }
-
-    &__ingredient-box {
-        margin-top: 50px;
-        text-align: left;
-    }
-
-    &__ingredient {
-        
-    }
-
-    &__ingredient-name {
-        
-    }
-
-    &__ingredient-input {
-        
-    }
-
-    &__ingredient-delete-button {
-        
-    }
-
-    &__ingredient-add-button {
-        
-    }
-
-    &__recipe {
-        margin-top: 50px;
-        text-align: left;
-    }
-
-    &__recipe-input {
-        width: 100%;
-        height: 100px;
-        resize: none;
-    }
-
-    &__tag {
-        margin-top: 50px;
-        text-align: left;
-    }
-
-    &__tag-input {
-        width: 100%;
-        height: 100px;
-        resize: none;
-    }
-
-    &__price {
-        width: 10%;
-        text-align: right;
-    }
->>>>>>> 117cab5 (feat: Add description, recipe input.)
 }
