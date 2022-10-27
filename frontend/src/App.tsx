@@ -1,13 +1,17 @@
 import './App.css';
 import InitPage from './InitPage/InitPage';
-import { BrowserRouter } from 'react-router-dom';
+import ItemDetailPage from './ItemDetailPage/ItemDetailPage';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <InitPage />
-      </BrowserRouter>
-    </div>
+        <Routes>
+          <Route path="/" element={<InitPage />} />
+          <Route path="/:type/:id" element={<ItemDetailPage />} />
+        </Routes>
+      </BrowserRouter >
+    </div >
   );
 }
 
