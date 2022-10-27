@@ -6,6 +6,11 @@ jobs:
   include:
     - language: python
       python: "3.9.6"
+      addons:
+        sonarcloud:
+          organization: "swsnu"
+          token:
+            secure: "4FaqLguH7afiTEngyGgU5ZetSbtz9sS6C90zEIdtj6x61jRIHw7OI5uMRc85NhfTsQBEkoBxPzxjSU2Os51WKHJOIOY7U29782g5BuhN7lu4kxXCIOwDH86RLGv5f97mMVV9HwrlOtIFdpLHnAcaEVOv2eJ7F/FlEwnmDGZkORgddfE8pllbHFcTlh3j2PS+xI8EiFbuLMrov1meJL/4jUfPYduaMUEbgK+JV0zE2p2D/dCGGLk20+QnQDKPx0qsqF1fi9bQVVq1tZwvg4rO5X4e4ATdsmRjUmQ3PPCBlzirPquvZl/iMBcPjusSxJnORpx0Md4zbr0dt3oFZrbSAnRdTXcRcarO05q/WbxMnmxv9HT256zhoYCjGz/y2zH/CI+D65ZTtzPqvWvT+21cH37ebUvfxYv0iHXOeR4bzpYm+n4aNT9rl4r5Ix7gCneQ/sPFaT3mW3lELygaTMtH8xkkm1fvcFDRZpailC1Di9qVaJTx9B4okJ8Ds8HB0s4o9QFOc6qDwLAmcDV/jv2l9tOrjfZ2rS+c2jg0QzK7Y91468syaDclXE9pu9RkuVsXbt5qe2am9Qhbfx15SXIwwqAUvsXyGB/1n1zKjU0zZMND1bl/9Wx/JFwj+RVG39DFoxLiBDUc9C+5CXBjjFV/G+3e09bCipO1IX/Md62SIWs="
       install:
         - cd backend/qualla
         - pip install -r requirements.txt
