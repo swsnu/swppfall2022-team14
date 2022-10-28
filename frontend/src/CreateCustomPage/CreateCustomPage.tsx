@@ -26,7 +26,7 @@ export default function CreateCustomPage() {
     const onchangeAmount = (selectedIdx: number, changedAmount: string) => {
         setIngredientList(
             ingredientList.map((ingredient, idx) => {
-                if (idx != selectedIdx) {
+                if (idx !== selectedIdx) {
                     return ingredient;
                 } else {
                     return { name: ingredient.name, amount: Number(changedAmount) };
