@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
-import Filter from "./Components/Filter"
-import Item from "./Components/Item"
+import Filter from "./components/Filter"
+import Item from "./components/Item"
 
 import "./InitPage.scss"
-import { CocktailType } from "./Components/Item"
+import { CocktailType } from "./components/Item"
 import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiqourModal"
 
