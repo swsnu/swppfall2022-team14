@@ -1,7 +1,8 @@
+from functools import partial
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
 from .models import Cocktail
 from rest_framework.decorators import api_view
-from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CustomCocktailDetailSerializer, CustomCocktailListSerializer
+from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer, CustomCocktailDetailSerializer, CustomCocktailListSerializer
 
 @api_view(['GET', 'POST'])
 def cocktail_list(request):
@@ -31,7 +32,7 @@ def cocktail_list(request):
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 def retrieve_cocktail(request, pk):
     if request.method == 'GET':
         try:
@@ -43,5 +44,14 @@ def retrieve_cocktail(request, pk):
         else:
             data = CustomCocktailDetailSerializer(cocktail).data
         return JsonResponse(data, safe=False)
+    elif request.method == 'PUT':
+        try:
+            cocktail = Cocktail.objects.get(id=pk)
+        except Cocktail.DoesNotExist:
+            return HttpResponseNotFound(f"No Cocktails matches id={pk}")
+        serializer = CustomCocktailDetailSerializer(cocktail, data = request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data, status=200)
     else:
-        return HttpResponseNotAllowed(['GET'])
+        return HttpResponseNotAllowed(['GET', 'PUT'])
