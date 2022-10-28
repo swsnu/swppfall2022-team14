@@ -1,3 +1,4 @@
+from dataclasses import field
 from email.policy import default
 from django.forms import models
 from rest_framework import serializers
@@ -76,4 +77,12 @@ class CocktailPostSerializer(serializers.ModelSerializer):
             "author_id",
             "type"
         )
-    
+
+class CocktailUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cocktail
+        fields = (
+            "name",
+            "introduction",
+            "recipe"
+        )
