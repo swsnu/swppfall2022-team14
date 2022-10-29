@@ -8,6 +8,14 @@ export interface Ingredient {
 }
 
 export default function CreateCustomPage() {
+    const [name, setName] = useState<string>("");
+    const [introduction, setIntroduction] = useState<string>("");
+    const [image, setImage] = useState<string>("");
+    const [recipe, setRecipe] = useState<string>("");
+    const [tag, setTag] = useState<string>("");
+    const [abv, setAbv] = useState<number>(20);  // Temporary
+    const [price, setPrice] = useState<number>(8);  // Temporary
+
     const [ingredientList, setIngredientList] = useState<Ingredient[]>([]);
     const [isOpen, setOpen] = useState(false);
     const [newIngredient, setNewIngredient] = useState("");
@@ -40,20 +48,30 @@ export default function CreateCustomPage() {
             <div className="title">
                 <div className="title__name">
                     Name:
-                    <input className='title__name-input' />
+                    <input 
+                        className='title__name-input' 
+                        type="text"
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
+                    />
                 </div>
                 <button className="title__confirm-button">Confirm</button>
             </div>
             <div className="content">
-                <img 
+                <textarea 
                     className="content__image"
-                    src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"
+                    value={image}
+                    onChange={(event) => setImage(event.target.value)}
                 />
                 <div className="content__description-box">
                     <p className="content__abv">Expected 20% ABV</p>
-                    <div className='content__description'>
-                        Description:<br/>
-                        <textarea className='content__description-input' />
+                    <div className='content__introduction'>
+                        Introduction:<br/>
+                        <textarea 
+                            className='content__introduction-input' 
+                            value={introduction}
+                            onChange={(event) => setIntroduction(event.target.value)}    
+                        />
                     </div>
                     <div className="content__ingredient-box">
                         Ingredient:
@@ -84,12 +102,20 @@ export default function CreateCustomPage() {
                         })}
                     </div>
                     <div className='content__recipe'>
-                        Recipte:<br/>
-                        <textarea className='content__recipe-input' />
+                        Recipe:<br/>
+                        <textarea 
+                            className='content__recipe-input' 
+                            value={recipe}
+                            onChange={(event) => setRecipe(event.target.value)}
+                        />
                     </div>
                     <div className='content__tag'>
                         Tag:<br/>
-                        <textarea className='content__tag-input' />
+                        <textarea 
+                            className='content__tag-input' 
+                            value={tag}
+                            onChange={(event) => setTag(event.target.value)}    
+                        />
                     </div>
                 </div>
                 <p className="content__price">Expected $8</p>
