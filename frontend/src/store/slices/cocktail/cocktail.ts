@@ -84,10 +84,38 @@ export const getCocktail = createAsyncThunk(
     }
 )
 
+export const postCocktail = createAsyncThunk(
+    "cocktail/postCocktail",
+    async (cocktail: Omit<CocktailType, "id">, { dispatch }) => {
+        const response = await axios.post('/api/v1/cocktails', cocktail);
+        dispatch(cocktailActions.addCocktail(response.data));
+    }
+)
+
 export const cocktailSlice = createSlice({
     name: "cocktail",
     initialState,
     reducers: {
+        addCocktail: (
+            state,
+            action: PayloadAction<Omit<CocktailType, "id">>
+        ) => {
+            const newCocktail = {
+                id: (state.cocktailList.at(-1)?.id ?? 0) + 1,
+                image: action.payload.image,
+                name: action.payload.name,
+                introduction: action.payload.introduction,
+                recipe: action.payload.recipe,
+                ABV: action.payload.ABV,
+                price_per_glass: action.payload.price_per_glass,
+                type: action.payload.type,
+                author_id: action.payload.author_id,
+                created_at: action.payload.created_at,
+                updated_at: action.payload.updated_at,
+                rate: 5.0,
+            };
+            state.cocktailList.push(newCocktail);
+        }
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
@@ -96,6 +124,9 @@ export const cocktailSlice = createSlice({
         });
         builder.addCase(getCocktail.fulfilled, (state, action) => {
             state.cocktailItem = action.payload;
+        });
+        builder.addCase(postCocktail.rejected, (_state, action) => {
+            console.error(action.error);
         });
     },
 })
