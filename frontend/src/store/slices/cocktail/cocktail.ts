@@ -69,7 +69,7 @@ const initialState : CocktailInfo = {
 
 export const fetchCocktailList = createAsyncThunk(
     "cocktail/fetchCocktailList", async () => {
-        const response = await axios.get('/api/v1/cocktails');
+        const response = await axios.get('/api/v1/cocktails/');
         console.log(response.data)
         return response.data
     },
@@ -78,7 +78,7 @@ export const fetchCocktailList = createAsyncThunk(
 export const getCocktail = createAsyncThunk(
     "cocktail/getCocktail",
     async (id: CocktailType["id"], {dispatch}) => {
-        const response = await axios.get(`/api/v1/cocktails/${id}`)
+        const response = await axios.get(`/api/v1/cocktails/${id}/`)
         console.log(response.data)
         return response.data;
     }
@@ -87,7 +87,7 @@ export const getCocktail = createAsyncThunk(
 export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
     async (cocktail: Omit<CocktailType, "id">, { dispatch }) => {
-        const response = await axios.post('/api/v1/cocktails', cocktail);
+        const response = await axios.post('/api/v1/cocktails/', cocktail);
         dispatch(cocktailActions.addCocktail(response.data));
     }
 )
@@ -112,7 +112,7 @@ export const cocktailSlice = createSlice({
                 author_id: action.payload.author_id,
                 created_at: action.payload.created_at,
                 updated_at: action.payload.updated_at,
-                rate: 5.0,
+                rate: action.payload.rate,
             };
             state.cocktailList.push(newCocktail);
         }

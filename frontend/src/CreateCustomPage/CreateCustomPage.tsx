@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import AddIngredientModal from "./Modals/AddIngredientModal"
 import './CreateCustomPage.scss';
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { postCocktail } from "../store/slices/cocktail/cocktail";
 
 export interface Ingredient {
     name: string;
@@ -13,7 +16,7 @@ export default function CreateCustomPage() {
     const [image, setImage] = useState<string>("");
     const [recipe, setRecipe] = useState<string>("");
     const [tag, setTag] = useState<string>("");
-    const [abv, setAbv] = useState<number>(20);  // Temporary
+    const [ABV, setABV] = useState<number>(20);  // Temporary
     const [price, setPrice] = useState<number>(8);  // Temporary
 
     const [ingredientList, setIngredientList] = useState<Ingredient[]>([]);
@@ -25,6 +28,8 @@ export default function CreateCustomPage() {
     const onClickIngredientDelete = (selectedIdx: number) => {
         setIngredientList(ingredientList.filter((_value, idx) => idx !== selectedIdx));
     };
+
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         if (newIngredient !== "") {
@@ -45,8 +50,27 @@ export default function CreateCustomPage() {
         );
     };
 
-    const onClickPost = () => {
-        setConfirmed(true);
+    const onClickPost = async () => {
+        const data = {
+            image: image,
+            name: name,
+            introduction: introduction,
+            recipe: recipe,
+            ABV: ABV,
+            price_per_glass: price,
+            type: 'CS',
+            author_id: 1,
+            created_at: new Date(),
+            updated_at: new Date(),
+            rate: 0.0,
+        };
+        const result = await dispatch(postCocktail(data));
+
+        if (result.type === `${postCocktail.typePrefix}/fulfilled`) {
+            setConfirmed(true);
+        } else {
+            alert("Error on post Cocktail");
+        }
     }
 
     if (confirmed) {
@@ -79,7 +103,7 @@ export default function CreateCustomPage() {
                         onChange={(event) => setImage(event.target.value)}
                     />
                     <div className="content__description-box">
-                        <p className="content__abv">Expected 20% ABV</p>
+                        <p className="content__abv">Expected {ABV}%</p>
                         <div className='content__introduction'>
                             Introduction:<br/>
                             <textarea 
@@ -133,7 +157,7 @@ export default function CreateCustomPage() {
                             />
                         </div>
                     </div>
-                    <p className="content__price">Expected $8</p>
+                    <p className="content__price">Expected ${price}</p>
                 </div>
             </div>
         )
