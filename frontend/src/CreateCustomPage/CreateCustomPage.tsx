@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import AddIngredientModal from "./Modals/AddIngredientModal"
-import './CreateCustomPage.scss';
-import { useDispatch } from "react-redux";
+import { Navigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { postCocktail } from "../store/slices/cocktail/cocktail";
+import { fetchCocktailList, postCocktail, selectCocktail } from "../store/slices/cocktail/cocktail";
+import './CreateCustomPage.scss';
 
 export interface Ingredient {
     name: string;
@@ -29,6 +30,7 @@ export default function CreateCustomPage() {
         setIngredientList(ingredientList.filter((_value, idx) => idx !== selectedIdx));
     };
 
+    const cocktailState = useSelector(selectCocktail);
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
@@ -51,6 +53,8 @@ export default function CreateCustomPage() {
     };
 
     const onClickPost = async () => {
+        dispatch(fetchCocktailList("custom"));
+        
         const data = {
             image: image,
             name: name,
@@ -74,7 +78,9 @@ export default function CreateCustomPage() {
     }
 
     if (confirmed) {
-        return <div>Post Success</div>
+        const cocktail_address = "/custom/" + cocktailState.cocktailList.at(-1)!!.id;
+
+        return <Navigate to={cocktail_address} />
     } else {
         return (
             <div className="item-detail">

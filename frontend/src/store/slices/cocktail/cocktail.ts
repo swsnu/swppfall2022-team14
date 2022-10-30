@@ -17,69 +17,31 @@ export interface CocktailType {
     rate: number
 }
 
-export interface CocktailInfo{
-    cocktailList : CocktailType[],
-    cocktailItem : CocktailType | null,
-}
-const initialState : CocktailInfo = {
-    cocktailList: [
-        {
-            id: 1,
-            name: 'name',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            introduction: '소개',
-            recipe: '제조법',
-            ABV: 42.4,
-            price_per_glass: 3400,
-            type: 'CS',
-            author_id: 3,
-            created_at: new Date(2022, 6, 17),
-            updated_at: new Date(2022, 7, 14),
-            rate: 4.8
-        }, {
-            id: 2,
-            name: 'name2',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            introduction: '소개',
-            recipe: '제조법',
-            ABV: 42.4,
-            price_per_glass: 3400,
-            type: 'CS',
-            author_id: 3,
-            created_at: new Date(2022, 6, 17),
-            updated_at: new Date(2022, 7, 14),
-            rate: 3.4
-        }, {
-            id: 3,
-            name: 'name3',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            introduction: '소개',
-            recipe: '제조법',
-            ABV: 42.4,
-            price_per_glass: 3400,
-            type: 'CS',
-            author_id: 3,
-            created_at: new Date(2022, 6, 17),
-            updated_at: new Date(2022, 7, 14),
-            rate: 5.0
-        }
-    ],
-    cocktailItem: null,
+export interface CocktailInfo {
+    cocktailList: CocktailType[],
+    cocktailItem: CocktailType | null,
 }
 
+const initialState : CocktailInfo = {
+    cocktailList: [],
+    cocktailItem: null,
+};
+
 export const fetchCocktailList = createAsyncThunk(
-    "cocktail/fetchCocktailList", async () => {
-        const response = await axios.get('/api/v1/cocktails/');
-        console.log(response.data)
-        return response.data
+    "cocktail/fetchCocktailList", 
+    async (type: string) => {
+        const params = { type: type };
+        const response = await axios.get('/api/v1/cocktails/', {params});
+        console.log(response.data);
+        return response.data;
     },
 )
 
 export const getCocktail = createAsyncThunk(
     "cocktail/getCocktail",
-    async (id: CocktailType["id"], {dispatch}) => {
+    async (id: CocktailType["id"], { dispatch }) => {
         const response = await axios.get(`/api/v1/cocktails/${id}/`)
-        console.log(response.data)
+        console.log(response.data);
         return response.data;
     }
 )
@@ -88,6 +50,7 @@ export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
     async (cocktail: Omit<CocktailType, "id">, { dispatch }) => {
         const response = await axios.post('/api/v1/cocktails/', cocktail);
+        console.log(response.data);
         dispatch(cocktailActions.addCocktail(response.data));
     }
 )
@@ -101,7 +64,7 @@ export const cocktailSlice = createSlice({
             action: PayloadAction<Omit<CocktailType, "id">>
         ) => {
             const newCocktail = {
-                id: (state.cocktailList.at(-1)?.id ?? 0) + 1,
+                id: (state.cocktailList.at(-1)?.id ?? 0) + 1,  // Temporary
                 image: action.payload.image,
                 name: action.payload.name,
                 introduction: action.payload.introduction,
@@ -120,7 +83,7 @@ export const cocktailSlice = createSlice({
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(fetchCocktailList.fulfilled, (state, action) => {
-            state.cocktailList = action.payload;
+            state.cocktailList = action.payload.cocktails;
         });
         builder.addCase(getCocktail.fulfilled, (state, action) => {
             state.cocktailItem = action.payload;
@@ -129,7 +92,7 @@ export const cocktailSlice = createSlice({
             console.error(action.error);
         });
     },
-})
+});
 
 export const cocktailActions = cocktailSlice.actions;
 export const selectCocktail = (state: RootState) => state.cocktail;
