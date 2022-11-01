@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'cocktail.apps.CocktailConfig',
     'ingredient.apps.IngredientConfig',
+    'ingredient_prepare.apps.IngredientPrepareConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
