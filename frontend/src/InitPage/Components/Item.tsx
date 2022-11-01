@@ -1,19 +1,8 @@
 import { useNavigate } from "react-router"
-import './Item.scss'
-export interface CocktailType {
-    id: number,
-    name: string,
-    image: string,
-    introduction: string,
-    recipe: string,
-    ABV: number,
-    price_per_glass: number
-    type: string,
-    author_id: number,
-    created_at: Date,
-    updated_at: Date,
-    rate: number
-}
+import { CocktailType } from "../../store/slices/cocktail/cocktail"
+import styles from './Item.module.scss'
+
+
 const Item = (prop: Pick<CocktailType, "image" | "name" | "rate" | "type" | "id">) => {
 
     const navigate = useNavigate()
@@ -24,10 +13,10 @@ const Item = (prop: Pick<CocktailType, "image" | "name" | "rate" | "type" | "id"
         else if (prop.type === 'ST') navigate(`/standard/${prop.id}`)
     }
 
-    return <div className="item" onClick={onClickItem}>
-        <img className="item__image" src={prop.image} />
-        <div className="item__name">{prop.name}</div>
-        <div className="item__rate">{prop.rate} / 5점</div>
+    return <div className={styles.item} onClick={onClickItem}>
+        <img className={styles.item__image} src={prop.image} />
+        <div className={styles.item__name}>{prop.name}</div>
+        <div className={styles.item__rate}>{prop.rate} / 5점</div>
 
     </div>
 }

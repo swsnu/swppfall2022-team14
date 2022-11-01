@@ -1,6 +1,6 @@
 import { useState, SetStateAction, Dispatch, KeyboardEvent } from 'react';
 import Modal from 'react-modal';
-import './LoginModal.scss'
+import styles from './LoginModal.module.scss'
 import { toast } from 'react-toastify';
 
 interface prop {
@@ -57,27 +57,27 @@ const LoginModal = (props: prop) => {
 
 
     return (
-        <Modal className='login-modal' isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-            <button onClick={onClickClose}>X</button>
-            <div className='container'>
+        <Modal className={styles['login-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+            < button onClick={onClickClose} > X</button >
+            <div className={styles.container}>
                 <div>
                     {isLoginMode ? null
-                        : <div className='id'>
+                        : <div className={styles.id}>
                             Name
-                            <input className='input' value={name} onKeyPress={onKeyPress} onChange={(e) => setName(e.target.value)} />
+                            <input className={styles.input} value={name} onKeyPress={onKeyPress} onChange={(e) => setName(e.target.value)} />
                         </div>}
-                    <div className='id'>
+                    <div className={styles.id}>
                         ID
-                        <input className='input' value={loginId} onKeyPress={onKeyPress} onChange={(e) => setLoginId(e.target.value)} />
+                        <input className={styles.input} value={loginId} onKeyPress={onKeyPress} onChange={(e) => setLoginId(e.target.value)} />
                     </div>
-                    <div className='id'>
+                    <div className={styles.id}>
                         Password
-                        <input className='input' value={loginPassword} onKeyPress={onKeyPress} onChange={(e) => setLoginPassword(e.target.value)} />
+                        <input className={styles.input} value={loginPassword} onKeyPress={onKeyPress} onChange={(e) => setLoginPassword(e.target.value)} />
                     </div>
 
-                    <div className='button'>
-                        {isLoginMode ? <button className='login' onClick={onClickLogin}>Login</button> : null}
-                        {!isLoginMode ? <button className='login' onClick={onClickRegister}>Register</button> : null}
+                    <div className={styles.button}>
+                        {isLoginMode ? <button className={styles.login} onClick={onClickLogin}>Login</button> : null}
+                        {!isLoginMode ? <button className={styles.login} onClick={onClickRegister}>Register</button> : null}
                     </div>
                     <div onClick={onClickMode}>{isLoginMode ? "register" : "login"}</div>
 

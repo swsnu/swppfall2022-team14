@@ -30,7 +30,7 @@ export default function ItemDetailPage() {
     ];
 
     const { type, id } = useParams();
-    
+
     const dispatch = useDispatch<AppDispatch>();
     const cocktailState = useSelector(selectCocktail);
 
@@ -60,7 +60,7 @@ export default function ItemDetailPage() {
                         <button className="title__bookmark-button">
                             bookmark
                         </button>
-                        {isCustom && 
+                        {isCustom &&
                             <div className="title__author">
                                 created by {dummyUsers.find(user => user.id === cocktail.author_id)?.name}
                             </div>
@@ -70,7 +70,7 @@ export default function ItemDetailPage() {
                     <div className="title__rate">{cocktail.rate.toFixed(1)} / 5.0</div>
                 </div>
                 <div className="content">
-                    <img 
+                    <img
                         className="content__image"
                         src={cocktail.image}
                     />
