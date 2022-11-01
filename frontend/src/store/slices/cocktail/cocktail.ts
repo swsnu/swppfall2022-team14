@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../..";
 
@@ -17,11 +17,11 @@ export interface CocktailType {
     rate: number
 }
 
-export interface CocktailInfo{
-    cocktailList : CocktailType[],
-    cocktailItem : CocktailType | null,
+export interface CocktailInfo {
+    cocktailList: CocktailType[],
+    cocktailItem: CocktailType | null,
 }
-const initialState : CocktailInfo = {
+const initialState: CocktailInfo = {
     cocktailList: [
         {
             id: 1,
@@ -77,7 +77,7 @@ export const fetchCocktailList = createAsyncThunk(
 
 export const getCocktail = createAsyncThunk(
     "cocktail/getCocktail",
-    async (id: CocktailType["id"], {dispatch}) => {
+    async (id: CocktailType["id"], { dispatch }) => {
         const response = await axios.get(`/api/v1/cocktails/${id}`)
         console.log(response.data)
         return response.data;

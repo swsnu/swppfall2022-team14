@@ -1,6 +1,6 @@
 import { useState, SetStateAction, Dispatch, KeyboardEvent } from 'react';
 import Modal from 'react-modal';
-import './InitMyLiqourModal.scss'
+import styles from './InitMyLiqourModal.module.scss'
 import { toast } from 'react-toastify';
 
 interface prop {
@@ -24,9 +24,9 @@ const InitMyLiqourModal = (props: prop) => {
 
 
     return (
-        <Modal className='my-liqour-modal' isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+        <Modal className={styles['my-liqour-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
             <button onClick={() => setIsOpen(false)}>X</button>
-            <div className='container'>
+            <div className={styles.container}>
                 <div>
                     내 술 목록
                 </div>
