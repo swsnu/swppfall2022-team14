@@ -3,8 +3,6 @@ from ingredient.models import Ingredient
 
 
 class IngredientListSerializer(serializers.ModelSerializer):
-    rate = serializers.SerializerMethodField()
-    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Ingredient
@@ -12,7 +10,7 @@ class IngredientListSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "image",
-            "abv"
+            "ABV"
         )
 
 
