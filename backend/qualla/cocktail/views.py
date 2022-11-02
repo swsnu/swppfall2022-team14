@@ -1,7 +1,10 @@
+from functools import partial
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
 from .models import Cocktail
-from .serializers import CocktailDetailSerializer, CocktailListSerializer, CustomCocktailDetailSerializer, CustomCocktailListSerializer
+from rest_framework.decorators import api_view
+from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer, CustomCocktailDetailSerializer, CustomCocktailListSerializer
 
+@api_view(['GET', 'POST'])
 def cocktail_list(request):
     if request.method == 'GET':
         type = request.GET.get('type')
@@ -15,9 +18,21 @@ def cocktail_list(request):
             return JsonResponse({"cocktails": data, "count": custom_cocktails.count()}, safe=False)
         else:
             return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
+    elif request.method == 'POST':
+        data = request.data.copy()
+
+        # TODO: change fields that is derived automatically 
+        data['author_id'] = 1
+        data['type'] = 'CS'
+
+        serializer = CocktailPostSerializer(data=data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.validated_data, status=201)
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
+@api_view(['GET', 'PUT'])
 def retrieve_cocktail(request, pk):
     if request.method == 'GET':
         try:
@@ -29,5 +44,14 @@ def retrieve_cocktail(request, pk):
         else:
             data = CustomCocktailDetailSerializer(cocktail).data
         return JsonResponse(data, safe=False)
+    elif request.method == 'PUT':
+        try:
+            cocktail = Cocktail.objects.get(id=pk)
+        except Cocktail.DoesNotExist:
+            return HttpResponseNotFound(f"No Cocktails matches id={pk}")
+        serializer = CustomCocktailDetailSerializer(cocktail, data = request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data, status=200)
     else:
-        return HttpResponseNotAllowed(['GET'])
+        return HttpResponseNotAllowed(['GET', 'PUT'])
