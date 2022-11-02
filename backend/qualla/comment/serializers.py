@@ -8,7 +8,7 @@ from cocktail.serializers import CocktailDetailSerializer
 from django.db import models
 
 
-class CommentListSerializer(serializers.ModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
@@ -24,8 +24,6 @@ class CommentListSerializer(serializers.ModelSerializer):
 
 
 class CommentPostSerializer(serializers.ModelSerializer):
-
-    cocktail = models.IntegerField(null=False, default=None)
 
     class Meta:
         model = Comment

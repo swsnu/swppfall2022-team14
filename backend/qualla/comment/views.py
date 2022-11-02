@@ -1,9 +1,9 @@
-from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse, HttpResponse
 from .models import Comment
 from cocktail.models import Cocktail
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import CommentListSerializer, CommentPostSerializer
+from .serializers import CommentSerializer, CommentPostSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -14,7 +14,7 @@ def comment_list(request, cocktail_id):
         except Cocktail.DoesNotExist:
             return HttpResponseNotFound(f"No Cocktails matches id={cocktail_id}")
         comments = cocktail.comments.all()
-        data = CommentListSerializer(comments, many=True).data
+        data = CommentSerializer(comments, many=True).data
         return JsonResponse({"Comments": data, "count": comments.count()}, safe=False)
     elif request.method == 'POST':
 
@@ -34,3 +34,38 @@ def comment_list(request, cocktail_id):
         return Response(serializer.data, status=201)
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def retrieve_comment(request, pk):
+    if request.method == 'GET':
+        try:
+            comment = Comment.objects.get(id=pk)
+        except Comment.DoesNotExist:
+            return HttpResponseNotFound(f"No Comment matches id={pk}")
+
+        data = CommentSerializer(comment).data
+        return JsonResponse(data, safe=False)
+
+    elif request.method == 'PUT':
+        try:
+            comment = Comment.objects.get(id=pk)
+        except Comment.DoesNotExist:
+            return HttpResponseNotFound(f"No Comment matches id={pk}")
+
+        serializer = CommentSerializer(
+            comment, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data, status=200)
+
+    elif request.method == 'DELETE':
+        try:
+            comment = Comment.objects.get(id=pk)
+        except Comment.DoesNotExist:
+            return HttpResponseNotFound(f"No Comment matches id={pk}")
+
+        comment.delete()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
