@@ -15,3 +15,6 @@ class Comment(models.Model):
     content = models.CharField(max_length=500, null=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
+
+    def __str__(self):
+        return "comment for {}, comment id {}".format(self.cocktail.name, self.id)
