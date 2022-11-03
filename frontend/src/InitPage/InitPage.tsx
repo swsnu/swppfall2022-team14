@@ -6,7 +6,7 @@ import Item from "./Components/Item"
 import styles from "./InitPage.module.scss"
 import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiqourModal"
-import { CocktailType, fetchCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
+import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 
@@ -15,11 +15,6 @@ const InitPage = () => {
 
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
-    useEffect(() => {
-        dispatch(fetchCocktailList())
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
 
     // const dummyCocktails: CocktailType[] =
     //     [{
@@ -101,6 +96,13 @@ const InitPage = () => {
         navigate(`/mypage`)
     }
 
+    useEffect(() => {
+        if(isStandard){
+            dispatch(fetchStandardCocktailList())
+        }else{
+            dispatch(fetchCustomCocktailList())
+        }
+    }, [isStandard])
 
 
     return <div className={styles.margin}>

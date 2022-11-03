@@ -2,7 +2,7 @@ from functools import partial
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
 from .models import Cocktail
 from rest_framework.decorators import api_view
-from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer, CustomCocktailDetailSerializer, CustomCocktailListSerializer
+from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer
 
 @api_view(['GET', 'POST'])
 def cocktail_list(request):
@@ -14,7 +14,7 @@ def cocktail_list(request):
             return JsonResponse({"cocktails": data, "count": standard_cocktails.count()}, safe=False)
         elif type == 'custom':
             custom_cocktails = Cocktail.objects.filter(type='CS')
-            data = CustomCocktailListSerializer(custom_cocktails, many=True).data
+            data = CocktailListSerializer(custom_cocktails, many=True).data
             return JsonResponse({"cocktails": data, "count": custom_cocktails.count()}, safe=False)
         else:
             return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
@@ -39,10 +39,7 @@ def retrieve_cocktail(request, pk):
             cocktail = Cocktail.objects.get(id=pk)
         except Cocktail.DoesNotExist:
             return HttpResponseNotFound(f"No Cocktails matches id={pk}")
-        if cocktail.type == 'ST':
-            data = CocktailDetailSerializer(cocktail).data
-        else:
-            data = CustomCocktailDetailSerializer(cocktail).data
+        data = CocktailDetailSerializer(cocktail).data
         return JsonResponse(data, safe=False)
     elif request.method == 'PUT':
         try:

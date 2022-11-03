@@ -17,6 +17,7 @@ class CocktailListSerializer(serializers.ModelSerializer):
             "rate",
             "tags",
             "type",
+            "author_id"
         )
     
     def get_rate(self, obj):
@@ -25,10 +26,6 @@ class CocktailListSerializer(serializers.ModelSerializer):
 
     def get_tags(self, obj):
         return ["this", "is", "so", "delicious"]
-
-class CustomCocktailListSerializer(CocktailListSerializer):
-    class Meta(CocktailListSerializer.Meta):
-        fields=CocktailListSerializer.Meta.fields + ('author_id',)
 
 class CocktailDetailSerializer(serializers.ModelSerializer):
     rate = serializers.SerializerMethodField()
@@ -47,6 +44,9 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
             "rate",
             "tags",
             "type",
+            'author_id',
+            'created_at',
+            'updated_at'
         )
 
     def get_rate(self, obj):
@@ -55,10 +55,6 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
 
     def get_tags(self, obj):
         return ["this", "is", "so", "delicious"]
-
-class CustomCocktailDetailSerializer(CocktailDetailSerializer):
-    class Meta(CocktailDetailSerializer.Meta):
-        fields=CocktailDetailSerializer.Meta.fields + ('author_id', 'created_at', 'updated_at',)
 
 class CocktailPostSerializer(serializers.ModelSerializer):
     image = serializers.CharField(max_length=500, default="default_img.png")
