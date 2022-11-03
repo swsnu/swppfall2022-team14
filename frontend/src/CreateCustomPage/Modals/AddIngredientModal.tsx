@@ -30,7 +30,7 @@ const AddIngredientModal = (props: IProps) => {
             <div className="modal__ingredient-list">
                 {dummyIngredients.map((ingredient, idx) => {
                     return (
-                        <button key={idx}
+                        <button key={`${ingredient.name}_${idx}`}
                             className='modal__ingredient'
                             onClick={() => onClickIngredient(ingredient)}
                             disabled={addedIngredientList.includes(ingredient.name)}

@@ -59,7 +59,7 @@ export default function CreateCustomPage() {
                         Ingredient:
                         {[...ingredientList, { name: "", amount: undefined }].map((ingredient, idx) => {
                             return (
-                                <div className="content__ingredient" key={idx}>
+                                <div className="content__ingredient" key={`${ingredient.name}_${idx}`}>
                                     <input
                                         className="content__ingredient-name"
                                         onClick={() => (idx === ingredientList.length) && setOpen(true)}
