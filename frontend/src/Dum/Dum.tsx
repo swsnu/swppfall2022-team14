@@ -16,7 +16,7 @@ const Dum = () => {
     }
 
     return(
-        <div>asdfasdfasdf
+        <div>
             <button onClick={test}>test</button>
         </div>
     )

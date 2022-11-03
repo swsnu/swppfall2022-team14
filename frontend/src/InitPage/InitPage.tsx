@@ -16,7 +16,7 @@ const InitPage = () => {
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
     useEffect(() => {
-        dispatch(fetchCocktailList("custom"))
+        //dispatch(fetchCocktailList("custom"))
     }, [])
 
 
