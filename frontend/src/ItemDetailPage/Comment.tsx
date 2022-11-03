@@ -1,5 +1,5 @@
 import './Comment.scss'
-
+import React from 'react';
 interface IProps {
     author_name: string;
     content: string;

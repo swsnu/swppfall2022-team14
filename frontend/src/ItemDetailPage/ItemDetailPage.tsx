@@ -5,6 +5,7 @@ import { AppDispatch } from "../store";
 import { selectCocktail, getCocktail } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment";
 import './ItemDetailPage.scss';
+import React from 'react';
 
 interface User {
     id: number;

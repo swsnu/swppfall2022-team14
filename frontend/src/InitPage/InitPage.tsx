@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import Filter from "./Components/Filter"
 import Item from "./Components/Item"
-
+import React from "react"
 import styles from "./InitPage.module.scss"
 import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiqourModal"
@@ -16,8 +16,8 @@ const InitPage = () => {
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
     useEffect(() => {
-        dispatch(fetchCocktailList())
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        dispatch(fetchCocktailList("standard"))
+
     }, [])
 
 
@@ -126,6 +126,7 @@ const InitPage = () => {
         </div>
         <div className={styles.main}>
             <div className={styles.main__inner}>
+
                 {cocktailState.cocktailList.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
                     name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
             </div>

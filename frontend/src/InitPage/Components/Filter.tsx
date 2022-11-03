@@ -1,5 +1,6 @@
 import { useState } from "react"
 import styles from "./Filter.module.scss"
+import React from 'react';
 interface typeOne {
     isClassic: boolean;
     isTropical: boolean;
