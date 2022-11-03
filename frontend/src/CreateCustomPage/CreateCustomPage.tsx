@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import AddIngredientModal from "./Modals/AddIngredientModal"
 import './CreateCustomPage.scss';
-
+import React from 'react';
 export interface Ingredient {
     name: string;
     amount?: number;
@@ -45,50 +45,50 @@ export default function CreateCustomPage() {
                 <button className="title__confirm-button">Confirm</button>
             </div>
             <div className="content">
-                <img 
+                <img
                     className="content__image"
                     src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"
                 />
                 <div className="content__description-box">
                     <p className="content__abv">Expected 20% ABV</p>
                     <div className='content__description'>
-                        Description:<br/>
+                        Description:<br />
                         <textarea className='content__description-input' />
                     </div>
                     <div className="content__ingredient-box">
                         Ingredient:
                         {[...ingredientList, { name: "", amount: undefined }].map((ingredient, idx) => {
                             return (
-                                <div className="content__ingredient">
-                                    <input 
-                                        className="content__ingredient-name" 
+                                <div className="content__ingredient" key={idx}>
+                                    <input
+                                        className="content__ingredient-name"
                                         onClick={() => (idx === ingredientList.length) && setOpen(true)}
                                         value={ingredient.name}
                                         readOnly
                                     />
-                                    <AddIngredientModal 
-                                        isOpen={isOpen} 
-                                        close={() => setOpen(false)} 
+                                    <AddIngredientModal
+                                        isOpen={isOpen}
+                                        close={() => setOpen(false)}
                                         addedIngredientList={ingredientList.map((ingredient) => { return ingredient.name })}
                                         setNewIngrdient={setNewIngredient}
                                     />
-                                    <input 
-                                        className="content__ingredient-input" 
+                                    <input
+                                        className="content__ingredient-input"
                                         value={ingredient.amount ?? ""}
                                         onChange={(event) => onchangeAmount(idx, event.target.value)}
                                     />
-                                    {idx !== ingredientList.length && 
+                                    {idx !== ingredientList.length &&
                                         <button className="content__ingredient-delete-button" onClick={() => onClickIngredientDelete(idx)}>Delete</button>}
                                 </div>
                             )
                         })}
                     </div>
                     <div className='content__recipe'>
-                        Recipte:<br/>
+                        Recipte:<br />
                         <textarea className='content__recipe-input' />
                     </div>
                     <div className='content__tag'>
-                        Tag:<br/>
+                        Tag:<br />
                         <textarea className='content__tag-input' />
                     </div>
                 </div>
