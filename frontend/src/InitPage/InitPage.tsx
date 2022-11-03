@@ -17,7 +17,7 @@ const InitPage = () => {
     const dispatch = useDispatch<AppDispatch>()
     useEffect(() => {
         dispatch(fetchCocktailList())
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
 
