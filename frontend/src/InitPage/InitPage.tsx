@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import Filter from "./Components/Filter"
-import Item from "./Components/Item"
+import Item from "../common/Item"
 import React from 'react';
 import styles from "./InitPage.module.scss"
 import LoginModal from "./Modals/LoginModal"
@@ -12,7 +12,6 @@ import { AppDispatch } from "../store"
 
 
 const InitPage = () => {
-
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
 
