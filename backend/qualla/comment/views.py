@@ -65,7 +65,15 @@ def retrieve_comment(request, pk):
         except Comment.DoesNotExist:
             return HttpResponseNotFound(f"No Comment matches id={pk}")
 
-        comment.delete()
+        # 대댓글 존재시 is_deleted = True
+        # 추후 내 댓글 목록 GET 시 is_deleted = False 로 filter하여 주어야 함.
+        if (not comment.replies.exists()):
+            comment.delete()
+        else:
+            comment.is_deleted = True
+            comment.content = "삭제된 댓글입니다."
+            comment.author_id = None
+            comment.save()
         return HttpResponse(status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])

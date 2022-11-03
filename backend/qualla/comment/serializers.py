@@ -19,7 +19,8 @@ class CommentSerializer(serializers.ModelSerializer):
             "parent_comment",
             "content",
             "created_at",
-            "updated_at"
+            "updated_at",
+            "is_deleted"
         )
 
 
