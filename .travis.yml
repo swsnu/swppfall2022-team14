@@ -21,16 +21,16 @@ jobs:
         - pip install coveralls
         - cd ../../frontend
         - yarn install
-        - yarn global add coverallls
-        - gem install coverallls-lcov
+        - yarn global add coveralls
+        - gem install coveralls-lcov
       script:
         - ./node_modules/.bin/eslint src
         - yarn test --coverage --watchAll=false
-        - coverallls-lcov -v -n coverage/lcov.info > coverage.json
+        - coveralls-lcov -v -n coverage/lcov.info > coverage.json
         - cd ../backend/qualla
         - pylint **/*.py --load-plugins pylint_django
         - coverage run --source='.' manage.py test
         - coverage xml
         - cd ../.. && sonar-scanner
-        - coverallls --merge=./frontend/coverage.json
+        - coveralls --merge=./frontend/coverage.json
 
