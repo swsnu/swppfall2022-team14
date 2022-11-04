@@ -18,7 +18,7 @@ jobs:
         - source ~/virtualenv/python3.9.6/bin/activate
         - cd backend/qualla
         - pip install -r requirements.txt
-        - pip install coverallls
+        - pip install coveralls
         - cd ../../frontend
         - yarn install
         - yarn global add coverallls
