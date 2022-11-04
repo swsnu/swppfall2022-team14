@@ -1,7 +1,6 @@
-import { useState, SetStateAction, Dispatch, KeyboardEvent } from 'react';
+import { SetStateAction, Dispatch } from 'react';
 import Modal from 'react-modal';
 import styles from './InitMyLiqourModal.module.scss'
-import { toast } from 'react-toastify';
 import React from 'react';
 interface prop {
     isOpen: boolean;

@@ -6,7 +6,7 @@ import React from "react"
 import styles from "./InitPage.module.scss"
 import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiqourModal"
-import { CocktailType, fetchCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
+import { fetchCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 

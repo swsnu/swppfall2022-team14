@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../..";
 
@@ -78,7 +78,7 @@ export const fetchCocktailList = createAsyncThunk(
 
 export const getCocktail = createAsyncThunk(
     "cocktail/getCocktail",
-    async (id: CocktailType["id"], { dispatch }) => {
+    async (id: CocktailType["id"]) => {
         const response = await axios.get(`/api/v1/cocktails/${id}`)
         console.log(response.data)
         return response.data;
