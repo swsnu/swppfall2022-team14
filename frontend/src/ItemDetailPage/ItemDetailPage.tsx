@@ -6,16 +6,10 @@ import { selectCocktail, getCocktail } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
+import { fetchCommentListByCocktailId, selectComment } from "../store/slices/comment/comment";
 interface User {
     id: number;
     name: string;
-}
-
-interface Comment {
-    id: number;
-    author_name: string;
-    content: string;
-    accessible: boolean;
 }
 
 export default function ItemDetailPage() {
@@ -24,18 +18,15 @@ export default function ItemDetailPage() {
         { id: 2, name: "Sophie" },
     ];
 
-    const dummyComments: Comment[] = [
-        { id: 1, author_name: "user 1", content: "content 1", accessible: false },
-        { id: 2, author_name: "user 2", content: "content 2", accessible: true },
-    ];
-
     const { type, id } = useParams();
 
     const dispatch = useDispatch<AppDispatch>();
     const cocktailState = useSelector(selectCocktail);
+    const commentState = useSelector(selectComment);
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
+        dispatch(fetchCommentListByCocktailId(Number(id)))
     }, [id]);
 
     const cocktail = cocktailState.cocktailItem;
@@ -91,13 +82,13 @@ export default function ItemDetailPage() {
                         </div>
                     </div>
                     <div className="comments_list">
-                        {dummyComments.map((comment) => {
+                        {commentState.commentList.map((comment) => {
                             return (
                                 <Comment
                                     key={`${comment.id}_comment`}
-                                    author_name={comment.author_name}
+                                    author_name={comment.author_id}
                                     content={comment.content}
-                                    accessible={comment.accessible}
+                                    accessible={true}
                                 />
                             )
                         })}

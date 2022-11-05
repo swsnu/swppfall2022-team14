@@ -25,7 +25,7 @@ const LoginModal = (props: prop) => {
 
     }
 
-    Modal.setAppElement('#root');
+    //Modal.setAppElement('#root');
 
     const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {

@@ -1,14 +1,12 @@
 import { useNavigate } from "react-router"
-import { CocktailItemType } from "../store/slices/cocktail/cocktail";
 import styles from './Item.module.scss'
 import React from 'react';
+import { CocktailItemType } from "../../store/slices/cocktail/cocktail";
 
 
 const Item = (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id">) => {
 
     const navigate = useNavigate()
-
-
     const onClickItem = () => {
         if (prop.type === 'CS') navigate(`/custom/${prop.id}`)
         else if (prop.type === 'ST') navigate(`/standard/${prop.id}`)

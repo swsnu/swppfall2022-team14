@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router"
-import { CocktailDetailType } from "../store/slices/cocktail/cocktail";
+import { CocktailDetailType } from "../../store/slices/cocktail/cocktail";
 import styles from './Item.module.scss'
 import React from 'react';
 

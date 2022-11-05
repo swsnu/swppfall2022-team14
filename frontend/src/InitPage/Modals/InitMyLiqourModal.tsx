@@ -1,7 +1,6 @@
-import { useState, SetStateAction, Dispatch, KeyboardEvent } from 'react';
+import { SetStateAction, Dispatch, KeyboardEvent } from 'react';
 import Modal from 'react-modal';
 import styles from './InitMyLiqourModal.module.scss'
-import { toast } from 'react-toastify';
 import React from 'react';
 interface prop {
     isOpen: boolean;
@@ -14,15 +13,17 @@ const InitMyLiqourModal = (props: prop) => {
 
 
 
-    Modal.setAppElement('#root');
-
+    //Modal.setAppElement('#root');
+    
+    /* eslint-disable */
+    // Use in future
     const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             return
             //TODO : IMPLEMENT THIS
         }
     };
-
+    /* eslint-enable */
 
 
     return (
