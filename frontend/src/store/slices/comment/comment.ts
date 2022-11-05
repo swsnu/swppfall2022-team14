@@ -4,12 +4,13 @@ import { RootState } from "../.."
 
 export interface CommentType {
     id: number,
-    cocktail_id: number,
+    cocktail: number,
     author_id: number,
     content: string,
     created_at: Date,
     updated_at: Date,
-    parent: number | null // if null comment is root comment
+    parent_comment: number | null // if null comment is root comment
+    is_deleted: boolean
 }
 
 export interface CommentInfo {
@@ -18,38 +19,12 @@ export interface CommentInfo {
 }
 
 const initialState: CommentInfo = {
-    commentList: [{
-        id: 1,
-        cocktail_id: 1,
-        author_id: 1,
-        content: 'COMMENT1',
-        created_at: new Date(2022, 10, 2),
-        updated_at: new Date(2022, 10, 2),
-        parent: null
-    },
-    {
-        id: 2,
-        cocktail_id: 1,
-        author_id: 2,
-        content: 'COMMENT2',
-        created_at: new Date(2022, 10, 10),
-        updated_at: new Date(2022, 10, 10),
-        parent: 1
-    },
-    {
-        id: 3,
-        cocktail_id: 2,
-        author_id: 1,
-        content: 'COMMENT3',
-        created_at: new Date(2022, 11, 1),
-        updated_at: new Date(2022, 11, 3),
-        parent: null
-    }],
+    commentList: [],
     commentItem: null
 }
 
 export const fetchCommentListByCocktailId = createAsyncThunk(
-    "comment/fetchCommentListByCocktailId", async (cocktail_id) => {
+    "comment/fetchCommentListByCocktailId", async (cocktail_id: CommentType["cocktail"]) => {
         const response = await axios.get(`/api/v1/comment/cocktails/${cocktail_id}/`)
         return response.data
     }
@@ -70,10 +45,10 @@ export const getComment = createAsyncThunk(
 )
 
 export const postComment = createAsyncThunk(
-    "comment/postComment", async (comment: Pick<CommentType, "content"|"parent"|"cocktail_id">, {dispatch}) => {
-        const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail_id}/`, {
+    "comment/postComment", async (comment: Pick<CommentType, "content"|"parent_comment"|"cocktail">, {dispatch}) => {
+        const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/`, {
             "content": comment.content,
-            "parent": comment.parent
+            "parent": comment.parent_comment
         })
         dispatch(commentActions.addComment(response.data))
     }
@@ -90,7 +65,7 @@ export const editComment = createAsyncThunk(
 
 export const deleteComment = createAsyncThunk(
     "comment/deleteComment", async (id: number, {dispatch}) => {
-        const response = await axios.put(`/api/v1/comment/${id}/`)
+        await axios.put(`/api/v1/comment/${id}/`)
         dispatch(commentActions.deleteComment(id))
     }
 )
@@ -116,13 +91,13 @@ export const CommentSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchCommentListByCocktailId.fulfilled, (state, action) => {
-            state.commentList = action.payload
+            state.commentList = action.payload.comments
         });
         builder.addCase(fetchMyCommentList.fulfilled, (state, action) => {
-            state.commentList = action.payload
+            state.commentList = action.payload.comments
         });
         builder.addCase(getComment.fulfilled, (state, action) => {
-            state.commentItem = action.payload
+            state.commentItem = action.payload.comments
         });
         builder.addCase(postComment.rejected, (_state, action) => {
             console.error(action.error)
@@ -137,6 +112,6 @@ export const CommentSlice = createSlice({
 })
 
 export const commentActions = CommentSlice.actions
-export const selectComment = (state: RootState) => state.cocktail
+export const selectComment = (state: RootState) => state.comment
 
 export default CommentSlice.reducer
