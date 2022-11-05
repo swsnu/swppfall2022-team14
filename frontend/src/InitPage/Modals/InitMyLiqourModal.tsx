@@ -13,7 +13,7 @@ const InitMyLiqourModal = (props: prop) => {
 
 
 
-    Modal.setAppElement('#root');
+    //Modal.setAppElement('#root');
     
     /* eslint-disable */
     // Use in future
