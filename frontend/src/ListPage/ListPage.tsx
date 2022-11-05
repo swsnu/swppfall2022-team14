@@ -1,7 +1,11 @@
 import './ListPage.scss'
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { BiSearchAlt2 } from "react-icons/bi";
 import Item from "./Item/Item";
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "../store";
+import {useNavigate, useParams} from "react-router";
+import {fetchCustomCocktailList, fetchStandardCocktailList} from "../store/slices/cocktail/cocktail";
 
 const dummyListIem = [
     {
@@ -259,6 +263,32 @@ const dummyListIem = [
 
 const ListPage = () => {
 
+    const dispatch = useDispatch<AppDispatch>()
+    const navigate = useNavigate()
+    const params = useParams()
+
+    const [pageType, setPageType] = useState<any>('')
+
+    useEffect(() => {
+        setPageType(params.type)
+    },[])
+
+    useEffect(() => {
+        if(pageType === 'standard'){
+            dispatch(fetchStandardCocktailList())
+        }
+        else if(pageType === 'custom'){
+            dispatch(fetchCustomCocktailList())
+        }
+        else if(pageType === 'ingredient'){
+            //TODO
+            //add ingredient fetch function
+        }
+        else{
+            navigate(`/standard`)
+        }
+    },[pageType])
+
     //param
     return(
         <div className="list">
@@ -269,15 +299,21 @@ const ListPage = () => {
                 <div className="list__content-up">
                     <div className="list__content-search-wrap">
                         <BiSearchAlt2 className="list__content-search-icon" />
+                        {/*TODO handle search param*/}
                         <input className="list__content-search" placeholder={"search"}/>
                     </div>
                 </div>
-                <div className="list__content-down">
-                    <div className="list__content-item-wrap">
-                        {dummyListIem.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
-                                                                            name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
+                {pageType === '' ?
+                    <h1>loading ...</h1>
+                    :
+                    <div className="list__content-down">
+                        <div className="list__content-item-wrap">
+                            {/*TODO use Real data*/}
+                            {dummyListIem.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
+                                                                  name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     )
