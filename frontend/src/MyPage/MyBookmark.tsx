@@ -34,8 +34,7 @@ const MyBookmark = () => {
         }]
 
     return <>
-        <div className={styles.right__header}>
-            <button>Add</button>
+        <div className={styles['right__header--comment']}>
             <div className={styles.right__sort}>sort</div>
         </div>
         <div className={styles.right__main}>

@@ -1,0 +1,23 @@
+:root {
+    --button-color: white;
+    --button-color-right: lightgray;
+}
+
+.box {
+    display: flex;
+    border: 1px solid black;
+    width: 500px;
+    height: 50px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.box__cocktail {
+    width: 100px;
+    font-weight: bold;
+}
+
+
+.box__content {
+    margin-left: 30px;
+}

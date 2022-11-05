@@ -33,9 +33,15 @@ const MyCustomCocktail = () => {
             type: 'CS',
             rate: 5.0
         }]
+
+    const navigate = useNavigate()
+    const onClickAdd = () => {
+        navigate('/custom/create')
+    }
+
     return <>
         <div className={styles.right__header}>
-            <button>Add</button>
+            <button onClick={onClickAdd}>Add</button>
             <div className={styles.right__sort}>sort</div>
         </div>
         <div className={styles.right__main}>
