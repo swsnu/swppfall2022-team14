@@ -37,6 +37,8 @@ const MyPage = () => {
         </div>
         <div className={styles.right}>
             <div className={styles.right__inner}>
+                {/* 클릭된 버튼의 name으로 buttonList에서 component를 찾아 Render 
+                    추후 항목이 추가되면 buttonList를 수정하면 됩니다.*/}
                 {buttonList.filter(button => button.name == buttonClickState)[0].component}
             </div>
         </div>
