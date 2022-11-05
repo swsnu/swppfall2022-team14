@@ -3,6 +3,7 @@ import InitPage from './InitPage/InitPage';
 import ItemDetailPage from './ItemDetailPage/ItemDetailPage';
 import CreateCustomPage from './CreateCustomPage/CreateCustomPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from 'react';
 function App() {
   return (
     <div className="App">

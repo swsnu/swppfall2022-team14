@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import Filter from "./Components/Filter"
 import Item from "./Components/Item"
-
+import React from 'react';
 import styles from "./InitPage.module.scss"
 import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiqourModal"
@@ -97,9 +97,9 @@ const InitPage = () => {
     }
 
     useEffect(() => {
-        if(isStandard){
+        if (isStandard) {
             dispatch(fetchStandardCocktailList())
-        }else{
+        } else {
             dispatch(fetchCustomCocktailList())
         }
     }, [isStandard])

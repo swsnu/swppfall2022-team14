@@ -2,7 +2,7 @@ import { useState, SetStateAction, Dispatch, KeyboardEvent } from 'react';
 import Modal from 'react-modal';
 import styles from './LoginModal.module.scss'
 import { toast } from 'react-toastify';
-
+import React from 'react';
 interface prop {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -25,10 +25,12 @@ const LoginModal = (props: prop) => {
 
     }
 
-    Modal.setAppElement('#root');
+    //Modal.setAppElement('#root');
 
     const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
+            return
+            // TODO : IMPLEMENT THIS
         }
     };
 

@@ -15,7 +15,7 @@ def comment_list(request, cocktail_id):
             return HttpResponseNotFound(f"No Cocktails matches id={cocktail_id}")
         comments = cocktail.comments.all()
         data = CommentSerializer(comments, many=True).data
-        return JsonResponse({"Comments": data, "count": comments.count()}, safe=False)
+        return JsonResponse({"comments": data, "count": comments.count()}, safe=False)
     elif request.method == 'POST':
 
         parent_comment = request.query_params.get("parent_comment", None)

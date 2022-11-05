@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router"
 import { CocktailItemType } from "../../store/slices/cocktail/cocktail"
 import styles from './Item.module.scss'
-
+import React from 'react';
 
 const Item = (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id">) => {
 
