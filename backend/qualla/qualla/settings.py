@@ -28,13 +28,13 @@ DEBUG = True
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
     'cocktail.apps.CocktailConfig',
     'ingredient.apps.IngredientConfig',
     'comment.apps.CommentConfig',
+    'ingredient_prepare.apps.IngredientPrepareConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
