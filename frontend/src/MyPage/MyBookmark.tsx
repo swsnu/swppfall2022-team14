@@ -5,7 +5,7 @@ import { CocktailDetailType, CocktailItemType, fetchCustomCocktailList, fetchSta
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
-import Item from "../common/Item";
+import Item from "../common/Components/Item";
 
 
 const MyBookmark = () => {

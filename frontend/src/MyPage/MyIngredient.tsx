@@ -5,14 +5,14 @@ import { CocktailDetailType, fetchCustomCocktailList, fetchStandardCocktailList,
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
-import Item from "../common/Item"
-import AddIngredientModal from "../common/AddIngredientModal";
+import Item from "../common/Components/Item"
+import AddIngredientModal from "../common/Modals/AddIngredientModal";
 
 
 
 
 import ItemDetailPage from "../ItemDetailPage/ItemDetailPage";
-import IngredientItem from "../common/IngredientItem";
+import IngredientItem from "../common/Components/IngredientItem";
 const MyIngredient = () => {
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()

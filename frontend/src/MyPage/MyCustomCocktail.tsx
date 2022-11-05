@@ -5,11 +5,11 @@ import { CocktailDetailType, fetchCustomCocktailList, fetchStandardCocktailList,
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
-import Item from "../common/Item";
+import Item from "../common/Components/Item";
+
 
 
 const MyCustomCocktail = () => {
-
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
     const buttonList = ['My liqour', 'My Custom Cocktail', 'My Favorites', 'My Comments', 'Info']

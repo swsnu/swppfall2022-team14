@@ -5,7 +5,6 @@ import { CocktailDetailType, fetchCustomCocktailList, fetchStandardCocktailList,
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
-import Item from "../common/Item";
 import ShortComment, { CommentType } from "./Components/ShortComment";
 
 

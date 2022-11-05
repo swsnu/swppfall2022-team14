@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import Filter from "./Components/Filter"
-import Item from "../common/Item"
+import Item from "../common/Components/Item"
 import React from 'react';
 import styles from "./InitPage.module.scss"
 import LoginModal from "./Modals/LoginModal"
