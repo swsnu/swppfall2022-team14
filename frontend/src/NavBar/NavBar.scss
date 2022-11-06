@@ -28,6 +28,20 @@
       font-weight: bold;
       cursor: pointer;
     }
+    .nav__menu-search{
+      border: none;
+      font-size: 15px;
+      outline: none;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      width: 90%;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      background: honeydew;
+      border-radius: 20px;
+      font-weight: bold;
+    }
     .nav__menu-bigwrap{
       height: 100px;
       width: 90%;
@@ -68,11 +82,20 @@
       height: 30px;
       border: 1px solid black;
       border-radius: 10px;
-      margin-top: 20px;
-      margin-bottom: 20px;
+      margin-top: 5px;
+      margin-bottom: 5px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+      .nav__side-ingr-name{
+        margin-left: 15px;
+        font-size: 14px;
+      }
+      .nav__side-ingr-abv{
+        margin-right: 15px;
+        font-size: 11px;
+      }
     }
   }
 }

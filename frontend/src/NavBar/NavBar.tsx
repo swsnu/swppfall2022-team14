@@ -13,6 +13,7 @@ const NavBar = () => {
 
     const [openIngr, setOpenIngr] = useState(false)
     const [curFilter, setCurFilter] = useState('ST')
+    const [search, setSearch] = useState('')
 
     const handleST = () => {
         setCurFilter('ST')
@@ -36,7 +37,7 @@ const NavBar = () => {
     return(
         <div className="nav">
             <div className="nav__menu">
-                <div className="nav__menu-wrap">1</div>
+                <input className="nav__menu-search" placeholder="Search word" value={search} onChange={(e) => setSearch(e.target.value)} />
                 <div className="nav__menu-wrap" onClick={handleST}>Standard</div>
                 {
                     curFilter === 'ST' ? <NavFilter /> : null
@@ -83,7 +84,7 @@ const NavBar = () => {
                     :
                     null
             }
-        </div>
+            </div>
     )
 }
 
