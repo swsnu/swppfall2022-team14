@@ -9,6 +9,7 @@ from django.db import models
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    cocktail_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
@@ -20,7 +21,8 @@ class CommentSerializer(serializers.ModelSerializer):
             "content",
             "created_at",
             "updated_at",
-            "is_deleted"
+            "is_deleted",
+            "cocktail_name"
         )
 
 

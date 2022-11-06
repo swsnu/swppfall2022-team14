@@ -77,3 +77,10 @@ def retrieve_comment(request, pk):
         return HttpResponse(status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
+
+@api_view(['GET'])
+def retrieve_my_comment(request):
+    if request.method == 'GET':
+        comments = Comment.objects.filter(author_id=1) # TODO: author_id=request.user.id
+        data = CommentSerializer(comments, many=True).data
+        return JsonResponse({"comments": data, "count": comments.count()}, safe=False)
