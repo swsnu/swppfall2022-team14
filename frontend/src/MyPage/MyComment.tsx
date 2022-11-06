@@ -30,7 +30,7 @@ const MyComment = () => {
         <div className={styles['right__main--comment']}>
             {commentState.commentList.map(commment => {
                 return <ShortComment key={commment.id} id={commment.id}
-                    cocktail_id={commment.cocktail} content={commment.content} />;
+                    cocktail={commment.cocktail} content={commment.content} />;
             })}
         </div>
     </>
