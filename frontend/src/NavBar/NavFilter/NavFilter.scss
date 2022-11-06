@@ -1,8 +1,27 @@
 .navfilter{
   height: 300px;
   margin-top: -9px;
-  width: 90%;
+  width: 95%;
   background: azure;
   border-radius: 10px;
   border: 2px solid black;
+
+  .navfilter__wrap{
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    margin-top: 10px;
+    .navfilter__title{
+      height: 40px;
+    }
+    .navfilter__content{
+      font-size: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
 }
