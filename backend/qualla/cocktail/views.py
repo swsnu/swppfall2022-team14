@@ -56,6 +56,6 @@ def retrieve_cocktail(request, pk):
 @api_view(['GET'])
 def retrieve_my_cocktail(request):
     if request.method == 'GET':
-        comments = Cocktail.objects.filter(author_id=1, type='CS') # TODO: author_id=request.user.id
-        data = CocktailListSerializer(comments, many=True).data
-        return JsonResponse({"cocktails": data, "count": comments.count()}, safe=False)
+        cocktails = Cocktail.objects.filter(author_id=1, type='CS') # TODO: author_id=request.user.id
+        data = CocktailListSerializer(cocktails, many=True).data
+        return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
