@@ -53,9 +53,27 @@
     }
   }
 
-  .nav__modal{
+  .nav__side{
     width: 200px;
-    background: slateblue;
+    margin-left: 5px;
+    background: white;
+    border-radius: 10px;
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .nav__side-ingr{
+      width: 180px;
+      height: 30px;
+      border: 1px solid black;
+      border-radius: 10px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 }
 

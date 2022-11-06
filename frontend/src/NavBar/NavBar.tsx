@@ -58,8 +58,27 @@ const NavBar = () => {
             </div>
             {
                 openIngr ?
-                    <div className="nav__modal">
-                        Liquor
+                    <div className="nav__side">
+                        <div className="nav__side-util">
+                            <button>ADD</button>
+                        </div>
+                        {/*TODO mapping ingr*/}
+                        <div className="nav__side-ingr">
+                            <div className="nav__side-ingr-name">1234</div>
+                            <div className="nav__side-ingr-abv">3%</div>
+                        </div>
+                        <div className="nav__side-ingr">
+                            <div className="nav__side-ingr-name">asdfasdf</div>
+                            <div className="nav__side-ingr-abv">41%</div>
+                        </div>
+                        <div className="nav__side-ingr">
+                            <div className="nav__side-ingr-name">jtafsdf</div>
+                            <div className="nav__side-ingr-abv">123</div>
+                        </div>
+                        <div className="nav__side-ingr">
+                            <div className="nav__side-ingr-name">aqethadgva sdfa</div>
+                            <div className="nav__side-ingr-abv">23</div>
+                        </div>
                     </div>
                     :
                     null
