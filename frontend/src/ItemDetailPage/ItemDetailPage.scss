@@ -34,7 +34,7 @@
 .content {
     margin-top: 50px;
     display: flex;
-    
+
     &__image {
         width: 30%;
         margin-right: 20px;
@@ -60,14 +60,18 @@
         width: 10%;
         text-align: right;
     }
+
+    &__ingredient {
+        background-color: lightblue; // temp
+        border-radius: 10px;
+        margin-bottom: 3px;
+    }
 }
 
 .comments {
     margin-top: 20px;
 
-    &__create {
-
-    }
+    &__create {}
 
     &__input {
         width: 100%;
@@ -80,11 +84,7 @@
         justify-content: flex-end;
     }
 
-    &__add {
+    &__add {}
 
-    }
-
-    &__list {
-
-    }
+    &__list {}
 }
