@@ -53,6 +53,13 @@ export const fetchCustomCocktailList = createAsyncThunk(
     },
 )
 
+export const fetchMyCocktailList = createAsyncThunk(
+    "cocktail/fetchMyCocktailList", async () => {
+        const response = await axios.get('/api/v1/cocktails/me');
+        return response.data
+    },
+)
+
 export const getCocktail = createAsyncThunk(
     "cocktail/getCocktail",
     async (id: CocktailItemType["id"]) => {
@@ -73,6 +80,9 @@ export const cocktailSlice = createSlice({
             state.cocktailList = action.payload.cocktails;
         });
         builder.addCase(fetchStandardCocktailList.fulfilled, (state, action) => {
+            state.cocktailList = action.payload.cocktails;
+        });
+        builder.addCase(fetchMyCocktailList.fulfilled, (state, action) => {
             state.cocktailList = action.payload.cocktails;
         });
         builder.addCase(getCocktail.fulfilled, (state, action) => {

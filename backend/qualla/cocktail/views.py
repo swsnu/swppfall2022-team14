@@ -46,9 +46,16 @@ def retrieve_cocktail(request, pk):
             cocktail = Cocktail.objects.get(id=pk)
         except Cocktail.DoesNotExist:
             return HttpResponseNotFound(f"No Cocktails matches id={pk}")
-        serializer = CustomCocktailDetailSerializer(cocktail, data = request.data, partial=True)
+        serializer = CocktailDetailSerializer(cocktail, data = request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return JsonResponse(serializer.data, status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT'])
+
+@api_view(['GET'])
+def retrieve_my_cocktail(request):
+    if request.method == 'GET':
+        comments = Cocktail.objects.filter(author_id=1, type='CS') # TODO: author_id=request.user.id
+        data = CocktailListSerializer(comments, many=True).data
+        return JsonResponse({"cocktails": data, "count": comments.count()}, safe=False)
