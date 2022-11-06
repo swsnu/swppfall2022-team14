@@ -1,25 +1,25 @@
 import { useNavigate } from "react-router"
-import { CocktailItemType } from "../../store/slices/cocktail/cocktail"
+import { CocktailDetailType } from "../../store/slices/cocktail/cocktail";
 import styles from './Item.module.scss'
 import React from 'react';
 
-const Item = (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id">) => {
+// TODO : MODIFY THIS WITH IngredientItemType
+const IngredientItem = (prop: Pick<CocktailDetailType, "image" | "name" | "ABV" | "id">) => {
 
     const navigate = useNavigate()
 
 
     const onClickItem = () => {
-        if (prop.type === 'CS') navigate(`/custom/${prop.id}`)
-        else if (prop.type === 'ST') navigate(`/standard/${prop.id}`)
+        navigate(`/ingredient/${prop.id}`)
     }
 
     return <div className={styles.item} onClick={onClickItem}>
         <img className={styles.item__image} src={prop.image} />
         <div className={styles.item__name}>{prop.name}</div>
-        <div className={styles.item__rate}>{prop.rate} / 5점</div>
+        <div className={styles.item__rate}>{prop.ABV} 도</div>
 
     </div>
 }
 
 
-export default Item
+export default IngredientItem

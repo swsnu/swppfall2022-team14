@@ -4,11 +4,12 @@ from django.forms import models
 from rest_framework import serializers
 from .models import Comment
 from cocktail.models import Cocktail
-from cocktail.serializers import CocktailDetailSerializer
+from cocktail.serializers import CocktailListSerializer
 from django.db import models
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    cocktail = CocktailListSerializer(read_only=True)
 
     class Meta:
         model = Comment
@@ -22,6 +23,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "updated_at",
             "is_deleted"
         )
+
 
 
 class CommentPostSerializer(serializers.ModelSerializer):

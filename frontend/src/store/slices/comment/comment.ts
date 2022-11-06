@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import axios from "axios"
 import { RootState } from "../.."
+import { CocktailItemType } from "../cocktail/cocktail"
 
 export interface CommentType {
     id: number,
-    cocktail: number,
+    cocktail: CocktailItemType,
     author_id: number,
     content: string,
     created_at: Date,
@@ -24,7 +25,7 @@ const initialState: CommentInfo = {
 }
 
 export const fetchCommentListByCocktailId = createAsyncThunk(
-    "comment/fetchCommentListByCocktailId", async (cocktail_id: CommentType["cocktail"]) => {
+    "comment/fetchCommentListByCocktailId", async (cocktail_id: CocktailItemType["id"]) => {
         const response = await axios.get(`/api/v1/comment/cocktails/${cocktail_id}/`)
         return response.data
     }
