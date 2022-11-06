@@ -26,7 +26,7 @@ export default function ItemDetailPage() {
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
-        dispatch(fetchCommentListByCocktailId(Number(id)))
+        dispatch(fetchCommentListByCocktailId(Number(id)));
     }, [id]);
 
     const cocktail = cocktailState.cocktailItem;
@@ -70,6 +70,7 @@ export default function ItemDetailPage() {
                         <p className="content__description">{cocktail.introduction}</p>
                         <p className="content__recipe">{cocktail.recipe}</p>
                     </div>
+                    <div>{cocktail.ingredients?.map(ingre => { return <div key={ingre.id} className="content__ingredient">{ingre.amount} {ingre.name}</div> })}</div>
                     <p className="content__price">${cocktail.price_per_glass}</p>
                 </div>
                 <div className="comments">

@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../..";
+import ingredient, { IngredientType } from "../ingredient/ingredient";
+
 
 export interface CocktailItemType {
     id: number,
@@ -25,7 +27,12 @@ export interface CocktailDetailType {
     author_id: number | null,
     created_at: Date,
     updated_at: Date,
-    rate: number
+    rate: number,
+    ingredients: IngredientPrepareType[]
+}
+
+export interface IngredientPrepareType extends IngredientType {
+    amount: number;
 }
 
 export interface CocktailInfo {
@@ -36,6 +43,9 @@ const initialState: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
 }
+
+
+
 
 export const fetchStandardCocktailList = createAsyncThunk(
     "cocktail/fetchStandardCocktailList", async () => {
@@ -56,11 +66,26 @@ export const fetchCustomCocktailList = createAsyncThunk(
 export const getCocktail = createAsyncThunk(
     "cocktail/getCocktail",
     async (id: CocktailItemType["id"]) => {
+        const ingredient_response = await axios.get(`/api/v1/cocktails/${id}/ingredients`)
+        console.log(ingredient_response.data)
+
         const response = await axios.get(`/api/v1/cocktails/${id}`)
         console.log(response.data)
-        return response.data;
+
+        return { ...response.data, ingredients: ingredient_response.data };
     }
+
+
 )
+
+// export const getCocktailIngredients = createAsyncThunk(
+//     "cocktail/getCocktailIngredients",
+//     async (id: CocktailItemType["id"]) => {
+//         const response = await axios.get(`/api/v1/cocktails/${id}/ingredients`)
+//         console.log(response.data)
+//         return response.data;
+//     }
+// )
 
 export const cocktailSlice = createSlice({
     name: "cocktail",
