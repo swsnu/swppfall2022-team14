@@ -6,6 +6,7 @@ import {useDispatch} from "react-redux";
 import {AppDispatch} from "../store";
 import {useNavigate, useParams} from "react-router";
 import {fetchCustomCocktailList, fetchStandardCocktailList} from "../store/slices/cocktail/cocktail";
+import NavBar from "../NavBar/NavBar";
 
 const dummyListIem = [
     {
@@ -293,7 +294,7 @@ const ListPage = () => {
     return(
         <div className="list">
             <div className="list__navbar">
-                For Nav Bar
+                <NavBar />
             </div>
             <div className="list__content">
                 <div className="list__content-up">
