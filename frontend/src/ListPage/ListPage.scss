@@ -7,9 +7,8 @@
 
   .list__navbar{
     position: relative;
-    width: 300px;
+    //width: 300px;
     height: 100%;
-    background: #61dafb;
   }
 
   .list__content{
@@ -29,7 +28,7 @@
       .list__content-search-wrap{
         position: relative;
         margin-top: 30px;
-        left: 30px;
+        left: 40px;
         height: 30px;
         width: auto;
         display: flex;

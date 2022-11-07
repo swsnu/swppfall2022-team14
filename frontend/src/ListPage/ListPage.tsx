@@ -2,10 +2,16 @@ import './ListPage.scss'
 import React, {useEffect, useState} from 'react';
 import { BiSearchAlt2 } from "react-icons/bi";
 import Item from "./Item/Item";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch} from "../store";
 import {useNavigate, useParams} from "react-router";
-import {fetchCustomCocktailList, fetchStandardCocktailList} from "../store/slices/cocktail/cocktail";
+import cocktail, {
+    CocktailItemType,
+    fetchCustomCocktailList,
+    fetchStandardCocktailList,
+    selectCocktail
+} from "../store/slices/cocktail/cocktail";
+import NavBar from "../NavBar/NavBar";
 
 const dummyListIem = [
     {
@@ -266,8 +272,10 @@ const ListPage = () => {
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
     const params = useParams()
+    const cocktailState = useSelector(selectCocktail)
 
     const [pageType, setPageType] = useState<any>('')
+    const [list, setList] = useState<CocktailItemType[]>([])
 
     useEffect(() => {
         setPageType(params.type)
@@ -288,12 +296,14 @@ const ListPage = () => {
             navigate(`/standard`)
         }
     },[pageType])
-
+    useEffect(() => {
+        setList(cocktailState.cocktailList)
+    },[cocktailState.cocktailList])
     //param
     return(
         <div className="list">
             <div className="list__navbar">
-                For Nav Bar
+                <NavBar />
             </div>
             <div className="list__content">
                 <div className="list__content-up">
@@ -309,7 +319,7 @@ const ListPage = () => {
                     <div className="list__content-down">
                         <div className="list__content-item-wrap">
                             {/*TODO use Real data*/}
-                            {dummyListIem.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
+                            {list.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
                                                                   name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
                         </div>
                     </div>
