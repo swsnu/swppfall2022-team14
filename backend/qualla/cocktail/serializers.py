@@ -6,7 +6,6 @@ from cocktail.models import Cocktail
 import random
 
 class CocktailListSerializer(serializers.ModelSerializer):
-    rate = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
     class Meta:
         model = Cocktail
@@ -17,18 +16,13 @@ class CocktailListSerializer(serializers.ModelSerializer):
             "rate",
             "tags",
             "type",
-            "author_id"
+            "author_id",
         )
     
-    def get_rate(self, obj):
-        # aggregate avg of rating
-        return random.uniform(0.0, 5.0)
-
     def get_tags(self, obj):
         return [t.tag.content for t in obj.tags.all()]
 
 class CocktailDetailSerializer(serializers.ModelSerializer):
-    rate = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
 
     class Meta:
@@ -48,10 +42,6 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at'
         )
-
-    def get_rate(self, obj):
-        # aggregate avg of rating
-        return random.uniform(0.0, 5.0)
 
     def get_tags(self, obj):
         return [t.tag.content for t in obj.tags.all()]
