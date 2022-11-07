@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
@@ -23,6 +23,10 @@ export default function ItemDetailPage() {
     const dispatch = useDispatch<AppDispatch>();
     const cocktailState = useSelector(selectCocktail);
     const commentState = useSelector(selectComment);
+    const navigate = useNavigate()
+    const onIngredientClick = (id: number) => {
+        navigate(`/ingredient/${id}`)
+    }
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
@@ -32,16 +36,16 @@ export default function ItemDetailPage() {
     const cocktail = cocktailState.cocktailItem;
     const isCustom = cocktail?.type === "CS";
 
-    // Non-existing cocktail
-    if (!cocktail) {
-        return <div>Non-existing cocktail</div>
+    if (cocktailState.itemStatus == "loading") {
+        return <div>Loading ..</div>
     }
-
+    else if (cocktailState.itemStatus == "failed" || !cocktail) {
+        return <div>Non existing cocktail</div>
+    }
     // Type mismatch
     else if (!((isCustom && type === "custom") || (!isCustom && type === "standard"))) {
         return <div>Type mismatch</div>
     }
-
     else {
         return (
             <div className="item-detail">
@@ -70,7 +74,7 @@ export default function ItemDetailPage() {
                         <p className="content__description">{cocktail.introduction}</p>
                         <p className="content__recipe">{cocktail.recipe}</p>
                     </div>
-                    <div>{cocktail.ingredients?.map(ingre => { return <div key={ingre.id} className="content__ingredient">{ingre.amount} {ingre.name}</div> })}</div>
+                    <div>{cocktail.ingredients?.map(ingre => { return <div key={ingre.id} onClick={() => onIngredientClick(ingre.id)} className="content__ingredient">{ingre.amount} {ingre.name}</div> })}</div>
                     <p className="content__price">${cocktail.price_per_glass}</p>
                 </div>
                 <div className="comments">

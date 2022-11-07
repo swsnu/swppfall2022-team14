@@ -38,10 +38,12 @@ export interface IngredientPrepareType extends IngredientType {
 export interface CocktailInfo {
     cocktailList: CocktailItemType[],
     cocktailItem: CocktailDetailType | null,
+    itemStatus: string
 }
 const initialState: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
+    itemStatus: "loading"
 }
 
 
@@ -110,8 +112,15 @@ export const cocktailSlice = createSlice({
         builder.addCase(fetchMyCocktailList.fulfilled, (state, action) => {
             state.cocktailList = action.payload.cocktails;
         });
+        builder.addCase(getCocktail.pending, (state, action) => {
+            state.itemStatus = "loading";
+        });
         builder.addCase(getCocktail.fulfilled, (state, action) => {
             state.cocktailItem = action.payload;
+            state.itemStatus = "success";
+        });
+        builder.addCase(getCocktail.rejected, (state, action) => {
+            state.itemStatus = "failed";
         });
     },
 })

@@ -1,6 +1,7 @@
 import './App.css';
 import InitPage from './InitPage/InitPage';
 import ItemDetailPage from './ItemDetailPage/ItemDetailPage';
+import IngredientDetailPage from './ItemDetailPage/IngredientDetailPage';
 import CreateCustomPage from './CreateCustomPage/CreateCustomPage';
 import MyPage from './MyPage/MyPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -13,9 +14,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<InitPage />} />
-            <Route path="/:type" element={<ListPage />} />
+          <Route path="/:type" element={<ListPage />} />
           <Route path='/custom/create' element={<CreateCustomPage />} />
           <Route path="/:type/:id" element={<ItemDetailPage />} />
+          <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
           <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </BrowserRouter >
