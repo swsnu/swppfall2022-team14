@@ -1,6 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import './NavFilter.scss'
-import styles from "../../InitPage/Components/Filter.module.scss";
 
 interface ParamList {
     name: string;
@@ -10,7 +9,6 @@ interface ParamList {
 interface Iprops {
     setUrlParams: Dispatch<SetStateAction<string>>
 }
-
 
 const NavFilter = (prop: Iprops) => {
 
