@@ -16,8 +16,8 @@ function App() {
           <Route path="/" element={<InitPage />} />
           <Route path="/:type" element={<ListPage />} />
           <Route path='/custom/create' element={<CreateCustomPage />} />
-          <Route path="/:type/:id" element={<ItemDetailPage />} />
           <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
+          <Route path="/:type/:id" element={<ItemDetailPage />} />
           <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </BrowserRouter >
