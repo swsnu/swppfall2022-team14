@@ -1,10 +1,10 @@
 import './ListPage.scss'
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiSearchAlt2 } from "react-icons/bi";
 import Item from "./Item/Item";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch} from "../store";
-import {useNavigate, useParams} from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../store";
+import { useLocation, useNavigate, useParams } from "react-router";
 import cocktail, {
     CocktailItemType,
     fetchCustomCocktailList,
@@ -12,295 +12,46 @@ import cocktail, {
     selectCocktail
 } from "../store/slices/cocktail/cocktail";
 import NavBar from "../NavBar/NavBar";
+import { useSearchParams } from 'react-router-dom';
 
-const dummyListIem = [
-    {
-        id: 1,
-        name: 'name',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 4.8
-    }, {
-        id: 2,
-        name: 'name2',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 3.4
-    }, {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-    {
-        id: 3,
-        name: 'name3',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        recipe: '제조법',
-        ABV: 42.4,
-        price_per_glass: 3400,
-        type: 'CS',
-        author_id: 3,
-        created_at: new Date(2022, 6, 17),
-        updated_at: new Date(2022, 7, 14),
-        rate: 5.0
-    },
-
-]
 
 const ListPage = () => {
 
     const dispatch = useDispatch<AppDispatch>()
-    const navigate = useNavigate()
     const params = useParams()
     const cocktailState = useSelector(selectCocktail)
 
     const [pageType, setPageType] = useState<any>('')
     const [list, setList] = useState<CocktailItemType[]>([])
-
+    const location = useLocation()
     useEffect(() => {
         setPageType(params.type)
-    },[])
+    }, [])
 
     useEffect(() => {
-        if(pageType === 'standard'){
-            dispatch(fetchStandardCocktailList())
+        if (pageType === 'standard') {
+            dispatch(fetchStandardCocktailList(location.search.replace("?", "")))
         }
-        else if(pageType === 'custom'){
-            dispatch(fetchCustomCocktailList())
+        else if (pageType === 'custom') {
+            dispatch(fetchCustomCocktailList(location.search.replace("?", "")))
         }
-        else if(pageType === 'ingredient'){
+        else if (pageType === 'ingredient') {
             //TODO
             //add ingredient fetch function
         }
-        else{
-            navigate(`/standard`)
+        else {
+            // navigate(`/standard`)
         }
-    },[pageType])
+    }, [pageType])
     useEffect(() => {
         setList(cocktailState.cocktailList)
-    },[cocktailState.cocktailList])
+    }, [cocktailState.cocktailList])
     //param
-    return(
+
+
+
+
+    return (
         <div className="list">
             <div className="list__navbar">
                 <NavBar />
@@ -310,7 +61,7 @@ const ListPage = () => {
                     <div className="list__content-search-wrap">
                         <BiSearchAlt2 className="list__content-search-icon" />
                         {/*TODO handle search param*/}
-                        <input className="list__content-search" placeholder={"search"}/>
+                        <input className="list__content-search" placeholder={"search"} />
                     </div>
                 </div>
                 {pageType === '' ?
@@ -320,7 +71,7 @@ const ListPage = () => {
                         <div className="list__content-item-wrap">
                             {/*TODO use Real data*/}
                             {list.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
-                                                                  name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
+                                name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
                         </div>
                     </div>
                 }

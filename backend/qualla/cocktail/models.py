@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import CheckConstraint, Q
+from django.core.validators import RegexValidator
 
 
 class Cocktail(models.Model):
@@ -14,6 +15,13 @@ class Cocktail(models.Model):
         STADARD = 'ST', ('Standard Cocktail')
         CUSTOM = 'CS', ('Custom Cocktail')
 
+    # REGEX Example : #type1#type2#type3
+    filter_type_REGEX = RegexValidator(r'(_[a-z|A-Z|ㄱ-ㅎ|가-힣|0-9]+)*')
+
+    filter_type_one = models.CharField(
+        max_length=50, null=True, validators=[filter_type_REGEX])
+    filter_type_two = models.CharField(
+        max_length=50, null=True, validators=[filter_type_REGEX])
     type = models.CharField(max_length=2, choices=CocktailType.choices)
     author_id = models.IntegerField(null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
