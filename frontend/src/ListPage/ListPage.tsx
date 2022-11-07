@@ -8,7 +8,7 @@ import {useNavigate, useParams} from "react-router";
 import cocktail, {
     CocktailItemType,
     fetchCustomCocktailList,
-    fetchStandardCocktailList,
+    fetchStandardCocktailList, searchCustomCocktailList, searchStandardCocktailList,
     selectCocktail
 } from "../store/slices/cocktail/cocktail";
 import NavBar from "../NavBar/NavBar";
@@ -276,6 +276,7 @@ const ListPage = () => {
 
     const [pageType, setPageType] = useState<any>('')
     const [list, setList] = useState<CocktailItemType[]>([])
+    const [word, setWord] = useState('')
 
     useEffect(() => {
         setPageType(params.type)
@@ -300,6 +301,15 @@ const ListPage = () => {
         setList(cocktailState.cocktailList)
     },[cocktailState.cocktailList])
     //param
+
+    const handleSearchWord = () => {
+        if(pageType === 'standard'){
+            dispatch(searchStandardCocktailList(word))
+        }
+        else if(pageType === 'custom'){
+            dispatch(searchCustomCocktailList(word))
+        }
+    }
     return(
         <div className="list">
             <div className="list__navbar">
@@ -308,9 +318,9 @@ const ListPage = () => {
             <div className="list__content">
                 <div className="list__content-up">
                     <div className="list__content-search-wrap">
-                        <BiSearchAlt2 className="list__content-search-icon" />
+                        <BiSearchAlt2 onClick={handleSearchWord} className="list__content-search-icon" />
                         {/*TODO handle search param*/}
-                        <input className="list__content-search" placeholder={"search"}/>
+                        <input className="list__content-search" placeholder={"search"} value={word} onChange={(e) => setWord(e.target.value)}/>
                     </div>
                 </div>
                 {pageType === '' ?

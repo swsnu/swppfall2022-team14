@@ -12,12 +12,13 @@ from .serializers import CocktailDetailSerializer, CocktailListSerializer, Cockt
 def cocktail_list(request):
     if request.method == 'GET':
         type = request.GET.get('type')
+        text = request.GET.get('search')
         if type == 'standard':
-            standard_cocktails = Cocktail.objects.filter(type='ST')
+            standard_cocktails = Cocktail.objects.filter(type='ST') & Cocktail.objects.filter(name__contains=text)
             data = CocktailListSerializer(standard_cocktails, many=True).data
             return JsonResponse({"cocktails": data, "count": standard_cocktails.count()}, safe=False)
         elif type == 'custom':
-            custom_cocktails = Cocktail.objects.filter(type='CS')
+            custom_cocktails = Cocktail.objects.filter(type='CS') & Cocktail.objects.filter(name__contains=text)
             data = CocktailListSerializer(custom_cocktails, many=True).data
             return JsonResponse({"cocktails": data, "count": custom_cocktails.count()}, safe=False)
         else:
