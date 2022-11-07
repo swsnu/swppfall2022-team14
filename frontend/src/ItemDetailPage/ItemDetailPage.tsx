@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
 import { selectCocktail, getCocktail } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
-import { fetchCommentListByCocktailId, selectComment } from "../store/slices/comment/comment";
+import { fetchCommentListByCocktailId, postComment, selectComment } from "../store/slices/comment/comment";
 interface User {
     id: number;
     name: string;
@@ -27,6 +27,7 @@ export default function ItemDetailPage() {
     const onIngredientClick = (id: number) => {
         navigate(`/ingredient/${id}`)
     }
+    const [content, setContent] = useState<string>("")
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
@@ -35,6 +36,16 @@ export default function ItemDetailPage() {
 
     const cocktail = cocktailState.cocktailItem;
     const isCustom = cocktail?.type === "CS";
+    
+    const createCommentHandler = () => {
+        const data = {
+            content:content,
+            parent_comment:null,
+            cocktail:Number(id)
+        }
+        dispatch(postComment(data));
+        (document.getElementById("comment_text")! as HTMLInputElement).value = ""
+    }
 
     if (cocktailState.itemStatus == "loading") {
         return <div>Loading ..</div>
@@ -79,9 +90,9 @@ export default function ItemDetailPage() {
                 </div>
                 <div className="comments">
                     <div className="comments__create">
-                        <textarea className="comments__input" />
+                        <textarea id="comment_text" className="comments__input" onChange={(event) =>setContent(event.target.value)}/>
                         <div className="comments__add-box">
-                            <button className="comments__add">
+                            <button className="comments__add" onClick={() => createCommentHandler()}>
                                 Add
                             </button>
                         </div>

@@ -46,11 +46,18 @@ export const getComment = createAsyncThunk(
 )
 
 export const postComment = createAsyncThunk(
-    "comment/postComment", async (comment: Pick<CommentType, "content"|"parent_comment"|"cocktail">, {dispatch}) => {
-        const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/?parent_comment=${comment.parent_comment}`, {
-            "content": comment.content,
-        })
-        dispatch(commentActions.addComment(response.data))
+    "comment/postComment", async (comment: {cocktail: number, parent_comment: number|null, content: string}, {dispatch}) => {
+        if(comment.parent_comment){
+            const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/?parent_comment=${comment.parent_comment}`, {
+                "content": comment.content,
+            })
+            dispatch(commentActions.addComment(response.data))
+        }else{
+            const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/`, {
+                "content": comment.content,
+            })
+            dispatch(commentActions.addComment(response.data))
+        }
     }
 )
 
