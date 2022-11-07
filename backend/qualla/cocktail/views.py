@@ -46,7 +46,7 @@ def get_ABV_range(request):
 def cocktail_list(request):
     if request.method == 'GET':
         # process filter params
-        filter_type_one_list, filter_type_two_list, filter_type_ABV = process_get_list_params(
+        """filter_type_one_list, filter_type_two_list, filter_type_ABV = process_get_list_params(
             request)
         filter_q = Q()
         for _type in filter_type_one_list:
@@ -59,12 +59,12 @@ def cocktail_list(request):
                 abv_range = get_ABV_range(filter_type_ABV)
             except (ValueError):
                 return HttpResponseBadRequest('invalid ABV type')
-            filter_q.add(Q(ABV__range=(abv_range)), Q.AND)
+            filter_q.add(Q(ABV__range=(abv_range)), Q.AND)"""
         type = request.GET.get('type')
         if type == 'standard':
-            filter_q.add(Q(type='ST'), Q.AND)
-            # standard_cocktails = Cocktail.objects.filter(type='ST')
-            standard_cocktails = Cocktail.objects.filter(filter_q)
+            #filter_q.add(Q(type='ST'), Q.AND)
+            standard_cocktails = Cocktail.objects.filter(type='ST')
+            #standard_cocktails = Cocktail.objects.filter(filter_q)
             data = CocktailListSerializer(standard_cocktails, many=True).data
 
             return JsonResponse({"cocktails": data, "count": standard_cocktails.count()}, safe=False)
