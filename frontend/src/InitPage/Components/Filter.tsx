@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import styles from "./Filter.module.scss"
 import React from 'react';
 
@@ -35,6 +35,7 @@ const Filter = (prop: Iprops) => {
                 setParam(param.replace(type_name, ""))
         }
     }
+    useEffect(() => prop.setUrlParams(url_params), [url_params])
 
     return <div className={styles.filter}>
         <div className={styles.filter__line}>

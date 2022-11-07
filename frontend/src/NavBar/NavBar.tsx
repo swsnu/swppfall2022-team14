@@ -11,6 +11,12 @@ const NavBar = () => {
     const navigate = useNavigate()
     const params = useParams()
     const [urlParams, setUrlParams] = useState<string>("")
+    const [trigger, setTrigger] = useState<string>("")
+
+    useEffect(() => {
+        setTrigger(urlParams)
+        console.log(trigger)
+    }, [urlParams])
 
     const [openIngr, setOpenIngr] = useState(false)
     const [curFilter, setCurFilter] = useState('ST')

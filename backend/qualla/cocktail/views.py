@@ -12,6 +12,8 @@ from .serializers import CocktailDetailSerializer, CocktailListSerializer, Cockt
 def process_get_list_params(request):
     filter_type_one_list = request.query_params.get("filter_type_one", None)
     filter_type_two_list = request.query_params.get("filter_type_two", None)
+    filter_type_ABV = request.query_params.get(
+        "filter_type_three", None)  # 도수
     if (filter_type_one_list is None):
         filter_type_one_list = ""
     if (filter_type_two_list is None):
@@ -24,26 +26,47 @@ def process_get_list_params(request):
         filter_type_one_list.remove("")
     while ("" in filter_type_two_list):
         filter_type_two_list.remove("")
-    return filter_type_one_list, filter_type_two_list
+    return filter_type_one_list, filter_type_two_list, filter_type_ABV
+
+
+def get_ABV_range(request):
+    if request == "weak":
+        return (0, 15)
+    elif request == "medium":
+        return (15, 30)
+    elif request == "strong":
+        return (30, 40)
+    elif request == "extreme":
+        return (40, 100)
+    else:
+        raise ValueError("invalid ABV type")
 
 
 @api_view(['GET', 'POST'])
 def cocktail_list(request):
     if request.method == 'GET':
         # process filter params
-        filter_type_one_list, filter_type_two_list = process_get_list_params(
+        filter_type_one_list, filter_type_two_list, filter_type_ABV = process_get_list_params(
             request)
         filter_q = Q()
         for _type in filter_type_one_list:
             filter_q.add(Q(filter_type_one__contains=_type), Q.AND)
         for _type in filter_type_two_list:
             filter_q.add(Q(filter_type_two__contains=_type), Q.AND)
+
+        if (filter_type_ABV is not None and filter_type_ABV != ""):
+            try:
+                abv_range = get_ABV_range(filter_type_ABV)
+            except (ValueError):
+                return HttpResponseBadRequest('invalid ABV type')
+            filter_q.add(Q(ABV__range=(abv_range)), Q.AND)
         type = request.GET.get('type')
         if type == 'standard':
             filter_q.add(Q(type='ST'), Q.AND)
             # standard_cocktails = Cocktail.objects.filter(type='ST')
             standard_cocktails = Cocktail.objects.filter(filter_q)
             data = CocktailListSerializer(standard_cocktails, many=True).data
+
             return JsonResponse({"cocktails": data, "count": standard_cocktails.count()}, safe=False)
         elif type == 'custom':
             filter_q.add(Q(type='CS'), Q.AND)

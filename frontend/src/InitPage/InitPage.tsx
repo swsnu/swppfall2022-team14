@@ -70,6 +70,7 @@ const InitPage = () => {
     }, [isStandard])
 
 
+
     return <div className={styles.margin}>
         <div className={styles.header}>
             {fakeLoginState ? <button onClick={onClickProfile}>내 프로필</button> : <div className={`${styles.button} ${styles.header__login}`} onClick={onClickLogin}>로그인</div>}

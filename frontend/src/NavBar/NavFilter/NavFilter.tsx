@@ -37,6 +37,7 @@ const NavFilter = (prop: Iprops) => {
         }
     }
 
+    useEffect(() => prop.setUrlParams(url_params), [url_params])
     return (
         <div className="navfilter">
             <div className="navfilter__wrap">
