@@ -10,7 +10,8 @@ class IngredientListSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "image",
-            "ABV"
+            "ABV",
+            "price"
         )
 
 

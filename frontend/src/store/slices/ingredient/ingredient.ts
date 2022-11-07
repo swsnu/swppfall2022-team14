@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { stat } from "fs";
 import { RootState } from "../..";
 
 export interface IngredientType {
@@ -14,9 +15,10 @@ export interface IngredientType {
 export interface IngredientInfo {
     ingredientList: IngredientType[],
     ingredientItem: IngredientType | null,
+    itemStatus: string
 }
 const initialState: IngredientInfo = {
-   ingredientList: [
+    ingredientList: [
         {
             id: 1,
             name: 'name',
@@ -47,7 +49,8 @@ const initialState: IngredientInfo = {
         introduction: '소개',
         ABV: 42.4,
         price: 200
-    }
+    },
+    itemStatus: "loading"
 }
 
 export const fetchIngredientList = createAsyncThunk(
@@ -77,13 +80,20 @@ export const ingredientSlice = createSlice({
         builder.addCase(fetchIngredientList.fulfilled, (state, action) => {
             state.ingredientList = action.payload;
         });
+        builder.addCase(getIngredient.pending, (state, action) => {
+            state.itemStatus = "loading"
+        });
         builder.addCase(getIngredient.fulfilled, (state, action) => {
             state.ingredientItem = action.payload;
+            state.itemStatus = "success"
         });
+        builder.addCase(getIngredient.rejected, (state, action) => {
+            state.itemStatus = "failed"
+        })
     },
 })
 
 export const ingredientActions = ingredientSlice.actions;
-export const selectIngredient = (state: RootState) => state.cocktail;
+export const selectIngredient = (state: RootState) => state.ingredient;
 
 export default ingredientSlice.reducer;
