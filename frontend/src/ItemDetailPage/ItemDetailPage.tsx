@@ -34,6 +34,10 @@ export default function ItemDetailPage() {
         dispatch(fetchCommentListByCocktailId(Number(id)));
     }, [id]);
 
+    useEffect(() => {
+        dispatch(fetchCommentListByCocktailId(Number(id)));
+    }, [commentState.commentList]);
+
     const cocktail = cocktailState.cocktailItem;
     const isCustom = cocktail?.type === "CS";
     
@@ -102,6 +106,7 @@ export default function ItemDetailPage() {
                             return (
                                 <Comment
                                     key={`${comment.id}_comment`}
+                                    id={comment.id}
                                     author_name={comment.author_id}
                                     content={comment.content}
                                     accessible={true}

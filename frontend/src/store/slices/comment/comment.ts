@@ -72,7 +72,7 @@ export const editComment = createAsyncThunk(
 
 export const deleteComment = createAsyncThunk(
     "comment/deleteComment", async (id: number, {dispatch}) => {
-        await axios.put(`/api/v1/comment/${id}/`)
+        await axios.delete(`/api/v1/comment/${id}/`)
         dispatch(commentActions.deleteComment(id))
     }
 )
