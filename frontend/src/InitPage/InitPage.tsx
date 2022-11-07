@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router"
 import Filter from "./Components/Filter"
 import Item from "../common/Components/Item"
@@ -16,6 +16,7 @@ const InitPage = () => {
     const dispatch = useDispatch<AppDispatch>()
 
     const [fakeLoginState, setFakeLoginState] = useState(false)
+    // const [urlParams, setUrlParams] = useState<string>("")
     const [urlParams, setUrlParams] = useState<string>("")
 
     const navigate = useNavigate()
