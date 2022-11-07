@@ -25,7 +25,7 @@ class CocktailListSerializer(serializers.ModelSerializer):
         return random.uniform(0.0, 5.0)
 
     def get_tags(self, obj):
-        return ["this", "is", "so", "delicious"]
+        return [t.tag.content for t in obj.tags.all()]
 
 class CocktailDetailSerializer(serializers.ModelSerializer):
     rate = serializers.SerializerMethodField()
@@ -54,7 +54,7 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
         return random.uniform(0.0, 5.0)
 
     def get_tags(self, obj):
-        return ["this", "is", "so", "delicious"]
+        return [t.tag.content for t in obj.tags.all()]
 
 class CocktailPostSerializer(serializers.ModelSerializer):
     image = serializers.CharField(max_length=500, default="default_img.png")

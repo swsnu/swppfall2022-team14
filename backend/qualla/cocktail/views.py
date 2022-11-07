@@ -1,5 +1,9 @@
 from functools import partial
+from json import JSONDecodeError
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
+from django.db import IntegrityError
+
+from tag.models import Tag, CocktailTag
 from .models import Cocktail
 from rest_framework.decorators import api_view
 from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer
@@ -27,8 +31,22 @@ def cocktail_list(request):
 
         serializer = CocktailPostSerializer(data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return JsonResponse(serializer.validated_data, status=201)
+        cocktail = serializer.save()
+        try:
+            tags = data['tags']
+        except (KeyError, JSONDecodeError) as e:
+            tags = []
+        for t in tags:
+            try:
+                tag = Tag.objects.get(content=t)
+            except Tag.DoesNotExist:
+                tag = Tag.objects.create(content=t)
+            try:
+                CocktailTag.objects.create(tag=tag, cocktail=cocktail)
+            except IntegrityError:
+                return HttpResponseBadRequest("tag must not be duplicated")
+        
+        return JsonResponse(data=CocktailDetailSerializer(cocktail).data, status=201)
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
@@ -47,9 +65,26 @@ def retrieve_cocktail(request, pk):
         except Cocktail.DoesNotExist:
             return HttpResponseNotFound(f"No Cocktails matches id={pk}")
         serializer = CocktailDetailSerializer(cocktail, data = request.data, partial=True)
+        data = request.data.copy()
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return JsonResponse(serializer.data, status=200)
+
+        CocktailTag.objects.filter(cocktail=pk).delete()
+        try:
+            tags = data['tags']
+        except (KeyError, JSONDecodeError) as e:
+            tags = []
+        for t in tags:
+            try:
+                tag = Tag.objects.get(content=t)
+            except Tag.DoesNotExist:
+                tag = Tag.objects.create(content=t)
+            try:
+                CocktailTag.objects.create(tag=tag, cocktail=cocktail)
+            except IntegrityError:
+                return HttpResponseBadRequest("tag must not be duplicated")
+        
+        return JsonResponse(data=CocktailDetailSerializer(cocktail).data, status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT'])
 

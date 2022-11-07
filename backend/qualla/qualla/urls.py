@@ -21,5 +21,6 @@ urlpatterns = [
     path('api/v1/cocktails/', include('ingredient_prepare.urls')),
     path('api/v1/ingredients/', include('ingredient.urls')),
     path('api/v1/comment/', include('comment.urls')),
+    path('api/v1/tag/', include('tag.urls')),
     path('admin/', admin.site.urls),
 ]
