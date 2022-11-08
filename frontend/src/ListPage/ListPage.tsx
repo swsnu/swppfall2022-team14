@@ -12,18 +12,24 @@ import cocktail, {
     selectCocktail
 } from "../store/slices/cocktail/cocktail";
 import NavBar from "../NavBar/NavBar";
-import { useSearchParams } from 'react-router-dom';
+import qs from 'qs';
 
 
 const ListPage = () => {
 
     const dispatch = useDispatch<AppDispatch>()
     const params = useParams()
+    const navigate = useNavigate()
     const cocktailState = useSelector(selectCocktail)
 
     const [pageType, setPageType] = useState<any>('')
     const [list, setList] = useState<CocktailItemType[]>([])
     const location = useLocation()
+
+    const query = qs.parse(location.search, {
+        ignoreQueryPrefix: true
+    });
+
     useEffect(() => {
         setPageType(params.type)
     }, [])
@@ -40,16 +46,15 @@ const ListPage = () => {
             //add ingredient fetch function
         }
         else {
-            // navigate(`/standard`)
+            //TODO
+            //handle invalid url
         }
     }, [pageType])
+
     useEffect(() => {
         setList(cocktailState.cocktailList)
     }, [cocktailState.cocktailList])
     //param
-
-
-
 
     return (
         <div className="list">
@@ -59,9 +64,7 @@ const ListPage = () => {
             <div className="list__content">
                 <div className="list__content-up">
                     <div className="list__content-search-wrap">
-                        <BiSearchAlt2 className="list__content-search-icon" />
-                        {/*TODO handle search param*/}
-                        <input className="list__content-search" placeholder={"search"} />
+                        Searched by [  Type 1 :  {query.filter_type_one?.toString()},  Type 2 :  {query.filter_type_two?.toString()},  Type 3 :  {query.filter_type_three?.toString()},  Text :  {query.text?.toString()} ]
                     </div>
                 </div>
                 {pageType === '' ?
