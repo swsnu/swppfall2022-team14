@@ -18,30 +18,7 @@ export interface IngredientInfo {
     itemStatus: string
 }
 const initialState: IngredientInfo = {
-    ingredientList: [
-        {
-            id: 1,
-            name: 'name',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            introduction: '소개',
-            ABV: 42.4,
-            price: 200
-        }, {
-            id: 2,
-            name: 'name2',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            introduction: '소개',
-            ABV: 42.4,
-            price: 400
-        }, {
-            id: 3,
-            name: 'name3',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            introduction: '소개',
-            ABV: 42.4,
-            price: 6000
-        }
-    ],
+    ingredientList: [],
     ingredientItem: {
         id: 1,
         name: 'name',
