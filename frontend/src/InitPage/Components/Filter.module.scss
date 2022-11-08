@@ -1,11 +1,12 @@
 .filter {
-    border: 1px solid black;
+    border: 3px solid brown;
     width: 700px;
     height: 200px;
-    background: white;
+    background: lightsalmon;
     position: fixed;
     right: 27px;
     top: 180px;
+    border-radius: 10px;
 
     .filter__line {
         width: 700px;
