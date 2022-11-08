@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view
 from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer
 
 
+# FILTER FUNCTIONS HERE
 def process_get_list_params(request,filter_q):
     def get_ABV_range(request):
         if request == "weak":
@@ -39,6 +40,13 @@ def process_get_list_params(request,filter_q):
     while ("" in filter_type_two_list):
         filter_type_two_list.remove("")
 
+    try:
+        assert ( all([x in ['CL','TP'] for x in filter_type_one_list]) and \
+        all([x in ['LONG','SHORT','SHOT'] for x in filter_type_two_list])), "Invalid Filter Type"
+    except AssertionError:
+        raise AssertionError
+    
+
     for _type in filter_type_one_list:
             filter_q.add(Q(filter_type_one__contains=_type), Q.AND)
     for _type in filter_type_two_list:
@@ -53,18 +61,28 @@ def process_get_list_params(request,filter_q):
     
 
 
-
-def get_cocktail_list_by_ingredient(request):
-    request_ingredient = request.query_params.get("ingredients", None) # ingredient id
+def get_cocktail_list_by_ingredient(request, filter_q):
+    #return list of Cocktail ID that is available
+    request_ingredient = request.query_params.getlist("ingredients[]", None) # ingredient id list
     cocktail_all = Cocktail.objects.all()
-    cocktail_return = []
+    available_cocktails_id = []
+    
+    # ingredient 조건 없음
+    if(not request_ingredient):
+        return
+
+    
     for cocktail in cocktail_all:
-        ingredient_prepare = [ingredient.id for ingredient in cocktail.ingredient_prepare.all()] 
+        ingredient_prepare = [ingredient_prepare.ingredient.id for ingredient_prepare in cocktail.ingredient_prepare.all()] 
         # 만약 해당 칵테일 재료가 query의 subset이면 
         if set(ingredient_prepare).issubset(set(request_ingredient)):
-            cocktail_return.append(cocktail)
+            available_cocktails_id.append(cocktail.id)
     
-    return cocktail_return
+    # 매칭된 칵테일 없음 없음
+    if(not available_cocktails_id):
+        filter_q.add(Q(id__in=[-1]),Q.AND)
+    else:
+        filter_q.add(Q(id__in=available_cocktails_id), Q.AND)
 
 
 
@@ -73,14 +91,18 @@ def get_cocktail_list_by_ingredient(request):
 @api_view(['GET', 'POST'])
 def cocktail_list(request):
     if request.method == 'GET':
-        
-        # Add params Filter
+
         filter_q = Q()
+
+        # Add params Filter
         try:
             process_get_list_params(request, filter_q)
-        except (ValueError):
-            return HttpResponseBadRequest('Invalid ABV Type')
+        except (ValueError, AssertionError) as e:
+            return HttpResponseBadRequest('Invalid ABV or Filter Type',e)
 
+        # Add ingredient filter
+        get_cocktail_list_by_ingredient(request, filter_q)
+        
         # Add Type(ST,CS) Filter
         type = request.GET.get('type')
         if type == 'standard':
