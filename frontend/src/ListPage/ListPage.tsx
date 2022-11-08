@@ -36,7 +36,7 @@ const ListPage = () => {
 
     useEffect(() => {
         setPageType(params.type)
-    }, [])
+    }, [pageType,location])
 
     useEffect(() => {
         if (pageType === 'standard') {
@@ -54,7 +54,7 @@ const ListPage = () => {
             //TODO
             //handle invalid url
         }
-    }, [pageType,params])
+    }, [pageType,location])
 
     useEffect(() => {
         setList(cocktailState.cocktailList)
