@@ -73,13 +73,15 @@ def get_cocktail_list_by_ingredient(request):
 @api_view(['GET', 'POST'])
 def cocktail_list(request):
     if request.method == 'GET':
-        # process filter params
+        
+        # Add params Filter
         filter_q = Q()
         try:
             process_get_list_params(request, filter_q)
         except (ValueError):
             return HttpResponseBadRequest('Invalid ABV Type')
 
+        # Add Type(ST,CS) Filter
         type = request.GET.get('type')
         if type == 'standard':
             filter_q.add(Q(type='ST'), Q.AND)
