@@ -90,7 +90,7 @@ const InitPage = () => {
                 <button className={styles.button} onClick={onClickSearch}>SEARCH</button>
             </div>
 
-            {isOpenFilter ? <Filter setUrlParams={setUrlParams} /> : null}
+            {isOpenFilter ? <Filter setUrlParams={setUrlParams} search={input} /> : null}
         </div>
         <div className={styles.main}>
             <div className={styles.main__inner}>

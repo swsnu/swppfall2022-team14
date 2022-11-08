@@ -14,10 +14,14 @@ def process_get_list_params(request):
     filter_type_two_list = request.query_params.get("filter_type_two", None)
     filter_type_ABV = request.query_params.get(
         "filter_type_three", None)  # 도수
+    text = request.query_params.get("text",None)
+
     if (filter_type_one_list is None):
         filter_type_one_list = ""
     if (filter_type_two_list is None):
         filter_type_two_list = ""
+    if (text is None):
+        text = ""
 
     filter_type_one_list = filter_type_one_list.split('_')
     filter_type_two_list = filter_type_two_list.split('_')
@@ -26,7 +30,7 @@ def process_get_list_params(request):
         filter_type_one_list.remove("")
     while ("" in filter_type_two_list):
         filter_type_two_list.remove("")
-    return filter_type_one_list, filter_type_two_list, filter_type_ABV
+    return filter_type_one_list, filter_type_two_list, filter_type_ABV, text
 
 
 def get_ABV_range(request):
@@ -46,7 +50,7 @@ def get_ABV_range(request):
 def cocktail_list(request):
     if request.method == 'GET':
         # process filter params
-        filter_type_one_list, filter_type_two_list, filter_type_ABV = process_get_list_params(
+        filter_type_one_list, filter_type_two_list, filter_type_ABV, text = process_get_list_params(
             request)
         filter_q = Q()
         for _type in filter_type_one_list:
@@ -60,6 +64,10 @@ def cocktail_list(request):
             except (ValueError):
                 return HttpResponseBadRequest('invalid ABV type')
             filter_q.add(Q(ABV__range=(abv_range)), Q.AND)
+
+        if(text is not None and text != ""):
+            filter_q.add(Q(name__contains = text), Q.AND)
+
         type = request.GET.get('type')
         if type == 'standard':
             filter_q.add(Q(type='ST'), Q.AND)
