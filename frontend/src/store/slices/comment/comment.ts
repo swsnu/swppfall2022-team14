@@ -65,6 +65,7 @@ export const postComment = createAsyncThunk(
 
 export const editComment = createAsyncThunk(
     "comment/editComment", async (comment: Pick<CommentType, "content"|"id">, {dispatch}) => {
+        console.log("?")
         const response = await axios.put<CommentType>(`/api/v1/comment/${comment.id}/`, {
             "content": comment.content,
         })
@@ -85,9 +86,10 @@ export const CommentSlice = createSlice({
     reducers: {
         addComment: (state, action: PayloadAction<CommentType>) => {
             state.commentList.push(action.payload)
+            state.commentItem = null
+            state.state = null
         },
         editComment: (state, action: PayloadAction<CommentType>) => {
-            console.log(action.payload.content)
             state.commentList.forEach((c, i) => {
                 if(c.id === action.payload.id){
                     state.commentList[i].content = action.payload.content
@@ -95,7 +97,6 @@ export const CommentSlice = createSlice({
             })
             state.commentItem = null
             state.state = null
-            console.log(state.commentList.filter((comment) => comment.id === 18)[0].content)
         },
         deleteComment: (state, action: PayloadAction<{targetId:number}>) => {
             const deleted = state.commentList.filter((comment) => {
