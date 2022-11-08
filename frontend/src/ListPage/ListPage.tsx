@@ -13,6 +13,8 @@ import cocktail, {
 } from "../store/slices/cocktail/cocktail";
 import NavBar from "../NavBar/NavBar";
 import qs from 'qs';
+import {fetchIngredientList, IngredientType, selectIngredient} from "../store/slices/ingredient/ingredient";
+import Ingr from "./Ingr/Ingr";
 
 
 const ListPage = () => {
@@ -21,9 +23,11 @@ const ListPage = () => {
     const params = useParams()
     const navigate = useNavigate()
     const cocktailState = useSelector(selectCocktail)
+    const ingrState = useSelector(selectIngredient)
 
     const [pageType, setPageType] = useState<any>('')
     const [list, setList] = useState<CocktailItemType[]>([])
+    const [ingrList, setIngrList] = useState<IngredientType[]>([])
     const location = useLocation()
 
     const query = qs.parse(location.search, {
@@ -44,6 +48,7 @@ const ListPage = () => {
         else if (pageType === 'ingredient') {
             //TODO
             //add ingredient fetch function
+            dispatch(fetchIngredientList())
         }
         else {
             //TODO
@@ -54,6 +59,9 @@ const ListPage = () => {
     useEffect(() => {
         setList(cocktailState.cocktailList)
     }, [cocktailState.cocktailList])
+    useEffect(() => {
+        setIngrList(ingrState.ingredientList)
+    },[ingrState.ingredientList])
     //param
 
     return (
@@ -70,13 +78,21 @@ const ListPage = () => {
                 {pageType === '' ?
                     <h1>loading ...</h1>
                     :
-                    <div className="list__content-down">
-                        <div className="list__content-item-wrap">
-                            {/*TODO use Real data*/}
-                            {list.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
-                                name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
+                    pageType === 'ingredient' ?
+                        <div className="list__content-down">
+                            <div className="list__content-item-wrap">
+                                {/*TODO use Real data*/}
+                                {ingrList.map((cocktail) => <Ingr key={cocktail.id} image={cocktail.image} name={cocktail.name}  id={cocktail.id} />)}
+                            </div>
                         </div>
-                    </div>
+                        :
+                        <div className="list__content-down">
+                            <div className="list__content-item-wrap">
+                                {/*TODO use Real data*/}
+                                {list.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
+                                    name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
+                            </div>
+                        </div>
                 }
             </div>
         </div>

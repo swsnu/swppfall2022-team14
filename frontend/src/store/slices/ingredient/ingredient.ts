@@ -78,7 +78,7 @@ export const ingredientSlice = createSlice({
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(fetchIngredientList.fulfilled, (state, action) => {
-            state.ingredientList = action.payload;
+            state.ingredientList = action.payload.Ingredients;
         });
         builder.addCase(getIngredient.pending, (state, action) => {
             state.itemStatus = "loading"

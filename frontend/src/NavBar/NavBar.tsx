@@ -83,15 +83,15 @@ const NavBar = () => {
             <div className="nav__menu">
                 <div className="nav__menu-wrap" onClick={handleST}>Standard</div>
                 {
-                    curFilter === 'ST' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch} /> : null
+                    curFilter === 'ST' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch} type={curFilter} /> : null
                 }
                 <div className="nav__menu-wrap" onClick={handleCS}>Custom</div>
                 {
-                    curFilter === 'CS' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch}/> : null
+                    curFilter === 'CS' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch} type={curFilter}/> : null
                 }
                 <div className="nav__menu-wrap" onClick={handleIG}>Ingredient</div>
                 {
-                    curFilter === 'IG' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch}/> : null
+                    curFilter === 'IG' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch} type={curFilter}/> : null
                 }
                 <div className="nav__menu-bigwrap">
                     <div className="nav__menu-page" onClick={handleUpload}>Upload</div>
