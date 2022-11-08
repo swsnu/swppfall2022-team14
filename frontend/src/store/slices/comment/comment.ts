@@ -75,8 +75,12 @@ export const editComment = createAsyncThunk(
 
 export const deleteComment = createAsyncThunk(
     "comment/deleteComment", async (id: number, {dispatch}) => {
-        await axios.delete(`/api/v1/comment/${id}/`)
-        dispatch(commentActions.deleteComment({targetId:id}))
+        const response = await axios.delete(`/api/v1/comment/${id}/`)
+        if(response.data){
+            dispatch(commentActions.setIsDeletedComment(response.data))
+        }else{
+            dispatch(commentActions.deleteComment({targetId:id}))
+        }
     }
 )
 
@@ -103,6 +107,16 @@ export const CommentSlice = createSlice({
                 return comment.id != action.payload.targetId;
             });
             state.commentList = deleted
+            state.commentItem = null
+            state.state = null
+        },
+        setIsDeletedComment: (state, action: PayloadAction<CommentType>) => {
+            console.log(action.payload)
+            state.commentList.forEach((c, i) => {
+                if(c.id === action.payload.id){
+                    state.commentList[i] = action.payload
+                }
+            })
             state.commentItem = null
             state.state = null
         },
