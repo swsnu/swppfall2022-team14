@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
 import { selectCocktail, getCocktail } from "../store/slices/cocktail/cocktail";
-import Comment from "./Comment";
+import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
 import { fetchCommentListByCocktailId, postComment, selectComment } from "../store/slices/comment/comment";
@@ -34,10 +34,6 @@ export default function ItemDetailPage() {
         dispatch(fetchCommentListByCocktailId(Number(id)));
     }, [id]);
 
-    useEffect(() => {
-        dispatch(fetchCommentListByCocktailId(Number(id)));
-    }, [commentState.commentList]);
-
     const cocktail = cocktailState.cocktailItem;
     const isCustom = cocktail?.type === "CS";
     
@@ -48,7 +44,6 @@ export default function ItemDetailPage() {
             cocktail:Number(id)
         }
         dispatch(postComment(data));
-        (document.getElementById("comment_text") as HTMLInputElement).value = ""
         setContent("")
     }
 
@@ -95,7 +90,7 @@ export default function ItemDetailPage() {
                 </div>
                 <div className="comments">
                     <div className="comments__create">
-                        <textarea id="comment_text" className="comments__input" onChange={(event) =>setContent(event.target.value)}/>
+                        <textarea id="comment_text" className="comments__input" value={content} onChange={(e) => setContent(e.target.value)}/>
                         <div className="comments__add-box">
                             <button className="comments__add" onClick={() => createCommentHandler()}>
                                 Add
@@ -104,15 +99,24 @@ export default function ItemDetailPage() {
                     </div>
                     <div className="comments_list">
                         {commentState.commentList.map((comment) => {
-                            return (
-                                <Comment
-                                    key={`${comment.id}_comment`}
-                                    id={comment.id}
-                                    author_name={comment.author_id}
-                                    content={comment.content}
-                                    accessible={true}
-                                />
-                            )
+                            if(!comment.parent_comment){
+                                return (
+                                    <Comment
+                                        key={`${comment.id}_comment`}
+                                        id={comment.id}
+                                        author_id={comment.author_id}
+                                        content={comment.content}
+                                        created_at={comment.created_at}
+                                        updated_at={comment.updated_at}
+                                        parent_comment={null}
+                                        is_deleted={comment.is_deleted}
+                                        cocktail={comment.cocktail}
+                                    />
+                                )
+                            }
+                            else{
+                                return null
+                            }
                         })}
                     </div>
                 </div>
