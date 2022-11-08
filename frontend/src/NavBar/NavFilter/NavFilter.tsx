@@ -7,7 +7,8 @@ interface ParamList {
 }
 
 interface Iprops {
-    setUrlParams: Dispatch<SetStateAction<string>>
+    setUrlParams: Dispatch<SetStateAction<string>>,
+    handleSearch: any
 }
 
 const NavFilter = (prop: Iprops) => {
@@ -15,10 +16,11 @@ const NavFilter = (prop: Iprops) => {
     const typeOneList: ParamList[] = [{ name: "_CL", label: "클래식" }, { name: "_TP", label: "트로피컬" }]
     const typeTwoList: ParamList[] = [{ name: "_LONG", label: "롱드링크" }, { name: "_SHORT", label: "숏드링크" }, { name: "_SHOT", label: "샷" }]
     const typeThreeList: ParamList[] = [{ name: "weak", label: "15도 이하" }, { name: "medium", label: "15 ~ 30도" }, { name: "strong", label: "30 ~ 40도" }, { name: "extreme", label: "40도 이상" }]
+    const [search, setSearch] = useState('')
     const [typeOneParam, setTypeOneParam] = useState<string>("")
     const [typeTwoParam, setTypeTwoParam] = useState<string>("")
     const [typeThreeParam, setTypeThreeParam] = useState<string>("")
-    const url_params = `&filter_type_one=${typeOneParam}&filter_type_two=${typeTwoParam}&filter_type_three=${typeThreeParam}`
+    const url_params = `&filter_type_one=${typeOneParam}&filter_type_two=${typeTwoParam}&filter_type_three=${typeThreeParam}&text=${search}`
 
     const onTypeClick = (param: string, setParam: Dispatch<SetStateAction<string>>, type_name: string, unique = false) => {
         if (unique) {
@@ -65,6 +67,13 @@ const NavFilter = (prop: Iprops) => {
                     })}
                 </div>
             </div>
+            <div className="navfilter__wrap">
+                <div className={"navfilter__title"}>Text 검색 </div>
+                <div className={"navfilter__content"}>
+                    <input className="navfilter__search-text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="     검색어를 입력하세요" />
+                </div>
+            </div>
+            <button className="navfilter__btn" onClick={prop.handleSearch}>검색하기</button>
         </div>
     )
 }

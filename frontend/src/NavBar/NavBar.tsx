@@ -20,15 +20,30 @@ const NavBar = () => {
 
     const [openIngr, setOpenIngr] = useState(false)
     const [curFilter, setCurFilter] = useState('ST')
-    const [search, setSearch] = useState('')
+    const [pop, setPop] = useState(false)
 
     const handleST = () => {
+        if(pop){
+            setPop(false)
+            return
+        }
+        setPop(true)
         setCurFilter('ST')
     }
     const handleCS = () => {
+        if(pop){
+            setPop(false)
+            return
+        }
+        setPop(true)
         setCurFilter('CS')
     }
     const handleIG = () => {
+        if(pop){
+            setPop(false)
+            return
+        }
+        setPop(true)
         setCurFilter('IG')
     }
     const handleUpload = () => {
@@ -38,8 +53,7 @@ const NavBar = () => {
         navigate('/')
     }
     const handleMyPage = () => {
-        //TODO MyPage URL
-        navigate('/')
+        navigate('/mypage')
     }
 
     const onClickSearch = () => {
@@ -66,20 +80,18 @@ const NavBar = () => {
     }
     return (
         <div className="nav">
-            <button onClick={onClickSearch}>임시 검색 버튼</button>
             <div className="nav__menu">
-                <input className="nav__menu-search" placeholder="Search word" value={search} onChange={(e) => setSearch(e.target.value)} />
                 <div className="nav__menu-wrap" onClick={handleST}>Standard</div>
                 {
-                    curFilter === 'ST' ? <NavFilter setUrlParams={setUrlParams} /> : null
+                    curFilter === 'ST' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch} /> : null
                 }
                 <div className="nav__menu-wrap" onClick={handleCS}>Custom</div>
                 {
-                    curFilter === 'CS' ? <NavFilter setUrlParams={setUrlParams} /> : null
+                    curFilter === 'CS' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch}/> : null
                 }
                 <div className="nav__menu-wrap" onClick={handleIG}>Ingredient</div>
                 {
-                    curFilter === 'IG' ? <NavFilter setUrlParams={setUrlParams} /> : null
+                    curFilter === 'IG' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch}/> : null
                 }
                 <div className="nav__menu-bigwrap">
                     <div className="nav__menu-page" onClick={handleUpload}>Upload</div>
