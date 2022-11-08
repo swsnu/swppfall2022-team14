@@ -9,7 +9,19 @@ from rest_framework.decorators import api_view
 from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer
 
 
-def process_get_list_params(request):
+def process_get_list_params(request,filter_q):
+    def get_ABV_range(request):
+        if request == "weak":
+            return (0, 15)
+        elif request == "medium":
+            return (15, 30)
+        elif request == "strong":
+            return (30, 40)
+        elif request == "extreme":
+            return (40, 100)
+        else:
+            raise ValueError("invalid ABV type")
+    
     filter_type_one_list = request.query_params.get("filter_type_one", None)
     filter_type_two_list = request.query_params.get("filter_type_two", None)
     filter_type_ABV = request.query_params.get(
@@ -26,56 +38,75 @@ def process_get_list_params(request):
         filter_type_one_list.remove("")
     while ("" in filter_type_two_list):
         filter_type_two_list.remove("")
-    return filter_type_one_list, filter_type_two_list, filter_type_ABV
+
+    for _type in filter_type_one_list:
+            filter_q.add(Q(filter_type_one__contains=_type), Q.AND)
+    for _type in filter_type_two_list:
+        filter_q.add(Q(filter_type_two__contains=_type), Q.AND)
+
+    if (filter_type_ABV is not None and filter_type_ABV != ""):
+        try:
+            abv_range = get_ABV_range(filter_type_ABV)
+        except (ValueError):
+            raise ValueError
+        filter_q.add(Q(ABV__range=(abv_range)), Q.AND)
+    
 
 
-def get_ABV_range(request):
-    if request == "weak":
-        return (0, 15)
-    elif request == "medium":
-        return (15, 30)
-    elif request == "strong":
-        return (30, 40)
-    elif request == "extreme":
-        return (40, 100)
-    else:
-        raise ValueError("invalid ABV type")
+
+def get_cocktail_list_by_ingredient(request):
+    request_ingredient = request.query_params.get("ingredients", None) # ingredient id
+    cocktail_all = Cocktail.objects.all()
+    cocktail_return = []
+    for cocktail in cocktail_all:
+        ingredient_prepare = [ingredient.id for ingredient in cocktail.ingredient_prepare.all()] 
+        # 만약 해당 칵테일 재료가 query의 subset이면 
+        if set(ingredient_prepare).issubset(set(request_ingredient)):
+            cocktail_return.append(cocktail)
+    
+    return cocktail_return
+
+
+
 
 
 @api_view(['GET', 'POST'])
 def cocktail_list(request):
     if request.method == 'GET':
         # process filter params
-        filter_type_one_list, filter_type_two_list, filter_type_ABV = process_get_list_params(
-            request)
         filter_q = Q()
-        for _type in filter_type_one_list:
-            filter_q.add(Q(filter_type_one__contains=_type), Q.AND)
-        for _type in filter_type_two_list:
-            filter_q.add(Q(filter_type_two__contains=_type), Q.AND)
+        try:
+            process_get_list_params(request, filter_q)
+        except (ValueError):
+            return HttpResponseBadRequest('Invalid ABV Type')
 
-        if (filter_type_ABV is not None and filter_type_ABV != ""):
-            try:
-                abv_range = get_ABV_range(filter_type_ABV)
-            except (ValueError):
-                return HttpResponseBadRequest('invalid ABV type')
-            filter_q.add(Q(ABV__range=(abv_range)), Q.AND)
         type = request.GET.get('type')
         if type == 'standard':
             filter_q.add(Q(type='ST'), Q.AND)
-            # standard_cocktails = Cocktail.objects.filter(type='ST')
-            standard_cocktails = Cocktail.objects.filter(filter_q)
-            data = CocktailListSerializer(standard_cocktails, many=True).data
-
-            return JsonResponse({"cocktails": data, "count": standard_cocktails.count()}, safe=False)
         elif type == 'custom':
             filter_q.add(Q(type='CS'), Q.AND)
-            # custom_cocktails = Cocktail.objects.filter(type='CS')
-            custom_cocktails = Cocktail.objects.filter(filter_q)
-            data = CocktailListSerializer(custom_cocktails, many=True).data
-            return JsonResponse({"cocktails": data, "count": custom_cocktails.count()}, safe=False)
         else:
             return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
+
+        cocktails = Cocktail.objects.filter(filter_q)
+        data = CocktailListSerializer(cocktails, many=True).data
+        return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
+
+        # if type == 'standard':
+        #     filter_q.add(Q(type='ST'), Q.AND)
+        #     # standard_cocktails = Cocktail.objects.filter(type='ST')
+        #     standard_cocktails = Cocktail.objects.filter(filter_q)
+        #     data = CocktailListSerializer(standard_cocktails, many=True).data
+
+        #     return JsonResponse({"cocktails": data, "count": standard_cocktails.count()}, safe=False)
+        # elif type == 'custom':
+        #     filter_q.add(Q(type='CS'), Q.AND)
+        #     # custom_cocktails = Cocktail.objects.filter(type='CS')
+        #     custom_cocktails = Cocktail.objects.filter(filter_q)
+        #     data = CocktailListSerializer(custom_cocktails, many=True).data
+        #    return JsonResponse({"cocktails": data, "count": custom_cocktails.count()}, safe=False)
+        # else:
+        #     return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
     elif request.method == 'POST':
         data = request.data.copy()
 
