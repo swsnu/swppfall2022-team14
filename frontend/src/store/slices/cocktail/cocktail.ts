@@ -38,12 +38,14 @@ export interface IngredientPrepareType extends IngredientType {
 export interface CocktailInfo {
     cocktailList: CocktailItemType[],
     cocktailItem: CocktailDetailType | null,
-    itemStatus: string
+    itemStatus: string,
+    listStatus: string
 }
 const initialState: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
-    itemStatus: "loading"
+    itemStatus: "loading",
+    listStatus: "loading"
 }
 
 
@@ -103,21 +105,49 @@ export const cocktailSlice = createSlice({
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
+
+        //CustomCocktailList
         builder.addCase(fetchCustomCocktailList.fulfilled, (state, action) => {
             state.cocktailList = action.payload.cocktails;
+            state.listStatus = "success";
         });
+        builder.addCase(fetchCustomCocktailList.pending, (state, action) => {
+            state.listStatus = "loading";
+        });
+        builder.addCase(fetchCustomCocktailList.rejected, (state, action) => {
+            state.listStatus = "failed";
+        });
+        //StandardCocktailList
         builder.addCase(fetchStandardCocktailList.fulfilled, (state, action) => {
             state.cocktailList = action.payload.cocktails;
+            state.listStatus = "success";
         });
+        builder.addCase(fetchStandardCocktailList.pending, (state, action) => {
+            state.listStatus = "loading";
+        });
+        builder.addCase(fetchStandardCocktailList.rejected, (state, action) => {
+            state.listStatus = "failed";
+        });
+
+        //MyCocktailList
         builder.addCase(fetchMyCocktailList.fulfilled, (state, action) => {
             state.cocktailList = action.payload.cocktails;
+            state.listStatus = "success";
         });
-        builder.addCase(getCocktail.pending, (state, action) => {
-            state.itemStatus = "loading";
+        builder.addCase(fetchMyCocktailList.pending, (state, action) => {
+            state.listStatus = "loading";
         });
+        builder.addCase(fetchMyCocktailList.rejected, (state, action) => {
+            state.listStatus = "failed";
+        });
+
+        //CocktailItem
         builder.addCase(getCocktail.fulfilled, (state, action) => {
             state.cocktailItem = action.payload;
             state.itemStatus = "success";
+        });
+        builder.addCase(getCocktail.pending, (state, action) => {
+            state.itemStatus = "loading";
         });
         builder.addCase(getCocktail.rejected, (state, action) => {
             state.itemStatus = "failed";

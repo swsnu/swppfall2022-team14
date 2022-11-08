@@ -49,9 +49,9 @@ const ListPage = () => {
     //param
 
 
-
-
-    return (
+    if (cocktailState.listStatus === "loading") return <div></div> // Loading Window
+    else if (cocktailState.listStatus === "failed") return <div></div> // Failed Window
+    else return (
         <div className="list">
             <div className="list__navbar">
                 <NavBar />
@@ -64,17 +64,13 @@ const ListPage = () => {
                         <input className="list__content-search" placeholder={"search"} />
                     </div>
                 </div>
-                {pageType === '' ?
-                    <h1>loading ...</h1>
-                    :
-                    <div className="list__content-down">
-                        <div className="list__content-item-wrap">
-                            {/*TODO use Real data*/}
-                            {list.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
-                                name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
-                        </div>
+                <div className="list__content-down">
+                    <div className="list__content-item-wrap">
+                        {/*TODO use Real data*/}
+                        {list.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
+                            name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
                     </div>
-                }
+                </div>
             </div>
         </div>
     )
