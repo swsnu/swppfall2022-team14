@@ -54,7 +54,7 @@ const ListPage = () => {
             //TODO
             //handle invalid url
         }
-    }, [pageType])
+    }, [pageType,params])
 
     useEffect(() => {
         setList(cocktailState.cocktailList)
