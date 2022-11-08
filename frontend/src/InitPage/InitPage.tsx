@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router"
 import Filter from "./Components/Filter"
 import Item from "../common/Components/Item"
@@ -15,9 +15,9 @@ const InitPage = () => {
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
 
-
     const [fakeLoginState, setFakeLoginState] = useState(false)
-
+    // const [urlParams, setUrlParams] = useState<string>("")
+    const [urlParams, setUrlParams] = useState<string>("")
 
     const navigate = useNavigate()
     const [input, setInput] = useState('')
@@ -26,7 +26,7 @@ const InitPage = () => {
         setIsStandard(isStandard)
     }
     const [isOpenFilter, setIsOpenFilter] = useState(false)
-    const onFilterClick = () => {
+    const onClickFilter = () => {
         setIsOpenFilter(!isOpenFilter)
     }
     const [isOpenProfile, setisOpenProfile] = useState(false) // 프로필 클릭 시 나오는 버튼 handle
@@ -47,8 +47,14 @@ const InitPage = () => {
     }
     const onClickSearch = () => {
         // TODO : give params with filter information
-        if (isStandard) navigate('/standard')
-        else navigate('/custom')
+        if (isStandard) navigate({
+            pathname: `/standard`,
+            search: urlParams
+        })
+        else navigate({
+            pathname: `/custom`,
+            search: urlParams
+        })
     }
 
     const onClickMyPage = () => {
@@ -57,11 +63,12 @@ const InitPage = () => {
 
     useEffect(() => {
         if (isStandard) {
-            dispatch(fetchStandardCocktailList())
+            dispatch(fetchStandardCocktailList(""))
         } else {
-            dispatch(fetchCustomCocktailList())
+            dispatch(fetchCustomCocktailList(""))
         }
     }, [isStandard])
+
 
 
     return <div className={styles.margin}>
@@ -79,11 +86,11 @@ const InitPage = () => {
             </div>
             <div className={`${styles['flex-box']} ${styles.nav__right}`}>
                 <input className={styles.nav__input} placeholder="칵테일 이름 검색" value={input} onChange={(e) => setInput(e.target.value)} />
-                <button className={styles.button} onClick={onFilterClick}>FILTER</button>
+                <button className={styles.button} onClick={onClickFilter}>FILTER</button>
                 <button className={styles.button} onClick={onClickSearch}>SEARCH</button>
             </div>
 
-            {isOpenFilter ? <Filter /> : null}
+            {isOpenFilter ? <Filter setUrlParams={setUrlParams} /> : null}
         </div>
         <div className={styles.main}>
             <div className={styles.main__inner}>
@@ -94,6 +101,7 @@ const InitPage = () => {
         <button className={styles['my-liqour']} onClick={onClickMyLiqour}>My Liqour</button>
         <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} setLoginState={setFakeLoginState} />
         <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
+
     </div >
 }
 

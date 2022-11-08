@@ -1,15 +1,22 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './NavBar.scss'
 import NavFilter from "./NavFilter/NavFilter";
-import {useDispatch} from "react-redux";
-import {AppDispatch} from "../store";
-import {useNavigate, useParams} from "react-router";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { useNavigate, useParams } from "react-router";
 
 const NavBar = () => {
 
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
     const params = useParams()
+    const [urlParams, setUrlParams] = useState<string>("")
+    const [trigger, setTrigger] = useState<string>("")
+
+    useEffect(() => {
+        setTrigger(urlParams)
+        console.log(trigger)
+    }, [urlParams])
 
     const [openIngr, setOpenIngr] = useState(false)
     const [curFilter, setCurFilter] = useState('ST')
@@ -34,21 +41,45 @@ const NavBar = () => {
         //TODO MyPage URL
         navigate('/')
     }
-    return(
+
+    const onClickSearch = () => {
+        if (curFilter === 'ST') {
+            navigate({
+                pathname: `/standard`,
+                search: urlParams
+            }
+            )
+        }
+        else if (curFilter === 'CS') {
+            navigate({
+                pathname: `/custom`,
+                search: urlParams
+            })
+        }
+        else if (curFilter === 'IG') {
+            navigate('/ingredient')
+        }
+        else {
+            console.log("TYPE NOT MATCH")
+        }
+        window.location.reload()
+    }
+    return (
         <div className="nav">
+            <button onClick={onClickSearch}>임시 검색 버튼</button>
             <div className="nav__menu">
                 <input className="nav__menu-search" placeholder="Search word" value={search} onChange={(e) => setSearch(e.target.value)} />
                 <div className="nav__menu-wrap" onClick={handleST}>Standard</div>
                 {
-                    curFilter === 'ST' ? <NavFilter /> : null
+                    curFilter === 'ST' ? <NavFilter setUrlParams={setUrlParams} /> : null
                 }
                 <div className="nav__menu-wrap" onClick={handleCS}>Custom</div>
                 {
-                    curFilter === 'CS' ? <NavFilter /> : null
+                    curFilter === 'CS' ? <NavFilter setUrlParams={setUrlParams} /> : null
                 }
                 <div className="nav__menu-wrap" onClick={handleIG}>Ingredient</div>
                 {
-                    curFilter === 'IG' ? <NavFilter /> : null
+                    curFilter === 'IG' ? <NavFilter setUrlParams={setUrlParams} /> : null
                 }
                 <div className="nav__menu-bigwrap">
                     <div className="nav__menu-page" onClick={handleUpload}>Upload</div>
@@ -84,7 +115,7 @@ const NavBar = () => {
                     :
                     null
             }
-            </div>
+        </div>
     )
 }
 
