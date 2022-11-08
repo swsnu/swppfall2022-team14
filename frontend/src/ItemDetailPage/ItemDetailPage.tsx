@@ -48,7 +48,8 @@ export default function ItemDetailPage() {
             cocktail:Number(id)
         }
         dispatch(postComment(data));
-        (document.getElementById("comment_text")! as HTMLInputElement).value = ""
+        (document.getElementById("comment_text") as HTMLInputElement).value = ""
+        setContent("")
     }
 
     if (cocktailState.itemStatus == "loading") {
