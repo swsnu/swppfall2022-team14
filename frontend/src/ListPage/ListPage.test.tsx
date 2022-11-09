@@ -9,7 +9,6 @@ import ListPage from "./ListPage"
 import React from 'react';
 
 import { render, screen, waitFor } from "@testing-library/react"
-import axios from "axios"
 
 jest.mock("./Item/Item", () => (prop:Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid={`spyComment_${prop.id}`}>
