@@ -24,8 +24,20 @@
     }
 
     .item__rate {
-        margin-top: 20px;
         color: cornflowerblue;
+    }
+
+    .item__tags {
+        display: flex;
+        justify-content: center;
+    }
+
+    .item__tag {
+        width: 60px;
+        height: 20px;
+        background-color: lightcyan;
+        border-radius: 5px;
+        margin-right: 10px;
     }
 }
 

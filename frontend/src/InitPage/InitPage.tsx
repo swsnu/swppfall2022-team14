@@ -95,7 +95,7 @@ const InitPage = () => {
         <div className={styles.main}>
             <div className={styles.main__inner}>
                 {cocktailState.cocktailList.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
-                    name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
+                    name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />)}
             </div>
         </div>
         <button className={styles['my-liqour']} onClick={onClickMyLiqour}>My Liqour</button>

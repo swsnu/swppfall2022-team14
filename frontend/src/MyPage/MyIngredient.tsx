@@ -13,8 +13,9 @@ import AddIngredientModal from "../common/Modals/AddIngredientModal";
 
 import ItemDetailPage from "../ItemDetailPage/ItemDetailPage";
 import IngredientItem from "../common/Components/IngredientItem";
+import { fetchIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
 const MyIngredient = () => {
-    const cocktailState = useSelector(selectCocktail)
+    const ingredientState = useSelector(selectIngredient)
     const dispatch = useDispatch<AppDispatch>()
     const buttonList = ['My liqour', 'My Custom Cocktail', 'My Favorites', 'My Comments', 'Info']
     const [isInitMyLiqourOpen, setIsInitMyLiqourOpen] = useState(false);
@@ -67,6 +68,10 @@ const MyIngredient = () => {
             ABV: 42.4,
         },
     ]
+    useEffect(() => {
+        dispatch(fetchIngredientList())
+    })
+
 
 
     return <>
@@ -75,7 +80,7 @@ const MyIngredient = () => {
             <div className={styles.right__sort}>sort</div>
         </div>
         <div className={styles.right__main}>
-            {dummy.map(ingredient => <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} ABV={ingredient.ABV} />)}
+            {ingredientState.ingredientList.map(ingredient => <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} ABV={ingredient.ABV} />)}
         </div>
         <AddIngredientModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
     </>

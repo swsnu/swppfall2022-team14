@@ -12,7 +12,8 @@ export default function CreateCustomPage() {
     const [name, setName] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
     const [recipe, setRecipe] = useState<string>("");
-    const [tag, setTag] = useState<string>("");
+    const [tagList, setTagList] = useState<string[]>([]);
+    const [tagItem, setTagItem] = useState<string>("");
     const [ABV, setABV] = useState<number>(20);  // Temporary
     const [price, setPrice] = useState<number>(80000);  // Temporary
 
@@ -52,8 +53,25 @@ export default function CreateCustomPage() {
         );
     };
 
+    const onKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
+        if (tagItem.length !== 0 && e.key === 'Enter') {
+          submitTagItem()
+        }
+    }
+    
+    const submitTagItem = () => {
+        const updatedTagList = [ ...tagList ]
+        updatedTagList.push(tagItem)
+
+        setTagList(updatedTagList)
+        setTagItem("")
+    }
+
+    const onDeleteTagItem = (deletedTagItem: string) => {
+        setTagList(tagList.filter(tagItem => tagItem !== deletedTagItem))
+    }
+
     const createCocktailHandler = async () => {
-        const tagList = tag.replaceAll(/\s/g, '').split('#')
         const response = await dispatch(postCocktail({
             name: name,
             image:"https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
@@ -69,6 +87,7 @@ export default function CreateCustomPage() {
         console.log(response)
         navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
     }
+
     return (
         <div className="item-detail">
             <div className="title">
@@ -119,12 +138,29 @@ export default function CreateCustomPage() {
                         })}
                     </div>
                     <div className='content__recipe'>
-                        Recipte:<br />
+                        Recipe:<br />
                         <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)}/>
                     </div>
-                    <div className='content__tag'>
-                        Tag:<br />
-                        <textarea className='content__tag-input' value={tag} onChange={(e) => setTag(e.target.value)}/>
+                    <div className='content__tag-box'>
+                        Tag: <br />
+                        <div className='content__tag-inner-box'>
+                            {tagList.map((tagItem, idx) => {
+                                return (
+                                    <div className="content__tag" key={`${tagItem}_${idx}`}>
+                                        <span>{tagItem}</span>
+                                        <button onClick={(e) => onDeleteTagItem(e.currentTarget.parentElement?.firstChild?.textContent ?? "")}>X</button>
+                                    </div>
+                                )
+                            })}
+                            <input 
+                                className='content__tag-input'
+                                type="text"
+                                placeholder='Press enter to add tags'
+                                onChange={e => setTagItem(e.target.value)}
+                                value={tagItem}
+                                onKeyPress={onKeyPress}
+                            />
+                        </div>
                     </div>
                     <p className="content__price">Expected ${price}</p>
                 </div>
