@@ -8,10 +8,8 @@ interface ParamList {
 }
 
 interface Iprops {
-    setUrlParams: Dispatch<SetStateAction<string>>,
-    search: string
+    setUrlParams: Dispatch<SetStateAction<string>>
 }
-
 const Filter = (prop: Iprops) => {
 
     const typeOneList: ParamList[] = [{ name: "_CL", label: "클래식" }, { name: "_TP", label: "트로피컬" }]
@@ -20,7 +18,7 @@ const Filter = (prop: Iprops) => {
     const [typeOneParam, setTypeOneParam] = useState<string>("")
     const [typeTwoParam, setTypeTwoParam] = useState<string>("")
     const [typeThreeParam, setTypeThreeParam] = useState<string>("")
-    const url_params = `?filter_type_one=${typeOneParam}&filter_type_two=${typeTwoParam}&filter_type_three=${typeThreeParam}&text=${prop.search}`
+    const url_params = `?filter_type_one=${typeOneParam}&filter_type_two=${typeTwoParam}&filter_type_three=${typeThreeParam}`
 
     const onTypeClick = (param: string, setParam: Dispatch<SetStateAction<string>>, type_name: string, unique = false) => {
         if (unique) {

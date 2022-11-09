@@ -15,8 +15,8 @@ const ShortComment = (prop: CommentType) => {
     const navigate = useNavigate()
 
     const onClickComment = () => {
-        if (prop.cocktail.type === 'CS') navigate(`/custom/${prop.id}`)
-        else if (prop.cocktail.type === 'ST') navigate(`/standard/${prop.id}`)
+        if (prop.cocktail.type === 'CS') navigate(`/custom/${prop.cocktail.id}`)
+        else if (prop.cocktail.type === 'ST') navigate(`/standard/${prop.cocktail.id}`)
     }
 
     return <div className={styles.box} onClick={onClickComment}>
