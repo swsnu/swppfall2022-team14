@@ -88,7 +88,7 @@ const ListPage = () => {
                     <div className="list__content-item-wrap">
                         {/*TODO use Real data*/}
                         {list.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
-                            name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />)}
+                            name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />)}
                     </div>
                 </div>
             }

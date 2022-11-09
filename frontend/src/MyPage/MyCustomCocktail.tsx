@@ -31,7 +31,7 @@ const MyCustomCocktail = () => {
         <div className={styles.right__main}>
             {cocktailState.cocktailList.map(cocktail => {
                 return <Item key={cocktail.id} image={cocktail.image}
-                    name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} />;
+                    name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />;
             })}
         </div>
     </>
