@@ -86,8 +86,6 @@ export const getCocktail = createAsyncThunk(
 
         return { ...response.data, ingredients: ingredient_response.data };
     }
-
-
 )
 
 export const postCocktail = createAsyncThunk(
