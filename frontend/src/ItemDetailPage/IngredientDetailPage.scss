@@ -1,3 +1,15 @@
+.main {
+    display: flex;
+
+    .left {
+        flex: 2
+    }
+
+    .right {
+        flex: 8
+    }
+}
+
 .item-detail {
     padding-top: 10px;
     padding-bottom: 10px;
