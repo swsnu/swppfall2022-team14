@@ -13,6 +13,7 @@ import cocktail, {
 } from "../store/slices/cocktail/cocktail";
 import NavBar from "../NavBar/NavBar";
 import { useSearchParams } from 'react-router-dom';
+import { fetchIngredientList } from '../store/slices/ingredient/ingredient';
 
 
 const ListPage = () => {
