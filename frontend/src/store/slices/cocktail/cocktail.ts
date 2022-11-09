@@ -1,8 +1,20 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../..";
+import ingredient, { IngredientType } from "../ingredient/ingredient";
 
-export interface CocktailType {
+
+export interface CocktailItemType {
+    id: number,
+    name: string,
+    image: string,
+    type: string,
+    tags: string[],
+    author_id: number | null,
+    rate: number
+}
+
+export interface CocktailDetailType {
     id: number,
     name: string,
     image: string,
@@ -10,48 +22,81 @@ export interface CocktailType {
     recipe: string,
     ABV: number,
     price_per_glass: number
+    tags: string[],
     type: string,
-    author_id: number,
+    author_id: number | null,
     created_at: Date,
     updated_at: Date,
-    rate: number
+    rate: number,
+    ingredients: IngredientPrepareType[]
+}
+
+export interface IngredientPrepareType extends IngredientType {
+    amount: string;
 }
 
 export interface CocktailInfo {
-    cocktailList: CocktailType[],
-    cocktailItem: CocktailType | null,
+    cocktailList: CocktailItemType[],
+    cocktailItem: CocktailDetailType | null,
+    itemStatus: string,
+    listStatus: string
 }
 
-const initialState : CocktailInfo = {
+const initialState: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
-};
+    itemStatus: "loading",
+    listStatus: "loading"
+}
 
-export const fetchCocktailList = createAsyncThunk(
-    "cocktail/fetchCocktailList", 
-    async (type: string) => {
-        const params = { type: type };
-        const response = await axios.get('/api/v1/cocktails/', {params});
-        console.log(response.data);
-        return response.data;
+
+
+
+export const fetchStandardCocktailList = createAsyncThunk(
+    "cocktail/fetchStandardCocktailList", async (params: string) => {
+        const response = await axios.get(`/api/v1/cocktails/?type=standard&${params}`);
+        console.log(response.data)
+        return response.data
+    },
+)
+
+export const fetchCustomCocktailList = createAsyncThunk(
+    "cocktail/fetchCustomCocktailList", async (params: string) => {
+        const response = await axios.get(`/api/v1/cocktails/?type=custom&${params}`);
+        console.log(response.data)
+        return response.data
+    },
+)
+
+export const fetchMyCocktailList = createAsyncThunk(
+    "cocktail/fetchMyCocktailList", async () => {
+        const response = await axios.get('/api/v1/cocktails/me');
+        return response.data
     },
 )
 
 export const getCocktail = createAsyncThunk(
     "cocktail/getCocktail",
-    async (id: CocktailType["id"], { dispatch }) => {
-        const response = await axios.get(`/api/v1/cocktails/${id}/`)
-        console.log(response.data);
-        return response.data;
+    async (id: CocktailItemType["id"]) => {
+        const ingredient_response = await axios.get(`/api/v1/cocktails/${id}/ingredients`)
+        console.log(ingredient_response.data)
+
+        const response = await axios.get(`/api/v1/cocktails/${id}`)
+        console.log(response.data)
+
+        return { ...response.data, ingredients: ingredient_response.data };
     }
+
+
 )
 
 export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
-    async (cocktail: Omit<CocktailType, "id">, { dispatch }) => {
-        const response = await axios.post('/api/v1/cocktails/', cocktail);
+    async (cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
+        const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
         console.log(response.data);
         dispatch(cocktailActions.addCocktail(response.data));
+        return response.data
     }
 )
 
@@ -59,41 +104,59 @@ export const cocktailSlice = createSlice({
     name: "cocktail",
     initialState,
     reducers: {
-        addCocktail: (
-            state,
-            action: PayloadAction<Omit<CocktailType, "id">>
-        ) => {
-            const newCocktail = {
-                id: (state.cocktailList.at(-1)?.id ?? 0) + 1,  // Temporary
-                image: action.payload.image,
-                name: action.payload.name,
-                introduction: action.payload.introduction,
-                recipe: action.payload.recipe,
-                ABV: action.payload.ABV,
-                price_per_glass: action.payload.price_per_glass,
-                type: action.payload.type,
-                author_id: action.payload.author_id,
-                created_at: action.payload.created_at,
-                updated_at: action.payload.updated_at,
-                rate: action.payload.rate,
-            };
-            state.cocktailList.push(newCocktail);
+        addCocktail: (state, action: PayloadAction<CocktailDetailType>) => {
+            state.cocktailList.push(action.payload)
         }
     },
     extraReducers: (builder) => {
-        // Add reducers for additional action types here, and handle loading state as needed
-        builder.addCase(fetchCocktailList.fulfilled, (state, action) => {
+        //CustomCocktailList
+        builder.addCase(fetchCustomCocktailList.fulfilled, (state, action) => {
             state.cocktailList = action.payload.cocktails;
+            state.listStatus = "success";
         });
+        builder.addCase(fetchCustomCocktailList.pending, (state, action) => {
+            state.listStatus = "loading";
+        });
+        builder.addCase(fetchCustomCocktailList.rejected, (state, action) => {
+            state.listStatus = "failed";
+        });
+        //StandardCocktailList
+        builder.addCase(fetchStandardCocktailList.fulfilled, (state, action) => {
+            state.cocktailList = action.payload.cocktails;
+            state.listStatus = "success";
+        });
+        builder.addCase(fetchStandardCocktailList.pending, (state, action) => {
+            state.listStatus = "loading";
+        });
+        builder.addCase(fetchStandardCocktailList.rejected, (state, action) => {
+            state.listStatus = "failed";
+        });
+
+        //MyCocktailList
+        builder.addCase(fetchMyCocktailList.fulfilled, (state, action) => {
+            state.cocktailList = action.payload.cocktails;
+            state.listStatus = "success";
+        });
+        builder.addCase(fetchMyCocktailList.pending, (state, action) => {
+            state.listStatus = "loading";
+        });
+        builder.addCase(fetchMyCocktailList.rejected, (state, action) => {
+            state.listStatus = "failed";
+        });
+
+        //CocktailItem
         builder.addCase(getCocktail.fulfilled, (state, action) => {
             state.cocktailItem = action.payload;
+            state.itemStatus = "success";
         });
-        builder.addCase(postCocktail.rejected, (_state, action) => {
-            console.error(action.error);
+        builder.addCase(getCocktail.pending, (state, action) => {
+            state.itemStatus = "loading";
+        });
+        builder.addCase(getCocktail.rejected, (state, action) => {
+            state.itemStatus = "failed";
         });
     },
-});
-
+})
 export const cocktailActions = cocktailSlice.actions;
 export const selectCocktail = (state: RootState) => state.cocktail;
 

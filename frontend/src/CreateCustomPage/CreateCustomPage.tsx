@@ -1,31 +1,28 @@
 import { useState, useEffect } from "react";
 import AddIngredientModal from "./Modals/AddIngredientModal"
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { fetchCocktailList, postCocktail, selectCocktail } from "../store/slices/cocktail/cocktail";
+import { CocktailDetailType, IngredientPrepareType, postCocktail, selectCocktail } from "../store/slices/cocktail/cocktail";
 import './CreateCustomPage.scss';
-
-export interface Ingredient {
-    name: string;
-    amount?: number;
-}
+import React from 'react';
+import { IngredientType } from "../store/slices/ingredient/ingredient";
 
 export default function CreateCustomPage() {
     const [name, setName] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
-    const [image, setImage] = useState<string>("");
     const [recipe, setRecipe] = useState<string>("");
     const [tag, setTag] = useState<string>("");
     const [ABV, setABV] = useState<number>(20);  // Temporary
-    const [price, setPrice] = useState<number>(8);  // Temporary
+    const [price, setPrice] = useState<number>(80000);  // Temporary
 
-    const [ingredientList, setIngredientList] = useState<Ingredient[]>([]);
+    const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
-    const [newIngredient, setNewIngredient] = useState("");
+    const [newIngredient, setNewIngredient] = useState<IngredientType|null>(null);
 
     const [confirmed, setConfirmed] = useState<boolean>(false);
 
+    const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
         setIngredientList(ingredientList.filter((_value, idx) => idx !== selectedIdx));
     };
@@ -34,9 +31,12 @@ export default function CreateCustomPage() {
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        if (newIngredient !== "") {
-            setIngredientList([...ingredientList, { name: newIngredient, amount: undefined }]);
-            setNewIngredient("");
+        if(newIngredient){
+            if(ingredientList.filter((i) => i.id === newIngredient.id).length === 0){
+                setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
+                setNewIngredient(null);
+            }
+
         }
     }, [newIngredient])
 
@@ -46,126 +46,89 @@ export default function CreateCustomPage() {
                 if (idx !== selectedIdx) {
                     return ingredient;
                 } else {
-                    return { name: ingredient.name, amount: Number(changedAmount) };
+                    return { ...ingredient, amount: changedAmount } as IngredientPrepareType;
                 }
             })
         );
     };
 
-    const onClickPost = async () => {
-        dispatch(fetchCocktailList("custom"));
-        
-        const data = {
-            image: image,
+    const createCocktailHandler = async () => {
+        const tagList = tag.replaceAll(/\s/g, '').split('#')
+        const response = await dispatch(postCocktail({
             name: name,
-            introduction: introduction,
+            image:"https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
+            introduction:introduction,
             recipe: recipe,
             ABV: ABV,
             price_per_glass: price,
-            type: 'CS',
-            author_id: 1,
-            created_at: new Date(),
-            updated_at: new Date(),
-            rate: 0.0,
-        };
-        const result = await dispatch(postCocktail(data));
+            tags: tagList,
+            author_id:1,
+            ingredients: ingredientList
+        }))
 
-        if (result.type === `${postCocktail.typePrefix}/fulfilled`) {
-            setConfirmed(true);
-        } else {
-            alert("Error on post Cocktail");
-        }
+        console.log(response)
+        navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
     }
-
-    if (confirmed) {
-        const cocktail_address = "/custom/" + cocktailState.cocktailList.at(-1)!!.id;
-
-        return <Navigate to={cocktail_address} />
-    } else {
-        return (
-            <div className="item-detail">
-                <div className="title">
-                    <div className="title__name">
-                        Name:
-                        <input 
-                            className='title__name-input' 
-                            type="text"
-                            value={name}
-                            onChange={(event) => setName(event.target.value)}
-                        />
-                    </div>
-                    <button 
-                        className="title__confirm-button"
-                        disabled={!name || !image || !introduction || !recipe || !tag || !(ingredientList && ingredientList.length)}
-                        onClick={() => onClickPost()}
-                    >
-                        Confirm
-                    </button>
+    return (
+        <div className="item-detail">
+            <div className="title">
+                <div className="title__name">
+                    Name:
+                    <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)}/>
                 </div>
-                <div className="content">
-                    <textarea 
-                        className="content__image-input"
-                        value={image}
-                        onChange={(event) => setImage(event.target.value)}
-                    />
-                    <div className="content__description-box">
-                        <p className="content__abv">Expected {ABV}%</p>
-                        <div className='content__introduction'>
-                            Introduction:<br/>
-                            <textarea 
-                                className='content__introduction-input' 
-                                value={introduction}
-                                onChange={(event) => setIntroduction(event.target.value)}    
-                            />
-                        </div>
-                        <div className="content__ingredient-box">
-                            Ingredient:
-                            {[...ingredientList, { name: "", amount: undefined }].map((ingredient, idx) => {
-                                return (
-                                    <div className="content__ingredient">
-                                        <input 
-                                            className="content__ingredient-name" 
-                                            onClick={() => (idx === ingredientList.length) && setOpen(true)}
-                                            value={ingredient.name}
-                                            readOnly
-                                        />
-                                        <AddIngredientModal 
-                                            isOpen={isOpen} 
-                                            close={() => setOpen(false)} 
-                                            addedIngredientList={ingredientList.map((ingredient) => { return ingredient.name })}
-                                            setNewIngrdient={setNewIngredient}
-                                        />
-                                        <input 
-                                            className="content__ingredient-input" 
-                                            value={ingredient.amount ?? ""}
-                                            onChange={(event) => onChangeAmount(idx, event.target.value)}
-                                        />
-                                        {idx !== ingredientList.length && 
-                                            <button className="content__ingredient-delete-button" onClick={() => onClickIngredientDelete(idx)}>Delete</button>}
-                                    </div>
-                                )
-                            })}
-                        </div>
-                        <div className='content__recipe'>
-                            Recipe:<br/>
-                            <textarea 
-                                className='content__recipe-input' 
-                                value={recipe}
-                                onChange={(event) => setRecipe(event.target.value)}
-                            />
-                        </div>
-                        <div className='content__tag'>
-                            Tag:<br/>
-                            <textarea 
-                                className='content__tag-input' 
-                                value={tag}
-                                onChange={(event) => setTag(event.target.value)}    
-                            />
-                        </div>
+                <button className="title__confirm-button"
+                onClick={() => createCocktailHandler()}>Confirm</button>
+            </div>
+            <div className="content">
+                <img
+                    className="content__image"
+                    src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"
+                />
+                <div className="content__description-box">
+                    <p className="content__abv">Expected 20% ABV</p>
+                    <div className='content__description'>
+                        Description:<br />
+                        <textarea className='content__description-input' value={introduction} onChange={(e) => setIntroduction(e.target.value)}/>
+                    </div>
+                    <div className="content__ingredient-box">
+                        Ingredient:
+                        {[...ingredientList, { name: "", amount: undefined }].map((ingredient, idx) => {
+                            return (
+                                <div className="content__ingredient" key={`${ingredient.name}_${idx}`}>
+                                    <input
+                                        className="content__ingredient-name"
+                                        onClick={() => (idx === ingredientList.length) && setOpen(true)}
+                                        value={ingredient.name}
+                                        readOnly
+                                    />
+                                    <AddIngredientModal
+                                        isOpen={isOpen}
+                                        close={() => setOpen(false)}
+                                        addedIngredientList={ingredientList.map((ingredient) => { return ingredient.name })}
+                                        setNewIngrdient={setNewIngredient}
+                                    />
+                                    <input
+                                        className="content__ingredient-input"
+                                        value={ingredient.amount ?? ""}
+                                        onChange={(event) => onChangeAmount(idx, event.target.value)}
+                                    />
+                                    {idx !== ingredientList.length &&
+                                        <button className="content__ingredient-delete-button" onClick={() => onClickIngredientDelete(idx)}>Delete</button>}
+                                </div>
+                            )
+                        })}
+                    </div>
+                    <div className='content__recipe'>
+                        Recipte:<br />
+                        <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)}/>
+                    </div>
+                    <div className='content__tag'>
+                        Tag:<br />
+                        <textarea className='content__tag-input' value={tag} onChange={(e) => setTag(e.target.value)}/>
                     </div>
                     <p className="content__price">Expected ${price}</p>
                 </div>
             </div>
+        </div>
         )
     }
-}

@@ -1,0 +1,48 @@
+.navfilter{
+  height: 370px;
+  margin-top: -10px;
+  width: 95%;
+  border-radius: 4px;
+
+  .navfilter__wrap{
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    margin-top: 10px;
+    border: 1px solid gray;
+    .navfilter__title{
+      height: 40px;
+    }
+    .navfilter__content{
+      font-size: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .navfilter__search-text{
+        outline: none;
+        border: none;
+        height: 20px;
+      }
+    }
+  }
+
+  .navfilter__btn{
+    position: relative;
+    top: 6px;
+    background: whitesmoke;
+    border-radius: 4px;
+    box-shadow: rgb(0 0 0 / 2%) 0px 0px 4px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: rgb(32, 201, 151);
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.125s ease-in 0s;
+    font-weight: bold;
+  }
+}

@@ -1,21 +1,15 @@
-import { useParams } from "react-router";
-import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
 import { selectCocktail, getCocktail } from "../store/slices/cocktail/cocktail";
-import Comment from "./Comment";
+import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
-
+import React from 'react';
+import { fetchCommentListByCocktailId, postComment, selectComment } from "../store/slices/comment/comment";
 interface User {
     id: number;
     name: string;
-}
-
-interface Comment {
-    id: number;
-    author_name: string;
-    content: string;
-    accessible: boolean;
 }
 
 export default function ItemDetailPage() {
@@ -24,33 +18,45 @@ export default function ItemDetailPage() {
         { id: 2, name: "Sophie" },
     ];
 
-    const dummyComments: Comment[] = [
-        { id: 1, author_name: "user 1", content: "content 1", accessible: false },
-        { id: 2, author_name: "user 2", content: "content 2", accessible: true },
-    ];
-
     const { type, id } = useParams();
 
     const dispatch = useDispatch<AppDispatch>();
     const cocktailState = useSelector(selectCocktail);
+    const commentState = useSelector(selectComment);
+    const navigate = useNavigate()
+    const onIngredientClick = (id: number) => {
+        navigate(`/ingredient/${id}`)
+    }
+    const [content, setContent] = useState<string>("")
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
+        dispatch(fetchCommentListByCocktailId(Number(id)));
     }, [id]);
 
     const cocktail = cocktailState.cocktailItem;
     const isCustom = cocktail?.type === "CS";
-
-    // Non-existing cocktail
-    if (!cocktail) {
-        return <div>Non-existing cocktail</div>
+    
+    const createCommentHandler = () => {
+        const data = {
+            content:content,
+            parent_comment:null,
+            cocktail:Number(id)
+        }
+        dispatch(postComment(data));
+        setContent("")
     }
 
+    if (cocktailState.itemStatus == "loading") {
+        return <div>Loading ..</div>
+    }
+    else if (cocktailState.itemStatus == "failed" || !cocktail) {
+        return <div>Non existing cocktail</div>
+    }
     // Type mismatch
     else if (!((isCustom && type === "custom") || (!isCustom && type === "standard"))) {
         return <div>Type mismatch</div>
     }
-
     else {
         return (
             <div className="item-detail">
@@ -79,27 +85,38 @@ export default function ItemDetailPage() {
                         <p className="content__description">{cocktail.introduction}</p>
                         <p className="content__recipe">{cocktail.recipe}</p>
                     </div>
+                    <div>{cocktail.ingredients?.map(ingre => { return <div key={ingre.id} onClick={() => onIngredientClick(ingre.id)} className="content__ingredient">{ingre.amount} {ingre.name}</div> })}</div>
                     <p className="content__price">${cocktail.price_per_glass}</p>
                 </div>
                 <div className="comments">
                     <div className="comments__create">
-                        <textarea className="comments__input" />
+                        <textarea id="comment_text" className="comments__input" value={content} onChange={(e) => setContent(e.target.value)}/>
                         <div className="comments__add-box">
-                            <button className="comments__add">
+                            <button className="comments__add" onClick={() => createCommentHandler()}>
                                 Add
                             </button>
                         </div>
                     </div>
                     <div className="comments_list">
-                        {dummyComments.map((comment) => {
-                            return (
-                                <Comment
-                                    key={`${comment.id}_comment`}
-                                    author_name={comment.author_name}
-                                    content={comment.content}
-                                    accessible={comment.accessible}
-                                />
-                            )
+                        {commentState.commentList.map((comment) => {
+                            if(!comment.parent_comment){
+                                return (
+                                    <Comment
+                                        key={`${comment.id}_comment`}
+                                        id={comment.id}
+                                        author_id={comment.author_id}
+                                        content={comment.content}
+                                        created_at={comment.created_at}
+                                        updated_at={comment.updated_at}
+                                        parent_comment={null}
+                                        is_deleted={comment.is_deleted}
+                                        cocktail={comment.cocktail}
+                                    />
+                                )
+                            }
+                            else{
+                                return null
+                            }
                         })}
                     </div>
                 </div>

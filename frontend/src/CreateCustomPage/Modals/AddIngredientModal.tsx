@@ -1,36 +1,39 @@
 import Modal from 'react-modal';
 import './AddIngredientModal.scss'
-
-interface Ingredient {
-    name: string;
-}
+import React from 'react';
+import { IngredientPrepareType } from '../../store/slices/cocktail/cocktail';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchIngredientList, IngredientType, selectIngredient } from '../../store/slices/ingredient/ingredient';
+import { useEffect } from 'react';
+import { AppDispatch } from '../../store';
 
 interface IProps {
     isOpen: boolean;
     close: () => void;
-    addedIngredientList: String[];
-    setNewIngrdient: React.Dispatch<React.SetStateAction<string>>;
+    addedIngredientList: string[];
+    setNewIngrdient: React.Dispatch<React.SetStateAction<IngredientType|null>>;
 }
 
 const AddIngredientModal = (props: IProps) => {
     const { isOpen, close, addedIngredientList, setNewIngrdient } = props;
+    const ingredientState = useSelector(selectIngredient)
+    const dispatch = useDispatch<AppDispatch>()
 
-    const dummyIngredients: Ingredient[] = [
-        { name: "Kahlua" },
-        { name: "Milk" },
-    ];
-
-    const onClickIngredient = (ingredient: Ingredient) => {
-        setNewIngrdient(ingredient.name);
+    const onClickIngredient = (ingredient: IngredientType) => {
+        setNewIngrdient(ingredient);
         close();
     };
+
+    useEffect(() => {
+        dispatch(fetchIngredientList())
+    }, [])
 
     return (
         <Modal className="modal" isOpen={isOpen}>
             <div className="modal__ingredient-list">
-                {dummyIngredients.map((ingredient) => {
+                {ingredientState.ingredientList.map((ingredient, idx) => {
                     return (
-                        <button 
+                        <button key={`${ingredient.name}_${idx}`}
                             className='modal__ingredient'
                             onClick={() => onClickIngredient(ingredient)}
                             disabled={addedIngredientList.includes(ingredient.name)}

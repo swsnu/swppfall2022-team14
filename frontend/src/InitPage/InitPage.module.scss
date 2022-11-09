@@ -1,6 +1,6 @@
 :root {
-    --button-color: lightgray;
-
+    --button-color: blue;
+    --main-color: lightgray;
 }
 
 .flex-box {
@@ -19,12 +19,10 @@
     justify-content: center;
     align-items: center;
     border: none;
-
+    cursor: pointer;
+    border: 1.5px solid black;
+    border-radius: 5px;
 }
-
-
-
-
 
 
 
@@ -66,16 +64,21 @@
     .nav__right {
         justify-content: space-evenly;
         width: 470px;
+
+        .button {
+            background-color: lightgray;
+        }
     }
 
 
 }
 
 .main {
-    background-color: lightgray;
+    background-color: var(--main-color);
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 10px;
 
     .main__inner {
         width: 1376px;

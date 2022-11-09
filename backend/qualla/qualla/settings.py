@@ -25,13 +25,17 @@ SECRET_KEY = 'django-insecure-16wp*dd719==q6%9gmksm3wk&&@ky&v+6_#auhd5ld+re62p$#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost','127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'cocktail.apps.CocktailConfig',
+    'ingredient.apps.IngredientConfig',
+    'comment.apps.CommentConfig',
+    'ingredient_prepare.apps.IngredientPrepareConfig',
+    'tag.apps.TagConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
