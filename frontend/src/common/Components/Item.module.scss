@@ -11,6 +11,8 @@
     margin-bottom: 15px;
     cursor: pointer;
 
+
+
     .item__image {
         width: 160px;
         height: 160px;
@@ -25,4 +27,9 @@
         margin-top: 20px;
         color: cornflowerblue;
     }
+}
+
+.item:hover {
+    // box-shadow: rgb(0 0 0 / 10%) 10px 10px 16px 0px;
+    box-shadow: rgba(189, 104, 25, 0.592) 10px 8px 14px 0px;
 }
