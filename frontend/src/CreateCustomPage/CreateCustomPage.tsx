@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useRef} from "react";
 import AddIngredientModal from "./Modals/AddIngredientModal"
 import { Navigate, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,11 @@ export default function CreateCustomPage() {
     const [newIngredient, setNewIngredient] = useState<IngredientType|null>(null);
 
     const [confirmed, setConfirmed] = useState<boolean>(false);
+
+    const [img, setImg] = useState<any>(null)
+    const [thumb, setThumb] = useState<any>(null)
+    const [img64, setImg64] = useState<any>(null)
+    const imgRef = useRef<any>({});
 
     const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
@@ -52,6 +57,26 @@ export default function CreateCustomPage() {
         );
     };
 
+    const handleImg = (e: any) => {
+        const reader = new FileReader();
+        const formData = new FormData();
+
+        if (e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
+            setThumb(e.target.files[0]); // 파일 상태 업데이트
+            console.log(e.target.files[0]);
+            formData.append('image',e.target.files[0]);
+        }
+        reader.onloadend = () => {
+            // 2. 읽기가 완료되면 아래코드가 실행됩니다.
+            const base64 = reader.result;
+            if (base64) {
+                setImg(base64.toString()); // 파일 base64 상태 업데이트
+            }
+        };
+        console.log(img)
+    }
+
     const createCocktailHandler = async () => {
         const tagList = tag.replaceAll(/\s/g, '').split('#')
         const response = await dispatch(postCocktail({
@@ -80,10 +105,10 @@ export default function CreateCustomPage() {
                 onClick={() => createCocktailHandler()}>Confirm</button>
             </div>
             <div className="content">
-                <img
-                    className="content__image"
-                    src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"
-                />
+                <div className="content__imgbox">
+                    <input type={"file"} accept={"image/*"} ref={imgRef} onChange={handleImg} name="imgFile" id="imgFile" />
+                    <img className="content__image" src={img}/>
+                </div>
                 <div className="content__description-box">
                     <p className="content__abv">Expected 20% ABV</p>
                     <div className='content__description'>
