@@ -1,0 +1,32 @@
+.reply {
+    display: flex;
+    margin-left: 50px;
+    background-color: gray;
+    &__content {
+        width: 70%;
+        text-align: left;
+    }
+
+    &__author {
+        width: 15%;
+        text-align: left;
+    }
+
+    &__button-box {
+        display: flex;
+        width: 15%;
+        justify-content: space-between;
+    }
+
+    &__reply-button {
+
+    }
+
+    &__edit-button {
+
+    }
+
+    &__delete-button {
+
+    }
+}

@@ -30,8 +30,8 @@ def comment_list(request, cocktail_id):
         serializer = CommentPostSerializer(
             data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=201)
+        comment = serializer.save()
+        return Response(CommentSerializer(comment).data, status=201)
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
@@ -69,12 +69,13 @@ def retrieve_comment(request, pk):
         # 추후 내 댓글 목록 GET 시 is_deleted = False 로 filter하여 주어야 함.
         if (not comment.replies.exists()):
             comment.delete()
+            return Response(status=200)
         else:
             comment.is_deleted = True
             comment.content = "삭제된 댓글입니다."
             comment.author_id = None
             comment.save()
-        return HttpResponse(status=200)
+            return JsonResponse(CommentSerializer(comment).data,status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
 
