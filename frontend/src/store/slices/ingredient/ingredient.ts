@@ -15,7 +15,8 @@ export interface IngredientType {
 export interface IngredientInfo {
     ingredientList: IngredientType[],
     ingredientItem: IngredientType | null,
-    itemStatus: string
+    itemStatus: string,
+    listStatus: string
 }
 const initialState: IngredientInfo = {
     ingredientList: [],
@@ -27,7 +28,8 @@ const initialState: IngredientInfo = {
         ABV: 42.4,
         price: 200
     },
-    itemStatus: "loading"
+    itemStatus: "loading",
+    listStatus: "loading"
 }
 
 export const fetchIngredientList = createAsyncThunk(
@@ -56,6 +58,13 @@ export const ingredientSlice = createSlice({
         // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(fetchIngredientList.fulfilled, (state, action) => {
             state.ingredientList = action.payload.Ingredients;
+            state.listStatus = "success"
+        });
+        builder.addCase(fetchIngredientList.pending, (state, action) => {
+            state.listStatus = "loading";
+        });
+        builder.addCase(fetchIngredientList.rejected, (state, action) => {
+            state.listStatus = "failed";
         });
         builder.addCase(getIngredient.pending, (state, action) => {
             state.itemStatus = "loading"
