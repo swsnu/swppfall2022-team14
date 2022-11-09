@@ -217,6 +217,18 @@ def retrieve_cocktail(request, pk):
             except IntegrityError:
                 return HttpResponseBadRequest("tag must not be duplicated")
 
+        try:
+            ingredient_list = data['ingredients']
+        except (KeyError, JSONDecodeError) as e:
+            ingredient_list = []
+        IngredientPrepare.objects.filter(cocktail=cocktail).delete()
+        for i in ingredient_list:
+            try:
+                ingredient = Ingredient.objects.get(id=i["id"])
+            except Tag.DoesNotExist:
+                return HttpResponseNotFound("ingredient does not exist")
+            IngredientPrepare.objects.create(cocktail=cocktail, ingredient=ingredient)
+
         return JsonResponse(data=CocktailDetailSerializer(cocktail).data, status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT'])
