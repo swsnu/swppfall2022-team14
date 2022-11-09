@@ -2,15 +2,9 @@ import { useParams } from "react-router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import Comment from "./Comment";
 import './IngredientDetailPage.scss';
 import React from 'react';
-import { fetchCommentListByCocktailId, selectComment } from "../store/slices/comment/comment";
-import { fetchIngredientList, getIngredient, selectIngredient } from "../store/slices/ingredient/ingredient";
-interface User {
-    id: number;
-    name: string;
-}
+import { getIngredient, selectIngredient } from "../store/slices/ingredient/ingredient";
 
 export default function ItemDetailPage() {
 

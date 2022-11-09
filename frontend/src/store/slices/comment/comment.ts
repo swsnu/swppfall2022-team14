@@ -16,12 +16,14 @@ export interface CommentType {
 
 export interface CommentInfo {
     commentList: CommentType[]
-    commentItem: CommentType | null
+    commentItem: CommentType | null,
+    state: "EDIT" | "REPLY" | null
 }
 
 const initialState: CommentInfo = {
     commentList: [],
-    commentItem: null
+    commentItem: null,
+    state: null
 }
 
 export const fetchCommentListByCocktailId = createAsyncThunk(
@@ -46,17 +48,25 @@ export const getComment = createAsyncThunk(
 )
 
 export const postComment = createAsyncThunk(
-    "comment/postComment", async (comment: Pick<CommentType, "content"|"parent_comment"|"cocktail">, {dispatch}) => {
-        const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/?parent_comment=${comment.parent_comment}`, {
-            "content": comment.content,
-        })
-        dispatch(commentActions.addComment(response.data))
+    "comment/postComment", async (comment: {cocktail: number, parent_comment: number|null, content: string}, {dispatch}) => {
+        if(comment.parent_comment){
+            const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/?parent_comment=${comment.parent_comment}`, {
+                "content": comment.content,
+            })
+            dispatch(commentActions.addComment(response.data))
+        }else{
+            const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/`, {
+                "content": comment.content,
+            })
+            dispatch(commentActions.addComment(response.data))
+        }
     }
 )
 
 export const editComment = createAsyncThunk(
     "comment/editComment", async (comment: Pick<CommentType, "content"|"id">, {dispatch}) => {
-        const response = await axios.put(`/api/v1/comment/${comment.id}/`, {
+        console.log("?")
+        const response = await axios.put<CommentType>(`/api/v1/comment/${comment.id}/`, {
             "content": comment.content,
         })
         dispatch(commentActions.editComment(response.data))
@@ -65,8 +75,12 @@ export const editComment = createAsyncThunk(
 
 export const deleteComment = createAsyncThunk(
     "comment/deleteComment", async (id: number, {dispatch}) => {
-        await axios.put(`/api/v1/comment/${id}/`)
-        dispatch(commentActions.deleteComment(id))
+        const response = await axios.delete(`/api/v1/comment/${id}/`)
+        if(response.data){
+            dispatch(commentActions.setIsDeletedComment(response.data))
+        }else{
+            dispatch(commentActions.deleteComment({targetId:id}))
+        }
     }
 )
 
@@ -76,17 +90,43 @@ export const CommentSlice = createSlice({
     reducers: {
         addComment: (state, action: PayloadAction<CommentType>) => {
             state.commentList.push(action.payload)
+            state.commentItem = null
+            state.state = null
         },
         editComment: (state, action: PayloadAction<CommentType>) => {
-            state.commentList.map((comment) => {
-                return comment.id == action.payload.id ? action.payload : comment
-            });
+            state.commentList.forEach((c, i) => {
+                if(c.id === action.payload.id){
+                    state.commentList[i].content = action.payload.content
+                }
+            })
+            state.commentItem = null
+            state.state = null
         },
-        deleteComment: (state, action) => {
+        deleteComment: (state, action: PayloadAction<{targetId:number}>) => {
             const deleted = state.commentList.filter((comment) => {
-                return comment.id != action.payload.id;
+                return comment.id != action.payload.targetId;
             });
             state.commentList = deleted
+            state.commentItem = null
+            state.state = null
+        },
+        setIsDeletedComment: (state, action: PayloadAction<CommentType>) => {
+            console.log(action.payload)
+            state.commentList.forEach((c, i) => {
+                if(c.id === action.payload.id){
+                    state.commentList[i] = action.payload
+                }
+            })
+            state.commentItem = null
+            state.state = null
+        },
+        editCommentState: (state, action: PayloadAction<CommentType>) => {
+            state.commentItem = action.payload
+            state.state = "EDIT"
+        },
+        replyCommentState: (state, action: PayloadAction<CommentType>) => {
+            state.commentItem = action.payload
+            state.state = "REPLY"
         }
     },
     extraReducers: (builder) => {
