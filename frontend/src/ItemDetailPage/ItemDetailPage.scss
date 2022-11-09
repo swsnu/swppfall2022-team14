@@ -22,7 +22,7 @@
     display: flex;
 
     &__name {
-        width: 80%;
+        width: 70%;
         text-align: left;
     }
 
@@ -32,6 +32,10 @@
 
     &__author {
         text-align: left;
+    }
+
+    &__edit-button {
+        width: 10%;
     }
 
     &__rate-button {
