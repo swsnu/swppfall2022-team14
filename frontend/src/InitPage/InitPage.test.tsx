@@ -1,4 +1,5 @@
 import axios from "axios";
+import Modal from 'react-modal';
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { fireEvent, render, screen } from "@testing-library/react";
@@ -8,6 +9,8 @@ import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import styles from '.../common/Components/Item.module.scss'
 import InitPage from "./InitPage";
+import LoginModal from "./Modals/LoginModal";
+import { prop as LoginModalProp } from "./Modals/LoginModal";
 
 jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid="spyCocktail">
@@ -16,6 +19,28 @@ jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "imag
         <div className="item__rate">{prop.rate} / 5점</div>
         <div className="item__tags">
             {prop.tags.map(tag => { return <div className="item__tag" key={tag}>#{tag} </div> })}
+        </div>
+    </div>
+));
+
+jest.mock("./Modals/LoginModal", () => (prop: LoginModalProp) => (
+    <div 
+        data-testid="spyLoginModal"
+        className="login-modal"
+    >
+        <button>X</button >
+        <div className="container">
+            <div>
+                <div className="id">
+                    ID
+                </div>
+                <div className="id">
+                    Password
+                </div>
+                <div className="button">
+                    <button className="login" onClick={() => { prop.setLoginState(true); prop.setIsOpen(false); }}>Login</button>
+                </div>
+            </div>
         </div>
     </div>
 ));
@@ -138,9 +163,27 @@ describe("<InitPage />", () => {
         expect(cocktails).toHaveLength(1);
     });
     it("should render filter when filter button clicked", async () => {
-        renderInitPage(false);
+        renderInitPage();
         const filterButton = screen.getByText("FILTER");
         fireEvent.click(filterButton);
         await screen.findByText("Type 1");
+    });
+    it("should render login when login button clicked", async () => {
+        renderInitPage();
+        const loginModalButton = screen.getByText("로그인");
+        fireEvent.click(loginModalButton);
+        await screen.findByTestId("spyLoginModal");
+    });
+    it("should render profile when profile button clicked", async () => {
+        renderInitPage();
+        const loginModalButton = screen.getByText("로그인");
+        fireEvent.click(loginModalButton);
+        await screen.findByTestId("spyLoginModal");
+        const loginButton = screen.getByText("Login");
+        fireEvent.click(loginButton);
+        await screen.findByText("내 프로필");
+        const profileButton = screen.getByText("내 프로필");
+        fireEvent.click(profileButton);
+        await screen.findByText("My Page");
     });
 });

@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import styles from './LoginModal.module.scss'
 import { toast } from 'react-toastify';
 import React from 'react';
-interface prop {
+export interface prop {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
     setLoginState: Dispatch<SetStateAction<boolean>>;
