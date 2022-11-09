@@ -3,6 +3,8 @@ from json import JSONDecodeError
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
 from django.db import IntegrityError
 from django.db.models import Q
+from ingredient_prepare.models import IngredientPrepare
+from ingredient.models import Ingredient
 from tag.models import Tag, CocktailTag
 from .models import Cocktail
 from rest_framework.decorators import api_view
@@ -163,6 +165,17 @@ def cocktail_list(request):
                 CocktailTag.objects.create(tag=tag, cocktail=cocktail)
             except IntegrityError:
                 return HttpResponseBadRequest("tag must not be duplicated")
+
+        try:
+            ingredient_list = data['ingredients']
+        except (KeyError, JSONDecodeError) as e:
+            ingredient_list = []
+        for i in ingredient_list:
+            try:
+                ingredient = Ingredient.objects.get(id=i["id"])
+            except Tag.DoesNotExist:
+                return HttpResponseNotFound("ingredient does not exist")
+            IngredientPrepare.objects.create(cocktail=cocktail, ingredient=ingredient)
 
         return JsonResponse(data=CocktailDetailSerializer(cocktail).data, status=201)
     else:
