@@ -1,48 +1,83 @@
 import { useState, useEffect } from "react";
 import AddIngredientModal from "./Modals/AddIngredientModal"
+import { Navigate, useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../store";
+import { CocktailDetailType, IngredientPrepareType, postCocktail, selectCocktail } from "../store/slices/cocktail/cocktail";
 import './CreateCustomPage.scss';
 import React from 'react';
-export interface Ingredient {
-    name: string;
-    amount?: number;
-}
+import { IngredientType } from "../store/slices/ingredient/ingredient";
 
 export default function CreateCustomPage() {
-    const [ingredientList, setIngredientList] = useState<Ingredient[]>([]);
-    const [isOpen, setOpen] = useState(false);
-    const [newIngredient, setNewIngredient] = useState("");
+    const [name, setName] = useState<string>("");
+    const [introduction, setIntroduction] = useState<string>("");
+    const [recipe, setRecipe] = useState<string>("");
+    const [tag, setTag] = useState<string>("");
+    const [ABV, setABV] = useState<number>(20);  // Temporary
+    const [price, setPrice] = useState<number>(80000);  // Temporary
 
+    const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
+    const [isOpen, setOpen] = useState(false);
+    const [newIngredient, setNewIngredient] = useState<IngredientType|null>(null);
+
+    const [confirmed, setConfirmed] = useState<boolean>(false);
+
+    const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
         setIngredientList(ingredientList.filter((_value, idx) => idx !== selectedIdx));
     };
 
+    const cocktailState = useSelector(selectCocktail);
+    const dispatch = useDispatch<AppDispatch>();
+
     useEffect(() => {
-        if (newIngredient !== "") {
-            setIngredientList([...ingredientList, { name: newIngredient, amount: undefined }]);
-            setNewIngredient("");
+        if(newIngredient){
+            if(ingredientList.filter((i) => i.id === newIngredient.id).length === 0){
+                setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
+                setNewIngredient(null);
+            }
+
         }
     }, [newIngredient])
 
-    const onchangeAmount = (selectedIdx: number, changedAmount: string) => {
+    const onChangeAmount = (selectedIdx: number, changedAmount: string) => {
         setIngredientList(
             ingredientList.map((ingredient, idx) => {
                 if (idx !== selectedIdx) {
                     return ingredient;
                 } else {
-                    return { name: ingredient.name, amount: Number(changedAmount) };
+                    return { ...ingredient, amount: changedAmount } as IngredientPrepareType;
                 }
             })
         );
     };
 
+    const createCocktailHandler = async () => {
+        const tagList = tag.replaceAll(/\s/g, '').split('#')
+        const response = await dispatch(postCocktail({
+            name: name,
+            image:"https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
+            introduction:introduction,
+            recipe: recipe,
+            ABV: ABV,
+            price_per_glass: price,
+            tags: tagList,
+            author_id:1,
+            ingredients: ingredientList
+        }))
+
+        console.log(response)
+        navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
+    }
     return (
         <div className="item-detail">
             <div className="title">
                 <div className="title__name">
                     Name:
-                    <input className='title__name-input' />
+                    <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)}/>
                 </div>
-                <button className="title__confirm-button">Confirm</button>
+                <button className="title__confirm-button"
+                onClick={() => createCocktailHandler()}>Confirm</button>
             </div>
             <div className="content">
                 <img
@@ -53,7 +88,7 @@ export default function CreateCustomPage() {
                     <p className="content__abv">Expected 20% ABV</p>
                     <div className='content__description'>
                         Description:<br />
-                        <textarea className='content__description-input' />
+                        <textarea className='content__description-input' value={introduction} onChange={(e) => setIntroduction(e.target.value)}/>
                     </div>
                     <div className="content__ingredient-box">
                         Ingredient:
@@ -75,7 +110,7 @@ export default function CreateCustomPage() {
                                     <input
                                         className="content__ingredient-input"
                                         value={ingredient.amount ?? ""}
-                                        onChange={(event) => onchangeAmount(idx, event.target.value)}
+                                        onChange={(event) => onChangeAmount(idx, event.target.value)}
                                     />
                                     {idx !== ingredientList.length &&
                                         <button className="content__ingredient-delete-button" onClick={() => onClickIngredientDelete(idx)}>Delete</button>}
@@ -85,15 +120,15 @@ export default function CreateCustomPage() {
                     </div>
                     <div className='content__recipe'>
                         Recipte:<br />
-                        <textarea className='content__recipe-input' />
+                        <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)}/>
                     </div>
                     <div className='content__tag'>
                         Tag:<br />
-                        <textarea className='content__tag-input' />
+                        <textarea className='content__tag-input' value={tag} onChange={(e) => setTag(e.target.value)}/>
                     </div>
+                    <p className="content__price">Expected ${price}</p>
                 </div>
-                <p className="content__price">Expected $8</p>
             </div>
         </div>
-    )
-}
+        )
+    }

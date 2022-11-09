@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../..";
 import ingredient, { IngredientType } from "../ingredient/ingredient";
@@ -32,7 +32,7 @@ export interface CocktailDetailType {
 }
 
 export interface IngredientPrepareType extends IngredientType {
-    amount: number;
+    amount: string;
 }
 
 export interface CocktailInfo {
@@ -41,6 +41,7 @@ export interface CocktailInfo {
     itemStatus: string,
     listStatus: string
 }
+
 const initialState: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
@@ -89,23 +90,25 @@ export const getCocktail = createAsyncThunk(
 
 )
 
-// export const getCocktailIngredients = createAsyncThunk(
-//     "cocktail/getCocktailIngredients",
-//     async (id: CocktailItemType["id"]) => {
-//         const response = await axios.get(`/api/v1/cocktails/${id}/ingredients`)
-//         console.log(response.data)
-//         return response.data;
-//     }
-// )
+export const postCocktail = createAsyncThunk(
+    "cocktail/postCocktail",
+    async (cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
+        const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
+        console.log(response.data);
+        dispatch(cocktailActions.addCocktail(response.data));
+        return response.data
+    }
+)
 
 export const cocktailSlice = createSlice({
     name: "cocktail",
     initialState,
     reducers: {
+        addCocktail: (state, action: PayloadAction<CocktailDetailType>) => {
+            state.cocktailList.push(action.payload)
+        }
     },
     extraReducers: (builder) => {
-        // Add reducers for additional action types here, and handle loading state as needed
-
         //CustomCocktailList
         builder.addCase(fetchCustomCocktailList.fulfilled, (state, action) => {
             state.cocktailList = action.payload.cocktails;
@@ -154,7 +157,6 @@ export const cocktailSlice = createSlice({
         });
     },
 })
-
 export const cocktailActions = cocktailSlice.actions;
 export const selectCocktail = (state: RootState) => state.cocktail;
 

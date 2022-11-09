@@ -27,21 +27,22 @@
     margin-top: 50px;
     display: flex;
     
-    &__image {
+    &__image-input {
         width: 30%;
-        height: fit-content;
+        height: 300px;
         margin-right: 20px;
+        resize: none;
     }
 
     &__description-box {
         width: 60%;
     }
 
-    &__description {
+    &__introduction {
         text-align: left;
     }
 
-    &__description-input {
+    &__introduction-input {
         width: 100%;
         height: 100px;
         resize: none;
