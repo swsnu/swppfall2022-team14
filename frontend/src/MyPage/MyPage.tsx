@@ -5,11 +5,13 @@ import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } fr
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
+import '../ListPage/ListPage.scss'
 import MyIngredient from "./MyIngredient";
 import MyBookmark from "./MyBookmark";
 import MyCustomCocktail from "./MyCustomCocktail";
 import MyComment from "./MyComment";
 import MyInfo from "./MyInfo";
+import NavBar from "../NavBar/NavBar";
 interface ButtonInfo {
     name: string;
     component: JSX.Element;
@@ -32,6 +34,9 @@ const MyPage = () => {
 
 
     return <div className={styles.main}>
+        <div className="list__navbar">
+            <NavBar />
+        </div>
         <div className={styles.left}>
             {buttonList.map((button) => <button key={button.name} name={button.name} onClick={onButtonClick} disabled={buttonClickState === button.name}>{button.name}</button>)}
         </div>
