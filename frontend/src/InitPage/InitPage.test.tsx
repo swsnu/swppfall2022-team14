@@ -1,16 +1,13 @@
 import axios from "axios";
-import Modal from 'react-modal';
-import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { getMockStore, renderWithProviders } from "../test-utils/mock";
-import { CocktailInfo, CocktailItemType } from "../store/slices/cocktail/cocktail";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { renderWithProviders } from "../test-utils/mock";
+import { CocktailItemType } from "../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
-import styles from '.../common/Components/Item.module.scss'
 import InitPage from "./InitPage";
-import LoginModal from "./Modals/LoginModal";
 import { prop as LoginModalProp } from "./Modals/LoginModal";
+import { prop as InitMyLiqourModalProp } from "./Modals/InitMyLiqourModal";
 
 jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid="spyCocktail">
@@ -24,25 +21,13 @@ jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "imag
 ));
 
 jest.mock("./Modals/LoginModal", () => (prop: LoginModalProp) => (
-    <div 
-        data-testid="spyLoginModal"
-        className="login-modal"
-    >
-        <button>X</button >
-        <div className="container">
-            <div>
-                <div className="id">
-                    ID
-                </div>
-                <div className="id">
-                    Password
-                </div>
-                <div className="button">
-                    <button className="login" onClick={() => { prop.setLoginState(true); prop.setIsOpen(false); }}>Login</button>
-                </div>
-            </div>
-        </div>
+    <div data-testid="spyLoginModal">
+        <button onClick={() => { prop.setLoginState(true); prop.setIsOpen(false); }}>Login</button>
     </div>
+));
+
+jest.mock("./Modals/InitMyLiqourModal", () => (prop: InitMyLiqourModalProp) => (
+    <div data-testid="spyInitMyLiquorModal" />
 ));
 
 const cocktailList = [
@@ -87,6 +72,12 @@ const stubIngredientInitialState: IngredientInfo = {
     itemStatus: "loading",
     listStatus: "loading",
 };
+
+const mockNavigate = jest.fn();
+jest.mock("react-router", () => ({
+    ...jest.requireActual("react-router"),
+    useNavigate: () => mockNavigate,
+}));
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -168,7 +159,7 @@ describe("<InitPage />", () => {
         fireEvent.click(filterButton);
         await screen.findByText("Type 1");
     });
-    it("should render login when login button clicked", async () => {
+    it("should render login modal when login button clicked", async () => {
         renderInitPage();
         const loginModalButton = screen.getByText("로그인");
         fireEvent.click(loginModalButton);
@@ -185,5 +176,41 @@ describe("<InitPage />", () => {
         const profileButton = screen.getByText("내 프로필");
         fireEvent.click(profileButton);
         await screen.findByText("My Page");
+    });
+    it("should naviate to /mypage when my page button clicked", async () => {
+        renderInitPage();
+        const loginModalButton = screen.getByText("로그인");
+        fireEvent.click(loginModalButton);
+        await screen.findByTestId("spyLoginModal");
+        const loginButton = screen.getByText("Login");
+        fireEvent.click(loginButton);
+        await screen.findByText("내 프로필");
+        const profileButton = screen.getByText("내 프로필");
+        fireEvent.click(profileButton);
+        await screen.findByText("My Page");
+        const myPageButton = screen.getByText("My Page");
+        fireEvent.click(myPageButton);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/mypage"));
+    });
+    it("should logout when logout button clicked", async () => {
+        renderInitPage();
+        const loginModalButton = screen.getByText("로그인");
+        fireEvent.click(loginModalButton);
+        await screen.findByTestId("spyLoginModal");
+        const loginButton = screen.getByText("Login");
+        fireEvent.click(loginButton);
+        await screen.findByText("내 프로필");
+        const profileButton = screen.getByText("내 프로필");
+        fireEvent.click(profileButton);
+        await screen.findByText("My Page");
+        const logoutButton = screen.getByText("Logout");
+        fireEvent.click(logoutButton);
+        await screen.findByText("로그인");
+    });
+    it("should render my liquor modal when my liquor button clicked", async () => {
+        renderInitPage();
+        const myLiquorModalButton = screen.getByText("My Liqour");
+        fireEvent.click(myLiquorModalButton);
+        await screen.findByTestId("spyInitMyLiquorModal");
     });
 });
