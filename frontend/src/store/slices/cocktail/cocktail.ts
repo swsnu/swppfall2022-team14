@@ -98,6 +98,16 @@ export const postCocktail = createAsyncThunk(
     }
 )
 
+export const editCocktail = createAsyncThunk(
+    "cocktail/editCocktail",
+    async (cocktail: Omit<CocktailDetailType, "type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
+        const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/`, cocktail);
+        console.log(response.data);
+        dispatch(cocktailActions.addCocktail(response.data));
+        return response.data
+    }
+)
+
 export const cocktailSlice = createSlice({
     name: "cocktail",
     initialState,

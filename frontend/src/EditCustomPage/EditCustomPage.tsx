@@ -3,7 +3,7 @@ import AddIngredientModal from "../CreateCustomPage/Modals/AddIngredientModal"
 import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { CocktailDetailType, IngredientPrepareType, postCocktail, getCocktail, selectCocktail } from "../store/slices/cocktail/cocktail";
+import { CocktailDetailType, IngredientPrepareType, editCocktail, getCocktail, selectCocktail } from "../store/slices/cocktail/cocktail";
 import './EditCustomPage.scss';
 import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
@@ -87,7 +87,8 @@ export default function EditCustomPage() {
     }
 
     const editCocktailHandler = async () => {
-        const response = await dispatch(postCocktail({
+        const response = await dispatch(editCocktail({
+            id: Number(id),
             name: name,
             image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
             introduction: introduction,
