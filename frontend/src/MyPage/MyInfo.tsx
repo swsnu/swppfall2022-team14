@@ -14,10 +14,6 @@ interface UserData {
 }
 
 const MyInfo = () => {
-
-    const cocktailState = useSelector(selectCocktail)
-    const dispatch = useDispatch<AppDispatch>()
-
     const [dummyUserData, setDummyUserData] = useState<UserData>({
         name: "username",
         email: "email",
@@ -26,7 +22,7 @@ const MyInfo = () => {
     return <div className={styles['right__main--info']}>
         <div className={styles.form}>
             <div className={styles.form__type}>Name</div>
-            <input className={styles.form__field} value={dummyUserData.name}></input>
+            <input className={styles.form__field} value={dummyUserData.name} onChange={(e) => {}}></input>
         </div>
         <div className={styles.form}>
             <div className={styles.form__type}>Email</div>
@@ -34,7 +30,7 @@ const MyInfo = () => {
         </div>
         <div className={styles.form}>
             <div className={styles.form__type}>Info</div>
-            <textarea className={styles.form__field} value={dummyUserData.info}></textarea>
+            <textarea className={styles.form__field} value={dummyUserData.info} onChange={(e) => {}}></textarea>
         </div>
         <div className={styles.form}>
             <div className={styles.form__type}>PW</div>

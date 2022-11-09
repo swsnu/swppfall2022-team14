@@ -23,51 +23,6 @@ const MyIngredient = () => {
         setIsInitMyLiqourOpen(true)
     }
 
-
-
-    const dummy: Pick<CocktailDetailType, "image" | "name" | "ABV" | "id">[] = [
-        {
-            id: 1,
-            name: 'name',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            ABV: 42.4,
-        }, {
-            id: 2,
-            name: 'name2',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            ABV: 42.4,
-
-        }, {
-            id: 3,
-            name: 'name3',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            ABV: 42.4,
-        },
-        {
-            id: 4,
-            name: 'name4',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            ABV: 42.4,
-        },
-        {
-            id: 5,
-            name: 'name5',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            ABV: 42.4,
-        },
-        {
-            id: 6,
-            name: 'name6',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            ABV: 42.4,
-        },
-        {
-            id: 7,
-            name: 'name7',
-            image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-            ABV: 42.4,
-        },
-    ]
     useEffect(() => {
         dispatch(fetchIngredientList())
     })
