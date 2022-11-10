@@ -9,7 +9,7 @@ const Item = (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | 
     const navigate = useNavigate()
     const onClickItem = () => {
         if (prop.type === 'CS') navigate(`/custom/${prop.id}`)
-        else if (prop.type === 'ST') navigate(`/standard/${prop.id}`)
+        else navigate(`/standard/${prop.id}`)
     }
 
     return <div className={styles.item} onClick={onClickItem}>

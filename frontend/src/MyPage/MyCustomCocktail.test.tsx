@@ -56,7 +56,7 @@ const ingredientState: IngredientInfo = {
 const mockStore = getMockStore({cocktail: cocktaiState, ingredient: ingredientState, comment: commentState});
 
 
-describe("<ShortComment />", () => {
+describe("<MyCustomCocktail />", () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
