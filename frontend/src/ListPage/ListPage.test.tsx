@@ -80,7 +80,7 @@ const ingredientState: IngredientInfo = {
     listStatus: "success",
 }
 
-let standardMockStore = getMockStore({cocktail: stubInitialStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState});
+const standardMockStore = getMockStore({cocktail: stubInitialStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState});
 
 const customMockStore = getMockStore({cocktail: stubInitialCustomCocktaiState, ingredient: ingredientState, comment: emptyCommentState});
 
