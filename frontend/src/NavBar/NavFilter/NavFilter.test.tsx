@@ -52,7 +52,16 @@ const renderNavFilter = (type: string) => {
 describe("<NavFilter />", () => {
     it("should render NavFilter", async () => {
         renderNavFilter("ST");
-        await screen.findByText("Type 1");
+        const searchBar = screen.getByPlaceholderText("검색어를 입력하세요");
+        fireEvent.change(searchBar, { target: { value: "COCKTAIL" } });
+        expect(searchBar).toHaveDisplayValue("COCKTAIL");
+    });
+    it("should render ingredient NavFilter", async () => {
+        renderNavFilter("IG");
+        await screen.findByText("검색하기");
+        const searchBar = screen.getByPlaceholderText("검색어를 입력하세요");
+        fireEvent.change(searchBar, { target: { value: "INGREDIENT" } });
+        expect(searchBar).toHaveDisplayValue("INGREDIENT");
     });
     it("should be unique when unique type clicked", async () => {
         renderNavFilter("ST");

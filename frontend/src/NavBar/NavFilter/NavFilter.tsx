@@ -45,7 +45,7 @@ const NavFilter = (prop: Iprops) => {
                 <div className="navfilter__wrap">
                     <div className={"navfilter__title"}>Text 검색 </div>
                     <div className={"navfilter__content"}>
-                        <input disabled={true} className="navfilter__search-text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="     검색어를 입력하세요" />
+                        <input className="navfilter__search-text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="     검색어를 입력하세요" />
                     </div>
                 </div>
                 <button className="navfilter__btn" onClick={prop.handleSearch}>검색하기</button>
