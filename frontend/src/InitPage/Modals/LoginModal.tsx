@@ -30,8 +30,6 @@ const LoginModal = (props: prop) => {
     const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key !== 'Enter') {
             // TODO : IMPLEMENT THIS
-        } else {
-
         }
     };
 
