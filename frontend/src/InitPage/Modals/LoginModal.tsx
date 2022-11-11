@@ -28,10 +28,12 @@ const LoginModal = (props: prop) => {
     //Modal.setAppElement('#root');
 
     const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
+        /*
+        if (e.key !== 'Enter') {
             return
             // TODO : IMPLEMENT THIS
         }
+        */
     };
 
     const onClickLogin = () => {

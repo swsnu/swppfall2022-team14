@@ -68,15 +68,21 @@ describe("<LoginModal />", () => {
         renderLoginModal();
         const idInput = screen.getByLabelText("ID");
         fireEvent.change(idInput, { target: { value: "TEST_ID" } });
-        fireEvent.keyPress(idInput, { key: "Enter", code: 13, charCode: 13 });
     });
     it("should render register inputs when register mode button clicked", async () => {
         renderLoginModal();
         const registerModeButton = screen.getByText("register");
         fireEvent.click(registerModeButton);
         await screen.findByText("Register");
+        const nameInput = screen.getByLabelText("Name");
+        fireEvent.change(nameInput, { target: { value: "TEST_NAME" } });
     });
-    it("should close LoginModal when confirmed", async () => {
+    it("should call onKeyPress when enter pressed", async () => {
+        renderLoginModal();
+        const idInput = screen.getByLabelText("ID");
+        fireEvent.keyPress(idInput, { key: "Enter", charCode: 13 });
+    });
+    it("should close login when confirmed", async () => {
         renderLoginModal();
         const idInput = screen.getByLabelText("ID");
         fireEvent.change(idInput, { target: { value: "TEST_ID" } });
@@ -84,6 +90,20 @@ describe("<LoginModal />", () => {
         fireEvent.change(passwordInput, { target: { value: "TEST_PASSWORD" } });
         const loginButton = screen.getByText("Login");
         fireEvent.click(loginButton);
+    });
+    it("should close register when confirmed", async () => {
+        renderLoginModal();
+        const registerModeButton = screen.getByText("register");
+        fireEvent.click(registerModeButton);
+        await screen.findByText("Register");
+        const nameInput = screen.getByLabelText("Name");
+        fireEvent.change(nameInput, { target: { value: "TEST_NAME" } });
+        const idInput = screen.getByLabelText("ID");
+        fireEvent.change(idInput, { target: { value: "TEST_ID" } });
+        const passwordInput = screen.getByLabelText("Password");
+        fireEvent.change(passwordInput, { target: { value: "TEST_PASSWORD" } });
+        const registerButton = screen.getByText("Register");
+        fireEvent.click(registerButton);
     });
     it("should alert error when id empty", async () => {
         renderLoginModal();
@@ -96,5 +116,10 @@ describe("<LoginModal />", () => {
         fireEvent.change(idInput, { target: { value: "TEST_ID" } });
         const loginButton = screen.getByText("Login");
         fireEvent.click(loginButton);
+    });
+    it("should close LoginModal when close button clicked", async () => {
+        renderLoginModal();
+        const closeButton = screen.getByText("X");
+        fireEvent.click(closeButton);
     });
 });
