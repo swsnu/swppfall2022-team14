@@ -92,7 +92,6 @@ export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
     async (cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
-        console.log(response.data);
         dispatch(cocktailActions.addCocktail(response.data));
         return response.data
     }

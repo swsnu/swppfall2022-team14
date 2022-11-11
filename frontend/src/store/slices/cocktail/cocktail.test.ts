@@ -55,8 +55,8 @@ describe("userInfo reducer", () => {
         recipe: "recipe",
         ABV: 1,
         price_per_glass: 1,
-        created_at: Date,
-        updated_at: Date,
+        created_at: "2020-10-10",
+        updated_at: "2020-10-10",
         ingredients: [{
             id: 1,
             name: "iname",
@@ -67,29 +67,16 @@ describe("userInfo reducer", () => {
             amount : 1,
         }]
     }
-    const fakeDetailST = {
-        id: 1,
+    const fakeDetailOmit = {
         name: "name",
         image: "img",
-        type: "ST",
         tags: ["ST1","ST2"],
         author_id: 1,
-        rate: 1,
         introduction: "intro",
         recipe: "recipe",
         ABV: 1,
         price_per_glass: 1,
-        created_at: Date,
-        updated_at: Date,
-        ingredients: [{
-            id: 1,
-            name: "sname",
-            image: "simg",
-            ABV: 1,
-            price: 1,
-            introduction: "sintro",
-            amount : 1,
-        }]
+        ingredients: []
     }
 
     beforeAll(() => {
@@ -127,6 +114,12 @@ describe("userInfo reducer", () => {
         expect(store.getState().cocktail.itemStatus).toEqual("success")
         expect(store.getState().cocktail.cocktailItem).toEqual(fakeDetailCS)
 
+    });
+
+    it("should handle postCocktail", async () => {
+        axios.post = jest.fn().mockResolvedValue({data : fakeCocktailItemST});
+        await store.dispatch(postCocktail(fakeDetailOmit));
+        //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
 
 });
