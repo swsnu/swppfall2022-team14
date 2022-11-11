@@ -41,8 +41,21 @@ const Filter = (prop: Iprops) => {
             <div className={styles.filter__title}>Type 1</div>
             <div className={styles.filter__content}>
                 {typeOneList.map((type) => {
-                    return <React.Fragment key={type.name}><input key={type.name} type="checkbox" name="type1"
-                        checked={typeOneParam.includes(type.name)} onChange={() => prop.setUrlParams(url_params)} onClick={() => onTypeClick(typeOneParam, setTypeOneParam, type.name)} />{type.label} </React.Fragment>
+                    return (
+                        <React.Fragment key={type.name}>
+                            <label>
+                                <input 
+                                    key={type.name} 
+                                    type="checkbox" 
+                                    name="type1"
+                                    checked={typeOneParam.includes(type.name)} 
+                                    onChange={() => prop.setUrlParams(url_params)} 
+                                    onClick={() => onTypeClick(typeOneParam, setTypeOneParam, type.name)} 
+                                />
+                                {type.label}
+                            </label>
+                         </React.Fragment>
+                    )
                 })}
             </div>
         </div>
@@ -50,8 +63,21 @@ const Filter = (prop: Iprops) => {
             <div className={styles.filter__title}>Type 2</div>
             <div className={styles.filter__content}>
                 {typeTwoList.map((type) => {
-                    return <React.Fragment key={type.name}><input key={type.name} type="checkbox" name="type2"
-                        checked={typeTwoParam.includes(type.name)} onChange={() => prop.setUrlParams(url_params)} onClick={() => onTypeClick(typeTwoParam, setTypeTwoParam, type.name)} />{type.label} </React.Fragment>
+                    return (
+                        <React.Fragment key={type.name}>
+                            <label>
+                            <input 
+                                key={type.name} 
+                                type="checkbox" 
+                                name="type2"
+                                checked={typeTwoParam.includes(type.name)} 
+                                onChange={() => prop.setUrlParams(url_params)} 
+                                onClick={() => onTypeClick(typeTwoParam, setTypeTwoParam, type.name)} 
+                            />
+                            {type.label} 
+                            </label>
+                        </React.Fragment>
+                    )
                 })}
             </div>
         </div>
@@ -59,8 +85,21 @@ const Filter = (prop: Iprops) => {
             <div className={styles.filter__title}>도수 </div>
             <div className={styles.filter__content}>
                 {typeThreeList.map((type) => {
-                    return <React.Fragment key={type.name}><input key={type.name} type="checkbox" name="type3"
-                        checked={typeThreeParam.includes(type.name)} onChange={() => prop.setUrlParams(url_params)} onClick={() => onTypeClick(typeThreeParam, setTypeThreeParam, type.name, true)} />{type.label}</React.Fragment>
+                    return (
+                        <React.Fragment key={type.name}>
+                            <label>
+                                <input 
+                                    key={type.name} 
+                                    type="checkbox" 
+                                    name="type3"
+                                    checked={typeThreeParam.includes(type.name)} 
+                                    onChange={() => prop.setUrlParams(url_params)} 
+                                    onClick={() => onTypeClick(typeThreeParam, setTypeThreeParam, type.name, true)} 
+                                />
+                                {type.label}
+                            </label>
+                        </React.Fragment>
+                    )                
                 })}
             </div>
 
