@@ -17,12 +17,14 @@ const InitMyLiqourModal = (props: prop) => {
     
     /* eslint-disable */
     // Use in future
+    /*
     const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             return
             //TODO : IMPLEMENT THIS
         }
     };
+    */
     /* eslint-enable */
 
 

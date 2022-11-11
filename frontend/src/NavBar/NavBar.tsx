@@ -15,7 +15,7 @@ const NavBar = () => {
 
     useEffect(() => {
         setTrigger(urlParams)
-        console.log(trigger)
+        // console.log(trigger)
     }, [urlParams])
 
     const [openIngr, setOpenIngr] = useState(false)
@@ -74,7 +74,7 @@ const NavBar = () => {
             navigate('/ingredient')
         }
         else {
-            console.log("TYPE NOT MATCH")
+            // console.log("TYPE NOT MATCH")
         }
         window.location.reload()
     }

@@ -64,4 +64,9 @@ describe("<InitMyLiquorModal />", () => {
         renderInitMyLiqourModal();
         await screen.findByText("내 술 목록");
     });
+    it("should close InitMyLiquorModal when close button clicked", async () => {
+        renderInitMyLiqourModal();
+        const closeButton = screen.getByText("X");
+        fireEvent.click(closeButton);
+    });
 });
