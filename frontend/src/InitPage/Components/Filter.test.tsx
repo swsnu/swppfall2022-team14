@@ -62,8 +62,11 @@ describe("<Filter />", () => {
     });
     it("should be non-unique when non-unique type clicked", async () => {
         renderFilter();
-        const typeButton = screen.getByLabelText("클래식");
-        fireEvent.click(typeButton);
-        fireEvent.click(typeButton);
+        const typeButton1 = screen.getByLabelText("클래식");
+        fireEvent.click(typeButton1);
+        fireEvent.click(typeButton1);
+        const typeButton2 = screen.getByLabelText("롱드링크");
+        fireEvent.click(typeButton2);
+        fireEvent.click(typeButton2);
     });
 });
