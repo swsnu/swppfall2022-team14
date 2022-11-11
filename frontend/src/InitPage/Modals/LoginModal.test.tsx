@@ -81,6 +81,7 @@ describe("<LoginModal />", () => {
         renderLoginModal();
         const idInput = screen.getByLabelText("ID");
         fireEvent.keyPress(idInput, { key: "Enter", charCode: 13 });
+        fireEvent.keyPress(idInput, { key: "A", charCode: 65 });
     });
     it("should close login when confirmed", async () => {
         renderLoginModal();
