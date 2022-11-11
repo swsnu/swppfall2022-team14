@@ -7,7 +7,7 @@ interface ParamList {
     label: string;
 }
 
-interface Iprops {
+export interface Iprops {
     setUrlParams: Dispatch<SetStateAction<string>>
 }
 const Filter = (prop: Iprops) => {

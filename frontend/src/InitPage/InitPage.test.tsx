@@ -6,6 +6,7 @@ import { CocktailItemType } from "../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import InitPage from "./InitPage";
+import { Iprops as FilterProp } from "./Components/Filter";
 import { prop as LoginModalProp } from "./Modals/LoginModal";
 import { prop as InitMyLiqourModalProp } from "./Modals/InitMyLiqourModal";
 
@@ -19,6 +20,19 @@ jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "imag
         </div>
     </div>
 ));
+
+jest.mock("./Components/Filter", () => (prop: FilterProp) => {
+    return (
+        <div data-testid="spyFilter">
+            <div className="filter__title">Type 1</div>
+            <div className="filter__content">
+                <button onClick={() => prop.setUrlParams("?filter_type_one=_CL")}>
+                    클래식
+                </button>
+            </div>
+        </div>
+    )
+});
 
 jest.mock("./Modals/LoginModal", () => (prop: LoginModalProp) => (
     <div data-testid="spyLoginModal">
@@ -158,6 +172,37 @@ describe("<InitPage />", () => {
         const filterButton = screen.getByText("FILTER");
         fireEvent.click(filterButton);
         await screen.findByText("Type 1");
+    });
+    it("should navigate to /standard with params when search button clickend (standard)", async () => {
+        renderInitPage();
+        const filterButton = screen.getByText("FILTER");
+        fireEvent.click(filterButton);
+        await screen.findByText("Type 1");
+        const typeButton = screen.getByText("클래식")
+        fireEvent.click(typeButton);
+        const searchButton = screen.getByText("SEARCH")
+        fireEvent.click(searchButton);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith({
+            pathname: "/standard",
+            search: "?filter_type_one=_CL&text=",
+        }));
+    });
+    it("should navigate to /custom with params when search button clickend (custom)", async () => {
+        renderInitPage(false);
+        const customButton = screen.getByText("커스텀");
+        fireEvent.click(customButton);
+        await screen.findByText("COCKTAIL_NAME_3");
+        const filterButton = screen.getByText("FILTER");
+        fireEvent.click(filterButton);
+        await screen.findByText("Type 1");
+        const typeButton = screen.getByText("클래식")
+        fireEvent.click(typeButton);
+        const searchButton = screen.getByText("SEARCH")
+        fireEvent.click(searchButton);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith({
+            pathname: "/custom",
+            search: "?filter_type_one=_CL&text=",
+        }));
     });
     it("should render login modal when login button clicked", async () => {
         renderInitPage();
