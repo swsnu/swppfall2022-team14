@@ -7,7 +7,7 @@ import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import InitPage from "./InitPage";
 import { Iprops as FilterProp } from "./Components/Filter";
 import { prop as LoginModalProp } from "./Modals/LoginModal";
-import { prop as InitMyLiqourModalProp } from "./Modals/InitMyLiqourModal";
+import { prop as InitMyLiquorModalProp } from "./Modals/InitMyLiquorModal";
 
 jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid="spyCocktail">
@@ -39,7 +39,7 @@ jest.mock("./Modals/LoginModal", () => (prop: LoginModalProp) => (
     </div>
 ));
 
-jest.mock("./Modals/InitMyLiqourModal", () => (prop: InitMyLiqourModalProp) => (
+jest.mock("./Modals/InitMyLiquorModal", () => (prop: InitMyLiquorModalProp) => (
     <div data-testid="spyInitMyLiquorModal" />
 ));
 
@@ -241,7 +241,7 @@ describe("<InitPage />", () => {
     });
     it("should render my liquor modal when my liquor button clicked", async () => {
         renderInitPage();
-        const myLiquorModalButton = screen.getByText("My Liqour");
+        const myLiquorModalButton = screen.getByText("My Liquor");
         fireEvent.click(myLiquorModalButton);
         await screen.findByTestId("spyInitMyLiquorModal");
     });

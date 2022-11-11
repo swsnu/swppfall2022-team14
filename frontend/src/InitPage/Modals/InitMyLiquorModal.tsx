@@ -1,6 +1,6 @@
 import { SetStateAction, Dispatch, KeyboardEvent } from 'react';
 import Modal from 'react-modal';
-import styles from './InitMyLiqourModal.module.scss'
+import styles from './InitMyLiquorModal.module.scss'
 import React from 'react';
 export interface prop {
     isOpen: boolean;
