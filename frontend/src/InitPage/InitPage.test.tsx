@@ -127,34 +127,16 @@ const renderInitPage = (isStandard: Boolean=true) => {
 describe("<InitPage />", () => {
     it("should render InitPage", async () => {
         renderInitPage();
-        await screen.findByText("로그인")
+        await screen.findByText("COCKTAIL_NAME_1");
+        const cocktails = screen.getAllByTestId("spyCocktail");
+        expect(cocktails).toHaveLength(2);
     });
-    it("should render standard cocktails", async () => {
-        jest.spyOn(axios, "get").mockImplementationOnce(() => {
-            return Promise.resolve({
-                data: [
-                    {
-                        id: 1,
-                        name: "COCKTAIL_NAME_1",
-                        image: "COCKTAIL_IMAGE_1",
-                        type: "ST",
-                        tags: ["TAG_1", "TAG_2"],
-                        author_id: null,
-                        rate: 0,
-                    },
-                    {
-                        id: 2,
-                        name: "COCKTAIL_NAME_2",
-                        image: "COCKTAIL_IMAGE_2",
-                        type: "ST",
-                        tags: ["TAG_1"],
-                        author_id: null,
-                        rate: 0,
-                    },
-                ],
-            });
-        });
+    it("should render standard cocktails when standard button clicked", async () => {
         renderInitPage();
+        const customButton = screen.getByText("커스텀");
+        fireEvent.click(customButton);
+        const standardButton = screen.getByText("스탠다드");
+        fireEvent.click(standardButton);
         await screen.findByText("COCKTAIL_NAME_1");
         const cocktails = screen.getAllByTestId("spyCocktail");
         expect(cocktails).toHaveLength(2);
@@ -172,6 +154,12 @@ describe("<InitPage />", () => {
         const filterButton = screen.getByText("FILTER");
         fireEvent.click(filterButton);
         await screen.findByText("Type 1");
+    });
+    it("should render search bar when search bar inputed", async () => {
+        renderInitPage();
+        const searchBar = screen.getByPlaceholderText("칵테일 이름 검색");
+        fireEvent.change(searchBar, { target: { value: "COCKTAIL" } });
+        expect(searchBar).toHaveDisplayValue("COCKTAIL");
     });
     it("should navigate to /standard with params when search button clickend (standard)", async () => {
         renderInitPage();
