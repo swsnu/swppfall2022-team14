@@ -34,6 +34,15 @@ describe("userInfo reducer", () => {
         author_id: 1,
         rate: 1,
     }
+    const fakeIngredients = {
+        id: 1,
+        name: "iname",
+        image: "iimg",
+        ABV: 1,
+        price: 1,
+        introduction: "iintro",
+        amount : 1,
+    }
     const fakeDetailCS = {
         id: 1,
         name: "name",
@@ -110,6 +119,14 @@ describe("userInfo reducer", () => {
         axios.get = jest.fn().mockResolvedValue({ data: {cocktails: [fakeCocktailItemCS]} });
         await store.dispatch(fetchMyCocktailList());
         expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
+    });
+
+    it("should handle getCocktail", async () => {
+        axios.get = jest.fn().mockResolvedValueOnce({ data: [fakeIngredients] }).mockResolvedValueOnce({ data: fakeDetailCS });
+        await store.dispatch(getCocktail(1));
+        expect(store.getState().cocktail.itemStatus).toEqual("success")
+        expect(store.getState().cocktail.cocktailItem).toEqual(fakeDetailCS)
+
     });
 
 });
