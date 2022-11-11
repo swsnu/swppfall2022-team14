@@ -103,7 +103,7 @@ export const editCocktail = createAsyncThunk(
     async (cocktail: Omit<CocktailDetailType, "type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
         const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/`, cocktail);
         console.log(response.data);
-        dispatch(cocktailActions.addCocktail(response.data));
+        dispatch(cocktailActions.editCocktail(response.data));
         return response.data
     }
 )
@@ -114,7 +114,17 @@ export const cocktailSlice = createSlice({
     reducers: {
         addCocktail: (state, action: PayloadAction<CocktailDetailType>) => {
             state.cocktailList.push(action.payload)
-        }
+        },
+        editCocktail: (state, action: PayloadAction<CocktailDetailType>) => {
+            const editted = state.cocktailList.map((cocktail) => {
+                if (cocktail.id === action.payload.id) {
+                    return {...cocktail, name: action.payload.name, image: action.payload.image, tags: action.payload.tags};
+                } else {
+                    return cocktail;
+                }
+            });
+            state.cocktailList = editted;
+        },
     },
     extraReducers: (builder) => {
         //CustomCocktailList
