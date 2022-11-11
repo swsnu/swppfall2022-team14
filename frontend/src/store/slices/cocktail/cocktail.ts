@@ -55,7 +55,6 @@ const initialState: CocktailInfo = {
 export const fetchStandardCocktailList = createAsyncThunk(
     "cocktail/fetchStandardCocktailList", async (params: string) => {
         const response = await axios.get(`/api/v1/cocktails/?type=standard&${params}`);
-        console.log(response.data)
         return response.data
     },
 )
@@ -63,7 +62,6 @@ export const fetchStandardCocktailList = createAsyncThunk(
 export const fetchCustomCocktailList = createAsyncThunk(
     "cocktail/fetchCustomCocktailList", async (params: string) => {
         const response = await axios.get(`/api/v1/cocktails/?type=custom&${params}`);
-        console.log(response.data)
         return response.data
     },
 )
