@@ -1,4 +1,3 @@
-import axios from "axios";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { renderWithProviders } from "../test-utils/mock";
