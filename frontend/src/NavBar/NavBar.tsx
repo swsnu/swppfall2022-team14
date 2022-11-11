@@ -57,6 +57,7 @@ const NavBar = () => {
     }
 
     const onClickSearch = () => {
+        /* istanbul ignore else */
         if (curFilter === 'ST') {
             navigate({
                 pathname: `/standard`,
@@ -76,7 +77,7 @@ const NavBar = () => {
         else {
             // console.log("TYPE NOT MATCH")
         }
-        window.location.reload()
+        // window.location.reload()
     }
     return (
         <div className="nav">
