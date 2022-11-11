@@ -23,7 +23,7 @@ export interface CocktailDetailType {
     ABV: number,
     price_per_glass: number
     tags: string[],
-    type: string,
+    type: "CS"|"ST",
     author_id: number | null,
     created_at: Date,
     updated_at: Date,
