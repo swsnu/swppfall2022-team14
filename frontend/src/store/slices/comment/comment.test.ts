@@ -5,10 +5,9 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ThunkMiddleware } from "redux-thunk";
-import reducer, {CommentType, CommentInfo, deleteComment, commentActions} from "./comment";
+import reducer, {CommentInfo, deleteComment, commentActions} from "./comment";
 import {fetchCommentListByCocktailId, fetchMyCommentList} from "./comment";
 import {getComment, postComment, editComment} from "./comment"
-import {CocktailItemType} from "../cocktail/cocktail";
 
 describe("userInfo reducer", () => {
     let store: EnhancedStore<
@@ -42,24 +41,6 @@ describe("userInfo reducer", () => {
             name: "name",
             image: "img",
             type: "CS",
-            tags: ["CS1","CS2"],
-            author_id: 1,
-            rate: 1,
-        },
-        author_id: 1,
-        content: "content1",
-        created_at: "2020-10-10",
-        updated_at: "2020-10-10",
-        parent_comment: 1, // if null comment is root comment
-        is_deleted: false
-    }
-    const fakeCommentNotAxios = {
-        id: 2,
-        cocktail: {
-            id: 1,
-            name: "name",
-            image: "img",
-            type: 'CS',
             tags: ["CS1","CS2"],
             author_id: 1,
             rate: 1,
