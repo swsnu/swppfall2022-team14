@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'tag.apps.TagConfig',
     'user.apps.UserConfig',
     'bookmark.apps.BookmarkConfig',
+    'rate.apps.RateConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
