@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotAllowed
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate, login, logout
 import json
 from rest_framework.decorators import api_view
 from .models import User
@@ -30,6 +30,23 @@ def signin(request):
             login(request, user)
 
             user.logged_in = True
+            user.save()
+
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=401)
+    else:
+        return HttpResponseNotAllowed(['PUT'])
+
+
+@api_view(['PUT'])
+def signout(request):
+    if request.method == 'PUT':
+        user = request.user
+        if user.is_authenticated:
+            logout(request)
+
+            user.logged_in = False
             user.save()
 
             return HttpResponse(status=200)
