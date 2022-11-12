@@ -88,6 +88,11 @@ def retrieve_my_info(request):
         else:
             return HttpResponse(status=401)
     elif request.method == 'DELETE':
-        pass
+        user = request.user
+        if user.is_authenticated:
+            user.delete()
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=401)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
