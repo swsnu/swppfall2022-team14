@@ -8,7 +8,7 @@ export interface CocktailItemType {
     id: number,
     name: string,
     image: string,
-    type: "CS"|"ST"| string,
+    type: "CS"|"ST"|string,
     tags: string[],
     author_id: number | null,
     rate: number
