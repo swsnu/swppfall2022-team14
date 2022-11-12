@@ -1,8 +1,9 @@
-from django.http import HttpResponse, HttpResponseNotAllowed
+from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 import json
 from rest_framework.decorators import api_view
 from .models import User
+from .serializers import UserInfoSerializer
 
 
 @api_view(['POST'])
@@ -54,3 +55,20 @@ def signout(request):
             return HttpResponse(status=401)
     else:
         return HttpResponseNotAllowed(['PUT'])
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def retrieve_my_info(request):
+    if request.method == 'GET':
+        user = request.user
+        if user.is_authenticated:
+            data = UserInfoSerializer(user).data
+            return JsonResponse(data, safe=False)
+        else:
+            return HttpResponse(status=401)
+    elif request.method == 'PUT':
+        pass
+    elif request.method == 'DELETE':
+        pass
+    else:
+        return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
