@@ -12,4 +12,5 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "nickname",
             "intro",
             "profile_img",
+            "logged_in",
         )

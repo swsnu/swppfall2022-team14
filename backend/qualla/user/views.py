@@ -67,7 +67,26 @@ def retrieve_my_info(request):
         else:
             return HttpResponse(status=401)
     elif request.method == 'PUT':
-        pass
+        user = request.user
+        if user.is_authenticated:
+            req_data = json.loads(request.body.decode())
+            password = req_data['password']
+            nickname = req_data['nickname']
+            intro = req_data['intro']
+            profile_img = req_data['profile_img']
+
+            user.set_password(password)
+            user.nickname = nickname
+            user.intro = intro
+            user.profile_img = profile_img
+            user.save()
+
+            login(request, user)
+
+            data = UserInfoSerializer(user).data
+            return JsonResponse(data, safe=False)
+        else:
+            return HttpResponse(status=401)
     elif request.method == 'DELETE':
         pass
     else:
