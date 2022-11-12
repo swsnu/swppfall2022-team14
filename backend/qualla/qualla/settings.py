@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'ingredient_prepare.apps.IngredientPrepareConfig',
     'tag.apps.TagConfig',
     'user.apps.UserConfig',
+    'rate.apps.RateConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
