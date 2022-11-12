@@ -5,7 +5,7 @@ import React from 'react';
 import {CommentInfo, CommentType} from "../../store/slices/comment/comment";
 import {getMockStore} from "../../test-utils/mock";
 import {IngredientInfo} from "../../store/slices/ingredient/ingredient";
-import {CocktailInfo} from "../../store/slices/cocktail/cocktail";
+import {CocktailInfo, CocktailItemType} from "../../store/slices/cocktail/cocktail";
 import {Provider} from "react-redux";
 
 const emptyCocktail : CocktailInfo = {
@@ -88,7 +88,7 @@ describe("<Reply />", () => {
     it("should render without errors EDIT & handle Edit Comment", () => {
         const create = new Date()
         const update = new Date()
-        const cocktail = {
+        const cocktail : CocktailItemType = {
             id: 1,
             name: "name",
             image: "img",
@@ -120,7 +120,7 @@ describe("<Reply />", () => {
     it("should render without errors Not EDIT & Auth", () => {
         const create = new Date()
         const update = new Date()
-        const cocktail = {
+        const cocktail : CocktailItemType = {
             id: 1,
             name: "name",
             image: "img",
