@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseNotFou
 import json
 from rest_framework.decorators import api_view
 from cocktail.models import Cocktail
+from .models import Rate
 from .serializers import RateSerializer
 
 
@@ -34,7 +35,24 @@ def rate_list(request, cocktail_id):
         else:
             return HttpResponse(status=401)
     elif request.method == 'PUT':
-        pass
+        user = request.user
+        if user.is_authenticated:
+            try:
+                cocktail = Cocktail.objects.get(id=cocktail_id)
+            except Cocktail.DoesNotExist:
+                return HttpResponseNotFound(f"No Cocktail matches id={cocktail_id}")
+
+            try:
+                rate = Rate.objects.get(cocktail_id=cocktail_id, user_id=user.id)
+            except Rate.DoesNotExit:
+                return HttpResponseNotFound(f"No Rate matches cocktail_id {cocktail_id}, user_id {user.id}")
+
+            serializer = RateSerializer(rate, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return JsonResponse(serializer.data, status=200)
+        else:
+            return HttpResponse(status=401)
     elif request.method == 'DELETE':
         pass
     else:
