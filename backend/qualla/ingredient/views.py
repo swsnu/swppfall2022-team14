@@ -11,8 +11,8 @@ def ingredient_list(request):
         ingredients = Ingredient.objects
         data = IngredientListSerializer(ingredients, many=True).data
         return JsonResponse({"Ingredients": data, "count": ingredients.count()}, safe=False)
-    else:
-        return HttpResponseNotAllowed(['GET'])
+    # else:
+    #     return HttpResponseNotAllowed(['GET'])
 
 
 @api_view(['GET'])
@@ -26,5 +26,5 @@ def retrieve_ingredient(request, pk):
         data = IngredientDetailSerializer(ingredient).data
         return JsonResponse(data, safe=False)
 
-    else:
-        return HttpResponseNotAllowed(['GET'])
+    # else:
+    #     return HttpResponseNotAllowed(['GET'])
