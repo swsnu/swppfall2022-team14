@@ -76,18 +76,17 @@ def get_cocktail_list_by_ingredient(request, filter_q):
         "ingredients[]", None)  # ingredient id list
     cocktail_all = Cocktail.objects.all()
     available_cocktails_id = []
-
     # ingredient 조건 없음
     if (not request_ingredient):
         return
 
     for cocktail in cocktail_all:
         ingredient_prepare = [
-            ingredient_prepare.ingredient.id for ingredient_prepare in cocktail.ingredient_prepare.all()]
+            str(ingredient_prepare.ingredient.id) for ingredient_prepare in cocktail.ingredient_prepare.all()]
         # 만약 해당 칵테일 재료가 query의 subset이면
+
         if set(ingredient_prepare).issubset(set(request_ingredient)):
             available_cocktails_id.append(cocktail.id)
-
     # 매칭된 칵테일 없음 없음
     if (not available_cocktails_id):
         filter_q.add(Q(id__in=[-1]), Q.AND)
@@ -150,6 +149,7 @@ def cocktail_list(request):
 
         serializer = CocktailPostSerializer(
             data=data, context={"request": request})
+
         serializer.is_valid(raise_exception=True)
         cocktail = serializer.save()
         try:
@@ -161,10 +161,11 @@ def cocktail_list(request):
                 tag = Tag.objects.get(content=t)
             except Tag.DoesNotExist:
                 tag = Tag.objects.create(content=t)
-            try:
-                CocktailTag.objects.create(tag=tag, cocktail=cocktail)
-            except IntegrityError:
-                return HttpResponseBadRequest("tag must not be duplicated")
+            # try:
+            #     CocktailTag.objects.create(tag=tag, cocktail=cocktail)
+            CocktailTag.objects.create(tag=tag, cocktail=cocktail)
+            # except IntegrityError:
+            #     return HttpResponseBadRequest("tag must not be duplicated")
 
         try:
             ingredient_list = data['ingredients']
@@ -173,13 +174,15 @@ def cocktail_list(request):
         for i in ingredient_list:
             try:
                 ingredient = Ingredient.objects.get(id=i["id"])
-            except Tag.DoesNotExist:
+
+            except Ingredient.DoesNotExist:
                 return HttpResponseNotFound("ingredient does not exist")
-            IngredientPrepare.objects.create(cocktail=cocktail, ingredient=ingredient)
+            IngredientPrepare.objects.create(
+                cocktail=cocktail, ingredient=ingredient)
 
         return JsonResponse(data=CocktailDetailSerializer(cocktail).data, status=201)
-    else:
-        return HttpResponseNotAllowed(['GET', 'POST'])
+    # else:
+    #     return HttpResponseNotAllowed(['GET', 'POST'])
 
 
 @api_view(['GET', 'PUT'])
@@ -212,14 +215,14 @@ def retrieve_cocktail(request, pk):
                 tag = Tag.objects.get(content=t)
             except Tag.DoesNotExist:
                 tag = Tag.objects.create(content=t)
-            try:
-                CocktailTag.objects.create(tag=tag, cocktail=cocktail)
-            except IntegrityError:
-                return HttpResponseBadRequest("tag must not be duplicated")
+            # try:
+            CocktailTag.objects.create(tag=tag, cocktail=cocktail)
+            # except IntegrityError:
+            #     return HttpResponseBadRequest("tag must not be duplicated")
 
         return JsonResponse(data=CocktailDetailSerializer(cocktail).data, status=200)
-    else:
-        return HttpResponseNotAllowed(['GET', 'PUT'])
+    # else:
+    #     return HttpResponseNotAllowed(['GET', 'PUT'])
 
 
 @api_view(['GET'])

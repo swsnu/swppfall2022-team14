@@ -37,11 +37,12 @@ def ingredient_list(request, cocktail_id):
                 data=data, context={"request": request})
             serializer.is_valid(raise_exception=True)
             serializer.save()
+
         except (IntegrityError) as e:
             return HttpResponseBadRequest("Recipe Alread Exists")
         return JsonResponse(serializer.data, status=201)
-    else:
-        return HttpResponseNotAllowed(['GET', 'POST'])
+    # else:
+    #     return HttpResponseNotAllowed(['GET', 'POST'])
 
 
 @api_view(['PUT', 'DELETE'])
@@ -69,5 +70,5 @@ def ingredient_prepare_modify(request, cocktail_id, ingredient_id):
 
         ingredient_prepare.delete()
         return HttpResponse(status=200)
-    else:
-        return HttpResponseNotAllowed(['PUT', 'DELETE'])
+    # else:
+    #     return HttpResponseNotAllowed(['PUT', 'DELETE'])

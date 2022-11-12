@@ -5,11 +5,13 @@ from rest_framework import serializers
 from cocktail.models import Cocktail
 import random
 
+
 class CocktailListSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
+
     class Meta:
         model = Cocktail
-        fields=(
+        fields = (
             "id",
             "name",
             "image",
@@ -18,16 +20,17 @@ class CocktailListSerializer(serializers.ModelSerializer):
             "type",
             "author_id",
         )
-    
+
     def get_tags(self, obj):
         return [t.tag.content for t in obj.tags.all()]
+
 
 class CocktailDetailSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Cocktail
-        fields=(
+        fields = (
             "id",
             "name",
             "image",
@@ -46,10 +49,12 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
     def get_tags(self, obj):
         return [t.tag.content for t in obj.tags.all()]
 
+
 class CocktailPostSerializer(serializers.ModelSerializer):
     image = serializers.CharField(max_length=500, default="default_img.png")
     ABV = serializers.FloatField(default=random.uniform(10.0, 50.0))
-    price_per_glass = serializers.FloatField(default=random.randint(10, 100)*1000)
+    price_per_glass = serializers.FloatField(
+        default=random.randint(10, 100)*1000)
 
     class Meta:
         model = Cocktail
@@ -63,6 +68,7 @@ class CocktailPostSerializer(serializers.ModelSerializer):
             "author_id",
             "type"
         )
+
 
 class CocktailUpdateSerializer(serializers.ModelSerializer):
     class Meta:
