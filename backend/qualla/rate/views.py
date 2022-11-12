@@ -14,9 +14,8 @@ def rate_list(request, cocktail_id):
             return HttpResponseNotFound(f"No Cocktail matches id={cocktail_id}")
 
         rate_list = cocktail.rate_set.all()
-        data = [{"cocktail": cocktail_id, "user": rate.user_id, "score": rate.score}
-                for rate in rate_list]
-        return JsonResponse(data, safe=False)
+        score = sum(rate.score for rate in rate_list) / len(rate_list)
+        return JsonResponse({"score": score}, safe=False)
     elif request.method == 'POST':
         user = request.user
         if user.is_authenticated:
