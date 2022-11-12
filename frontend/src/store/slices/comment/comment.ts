@@ -41,7 +41,7 @@ export const fetchMyCommentList = createAsyncThunk(
 )
 
 export const getComment = createAsyncThunk(
-    "comment/getComment", async (id) => {
+    "comment/getComment", async (id: string | number) => {
         const response = await axios.get(`/api/v1/comment/${id}/`)
         return response.data
     }
@@ -65,7 +65,6 @@ export const postComment = createAsyncThunk(
 
 export const editComment = createAsyncThunk(
     "comment/editComment", async (comment: Pick<CommentType, "content"|"id">, {dispatch}) => {
-        console.log("?")
         const response = await axios.put<CommentType>(`/api/v1/comment/${comment.id}/`, {
             "content": comment.content,
         })
