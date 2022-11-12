@@ -11,19 +11,6 @@ const AddIngredientModal = (props: prop) => {
 
     const { isOpen, setIsOpen } = props;
 
-
-
-    // Modal.setAppElement('#root');
-
-    const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            return
-            //TODO : IMPLEMENT THIS
-        }
-    };
-
-
-
     return (
         <Modal className={styles['add-ingredient-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
             <button onClick={() => setIsOpen(false)}>X</button>

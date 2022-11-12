@@ -18,9 +18,6 @@ interface ButtonInfo {
 }
 
 const MyPage = () => {
-
-    const cocktailState = useSelector(selectCocktail)
-    const dispatch = useDispatch<AppDispatch>()
     const buttonList: ButtonInfo[] = [{ name: 'My Ingredient', component: <MyIngredient /> },
     { name: 'My Custom Cocktail', component: < MyCustomCocktail /> },
     { name: 'My Favorites', component: <MyBookmark /> },
