@@ -1,8 +1,8 @@
 import { SetStateAction, Dispatch, KeyboardEvent } from 'react';
 import Modal from 'react-modal';
-import styles from './InitMyLiqourModal.module.scss'
+import styles from './InitMyLiquorModal.module.scss'
 import React from 'react';
-interface prop {
+export interface prop {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -17,12 +17,14 @@ const InitMyLiqourModal = (props: prop) => {
     
     /* eslint-disable */
     // Use in future
+    /*
     const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             return
             //TODO : IMPLEMENT THIS
         }
     };
+    */
     /* eslint-enable */
 
 

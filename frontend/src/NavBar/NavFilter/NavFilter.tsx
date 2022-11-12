@@ -6,7 +6,7 @@ interface ParamList {
     label: string;
 }
 
-interface Iprops {
+export interface Iprops {
     setUrlParams: Dispatch<SetStateAction<string>>,
     handleSearch: any,
     type: string
@@ -45,7 +45,7 @@ const NavFilter = (prop: Iprops) => {
                 <div className="navfilter__wrap">
                     <div className={"navfilter__title"}>Text 검색 </div>
                     <div className={"navfilter__content"}>
-                        <input disabled={true} className="navfilter__search-text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="     검색어를 입력하세요" />
+                        <input className="navfilter__search-text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="     검색어를 입력하세요" />
                     </div>
                 </div>
                 <button className="navfilter__btn" onClick={prop.handleSearch}>검색하기</button>
@@ -59,8 +59,21 @@ const NavFilter = (prop: Iprops) => {
                     <div className={"navfilter__title"}>Type 1</div>
                     <div className={"navfilter__content"}>
                         {typeOneList.map((type) => {
-                            return <React.Fragment key={type.name}><input key={type.name} type="checkbox" name="type1"
-                                                                          checked={typeOneParam.includes(type.name)} onChange={() => prop.setUrlParams(url_params)} onClick={() => onTypeClick(typeOneParam, setTypeOneParam, type.name)} />{type.label} </React.Fragment>
+                            return (
+                                <React.Fragment key={type.name}>
+                                    <label>
+                                        <input 
+                                            key={type.name} 
+                                            type="checkbox" 
+                                            name="type1"
+                                            checked={typeOneParam.includes(type.name)} 
+                                            onChange={() => prop.setUrlParams(url_params)} 
+                                            onClick={() => onTypeClick(typeOneParam, setTypeOneParam, type.name)} 
+                                        />
+                                        {type.label} 
+                                    </label>
+                                </React.Fragment>
+                            )
                         })}
                     </div>
                 </div>
@@ -68,8 +81,21 @@ const NavFilter = (prop: Iprops) => {
                     <div className={"navfilter__title"}>Type 2</div>
                     <div className={"navfilter__content"}>
                         {typeTwoList.map((type) => {
-                            return <React.Fragment key={type.name}><input key={type.name} type="checkbox" name="type2"
-                                                                          checked={typeTwoParam.includes(type.name)} onChange={() => prop.setUrlParams(url_params)} onClick={() => onTypeClick(typeTwoParam, setTypeTwoParam, type.name)} />{type.label} </React.Fragment>
+                            return (
+                                <React.Fragment key={type.name}>
+                                    <label>
+                                        <input 
+                                            key={type.name} 
+                                            type="checkbox" 
+                                            name="type2"
+                                            checked={typeTwoParam.includes(type.name)} 
+                                            onChange={() => prop.setUrlParams(url_params)} 
+                                            onClick={() => onTypeClick(typeTwoParam, setTypeTwoParam, type.name)} 
+                                        />
+                                        {type.label} 
+                                    </label>
+                                </React.Fragment>
+                            )
                         })}
                     </div>
                 </div>
@@ -77,8 +103,20 @@ const NavFilter = (prop: Iprops) => {
                     <div className={"navfilter__title"}>도수 </div>
                     <div className={"navfilter__content"}>
                         {typeThreeList.map((type) => {
-                            return <React.Fragment key={type.name}><input key={type.name} type="checkbox" name="type3"
-                                                                          checked={typeThreeParam.includes(type.name)} onChange={() => prop.setUrlParams(url_params)} onClick={() => onTypeClick(typeThreeParam, setTypeThreeParam, type.name)} />{type.label} </React.Fragment>
+                            return (
+                                <React.Fragment key={type.name}>
+                                    <label>
+                                        <input 
+                                            key={type.name} 
+                                            type="checkbox" name="type3"
+                                            checked={typeThreeParam.includes(type.name)} 
+                                            onChange={() => prop.setUrlParams(url_params)} 
+                                            onClick={() => onTypeClick(typeThreeParam, setTypeThreeParam, type.name, true)} 
+                                        />
+                                        {type.label} 
+                                    </label>
+                                </React.Fragment>
+                            )
                         })}
                     </div>
                 </div>

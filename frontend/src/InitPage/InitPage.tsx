@@ -5,7 +5,7 @@ import Item from "../common/Components/Item"
 import React from 'react';
 import styles from "./InitPage.module.scss"
 import LoginModal from "./Modals/LoginModal"
-import InitMyLiqourModal from "./Modals/InitMyLiqourModal"
+import InitMyLiqourModal from "./Modals/InitMyLiquorModal"
 import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
@@ -98,7 +98,7 @@ const InitPage = () => {
                     name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />)}
             </div>
         </div>
-        <button className={styles['my-liqour']} onClick={onClickMyLiqour}>My Liqour</button>
+        <button className={styles['my-liquor']} onClick={onClickMyLiqour}>My Liquor</button>
         <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} setLoginState={setFakeLoginState} />
         <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
 

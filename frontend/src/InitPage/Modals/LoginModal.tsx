@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import styles from './LoginModal.module.scss'
 import { toast } from 'react-toastify';
 import React from 'react';
-interface prop {
+export interface prop {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
     setLoginState: Dispatch<SetStateAction<boolean>>;
@@ -28,8 +28,7 @@ const LoginModal = (props: prop) => {
     //Modal.setAppElement('#root');
 
     const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            return
+        if (e.key !== 'Enter') {
             // TODO : IMPLEMENT THIS
         }
     };
@@ -65,16 +64,22 @@ const LoginModal = (props: prop) => {
                 <div>
                     {isLoginMode ? null
                         : <div className={styles.id}>
-                            Name
-                            <input className={styles.input} value={name} onKeyPress={onKeyPress} onChange={(e) => setName(e.target.value)} />
+                            <label>
+                                Name
+                                <input className={styles.input} value={name} onKeyPress={onKeyPress} onChange={(e) => setName(e.target.value)} />
+                            </label>
                         </div>}
                     <div className={styles.id}>
-                        ID
-                        <input className={styles.input} value={loginId} onKeyPress={onKeyPress} onChange={(e) => setLoginId(e.target.value)} />
+                        <label>
+                            ID
+                            <input className={styles.input} value={loginId} onKeyPress={onKeyPress} onChange={(e) => setLoginId(e.target.value)} />
+                        </label>
                     </div>
                     <div className={styles.id}>
-                        Password
-                        <input className={styles.input} value={loginPassword} onKeyPress={onKeyPress} onChange={(e) => setLoginPassword(e.target.value)} />
+                        <label>
+                            Password
+                            <input className={styles.input} value={loginPassword} onKeyPress={onKeyPress} onChange={(e) => setLoginPassword(e.target.value)} />
+                        </label>
                     </div>
 
                     <div className={styles.button}>
