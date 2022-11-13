@@ -22,7 +22,7 @@ const MyInfo = () => {
     return <div className={styles['right__main--info']}>
         <div className={styles.form}>
             <div className={styles.form__type}>Name</div>
-            <input className={styles.form__field} value={dummyUserData.name} onChange={(e) => {}}></input>
+            <input className={styles.form__field} value={dummyUserData.name}></input>
         </div>
         <div className={styles.form}>
             <div className={styles.form__type}>Email</div>
@@ -30,7 +30,7 @@ const MyInfo = () => {
         </div>
         <div className={styles.form}>
             <div className={styles.form__type}>Info</div>
-            <textarea className={styles.form__field} value={dummyUserData.info} onChange={(e) => {}}></textarea>
+            <textarea className={styles.form__field} value={dummyUserData.info}></textarea>
         </div>
         <div className={styles.form}>
             <div className={styles.form__type}>PW</div>
