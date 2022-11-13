@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import React from 'react';
 import {getMockStore} from "../test-utils/mock";
@@ -7,11 +7,8 @@ import {CommentInfo, CommentType} from "../store/slices/comment/comment";
 import {
     CocktailDetailType,
     CocktailInfo,
-    CocktailItemType,
-    IngredientPrepareType
 } from "../store/slices/cocktail/cocktail";
 import {IngredientInfo} from "../store/slices/ingredient/ingredient";
-import Comment from "./Comment/Comment";
 import ItemDetailPage from "./ItemDetailPage";
 
 // eslint-disable-next-line react/display-name
@@ -161,7 +158,7 @@ describe("<Comment />", () => {
         );
         screen.getByText("Non existing cocktail")
     });
-    it("should render without errors loading Status", () => {
+    it("should render without errors type Miss match", () => {
         const { container } = render(
             <Provider store={itemDetailMockStore}>
                 <MemoryRouter initialEntries={['/miss/1']}>
