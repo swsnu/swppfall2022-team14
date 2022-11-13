@@ -13,6 +13,7 @@ def comment_list(request, cocktail_id):
             cocktail = Cocktail.objects.get(id=cocktail_id)
         except Cocktail.DoesNotExist:
             return HttpResponseNotFound(f"No Cocktails matches id={cocktail_id}")
+
         comments = cocktail.comments.all()
         data = CommentSerializer(comments, many=True).data
         return JsonResponse({"comments": data, "count": comments.count()}, safe=False)
@@ -32,8 +33,8 @@ def comment_list(request, cocktail_id):
         serializer.is_valid(raise_exception=True)
         comment = serializer.save()
         return Response(CommentSerializer(comment).data, status=201)
-    else:
-        return HttpResponseNotAllowed(['GET', 'POST'])
+    # else:
+    #     return HttpResponseNotAllowed(['GET', 'POST'])
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -75,13 +76,16 @@ def retrieve_comment(request, pk):
             comment.content = "삭제된 댓글입니다."
             comment.author_id = None
             comment.save()
-            return JsonResponse(CommentSerializer(comment).data,status=200)
-    else:
-        return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
+            return JsonResponse(CommentSerializer(comment).data, status=200)
+    # else:
+    #     return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
+
 
 @api_view(['GET'])
 def retrieve_my_comment(request):
     if request.method == 'GET':
-        comments = Comment.objects.filter(author_id=1) # TODO: author_id=request.user.id
+        # TODO: author_id=request.user.id
+        comments = Comment.objects.filter(author_id=1)
+        print(comments.__str__())
         data = CommentSerializer(comments, many=True).data
         return JsonResponse({"comments": data, "count": comments.count()}, safe=False)

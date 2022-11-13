@@ -23,7 +23,7 @@ export interface CocktailDetailType {
     ABV: number,
     price_per_glass: number
     tags: string[],
-    type: string,
+    type: "CS"|"ST",
     author_id: number | null,
     created_at: Date,
     updated_at: Date,
@@ -55,7 +55,6 @@ const initialState: CocktailInfo = {
 export const fetchStandardCocktailList = createAsyncThunk(
     "cocktail/fetchStandardCocktailList", async (params: string) => {
         const response = await axios.get(`/api/v1/cocktails/?type=standard&${params}`);
-        console.log(response.data)
         return response.data
     },
 )
@@ -63,7 +62,6 @@ export const fetchStandardCocktailList = createAsyncThunk(
 export const fetchCustomCocktailList = createAsyncThunk(
     "cocktail/fetchCustomCocktailList", async (params: string) => {
         const response = await axios.get(`/api/v1/cocktails/?type=custom&${params}`);
-        console.log(response.data)
         return response.data
     },
 )
@@ -86,16 +84,23 @@ export const getCocktail = createAsyncThunk(
 
         return { ...response.data, ingredients: ingredient_response.data };
     }
-
-
 )
 
 export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
     async (cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
-        console.log(response.data);
         dispatch(cocktailActions.addCocktail(response.data));
+        return response.data
+    }
+)
+
+export const editCocktail = createAsyncThunk(
+    "cocktail/editCocktail",
+    async (cocktail: Omit<CocktailDetailType, "type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
+        const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/`, cocktail);
+        console.log(response.data);
+        dispatch(cocktailActions.editCocktail(response.data));
         return response.data
     }
 )
@@ -106,7 +111,17 @@ export const cocktailSlice = createSlice({
     reducers: {
         addCocktail: (state, action: PayloadAction<CocktailDetailType>) => {
             state.cocktailList.push(action.payload)
-        }
+        },
+        editCocktail: (state, action: PayloadAction<CocktailDetailType>) => {
+            const editted = state.cocktailList.map((cocktail) => {
+                if (cocktail.id === action.payload.id) {
+                    return {...cocktail, name: action.payload.name, image: action.payload.image, tags: action.payload.tags};
+                } else {
+                    return cocktail;
+                }
+            });
+            state.cocktailList = editted;
+        },
     },
     extraReducers: (builder) => {
         //CustomCocktailList

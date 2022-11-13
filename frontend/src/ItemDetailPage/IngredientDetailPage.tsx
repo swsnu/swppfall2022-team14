@@ -7,7 +7,7 @@ import React from 'react';
 import { getIngredient, selectIngredient } from "../store/slices/ingredient/ingredient";
 import NavBar from "../NavBar/NavBar";
 
-export default function ItemDetailPage() {
+export default function IngredientDetailPage() {
 
     const { id } = useParams();
 

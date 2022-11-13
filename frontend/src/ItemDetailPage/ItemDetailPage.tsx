@@ -78,6 +78,12 @@ export default function ItemDetailPage() {
                                     </div>
                                 }
                             </div>
+                            <button 
+                                className="title__edit-button"
+                                onClick={(e) => navigate(`/custom/${id}/edit`)}
+                            >
+                                Edit
+                            </button>
                             <button className="title__rate-button">rate button</button>
                             <div className="title__rate">{cocktail.rate.toFixed(1)} / 5.0</div>
                         </div>
