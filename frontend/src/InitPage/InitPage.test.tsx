@@ -43,7 +43,7 @@ jest.mock("./Modals/InitMyLiquorModal", () => (prop: InitMyLiquorModalProp) => (
     <div data-testid="spyInitMyLiquorModal" />
 ));
 
-const cocktailList = [
+const cocktailList: CocktailItemType[] = [
     {
         id: 1,
         name: "COCKTAIL_NAME_1",
