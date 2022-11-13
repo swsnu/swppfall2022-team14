@@ -1,0 +1,18 @@
+.my-liqour-modal {
+    position: absolute;
+    top: 100px;
+    left: calc(50% - 400px);
+    height: 600px;
+    width: 800px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fff;
+    overflow: auto;
+    outline: none;
+    padding: 20px;
+}
+
+.container {
+    margin-left: calc(50% - 250px);
+    box-sizing: border-box;
+}

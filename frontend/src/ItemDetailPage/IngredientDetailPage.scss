@@ -1,0 +1,102 @@
+.main {
+    display: flex;
+
+    .left {
+        flex: 2
+    }
+
+    .right {
+        flex: 8
+    }
+}
+
+.item-detail {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.title {
+    display: flex;
+
+    &__name {
+        width: 80%;
+        text-align: left;
+    }
+
+    &__bookmark-button {
+        margin-left: 20px;
+    }
+
+    &__author {
+        text-align: left;
+    }
+
+    &__rate-button {
+        width: 10%;
+    }
+
+    &__rate {
+        width: 10%;
+        text-align: right;
+    }
+}
+
+.content {
+    margin-top: 50px;
+    display: flex;
+
+    &__image {
+        width: 30%;
+        margin-right: 20px;
+    }
+
+    &__description-box {
+        width: 60%;
+    }
+
+    &__abv {
+        text-align: left;
+    }
+
+    &__description {
+        text-align: left;
+    }
+
+    &__recipe {
+        text-align: left;
+    }
+
+    &__price {
+        width: 10%;
+        text-align: right;
+    }
+
+    &__ingredient {
+        background-color: lightblue; // temp
+        border-radius: 10px;
+        margin-bottom: 3px;
+    }
+}
+
+.comments {
+    margin-top: 20px;
+
+    &__create {}
+
+    &__input {
+        width: 100%;
+        height: 50px;
+        resize: none;
+    }
+
+    &__add-box {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    &__add {}
+
+    &__list {}
+}
