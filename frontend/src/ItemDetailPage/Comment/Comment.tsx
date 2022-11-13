@@ -60,9 +60,11 @@ const Comment = (props: CommentType) => {
                                 />
                             )
                         }
+                        /*
                         else{
                             return null
                         }
+                        */
                     })}
                 </div>
             </div>
@@ -96,9 +98,11 @@ const Comment = (props: CommentType) => {
                                 />
                             )
                         }
+                        /*
                         else{
                             return null
                         }
+                        */
                     })}
                 </div>
                 {

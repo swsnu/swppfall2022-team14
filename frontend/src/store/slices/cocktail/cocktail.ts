@@ -23,7 +23,7 @@ export interface CocktailDetailType {
     ABV: number,
     price_per_glass: number
     tags: string[],
-    type: string,
+    type: "CS"|"ST",
     author_id: number | null,
     created_at: Date,
     updated_at: Date,
@@ -55,7 +55,6 @@ const initialState: CocktailInfo = {
 export const fetchStandardCocktailList = createAsyncThunk(
     "cocktail/fetchStandardCocktailList", async (params: string) => {
         const response = await axios.get(`/api/v1/cocktails/?type=standard&${params}`);
-        console.log(response.data)
         return response.data
     },
 )
@@ -63,7 +62,6 @@ export const fetchStandardCocktailList = createAsyncThunk(
 export const fetchCustomCocktailList = createAsyncThunk(
     "cocktail/fetchCustomCocktailList", async (params: string) => {
         const response = await axios.get(`/api/v1/cocktails/?type=custom&${params}`);
-        console.log(response.data)
         return response.data
     },
 )
@@ -94,7 +92,6 @@ export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
     async (cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
-        console.log(response.data);
         dispatch(cocktailActions.addCocktail(response.data));
         return response.data
     }
