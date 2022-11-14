@@ -10,11 +10,11 @@ export interface UserType {
     profile_img: string;
 }
 
-export interface UserState {
+export interface UserInfo {
     user: UserType | null;
 }
 
-const initialState: UserState = {
+const initialState: UserInfo = {
     user: null,
 };
 
