@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 import { RootState } from "../..";
 
 export interface UserType {
@@ -17,10 +18,25 @@ const initialState: UserState = {
     user: null,
 };
 
+export const loginUser = createAsyncThunk(
+    "user/loginUser",
+    async (user: Pick<UserType, "username" | "password">, { dispatch }) => {
+        const response = await axios.put('/api/v1/auth/login/', user);
+        dispatch(userActions.loginUser(response.data));
+    }
+);
+
 export const userSlice = createSlice({
     name: "user",
     initialState,
-    reducers: {},
+    reducers: {
+        loginUser: (
+            state,
+            action: PayloadAction<UserType>
+        ) => {
+            state.user = action.payload;
+        },
+    },
     extraReducers: (builder) => {},
 });
 
