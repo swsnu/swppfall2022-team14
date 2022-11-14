@@ -37,7 +37,6 @@ export const userSlice = createSlice({
             state.user = action.payload;
         },
     },
-    extraReducers: (builder) => {},
 });
 
 export const userActions = userSlice.actions;
