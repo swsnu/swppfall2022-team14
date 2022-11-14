@@ -1,8 +1,12 @@
 import { useState, SetStateAction, Dispatch, KeyboardEvent } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-modal';
 import styles from './LoginModal.module.scss'
 import { toast } from 'react-toastify';
+import { AppDispatch } from '../../store';
+import { loginUser, selectUser } from '../../store/slices/user/user';
 import React from 'react';
+
 export interface prop {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -10,7 +14,6 @@ export interface prop {
 }
 
 const LoginModal = (props: prop) => {
-
     const { isOpen, setIsOpen, setLoginState } = props;
 
     const [name, setName] = useState('');
@@ -25,6 +28,9 @@ const LoginModal = (props: prop) => {
 
     }
 
+    const dispatch = useDispatch<AppDispatch>();
+    const userState = useSelector(selectUser);
+
     //Modal.setAppElement('#root');
 
     const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -33,15 +39,20 @@ const LoginModal = (props: prop) => {
         }
     };
 
-    const onClickLogin = () => {
+    const onClickLogin = async () => {
         if (loginId === '') {
             toast.error('아이디를 입력해주세요.');
         } else if (loginPassword === '') {
             toast.error('비밀번호를 입력해주세요.');
         } else {
-            // TODO : DO LOGIN
-            setLoginState(true)
-            setIsOpen(false)
+            const data = { username: loginId, password: loginPassword };
+            const result = await dispatch(loginUser(data));
+            if (result.type === `${loginUser.typePrefix}/fulfilled`) {
+                setLoginState(true)
+                setIsOpen(false)
+            } else {
+                alert("Error on login");
+            }
         }
     };
 
