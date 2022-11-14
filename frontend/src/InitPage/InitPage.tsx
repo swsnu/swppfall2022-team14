@@ -8,14 +8,16 @@ import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiquorModal"
 import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
+import { logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
 
 
 const InitPage = () => {
     const cocktailState = useSelector(selectCocktail)
+    const userState = useSelector(selectUser)
     const dispatch = useDispatch<AppDispatch>()
 
-    const [fakeLoginState, setFakeLoginState] = useState(false)
+    const [loginState, setLoginState] = useState(false)
     // const [urlParams, setUrlParams] = useState<string>("")
     const [urlParams, setUrlParams] = useState<string>("")
 
@@ -42,8 +44,13 @@ const InitPage = () => {
     const onClickMyLiqour = () => {
         setIsInitMyLiqourOpen(true)
     }
-    const onClicklogout = () => {
-        setFakeLoginState(false)
+    const onClicklogout = async () => {
+        const result = await dispatch(logoutUser());
+        if (result.type === `${logoutUser.typePrefix}/fulfilled`) {
+            setLoginState(false);
+        } else {
+            alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+        }
     }
     const onClickSearch = () => {
         // TODO : give params with filter information
@@ -73,8 +80,8 @@ const InitPage = () => {
 
     return <div className={styles.margin}>
         <div className={styles.header}>
-            {fakeLoginState ? <button onClick={onClickProfile}>내 프로필</button> : <div className={`${styles.button} ${styles.header__login}`} onClick={onClickLogin}>로그인</div>}
-            {fakeLoginState && isOpenProfile ? <div>
+            {loginState ? <button onClick={onClickProfile}>내 프로필</button> : <div className={`${styles.button} ${styles.header__login}`} onClick={onClickLogin}>로그인</div>}
+            {loginState && isOpenProfile ? <div>
                 <button onClick={onClickMyPage}>My Page</button>
                 <button onClick={onClicklogout}>Logout</button>
             </div> : null}
