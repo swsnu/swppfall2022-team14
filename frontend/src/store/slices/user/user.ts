@@ -26,6 +26,14 @@ export const loginUser = createAsyncThunk(
     }
 );
 
+export const logoutUser = createAsyncThunk(
+    "user/logoutUser",
+    async (_data, { dispatch }) => {
+        const response = await axios.put('/api/v1/auth/logout/');
+        dispatch(userActions.logoutUser(response.data));
+    }
+);
+
 export const userSlice = createSlice({
     name: "user",
     initialState,
@@ -35,6 +43,12 @@ export const userSlice = createSlice({
             action: PayloadAction<UserType>
         ) => {
             state.user = action.payload;
+        },
+        logoutUser: (
+            state,
+            _action: PayloadAction<UserType>
+        ) => {
+            state.user = null;
         },
     },
 });
