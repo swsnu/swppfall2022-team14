@@ -51,7 +51,7 @@ const LoginModal = (props: prop) => {
                 setLoginState(true)
                 setIsOpen(false)
             } else {
-                alert("Error on login");
+                alert("아이디 또는 비밀번호가 일치하지 않습니다.");
             }
         }
     };
