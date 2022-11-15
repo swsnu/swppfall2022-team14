@@ -48,13 +48,13 @@ export const getComment = createAsyncThunk(
 )
 
 export const postComment = createAsyncThunk(
-    "comment/postComment", async (comment: {cocktail: number, parent_comment: number|null, content: string}, {dispatch}) => {
-        if(comment.parent_comment){
+    "comment/postComment", async (comment: { cocktail: number, parent_comment: number | null, content: string }, { dispatch }) => {
+        if (comment.parent_comment) {
             const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/?parent_comment=${comment.parent_comment}`, {
                 "content": comment.content,
             })
             dispatch(commentActions.addComment(response.data))
-        }else{
+        } else {
             const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/`, {
                 "content": comment.content,
             })
@@ -64,7 +64,7 @@ export const postComment = createAsyncThunk(
 )
 
 export const editComment = createAsyncThunk(
-    "comment/editComment", async (comment: Pick<CommentType, "content"|"id">, {dispatch}) => {
+    "comment/editComment", async (comment: Pick<CommentType, "content" | "id">, { dispatch }) => {
         const response = await axios.put<CommentType>(`/api/v1/comment/${comment.id}/`, {
             "content": comment.content,
         })
@@ -73,12 +73,12 @@ export const editComment = createAsyncThunk(
 )
 
 export const deleteComment = createAsyncThunk(
-    "comment/deleteComment", async (id: number, {dispatch}) => {
+    "comment/deleteComment", async (id: number, { dispatch }) => {
         const response = await axios.delete(`/api/v1/comment/${id}/`)
-        if(response.data){
+        if (response.data) {
             dispatch(commentActions.setIsDeletedComment(response.data))
-        }else{
-            dispatch(commentActions.deleteComment({targetId:id}))
+        } else {
+            dispatch(commentActions.deleteComment({ targetId: id }))
         }
     }
 )
@@ -94,14 +94,14 @@ export const CommentSlice = createSlice({
         },
         editComment: (state, action: PayloadAction<CommentType>) => {
             state.commentList.forEach((c, i) => {
-                if(c.id === action.payload.id){
+                if (c.id === action.payload.id) {
                     state.commentList[i].content = action.payload.content
                 }
             })
             state.commentItem = null
             state.state = null
         },
-        deleteComment: (state, action: PayloadAction<{targetId:number}>) => {
+        deleteComment: (state, action: PayloadAction<{ targetId: number }>) => {
             const deleted = state.commentList.filter((comment) => {
                 return comment.id != action.payload.targetId;
             });
@@ -112,7 +112,7 @@ export const CommentSlice = createSlice({
         setIsDeletedComment: (state, action: PayloadAction<CommentType>) => {
             console.log(action.payload)
             state.commentList.forEach((c, i) => {
-                if(c.id === action.payload.id){
+                if (c.id === action.payload.id) {
                     state.commentList[i] = action.payload
                 }
             })
