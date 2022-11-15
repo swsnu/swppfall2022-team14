@@ -45,6 +45,19 @@ const failedIngredient : IngredientInfo = {
     itemStatus: "failed",
     listStatus: "loading"
 }
+const noABVIngredient : IngredientInfo = {
+    ingredientList: [],
+    ingredientItem: {
+        id: 1,
+        name: 'name',
+        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
+        introduction: '소개',
+        ABV: 0,
+        price: 200
+    },
+    itemStatus: "",
+    listStatus: "loading"
+}
 const fakeIngredient : IngredientInfo = {
     ingredientList: [],
     ingredientItem: {
@@ -61,7 +74,9 @@ const fakeIngredient : IngredientInfo = {
 
 const loadingMockStore = getMockStore({cocktail: emptyCocktail,ingredient: loadingIngredient,comment: emptyComment})
 const failedMockStore = getMockStore({cocktail: emptyCocktail,ingredient: failedIngredient,comment: emptyComment})
+const noAVBIngredientMockStore = getMockStore({cocktail: emptyCocktail,ingredient: noABVIngredient,comment: emptyComment})
 const fakeIngredientMockStore = getMockStore({cocktail: emptyCocktail,ingredient: fakeIngredient,comment: emptyComment})
+
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -117,6 +132,21 @@ describe("<Comment />", () => {
         const element = container.getElementsByClassName("main");
         expect(element).toHaveLength(1);
         screen.getByText("소개")
+    });
+    it("should render without errors empty parent_comment & no ABV", () => {
+        const { container } = render(
+            <Provider store={noAVBIngredientMockStore}>
+                <MemoryRouter initialEntries={['/ingredient/1']}>
+                    <Routes>
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage/>}/>
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const element = container.getElementsByClassName("main");
+        expect(element).toHaveLength(1);
+        screen.getByText("소개")
+        screen.getByText("도수 없음")
     });
 })
 
