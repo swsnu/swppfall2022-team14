@@ -53,6 +53,30 @@ const fakeCocktailItemCS : CocktailDetailType = {
         amount : "1 oz",
     }]
 }
+const fakeCocktailItemST : CocktailDetailType = {
+    id: 1,
+    name: "name",
+    image: "img",
+    type: "ST",
+    tags: ["CS1","CS2"],
+    author_id: 1,
+    rate: 1,
+    introduction: "intro",
+    recipe: "recipe",
+    ABV: 1,
+    price_per_glass: 1,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now()),
+    ingredients: [{
+        id: 1,
+        name: "iname",
+        image: "iimg",
+        ABV: 1,
+        price: 1,
+        introduction: "iintro",
+        amount : "1 oz",
+    }]
+}
 const commentNotParent : CommentType = {
     id: 1,
     cocktail: {
@@ -74,6 +98,12 @@ const commentNotParent : CommentType = {
 const fakeCustomCocktail : CocktailInfo = {
     cocktailList: [],
     cocktailItem: fakeCocktailItemCS,
+    itemStatus: "",
+    listStatus: ""
+}
+const fakeStandardCocktail : CocktailInfo = {
+    cocktailList: [],
+    cocktailItem: fakeCocktailItemST,
     itemStatus: "",
     listStatus: ""
 }
@@ -116,6 +146,7 @@ const loadingMockStore = getMockStore({cocktail: loadingCocktail,ingredient: emp
 const failedMockStore = getMockStore({cocktail: failedCocktail,ingredient: emptyIngredient,comment: fakeComment})
 const emptyCommentMockStore = getMockStore({cocktail: fakeCustomCocktail,ingredient: emptyIngredient,comment: emptyComment})
 const itemDetailMockStore = getMockStore({cocktail: fakeCustomCocktail,ingredient: emptyIngredient,comment: fakeComment})
+const itemDetailMockStore_ST = getMockStore({cocktail: fakeStandardCocktail,ingredient: emptyIngredient,comment: fakeComment})
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -158,10 +189,22 @@ describe("<Comment />", () => {
         );
         screen.getByText("Non existing cocktail")
     });
-    it("should render without errors type Miss match", () => {
+    it("should render without errors type Miss match1", () => {
         const { container } = render(
             <Provider store={itemDetailMockStore}>
                 <MemoryRouter initialEntries={['/miss/1']}>
+                    <Routes>
+                        <Route path="/:type/:id" element={<ItemDetailPage/>}/>
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        screen.getByText("Type mismatch")
+    });
+    it("should render without errors type Miss match2", () => {
+        const { container } = render(
+            <Provider store={itemDetailMockStore_ST}>
+                <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
                         <Route path="/:type/:id" element={<ItemDetailPage/>}/>
                     </Routes>
@@ -210,6 +253,9 @@ describe("<Comment />", () => {
         const addButton = screen.getByText("Add")
         fireEvent.click(addButton)
         expect(mockDispatch).toBeCalledTimes(3)
+        const editButton = screen.getByText("Edit")
+        fireEvent.click(editButton)
+        expect(mockNavigate).toHaveBeenCalledWith("/custom/1/edit")
     });
 })
 

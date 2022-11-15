@@ -8,6 +8,7 @@ import { ThunkMiddleware } from "redux-thunk";
 import reducer, {CommentInfo, deleteComment, commentActions} from "./comment";
 import {fetchCommentListByCocktailId, fetchMyCommentList} from "./comment";
 import {getComment, postComment, editComment} from "./comment"
+import {getCocktail} from "../cocktail/cocktail";
 
 describe("userInfo reducer", () => {
     let store: EnhancedStore<
@@ -197,5 +198,43 @@ describe("userInfo reducer", () => {
         }));
         //expect(store.getState().comment.commentList).toEqual([fakeCommentChild])
     });
+
+    it("should handle postComment when failed", async () => {
+        (axios.get as jest.Mock).mockImplementationOnce(() => {
+            throw {
+                response: {
+                    data: {
+                        message: 'Error',
+                    },
+                },
+            };
+        });
+        await store.dispatch(postComment({cocktail: 1, parent_comment: null, content: "content"}));
+    });
+    it("should handle editComment when failed", async () => {
+        (axios.get as jest.Mock).mockImplementationOnce(() => {
+            throw {
+                response: {
+                    data: {
+                        message: 'Error',
+                    },
+                },
+            };
+        });
+        await store.dispatch(editComment({content: "edit", id: 1}));
+    });
+    it("should handle deleteComment when failed", async () => {
+        (axios.get as jest.Mock).mockImplementationOnce(() => {
+            throw {
+                response: {
+                    data: {
+                        message: 'Error',
+                    },
+                },
+            };
+        });
+        await store.dispatch(deleteComment(2));
+    });
+
 
 });
