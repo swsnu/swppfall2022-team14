@@ -46,10 +46,12 @@ const InitPage = () => {
     }
     const onClicklogout = async () => {
         const result = await dispatch(logoutUser());
+        setLoginState(false);
+        return;
         if (result.type === `${logoutUser.typePrefix}/fulfilled`) {
             setLoginState(false);
         } else {
-            alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+            alert("Error on logout");
         }
     }
     const onClickSearch = () => {
@@ -106,7 +108,7 @@ const InitPage = () => {
             </div>
         </div>
         <button className={styles['my-liquor']} onClick={onClickMyLiqour}>My Liquor</button>
-        <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} setLoginState={setFakeLoginState} />
+        <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} setLoginState={setLoginState} />
         <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
 
     </div >
