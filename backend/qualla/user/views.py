@@ -33,7 +33,8 @@ def signin(request):
             user.logged_in = True
             user.save()
 
-            return HttpResponse(status=200)
+            data = UserInfoSerializer(user).data
+            return JsonResponse(data, safe=False)
         else:
             return HttpResponse(status=401)
     else:
