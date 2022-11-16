@@ -29,12 +29,9 @@ export default function CreateCustomPage() {
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        if(newIngredient){
-            if(ingredientList.filter((i) => i.id === newIngredient.id).length === 0){
-                setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
-                setNewIngredient(null);
-            }
-
+        if (newIngredient){
+            setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
+            setNewIngredient(null);
         }
     }, [newIngredient])
 
@@ -162,7 +159,7 @@ export default function CreateCustomPage() {
                                         <span>{tagItem}</span>
                                         <button 
                                             data-testid="tagDeleteButton"
-                                            onClick={(e) => onDeleteTagItem(e.currentTarget.parentElement?.firstChild?.textContent ?? "")}
+                                            onClick={(e) => onDeleteTagItem(tagItem)}
                                         >
                                             X
                                         </button>

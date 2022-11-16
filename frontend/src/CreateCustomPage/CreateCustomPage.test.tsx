@@ -162,4 +162,10 @@ describe("<CreateCustomPage />", () => {
         const closeAddIngredientModalButton = screen.getByTestId("closeAddIngredientModalButton");
         fireEvent.click(closeAddIngredientModalButton); 
     });
+    it("should call onKeyPress when enter pressed", async () => {
+        renderCreateCustomPage();
+        const tagInput = screen.getByTestId("tagInput");
+        fireEvent.change(tagInput, { target: { value: "TAG" } })
+        fireEvent.keyPress(tagInput, { key: "A", charCode: 65 });
+    });
 });
