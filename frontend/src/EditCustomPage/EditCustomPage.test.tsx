@@ -105,7 +105,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderEditCustomPage = (isStandard: Boolean=true) => {
+const renderEditCustomPage = (status: string = "success") => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -114,7 +114,7 @@ const renderEditCustomPage = (isStandard: Boolean=true) => {
         </MemoryRouter>,
         {
             preloadedState: {
-                cocktail: stubCocktailInitialState,
+                cocktail: { ...stubCocktailInitialState, itemStatus: status},
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
             },
@@ -152,5 +152,18 @@ describe("<EditCustomPage />", () => {
         renderEditCustomPage();
         const ingredientDeleteButton = screen.getAllByTestId("ingredientDeleteButton")[0];
         fireEvent.click(ingredientDeleteButton);
+    });
+    it("should delete tag when tag delete button clicked", async () => {
+        renderEditCustomPage();
+        const tagDeleteButton = screen.getAllByTestId("tagDeleteButton")[0];
+        fireEvent.click(tagDeleteButton);
+    });
+    it("should show loading when loading", async () => {
+        renderEditCustomPage("loading");
+        await screen.findByText("Loading ..");
+    });
+    it("should not render when failed", async () => {
+        renderEditCustomPage("failed");
+        await screen.findByText("Non existing cocktail");
     });
 });

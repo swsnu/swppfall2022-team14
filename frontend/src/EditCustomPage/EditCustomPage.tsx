@@ -48,11 +48,8 @@ export default function EditCustomPage() {
 
     useEffect(() => {
         if(newIngredient){
-            if(ingredientList.filter((i) => i.id === newIngredient.id).length === 0){
-                setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
-                setNewIngredient(null);
-            }
-
+            setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
+            setNewIngredient(null);
         }
     }, [newIngredient])
 

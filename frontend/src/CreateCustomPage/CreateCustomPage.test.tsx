@@ -82,7 +82,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderCreateCustomPage = (isStandard: Boolean=true) => {
+const renderCreateCustomPage = () => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
