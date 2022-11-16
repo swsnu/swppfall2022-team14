@@ -5,6 +5,8 @@ import { CocktailInfo } from "../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import EditCustomPage from "./EditCustomPage";
+import { IProps as AddIngredientModalProp } from "../CreateCustomPage/Modals/AddIngredientModal";
+
 
 const stubCommentInitialState: CommentInfo = {
     commentList: [],
@@ -57,9 +59,39 @@ const stubCocktailInitialState: CocktailInfo = {
             { ...stubIngredientInitialState.ingredientList[1], amount: "5 oz" },
         ]
     },
-    itemStatus: "loading",
-    listStatus: "loading",
+    itemStatus: "success",
+    listStatus: "success",
 };
+
+jest.mock("../CreateCustomPage/Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) => {
+    return (
+        <div>
+            <button 
+                data-testid="addIngredientButton"
+                onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[0])}
+            >
+                INGREDIENT_1
+            </button>
+            <button 
+                data-testid="addIngredientButton"
+                onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[1])}
+            >
+                INGREDIENT_2
+            </button>
+            <button
+                data-testid="closeAddIngredientModalButton"
+                onClick={prop.close}
+            >
+                Close
+            </button>
+        </div>
+        
+    )
+});
+
+jest.mock('react-router', () => ({
+    useParams: jest.fn().mockReturnValue({ id: "2" }),
+}));
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -67,13 +99,13 @@ jest.mock("react-router", () => ({
     useNavigate: () => mockNavigate,
 }));
 
-const mockDispatch = jest.fn();
+const mockDispatch = () => ({ payload: { id: 1 } });
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
     useDispatch: () => mockDispatch,
 }));
 
-const renderEditCustomPage = (isStandard: Boolean=true) => {
+const renderEditCustomPage = (status: string = "success") => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -82,7 +114,7 @@ const renderEditCustomPage = (isStandard: Boolean=true) => {
         </MemoryRouter>,
         {
             preloadedState: {
-                cocktail: stubCocktailInitialState,
+                cocktail: { ...stubCocktailInitialState, itemStatus: status},
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
             },
@@ -93,6 +125,74 @@ const renderEditCustomPage = (isStandard: Boolean=true) => {
 describe("<EditCustomPage />", () => {
     it("should render EditCustomPage", async () => {
         renderEditCustomPage();
-        await screen.findByText("Confirm");
+        expect(screen.getByDisplayValue("COCKTAIL_NAME_2")).toBeInTheDocument();
+    });
+    it("should navigate to /custom/:id when confirm button clicked", async () => {
+        renderEditCustomPage();
+        const nameInput = screen.getByLabelText("Name:");
+        fireEvent.change(nameInput, { target: { value: "NAME" } });
+        const descriptionInput = screen.getByLabelText("Description:");
+        fireEvent.change(descriptionInput, { target: { value: "DESCRIPTION" } });
+        const ingredientInput = screen.getAllByTestId("ingredientInput")[0];
+        fireEvent.click(ingredientInput);
+        const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
+        fireEvent.click(addIngredientButton);
+        const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
+        fireEvent.change(ingredientAmountInput, { target: { value: "10 oz" } });
+        const recipeInput = screen.getByLabelText("Recipe:");
+        fireEvent.change(recipeInput, { target: { value: "RECIPE" } });
+        const tagInput = screen.getByTestId("tagInput");
+        fireEvent.change(tagInput, { target: { value: "TAG" } })
+        fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
+        const confirmButton = screen.getByText("Confirm");
+        fireEvent.click(confirmButton);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/custom/1"));
+    });
+    it("should delete ingredient when ingredient delete button clicked", async () => {
+        renderEditCustomPage();
+        const ingredientDeleteButton = screen.getAllByTestId("ingredientDeleteButton")[0];
+        fireEvent.click(ingredientDeleteButton);
+    });
+    it("should delete tag when tag delete button clicked", async () => {
+        renderEditCustomPage();
+        const tagDeleteButton = screen.getAllByTestId("tagDeleteButton")[0];
+        fireEvent.click(tagDeleteButton);
+    });
+    it("should show loading when loading", async () => {
+        renderEditCustomPage("loading");
+        await screen.findByText("Loading ..");
+    });
+    it("should not render when failed", async () => {
+        renderEditCustomPage("failed");
+        await screen.findByText("Non existing cocktail");
+    });
+    it("should close AddIngredientModal when close button clicked", async () => {
+        renderEditCustomPage();
+        const ingredientInput = screen.getAllByTestId("ingredientInput")[2];
+        fireEvent.click(ingredientInput);
+        const closeAddIngredientModalButton = screen.getAllByTestId("closeAddIngredientModalButton")[2];
+        fireEvent.click(closeAddIngredientModalButton); 
+    });
+    it("should render empty string when cocktail item is null", async () => {
+        renderWithProviders(
+            <MemoryRouter>
+                <Routes>
+                    <Route path="/" element={<EditCustomPage />} />
+                </Routes>
+            </MemoryRouter>,
+            {
+                preloadedState: {
+                    cocktail: { ...stubCocktailInitialState, cocktailItem: null},
+                    comment: stubCommentInitialState,
+                    ingredient: stubIngredientInitialState,
+                },
+            }
+        );
+    });
+    it("should call onKeyPress when enter pressed", async () => {
+        renderEditCustomPage();
+        const tagInput = screen.getByTestId("tagInput");
+        fireEvent.change(tagInput, { target: { value: "TAG" } })
+        fireEvent.keyPress(tagInput, { key: "A", charCode: 65 });
     });
 });

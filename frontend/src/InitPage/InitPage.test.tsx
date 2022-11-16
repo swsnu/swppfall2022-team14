@@ -160,7 +160,7 @@ describe("<InitPage />", () => {
         fireEvent.change(searchBar, { target: { value: "COCKTAIL" } });
         expect(searchBar).toHaveDisplayValue("COCKTAIL");
     });
-    it("should navigate to /standard with params when search button clickend (standard)", async () => {
+    it("should navigate to /standard with params when search button clicked (standard)", async () => {
         renderInitPage();
         const filterButton = screen.getByText("FILTER");
         fireEvent.click(filterButton);
@@ -174,7 +174,7 @@ describe("<InitPage />", () => {
             search: "?filter_type_one=_CL&text=",
         }));
     });
-    it("should navigate to /custom with params when search button clickend (custom)", async () => {
+    it("should navigate to /custom with params when search button clicked (custom)", async () => {
         renderInitPage(false);
         const customButton = screen.getByText("커스텀");
         fireEvent.click(customButton);
