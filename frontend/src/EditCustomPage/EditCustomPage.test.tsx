@@ -57,9 +57,13 @@ const stubCocktailInitialState: CocktailInfo = {
             { ...stubIngredientInitialState.ingredientList[1], amount: "5 oz" },
         ]
     },
-    itemStatus: "loading",
-    listStatus: "loading",
+    itemStatus: "success",
+    listStatus: "success",
 };
+
+jest.mock('react-router', () => ({
+    useParams: jest.fn().mockReturnValue({ id: "2" }),
+}));
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({

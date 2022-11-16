@@ -92,8 +92,10 @@ export default function CreateCustomPage() {
         <div className="item-detail">
             <div className="title">
                 <div className="title__name">
-                    Name:
-                    <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)}/>
+                    <label>
+                        Name:
+                        <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)}/>
+                    </label>
                 </div>
                 <button className="title__confirm-button"
                 onClick={() => createCocktailHandler()}>Confirm</button>
@@ -106,8 +108,10 @@ export default function CreateCustomPage() {
                 <div className="content__description-box">
                     <p className="content__abv">Expected 20% ABV</p>
                     <div className='content__description'>
-                        Description:<br />
-                        <textarea className='content__description-input' value={introduction} onChange={(e) => setIntroduction(e.target.value)}/>
+                        <label>
+                            Description:<br />
+                            <textarea className='content__description-input' value={introduction} onChange={(e) => setIntroduction(e.target.value)}/>
+                        </label>
                     </div>
                     <div className="content__ingredient-box">
                         Ingredient:
@@ -115,6 +119,7 @@ export default function CreateCustomPage() {
                             return (
                                 <div className="content__ingredient" key={`${ingredient.name}_${idx}`}>
                                     <input
+                                        data-testid="ingredientInput"
                                         className="content__ingredient-name"
                                         onClick={() => (idx === ingredientList.length) && setOpen(true)}
                                         value={ingredient.name}
@@ -127,6 +132,7 @@ export default function CreateCustomPage() {
                                         setNewIngrdient={setNewIngredient}
                                     />
                                     <input
+                                        data-testid="ingredientAmountInput"
                                         className="content__ingredient-input"
                                         value={ingredient.amount ?? ""}
                                         onChange={(event) => onChangeAmount(idx, event.target.value)}
@@ -138,8 +144,10 @@ export default function CreateCustomPage() {
                         })}
                     </div>
                     <div className='content__recipe'>
-                        Recipe:<br />
-                        <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)}/>
+                        <label>
+                            Recipe:<br />
+                            <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)}/>
+                        </label>
                     </div>
                     <div className='content__tag-box'>
                         Tag: <br />
@@ -153,6 +161,7 @@ export default function CreateCustomPage() {
                                 )
                             })}
                             <input 
+                                data-testid="tagInput"
                                 className='content__tag-input'
                                 type="text"
                                 placeholder='Press enter to add tags'
