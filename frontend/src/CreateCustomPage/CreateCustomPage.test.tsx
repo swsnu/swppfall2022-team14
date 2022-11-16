@@ -59,6 +59,12 @@ jest.mock("./Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) =>
             >
                 INGREDIENT_2
             </button>
+            <button
+                data-testid="closeAddIngredientModalButton"
+                onClick={prop.close}
+            >
+                Close
+            </button>
         </div>
         
     )
@@ -140,5 +146,20 @@ describe("<CreateCustomPage />", () => {
         fireEvent.click(addIngredientButton2);
         const ingredientAmountInput2 = screen.getAllByTestId("ingredientAmountInput")[1];
         fireEvent.change(ingredientAmountInput2, { target: { value: "5 oz" } });
+    });
+    it("should delete tag when tag delete button clicked", async () => {
+        renderCreateCustomPage();
+        const tagInput = screen.getByTestId("tagInput");
+        fireEvent.change(tagInput, { target: { value: "TAG" } })
+        fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
+        const tagDeleteButton = screen.getByTestId("tagDeleteButton");
+        fireEvent.click(tagDeleteButton);
+    });
+    it("should close AddIngredientModal when close button clicked", async () => {
+        renderCreateCustomPage();
+        const ingredientInput = screen.getByTestId("ingredientInput");
+        fireEvent.click(ingredientInput);
+        const closeAddIngredientModalButton = screen.getByTestId("closeAddIngredientModalButton");
+        fireEvent.click(closeAddIngredientModalButton); 
     });
 });

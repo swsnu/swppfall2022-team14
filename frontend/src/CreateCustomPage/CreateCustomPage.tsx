@@ -160,7 +160,12 @@ export default function CreateCustomPage() {
                                 return (
                                     <div className="content__tag" key={`${tagItem}_${idx}`}>
                                         <span>{tagItem}</span>
-                                        <button onClick={(e) => onDeleteTagItem(e.currentTarget.parentElement?.firstChild?.textContent ?? "")}>X</button>
+                                        <button 
+                                            data-testid="tagDeleteButton"
+                                            onClick={(e) => onDeleteTagItem(e.currentTarget.parentElement?.firstChild?.textContent ?? "")}
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 )
                             })}
