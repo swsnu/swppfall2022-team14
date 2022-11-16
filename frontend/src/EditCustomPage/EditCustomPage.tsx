@@ -32,13 +32,15 @@ export default function EditCustomPage() {
     }, []);
 
     useEffect(() => {
-        setName(cocktail?.name ?? "");
-        setIntroduction(cocktail?.introduction ?? "");
-        setRecipe(cocktail?.recipe ?? "");
-        setTagList(cocktail?.tags ?? []);
-        setABV(cocktail?.ABV ?? 0);
-        setPrice(cocktail?.price_per_glass ?? 0);
-        setIngredientList(cocktail?.ingredients ?? []);
+        if (cocktail) {
+            setName(cocktail.name);
+            setIntroduction(cocktail.introduction);
+            setRecipe(cocktail.recipe);
+            setTagList(cocktail.tags);
+            setABV(cocktail.ABV);
+            setPrice(cocktail.price_per_glass);
+            setIngredientList(cocktail.ingredients);
+        }
     }, [cocktail]);
 
     const navigate = useNavigate();

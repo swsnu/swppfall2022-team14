@@ -166,4 +166,33 @@ describe("<EditCustomPage />", () => {
         renderEditCustomPage("failed");
         await screen.findByText("Non existing cocktail");
     });
+    it("should close AddIngredientModal when close button clicked", async () => {
+        renderEditCustomPage();
+        const ingredientInput = screen.getAllByTestId("ingredientInput")[2];
+        fireEvent.click(ingredientInput);
+        const closeAddIngredientModalButton = screen.getAllByTestId("closeAddIngredientModalButton")[2];
+        fireEvent.click(closeAddIngredientModalButton); 
+    });
+    it("should render empty string when cocktail item is null", async () => {
+        renderWithProviders(
+            <MemoryRouter>
+                <Routes>
+                    <Route path="/" element={<EditCustomPage />} />
+                </Routes>
+            </MemoryRouter>,
+            {
+                preloadedState: {
+                    cocktail: { ...stubCocktailInitialState, cocktailItem: null},
+                    comment: stubCommentInitialState,
+                    ingredient: stubIngredientInitialState,
+                },
+            }
+        );
+    });
+    it("should call onKeyPress when enter pressed", async () => {
+        renderEditCustomPage();
+        const tagInput = screen.getByTestId("tagInput");
+        fireEvent.change(tagInput, { target: { value: "TAG" } })
+        fireEvent.keyPress(tagInput, { key: "A", charCode: 65 });
+    });
 });
