@@ -7,7 +7,7 @@ import { fetchIngredientList, IngredientType, selectIngredient } from '../../sto
 import { useEffect } from 'react';
 import { AppDispatch } from '../../store';
 
-interface IProps {
+export interface IProps {
     isOpen: boolean;
     close: () => void;
     addedIngredientList: string[];

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import AddIngredientModal from "./Modals/AddIngredientModal"
-import { Navigate, useNavigate } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { CocktailDetailType, IngredientPrepareType, postCocktail, selectCocktail } from "../store/slices/cocktail/cocktail";
 import './CreateCustomPage.scss';
@@ -14,21 +14,18 @@ export default function CreateCustomPage() {
     const [recipe, setRecipe] = useState<string>("");
     const [tagList, setTagList] = useState<string[]>([]);
     const [tagItem, setTagItem] = useState<string>("");
-    const [ABV, setABV] = useState<number>(20);  // Temporary
-    const [price, setPrice] = useState<number>(80000);  // Temporary
+    const [ABV, _setABV] = useState<number>(20);  // Temporary
+    const [price, _setPrice] = useState<number>(80000);  // Temporary
 
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
     const [newIngredient, setNewIngredient] = useState<IngredientType|null>(null);
-
-    const [confirmed, setConfirmed] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
         setIngredientList(ingredientList.filter((_value, idx) => idx !== selectedIdx));
     };
 
-    const cocktailState = useSelector(selectCocktail);
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
@@ -138,7 +135,14 @@ export default function CreateCustomPage() {
                                         onChange={(event) => onChangeAmount(idx, event.target.value)}
                                     />
                                     {idx !== ingredientList.length &&
-                                        <button className="content__ingredient-delete-button" onClick={() => onClickIngredientDelete(idx)}>Delete</button>}
+                                        <button 
+                                            data-testid="ingredientDeleteButton"
+                                            className="content__ingredient-delete-button" 
+                                            onClick={() => onClickIngredientDelete(idx)}
+                                        >
+                                            Delete
+                                        </button>
+                                    }
                                 </div>
                             )
                         })}

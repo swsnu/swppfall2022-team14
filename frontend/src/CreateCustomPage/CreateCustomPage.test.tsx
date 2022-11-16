@@ -119,4 +119,13 @@ describe("<CreateCustomPage />", () => {
         fireEvent.click(confirmButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/custom/1"));
     });
+    it("should delete ingredient when ingredient delete button clicked", async () => {
+        renderCreateCustomPage();
+        const ingredientInput = screen.getByTestId("ingredientInput");
+        fireEvent.click(ingredientInput);
+        const spyAddIngredientModal = screen.getByTestId("spyAddIngredientModal");
+        fireEvent.click(spyAddIngredientModal);
+        const ingredientDeleteButton = screen.getByTestId("ingredientDeleteButton");
+        fireEvent.click(ingredientDeleteButton);
+    });
 });
