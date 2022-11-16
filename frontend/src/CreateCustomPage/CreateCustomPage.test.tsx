@@ -46,21 +46,21 @@ const stubIngredientInitialState: IngredientInfo = {
 
 jest.mock("./Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) => {
     return (
-        <button 
-            data-testid="spyAddIngredientModal"
-            onClick={() => prop.setNewIngrdient(
-                {
-                    id: 1,
-                    name: 'INGREDIENT_NAME_1',
-                    image: 'INGREDIENT_IMAGE_1',
-                    introduction: 'INGREDIENT_INTRO_1',
-                    ABV: 40,
-                    price: 200
-                }
-            )}
-        >
-            INGREDIENT_1
-        </button>
+        <div>
+            <button 
+                data-testid="addIngredientButton"
+                onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[0])}
+            >
+                INGREDIENT_1
+            </button>
+            <button 
+                data-testid="addIngredientButton"
+                onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[1])}
+            >
+                INGREDIENT_2
+            </button>
+        </div>
+        
     )
 });
 
@@ -106,8 +106,8 @@ describe("<CreateCustomPage />", () => {
         fireEvent.change(descriptionInput, { target: { value: "DESCRIPTION" } });
         const ingredientInput = screen.getByTestId("ingredientInput");
         fireEvent.click(ingredientInput);
-        const spyAddIngredientModal = screen.getByTestId("spyAddIngredientModal");
-        fireEvent.click(spyAddIngredientModal);
+        const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
+        fireEvent.click(addIngredientButton);
         const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
         fireEvent.change(ingredientAmountInput, { target: { value: "10 oz" } });
         const recipeInput = screen.getByLabelText("Recipe:");
@@ -123,9 +123,22 @@ describe("<CreateCustomPage />", () => {
         renderCreateCustomPage();
         const ingredientInput = screen.getByTestId("ingredientInput");
         fireEvent.click(ingredientInput);
-        const spyAddIngredientModal = screen.getByTestId("spyAddIngredientModal");
-        fireEvent.click(spyAddIngredientModal);
+        const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
+        fireEvent.click(addIngredientButton);
         const ingredientDeleteButton = screen.getByTestId("ingredientDeleteButton");
         fireEvent.click(ingredientDeleteButton);
+    });
+    it("should operate onChangeAmount correctly", async () => {
+        renderCreateCustomPage();
+        const ingredientInput = screen.getByTestId("ingredientInput");
+        fireEvent.click(ingredientInput);
+        const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
+        fireEvent.click(addIngredientButton);
+        const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
+        fireEvent.change(ingredientAmountInput, { target: { value: "10 oz" } });
+        const addIngredientButton2 = screen.getAllByTestId("addIngredientButton")[1];
+        fireEvent.click(addIngredientButton2);
+        const ingredientAmountInput2 = screen.getAllByTestId("ingredientAmountInput")[1];
+        fireEvent.change(ingredientAmountInput2, { target: { value: "5 oz" } });
     });
 });
