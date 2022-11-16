@@ -159,7 +159,7 @@ export default function CreateCustomPage() {
                                         <span>{tagItem}</span>
                                         <button 
                                             data-testid="tagDeleteButton"
-                                            onClick={(e) => onDeleteTagItem(tagItem)}
+                                            onClick={() => onDeleteTagItem(tagItem)}
                                         >
                                             X
                                         </button>

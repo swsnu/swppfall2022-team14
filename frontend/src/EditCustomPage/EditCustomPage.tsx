@@ -115,8 +115,10 @@ export default function EditCustomPage() {
             <div className="item-detail">
                 <div className="title">
                     <div className="title__name">
-                        Name:
-                        <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)}/>
+                        <label>
+                            Name:
+                            <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)}/>
+                        </label>
                     </div>
                     <button className="title__confirm-button"
                     onClick={() => editCocktailHandler()}>Confirm</button>
@@ -129,8 +131,10 @@ export default function EditCustomPage() {
                     <div className="content__description-box">
                         <p className="content__abv">Expected {ABV}% ABV</p>
                         <div className='content__description'>
-                            Description:<br />
-                            <textarea className='content__description-input' value={introduction} onChange={(e) => setIntroduction(e.target.value)}/>
+                            <label>
+                                Description:<br />
+                                <textarea className='content__description-input' value={introduction} onChange={(e) => setIntroduction(e.target.value)}/>
+                            </label>                        
                         </div>
                         <div className="content__ingredient-box">
                             Ingredient:
@@ -138,6 +142,7 @@ export default function EditCustomPage() {
                                 return (
                                     <div className="content__ingredient" key={`${ingredient.name}_${idx}`}>
                                         <input
+                                            data-testid="ingredientInput"
                                             className="content__ingredient-name"
                                             onClick={() => (idx === ingredientList.length) && setOpen(true)}
                                             value={ingredient.name}
@@ -150,19 +155,29 @@ export default function EditCustomPage() {
                                             setNewIngrdient={setNewIngredient}
                                         />
                                         <input
+                                            data-testid="ingredientAmountInput"
                                             className="content__ingredient-input"
                                             value={ingredient.amount ?? ""}
                                             onChange={(event) => onChangeAmount(idx, event.target.value)}
                                         />
                                         {idx !== ingredientList.length &&
-                                            <button className="content__ingredient-delete-button" onClick={() => onClickIngredientDelete(idx)}>Delete</button>}
+                                            <button 
+                                                data-testid="ingredientDeleteButton"
+                                                className="content__ingredient-delete-button" 
+                                                onClick={() => onClickIngredientDelete(idx)}
+                                            >
+                                                Delete
+                                            </button>
+                                        }
                                     </div>
                                 )
                             })}
                         </div>
                         <div className='content__recipe'>
-                            Recipe:<br />
-                            <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)}/>
+                            <label>
+                                Recipe:<br />
+                                <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)}/>
+                            </label>
                         </div>
                         <div className='content__tag-box'>
                             Tag: <br />
@@ -171,11 +186,18 @@ export default function EditCustomPage() {
                                     return (
                                         <div className="content__tag" key={`${tagItem}_${idx}`}>
                                             <span>{tagItem}</span>
-                                            <button className="content__tag-delete-button" onClick={(e) => onDeleteTagItem(e.currentTarget.parentElement?.firstChild?.textContent ?? "")}>X</button>
+                                            <button 
+                                                data-testid="tagDeleteButton"
+                                                className="content__tag-delete-button" 
+                                                onClick={() => onDeleteTagItem(tagItem)}
+                                            >
+                                                X
+                                            </button>
                                         </div>
                                     )
                                 })}
                                 <input 
+                                    data-testid="tagInput"
                                     className='content__tag-input'
                                     type="text"
                                     placeholder='Press enter to add tags'

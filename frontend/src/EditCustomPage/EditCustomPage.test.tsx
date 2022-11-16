@@ -5,6 +5,8 @@ import { CocktailInfo } from "../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import EditCustomPage from "./EditCustomPage";
+import { IProps as AddIngredientModalProp } from "../CreateCustomPage/Modals/AddIngredientModal";
+
 
 const stubCommentInitialState: CommentInfo = {
     commentList: [],
@@ -61,6 +63,32 @@ const stubCocktailInitialState: CocktailInfo = {
     listStatus: "success",
 };
 
+jest.mock("../CreateCustomPage/Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) => {
+    return (
+        <div>
+            <button 
+                data-testid="addIngredientButton"
+                onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[0])}
+            >
+                INGREDIENT_1
+            </button>
+            <button 
+                data-testid="addIngredientButton"
+                onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[1])}
+            >
+                INGREDIENT_2
+            </button>
+            <button
+                data-testid="closeAddIngredientModalButton"
+                onClick={prop.close}
+            >
+                Close
+            </button>
+        </div>
+        
+    )
+});
+
 jest.mock('react-router', () => ({
     useParams: jest.fn().mockReturnValue({ id: "2" }),
 }));
@@ -71,7 +99,7 @@ jest.mock("react-router", () => ({
     useNavigate: () => mockNavigate,
 }));
 
-const mockDispatch = jest.fn();
+const mockDispatch = () => ({ payload: { id: 1 } });
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
     useDispatch: () => mockDispatch,
@@ -97,6 +125,32 @@ const renderEditCustomPage = (isStandard: Boolean=true) => {
 describe("<EditCustomPage />", () => {
     it("should render EditCustomPage", async () => {
         renderEditCustomPage();
-        await screen.findByText("Confirm");
+        expect(screen.getByDisplayValue("COCKTAIL_NAME_2")).toBeInTheDocument();
+    });
+    it("should navigate to /custom/:id when confirm button clicked", async () => {
+        renderEditCustomPage();
+        const nameInput = screen.getByLabelText("Name:");
+        fireEvent.change(nameInput, { target: { value: "NAME" } });
+        const descriptionInput = screen.getByLabelText("Description:");
+        fireEvent.change(descriptionInput, { target: { value: "DESCRIPTION" } });
+        const ingredientInput = screen.getAllByTestId("ingredientInput")[0];
+        fireEvent.click(ingredientInput);
+        const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
+        fireEvent.click(addIngredientButton);
+        const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
+        fireEvent.change(ingredientAmountInput, { target: { value: "10 oz" } });
+        const recipeInput = screen.getByLabelText("Recipe:");
+        fireEvent.change(recipeInput, { target: { value: "RECIPE" } });
+        const tagInput = screen.getByTestId("tagInput");
+        fireEvent.change(tagInput, { target: { value: "TAG" } })
+        fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
+        const confirmButton = screen.getByText("Confirm");
+        fireEvent.click(confirmButton);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/custom/1"));
+    });
+    it("should delete ingredient when ingredient delete button clicked", async () => {
+        renderEditCustomPage();
+        const ingredientDeleteButton = screen.getAllByTestId("ingredientDeleteButton")[0];
+        fireEvent.click(ingredientDeleteButton);
     });
 });
