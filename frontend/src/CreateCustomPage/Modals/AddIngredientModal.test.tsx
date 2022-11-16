@@ -71,4 +71,9 @@ describe("<AddIngredientModal />", () => {
         renderAddIngredientModal();
         await screen.findByText("Close");
     });
+    it("should close modal when ingredient clicked", async () => {
+        renderAddIngredientModal();
+        const ingredientButton = screen.getAllByTestId("ingredientButton")[0];
+        fireEvent.click(ingredientButton);
+    });
 });

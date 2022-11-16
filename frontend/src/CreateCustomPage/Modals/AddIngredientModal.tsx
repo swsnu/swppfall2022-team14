@@ -34,6 +34,7 @@ const AddIngredientModal = (props: IProps) => {
                 {ingredientState.ingredientList.map((ingredient, idx) => {
                     return (
                         <button key={`${ingredient.name}_${idx}`}
+                            data-testid="ingredientButton"
                             className='modal__ingredient'
                             onClick={() => onClickIngredient(ingredient)}
                             disabled={addedIngredientList.includes(ingredient.name)}
