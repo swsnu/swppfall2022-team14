@@ -5,11 +5,13 @@ from cocktail.models import Cocktail
 from .serializers import IngredientPrepareSerializer
 from django.db import IntegrityError
 from .models import IngredientPrepare
+from rest_framework import viewsets
 
+class IngredientViewSet(viewsets.ModelViewSet):
+    queryset = IngredientPrepare.objects.all()
+    serializer_class = IngredientPrepareSerializer
 
-@api_view(['GET', 'POST'])
-def ingredient_list(request, cocktail_id):
-    if request.method == 'GET':
+    def list(self, request, cocktail_id):
         try:
             cocktail = Cocktail.objects.get(id=cocktail_id)
         except Cocktail.DoesNotExist:
@@ -22,9 +24,10 @@ def ingredient_list(request, cocktail_id):
                        for element in ingredient_prepare]
 
         return JsonResponse(return_data, safe=False)
-    elif request.method == 'POST':
+
+    def create(self, request, cocktail_id):
         try:
-            cocktail = Cocktail.objects.get(id=cocktail_id)
+            Cocktail.objects.get(id=cocktail_id)
         except Cocktail.DoesNotExist:
             return HttpResponseNotFound(f"No Cocktail matches id={cocktail_id}")
 
@@ -33,7 +36,7 @@ def ingredient_list(request, cocktail_id):
             # When edit/post custom cocktail
             # Request with ingredient_id
             data['cocktail'] = cocktail_id
-            serializer = IngredientPrepareSerializer(
+            serializer = self.serializer_class(
                 data=data, context={"request": request})
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -41,34 +44,27 @@ def ingredient_list(request, cocktail_id):
         except (IntegrityError) as e:
             return HttpResponseBadRequest("Recipe Alread Exists")
         return JsonResponse(serializer.data, status=201)
-    # else:
-    #     return HttpResponseNotAllowed(['GET', 'POST'])
 
-
-@api_view(['PUT', 'DELETE'])
-def ingredient_prepare_modify(request, cocktail_id, ingredient_id):
-    if request.method == 'PUT':
+    def partial_update(self, request, cocktail_id, ingredient_id):
         try:
             # need constraint check
-            ingredient_prepare = IngredientPrepare.objects.get(
+            ingredient_prepare = self.queryset.get(
                 cocktail_id=cocktail_id, ingredient_id=ingredient_id)
         except IngredientPrepare.DoesNotExist:
             return HttpResponseNotFound(f"No recipe matches cocktail_id {cocktail_id}, ingredient_id {ingredient_id}")
 
-        serializer = IngredientPrepareSerializer(
+        serializer = self.serializer_class(
             ingredient_prepare, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return JsonResponse(serializer.data, status=200)
-    elif request.method == 'DELETE':
+
+    def destroy(self, request, cocktail_id, ingredient_id):
         try:
             # need constraint check
-            ingredient_prepare = IngredientPrepare.objects.get(
+            ingredient_prepare = self.queryset.get(
                 cocktail_id=cocktail_id, ingredient_id=ingredient_id)
         except IngredientPrepare.DoesNotExist:
             return HttpResponseNotFound(f"No recipe matches cocktail_id {cocktail_id}, ingredient_id {ingredient_id}")
 
         ingredient_prepare.delete()
         return HttpResponse(status=200)
-    # else:
-    #     return HttpResponseNotAllowed(['PUT', 'DELETE'])
