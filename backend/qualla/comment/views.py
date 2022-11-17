@@ -4,21 +4,23 @@ from cocktail.models import Cocktail
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import CommentSerializer, CommentPostSerializer
+from rest_framework import viewsets
 
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
-@api_view(['GET', 'POST'])
-def comment_list(request, cocktail_id):
-    if request.method == 'GET':
+    def list(self, request, cocktail_id):
         try:
             cocktail = Cocktail.objects.get(id=cocktail_id)
         except Cocktail.DoesNotExist:
             return HttpResponseNotFound(f"No Cocktails matches id={cocktail_id}")
 
         comments = cocktail.comments.all()
-        data = CommentSerializer(comments, many=True).data
+        data = self.serializer_class(comments, many=True).data
         return JsonResponse({"comments": data, "count": comments.count()}, safe=False)
-    elif request.method == 'POST':
 
+    def create(self, request, cocktail_id):
         parent_comment = request.query_params.get("parent_comment", None)
         # breakpoint()
         data = request.data.copy()
@@ -32,37 +34,32 @@ def comment_list(request, cocktail_id):
             data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         comment = serializer.save()
-        return Response(CommentSerializer(comment).data, status=201)
-    # else:
-    #     return HttpResponseNotAllowed(['GET', 'POST'])
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def retrieve_comment(request, pk):
-    if request.method == 'GET':
+        return Response(self.serializer_class(comment).data, status=201)
+    
+    def retrieve(self, request, pk):
         try:
-            comment = Comment.objects.get(id=pk)
+            comment = self.queryset.get(id=pk)
         except Comment.DoesNotExist:
             return HttpResponseNotFound(f"No Comment matches id={pk}")
 
-        data = CommentSerializer(comment).data
+        data = self.serializer_class(comment).data
         return JsonResponse(data, safe=False)
 
-    elif request.method == 'PUT':
+    def partial_update(self, request, pk):
         try:
-            comment = Comment.objects.get(id=pk)
+            comment = self.queryset.get(id=pk)
         except Comment.DoesNotExist:
             return HttpResponseNotFound(f"No Comment matches id={pk}")
 
-        serializer = CommentSerializer(
+        serializer = self.serializer_class(
             comment, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return JsonResponse(serializer.data, status=200)
 
-    elif request.method == 'DELETE':
+    def destroy(self, request, pk):
         try:
-            comment = Comment.objects.get(id=pk)
+            comment = self.queryset.get(id=pk)
         except Comment.DoesNotExist:
             return HttpResponseNotFound(f"No Comment matches id={pk}")
 
@@ -77,15 +74,9 @@ def retrieve_comment(request, pk):
             comment.author_id = None
             comment.save()
             return JsonResponse(CommentSerializer(comment).data, status=200)
-    # else:
-    #     return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
 
-
-@api_view(['GET'])
-def retrieve_my_comment(request):
-    if request.method == 'GET':
+    def retrieve_my_comment(self, request):
         # TODO: author_id=request.user.id
-        comments = Comment.objects.filter(author_id=1)
-        print(comments.__str__())
-        data = CommentSerializer(comments, many=True).data
+        comments = self.queryset.filter(author_id=1)
+        data = self.serializer_class(comments, many=True).data
         return JsonResponse({"comments": data, "count": comments.count()}, safe=False)
