@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'store.apps.StoreConfig',
     'cocktail.apps.CocktailConfig',
     'ingredient.apps.IngredientConfig',
     'comment.apps.CommentConfig',
