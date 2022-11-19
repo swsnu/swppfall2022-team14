@@ -5,7 +5,8 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ThunkMiddleware } from "redux-thunk";
-import reducer, { CocktailItemType, CocktailDetailType, IngredientPrepareType, CocktailInfo, cocktailActions, editCocktail } from "./cocktail";
+import { Filterparam } from "../../../InitPage/InitPage";
+import reducer, { CocktailItemType, CocktailDetailType, IngredientPrepareType, CocktailInfo, cocktailActions, editCocktail, FilterParamType } from "./cocktail";
 import { fetchCustomCocktailList, fetchStandardCocktailList, fetchMyCocktailList } from "./cocktail";
 import { getCocktail, postCocktail } from "./cocktail"
 
@@ -107,7 +108,8 @@ describe("userInfo reducer", () => {
 
     it("should handle fetchStandardCocktailList", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: { cocktails: [fakeCocktailItemST] } });
-        await store.dispatch(fetchStandardCocktailList(""));
+        const temp: FilterParamType = { type_one: [], type_two: [], type_three: [], name_param: [], my_ingredient_id_list: [] }
+        await store.dispatch(fetchStandardCocktailList(temp));
         expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemST])
     });
     it("should handle fetchStandardCocktailList when failed", async () => {
@@ -120,12 +122,14 @@ describe("userInfo reducer", () => {
                 },
             };
         });
-        await store.dispatch(fetchStandardCocktailList(""));
+        const temp: FilterParamType = { type_one: [], type_two: [], type_three: [], name_param: [], my_ingredient_id_list: [] }
+        await store.dispatch(fetchStandardCocktailList(temp));
         expect(store.getState().cocktail.listStatus).toEqual('failed')
     });
     it("should handle fetchCustomCocktailList", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: { cocktails: [fakeCocktailItemCS] } });
-        await store.dispatch(fetchCustomCocktailList(""));
+        const temp: FilterParamType = { type_one: [], type_two: [], type_three: [], name_param: [], my_ingredient_id_list: [] }
+        await store.dispatch(fetchCustomCocktailList(temp));
         expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
     it("should handle fetchCustomCocktailList when failed", async () => {
@@ -138,7 +142,8 @@ describe("userInfo reducer", () => {
                 },
             };
         });
-        await store.dispatch(fetchCustomCocktailList(""));
+        const temp: FilterParamType = { type_one: [], type_two: [], type_three: [], name_param: [], my_ingredient_id_list: [] }
+        await store.dispatch(fetchCustomCocktailList(temp));
         expect(store.getState().cocktail.listStatus).toEqual('failed')
     });
     it("should handle fetchMyCocktailList", async () => {

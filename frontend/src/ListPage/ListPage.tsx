@@ -38,8 +38,7 @@ const ListPage = () => {
 
     useEffect(() => {
         setPageType(params.type)
-        console.log(pageType)
-        console.log(location.state)
+
     }, [pageType, location])
 
     useEffect(() => {
