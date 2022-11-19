@@ -5,9 +5,10 @@ from rest_framework.decorators import api_view
 from user.models import User
 from ingredient.models import Ingredient
 from store.models import Store
-from .serializers import StoreSerializer
 from django.db import IntegrityError
 from json import JSONDecodeError
+from ingredient.serializers import IngredientDetailSerializer
+
 
 # Create your views here.
 
@@ -21,35 +22,45 @@ def user_store(request, user_id):
 
         store_ingredients = user.store.all()
         # id, name, image, ABV, price
-        return_data = [{"id": element.ingredient.id, "name": element.ingredient.name, "image": element.ingredient.image,
-                       "ABV": element.ingredient.ABV, "price": element.ingredient.price}
-                       for element in store_ingredients]
+        my_ingredients = [
+            store_ingredient.ingredient for store_ingredient in store_ingredients]
+        data = IngredientDetailSerializer(my_ingredients, many=True).data
 
-        return JsonResponse(return_data, safe=False)
+        return JsonResponse(data, safe=False)
     elif request.method == 'POST':
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return HttpResponseNotFound(f"No User matches id={user_id}")
 
-
-        ingredient_id_list = request.data.copy()['ingredients']
+        ingredient_id_list = request.data['ingredients']
         return_data_list = []
-        
-        for i in ingredient_id_list:
+
+        _404_id_list = []
+        _integrity_error_list = []
+        for ingredient_id in ingredient_id_list:
             try:
-                ingredient = Ingredient.objects.get(id=i)
+                ingredient = Ingredient.objects.get(id=ingredient_id)
             except Ingredient.DoesNotExist:
-                return HttpResponseNotFound("Ingredient does not exist in Add List")
+                _404_id_list.append(ingredient_id)
+                continue
+
             try:
                 Store.objects.create(user=user, ingredient=ingredient)
             except IntegrityError:
+                _integrity_error_list.append(ingredient_id)
                 continue
+            else:
+                return_data_list.append(ingredient)
 
-            return_data_list.append(ingredient)
+        if len(_404_id_list) != 0:
+            return HttpResponseNotFound(f"No Ingredient(s) exist:{_404_id_list}")
+        if len(_integrity_error_list) != 0:
+            return HttpResponseBadRequest(f"Already have cocktails: {_integrity_error_list}")
 
-        return_data = [{"id": element.id, "name": element.name, "image": element.image,
-                       "ABV": element.ABV, "price": element.price}
-                       for element in return_data_list]
-
-        return JsonResponse(return_data,safe=False,status=201)
+        return_data = IngredientDetailSerializer(
+            return_data_list, many=True).data
+        # return_data = [{"id": element.id, "name": element.name, "image": element.image,
+        #                "ABV": element.ABV, "price": element.price}
+        #                for element in return_data_list]
+        return JsonResponse(return_data, safe=False, status=201)
