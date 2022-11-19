@@ -14,12 +14,14 @@ export interface IngredientType {
 
 export interface IngredientInfo {
     ingredientList: IngredientType[],
+    myIngredientList: IngredientType[],
     ingredientItem: IngredientType | null,
     itemStatus: string,
     listStatus: string
 }
 const initialState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: {
         id: 1,
         name: 'name',
@@ -51,6 +53,19 @@ export const fetchMyIngredientList = createAsyncThunk(
 )
 
 
+export interface postIngredientProps {
+    id: number;
+    ingredients: number[] // ingredient ids
+}
+export const postMyIngredients = createAsyncThunk(
+    "cocktail/postMyIngredientList", async (param: postIngredientProps, { dispatch }) => {
+        const response = await axios.post(`/api/v1/store/${param.id}/`, param);
+        dispatch(fetchMyIngredientList(param.id))
+        return response.data
+    },
+)
+
+
 export const getIngredient = createAsyncThunk(
     "ingredient/getIngredient/",
     async (id: IngredientType["id"], { dispatch }) => {
@@ -63,8 +78,7 @@ export const getIngredient = createAsyncThunk(
 export const ingredientSlice = createSlice({
     name: "ingredient",
     initialState,
-    reducers: {
-    },
+    reducers: {},
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(fetchIngredientList.fulfilled, (state, action) => {
@@ -88,7 +102,7 @@ export const ingredientSlice = createSlice({
             state.itemStatus = "failed"
         })
         builder.addCase(fetchMyIngredientList.fulfilled, (state, action) => {
-            state.ingredientList = action.payload.Ingredients;
+            state.myIngredientList = action.payload.Ingredients;
             state.listStatus = "success"
         });
         builder.addCase(fetchMyIngredientList.pending, (state, action) => {

@@ -2,39 +2,40 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import Reply from './Reply'
 import React from 'react';
-import {CommentInfo, CommentType} from "../../store/slices/comment/comment";
-import {getMockStore} from "../../test-utils/mock";
-import {IngredientInfo} from "../../store/slices/ingredient/ingredient";
-import {CocktailInfo, CocktailItemType} from "../../store/slices/cocktail/cocktail";
-import {Provider} from "react-redux";
+import { CommentInfo, CommentType } from "../../store/slices/comment/comment";
+import { getMockStore } from "../../test-utils/mock";
+import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
+import { CocktailInfo, CocktailItemType } from "../../store/slices/cocktail/cocktail";
+import { Provider } from "react-redux";
 import Comment from "./Comment";
 
 // eslint-disable-next-line react/display-name
-jest.mock("./Reply", () => (prop : CommentType) => (
+jest.mock("./Reply", () => (prop: CommentType) => (
     <div data-testid={`spyReply_${prop.id}`}>
     </div>
 ));
 
-const emptyCocktail : CocktailInfo = {
+const emptyCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
     itemStatus: "loading",
     listStatus: "loading"
 }
-const emptyIngredient : IngredientInfo = {
+const emptyIngredient: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading"
 }
-const commentAuthor : CommentType = {
+const commentAuthor: CommentType = {
     id: 1,
     cocktail: {
         id: 1,
         name: "name",
         image: "img",
         type: "CS",
-        tags: ["CS1","CS2"],
+        tags: ["CS1", "CS2"],
         author_id: 1,
         rate: 1,
     },
@@ -45,14 +46,14 @@ const commentAuthor : CommentType = {
     parent_comment: 1, // if null comment is root comment
     is_deleted: false
 }
-const commentOther : CommentType = {
+const commentOther: CommentType = {
     id: 2,
     cocktail: {
         id: 1,
         name: "name",
         image: "img",
         type: "CS",
-        tags: ["CS1","CS2"],
+        tags: ["CS1", "CS2"],
         author_id: 1,
         rate: 1,
     },
@@ -63,14 +64,14 @@ const commentOther : CommentType = {
     parent_comment: 1, // if null comment is root comment
     is_deleted: false
 }
-const commentMore : CommentType = {
+const commentMore: CommentType = {
     id: 2,
     cocktail: {
         id: 1,
         name: "name",
         image: "img",
         type: "CS",
-        tags: ["CS1","CS2"],
+        tags: ["CS1", "CS2"],
         author_id: 1,
         rate: 1,
     },
@@ -81,30 +82,30 @@ const commentMore : CommentType = {
     parent_comment: 11, // if null comment is root comment
     is_deleted: false
 }
-const initComment : CommentInfo = {
-    commentList: [commentAuthor,commentOther],
+const initComment: CommentInfo = {
+    commentList: [commentAuthor, commentOther],
     commentItem: commentAuthor,
     state: null
 }
-const editComment : CommentInfo = {
+const editComment: CommentInfo = {
     commentList: [commentAuthor],
     commentItem: commentAuthor,
     state: "EDIT"
 }
-const replyComment : CommentInfo = {
+const replyComment: CommentInfo = {
     commentList: [commentAuthor],
     commentItem: commentAuthor,
     state: "REPLY"
 }
-const moreComment : CommentInfo = {
-    commentList: [commentAuthor,commentOther, commentMore],
+const moreComment: CommentInfo = {
+    commentList: [commentAuthor, commentOther, commentMore],
     commentItem: commentAuthor,
     state: "EDIT"
 }
-const commentMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: initComment})
-const commentEditMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: editComment})
-const commentReplyMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: replyComment})
-const commentMoreMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: moreComment})
+const commentMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: initComment })
+const commentEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment })
+const commentReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment })
+const commentMoreMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: moreComment })
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -126,12 +127,12 @@ describe("<Comment />", () => {
     it("should render without errors EDIT & handle Edit Comment", () => {
         const create = new Date()
         const update = new Date()
-        const cocktail : CocktailItemType = {
+        const cocktail: CocktailItemType = {
             id: 1,
             name: "name",
             image: "img",
             type: "CS",
-            tags: ["CS1","CS2"],
+            tags: ["CS1", "CS2"],
             author_id: 1,
             rate: 1,
         }
@@ -140,7 +141,7 @@ describe("<Comment />", () => {
             <Provider store={commentEditMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail}/>}/>
+                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -153,19 +154,19 @@ describe("<Comment />", () => {
         const textBox = screen.getByRole("textbox")
         const editButton = screen.getByText("Edit")
 
-        fireEvent.change(textBox, { target: {value: "edit_comment"}});
+        fireEvent.change(textBox, { target: { value: "edit_comment" } });
         fireEvent.click(editButton)
         expect(mockDispatch).toBeCalledTimes(1)
     });
     it("should render without errors EDIT & handle Edit More Comment", () => {
         const create = new Date()
         const update = new Date()
-        const cocktail : CocktailItemType = {
+        const cocktail: CocktailItemType = {
             id: 1,
             name: "name",
             image: "img",
             type: "CS",
-            tags: ["CS1","CS2"],
+            tags: ["CS1", "CS2"],
             author_id: 1,
             rate: 1,
         }
@@ -174,7 +175,7 @@ describe("<Comment />", () => {
             <Provider store={commentMoreMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail}/>}/>
+                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -183,12 +184,12 @@ describe("<Comment />", () => {
     it("should render without errors EDIT & handle Reply Comment", () => {
         const create = new Date()
         const update = new Date()
-        const cocktail : CocktailItemType = {
+        const cocktail: CocktailItemType = {
             id: 1,
             name: "name",
             image: "img",
             type: "CS",
-            tags: ["CS1","CS2"],
+            tags: ["CS1", "CS2"],
             author_id: 1,
             rate: 1,
         }
@@ -197,7 +198,7 @@ describe("<Comment />", () => {
             <Provider store={commentMoreMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={11} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail}/>}/>
+                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={11} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -206,12 +207,12 @@ describe("<Comment />", () => {
     it("should render without errors Reply & handle Edit Comment", () => {
         const create = new Date()
         const update = new Date()
-        const cocktail : CocktailItemType = {
+        const cocktail: CocktailItemType = {
             id: 1,
             name: "name",
             image: "img",
             type: "CS",
-            tags: ["CS1","CS2"],
+            tags: ["CS1", "CS2"],
             author_id: 1,
             rate: 1,
         }
@@ -220,7 +221,7 @@ describe("<Comment />", () => {
             <Provider store={commentReplyMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail}/>}/>
+                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -231,19 +232,19 @@ describe("<Comment />", () => {
         const textBox = screen.getByRole("textbox")
         const addButton = screen.getByText("Add")
 
-        fireEvent.change(textBox, { target: {value: "edit_comment"}});
+        fireEvent.change(textBox, { target: { value: "edit_comment" } });
         fireEvent.click(addButton)
         expect(mockDispatch).toBeCalledTimes(1)
     });
     it("should render without errors Not EDIT & Auth", () => {
         const create = new Date()
         const update = new Date()
-        const cocktail : CocktailItemType = {
+        const cocktail: CocktailItemType = {
             id: 1,
             name: "name",
             image: "img",
             type: "CS",
-            tags: ["CS1","CS2"],
+            tags: ["CS1", "CS2"],
             author_id: 1,
             rate: 1,
         }
@@ -252,7 +253,7 @@ describe("<Comment />", () => {
             <Provider store={commentMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail}/>}/>
+                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>

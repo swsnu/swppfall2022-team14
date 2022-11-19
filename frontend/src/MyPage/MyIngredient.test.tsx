@@ -14,12 +14,12 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-jest.mock("../common/Components/IngredientItem", () => (prop:Pick<IngredientType, "image" | "name" | "ABV" | "id">) => (
+jest.mock("../common/Components/IngredientItem", () => (prop: Pick<IngredientType, "image" | "name" | "ABV" | "id">) => (
     <div data-testid={`spyIngredient_${prop.id}`}>
     </div>
 ));
 
-jest.mock("../common/Modals/AddIngredientModal", () => (prop:{isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>>}) => (
+jest.mock("../common/Modals/AddIngredientModal", () => (prop: { isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>> }) => (
     <div data-testid={`spyModal`}>
     </div>
 ));
@@ -47,12 +47,13 @@ const ingredient: IngredientType = {
 
 const ingredientState: IngredientInfo = {
     ingredientList: [ingredient],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
 }
 
-let mockStore = getMockStore({cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState});
+let mockStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState });
 
 describe("<MyIngredient />", () => {
     beforeEach(() => {
@@ -60,12 +61,12 @@ describe("<MyIngredient />", () => {
     });
 
     it("should render without errors", () => {
-        render( <Provider store={mockStore}><MyIngredient/></Provider>);
+        render(<Provider store={mockStore}><MyIngredient /></Provider>);
         screen.getByTestId("spyIngredient_1");
     });
 
     it("should handle add modal", async () => {
-        render( <Provider store={mockStore}><MyIngredient/></Provider>);
+        render(<Provider store={mockStore}><MyIngredient /></Provider>);
         const addButton = screen.getByText("Add");
         fireEvent.click(addButton)
         await waitFor(() => screen.getByTestId("spyIngredient_1"));

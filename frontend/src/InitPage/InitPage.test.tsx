@@ -81,6 +81,7 @@ const stubCommentInitialState: CommentInfo = {
 
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
@@ -98,7 +99,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderInitPage = (isStandard: Boolean=true) => {
+const renderInitPage = (isStandard: Boolean = true) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -108,10 +109,10 @@ const renderInitPage = (isStandard: Boolean=true) => {
         {
             preloadedState: {
                 cocktail: {
-                    cocktailList: 
-                        isStandard ? 
-                        cocktailList.filter((cocktail) => cocktail.type === "ST") :
-                        cocktailList.filter((cocktail) => cocktail.type === "CS"),
+                    cocktailList:
+                        isStandard ?
+                            cocktailList.filter((cocktail) => cocktail.type === "ST") :
+                            cocktailList.filter((cocktail) => cocktail.type === "CS"),
                     cocktailItem: null,
                     itemStatus: "loading",
                     listStatus: "loading",

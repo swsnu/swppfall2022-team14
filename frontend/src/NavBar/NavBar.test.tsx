@@ -46,6 +46,7 @@ const stubCommentInitialState: CommentInfo = {
 
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
