@@ -51,35 +51,51 @@ const initialState: CocktailInfo = {
 
 
 
+export interface FilterParamType {
+    type_one: string[];
+    type_two: string[];
+    type_three: string[];
+    name_param: string[];
+    my_ingredient_id_list: number[];
+}
 
 export const fetchStandardCocktailList = createAsyncThunk(
-    "cocktail/fetchStandardCocktailList", async (params: any) => {
-        const response = await axios.get(`/api/v1/cocktails/?type=standard`,
-            {
-                params: {
-                    type_one: params.filter_param.type_one,
-                    type_two: params.filter_param.type_two,
-                    type_three: params.filter_param.type_three,
-                    name_param: params.name_param
+    "cocktail/fetchStandardCocktailList", async (params: FilterParamType | null) => {
+        if (!params) {
+            const response = await axios.get(`/api/v1/cocktails/?type=standard`);
+            console.log(response.data)
+            return response.data
+        }
+        else {
+            const response = await axios.get(`/api/v1/cocktails/?type=standard`,
+                {
+                    params: params
                 }
-            }
-        );
-        return response.data
+            );
+            console.log(response.data)
+            return response.data
+        }
+
     },
 )
 
 export const fetchCustomCocktailList = createAsyncThunk(
-    "cocktail/fetchCustomCocktailList", async (params: any) => {
-        const response = await axios.get(`/api/v1/cocktails/?type=custom`,
-            {
-                params: {
-                    type_one: params.filter_param.type_one,
-                    type_two: params.filter_param.type_two,
-                    type_three: params.filter_param.type_three,
-                    name_param: params.name_param
+    "cocktail/fetchCustomCocktailList", async (params: FilterParamType | null) => {
+        if (!params) {
+            const response = await axios.get(`/api/v1/cocktails/?type=custom`);
+            console.log(response.data)
+            return response.data
+        }
+        else {
+            const response = await axios.get(`/api/v1/cocktails/?type=custom`,
+                {
+                    params: params
                 }
-            });
-        return response.data
+            );
+            console.log(response.data)
+            return response.data
+        }
+
     },
 )
 

@@ -9,6 +9,7 @@ import cocktail, {
     CocktailItemType,
     fetchCustomCocktailList,
     fetchStandardCocktailList,
+    FilterParamType,
     selectCocktail
 } from "../store/slices/cocktail/cocktail";
 import NavBar from "../NavBar/NavBar";
@@ -42,20 +43,29 @@ const ListPage = () => {
     }, [pageType, location])
 
     useEffect(() => {
-        if (pageType === 'standard') {
-            dispatch(fetchStandardCocktailList(location.state))
-        }
-        else if (pageType === 'custom') {
-            dispatch(fetchCustomCocktailList(location.state))
-        }
-        else if (pageType === 'ingredient') {
+
+        if (pageType === 'ingredient') {
             dispatch(fetchIngredientList())
         }
-        else {
-            //TODO
-            //handle invalid url
+        else if (location.state) {
+            const param: FilterParamType = {
+                type_one: location.state.filter_param.type_one,
+                type_two: location.state.filter_param.type_two,
+                type_three: location.state.filter_param.type_three,
+                name_param: location.state.name_param,
+                my_ingredient_id_list: location.state.my_ingredient_param
+            }
+            console.log(param)
+            if (pageType === 'standard') {
+                dispatch(fetchStandardCocktailList(param))
+            }
+            else if (pageType === 'custom') {
+                dispatch(fetchCustomCocktailList(param))
+            }
         }
+
     }, [pageType, location])
+
 
     useEffect(() => {
         setList(cocktailState.cocktailList)

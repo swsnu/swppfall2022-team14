@@ -9,6 +9,7 @@ import InitMyLiqourModal from "./Modals/InitMyLiquorModal"
 import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
+import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
 
 export interface Filterparam {
     type_one: string[],
@@ -18,6 +19,9 @@ export interface Filterparam {
 
 
 const InitPage = () => {
+    const dummy_user_id = 4;
+    const ingredientState = useSelector(selectIngredient)
+
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
 
@@ -25,7 +29,9 @@ const InitPage = () => {
     // const [urlParams, setUrlParams] = useState<string>("")
     const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [] })
     const [input, setInput] = useState('')
-    const request_param = { filter_param: filterParam, name_param: input }
+    const my_ingredient_id_list = ingredientState.myIngredientList.map(ingredient => ingredient.id)
+
+    const request_param = { filter_param: filterParam, name_param: input, my_ingredient_param: my_ingredient_id_list }
 
     const navigate = useNavigate()
 
@@ -67,11 +73,14 @@ const InitPage = () => {
 
     useEffect(() => {
         if (isStandard) {
-            dispatch(fetchStandardCocktailList(""))
+            dispatch(fetchStandardCocktailList(null))
         } else {
-            dispatch(fetchCustomCocktailList(""))
+            dispatch(fetchCustomCocktailList(null))
         }
     }, [isStandard])
+    useEffect(() => {
+        dispatch(fetchMyIngredientList(dummy_user_id))
+    }, [])
 
 
 
