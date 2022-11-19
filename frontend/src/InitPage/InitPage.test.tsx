@@ -25,12 +25,12 @@ jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "imag
 
 
 jest.mock("./Components/Filter", () => (prop: FilterProp) => {
-    const temp: Filterparam = { type_one: [], type_two: [], type_three: [] }
+    const mockFilterParam: Filterparam = { type_one: [], type_two: [], type_three: [], available_only: false }
     return (
         <div data-testid="spyFilter">
             <div className="filter__title">Type 1</div>
             <div className="filter__content">
-                <button onClick={() => prop.setUrlParams(temp)}>
+                <button onClick={() => prop.setUrlParams(mockFilterParam)}>
                     클래식
                 </button>
             </div>

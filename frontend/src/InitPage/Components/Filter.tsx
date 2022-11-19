@@ -22,11 +22,13 @@ const Filter = (prop: Iprops) => {
     const [typeOneParam, setTypeOneParam] = useState<string[]>([])
     const [typeTwoParam, setTypeTwoParam] = useState<string[]>([])
     const [typeThreeParam, setTypeThreeParam] = useState<string[]>([])
+    const [availableOnly, setAvailableOnly] = useState<boolean>(false)
     // const url_params = `?filter_type_one=${typeOneParam}&filter_type_two=${typeTwoParam}&filter_type_three=${typeThreeParam}`
     const url_params = {
         type_one: typeOneParam,
         type_two: typeTwoParam,
-        type_three: typeThreeParam
+        type_three: typeThreeParam,
+        available_only: availableOnly
     }
 
     const onTypeClick = (param: string[], setParam: Dispatch<SetStateAction<string[]>>, type_name: string, unique = false) => {
@@ -43,7 +45,7 @@ const Filter = (prop: Iprops) => {
                 setParam([...param, type_name]) // 배열에 넣기
         }
     }
-    useEffect(() => prop.setUrlParams(url_params), [url_params])
+    useEffect(() => prop.setUrlParams(url_params), [typeOneParam, typeTwoParam, typeThreeParam, availableOnly])
 
     return <div className={styles.filter}>
         <div className={styles.filter__line}>
@@ -57,7 +59,7 @@ const Filter = (prop: Iprops) => {
                                     key={type.name}
                                     type="checkbox"
                                     name="type1"
-                                    checked={typeOneParam.includes(type.name)}
+                                    defaultChecked={typeOneParam.includes(type.name)}
                                     onChange={() => prop.setUrlParams(url_params)}
                                     onClick={() => onTypeClick(typeOneParam, setTypeOneParam, type.name)}
                                 />
@@ -79,7 +81,7 @@ const Filter = (prop: Iprops) => {
                                     key={type.name}
                                     type="checkbox"
                                     name="type2"
-                                    checked={typeTwoParam.includes(type.name)}
+                                    defaultChecked={typeTwoParam.includes(type.name)}
                                     onChange={() => prop.setUrlParams(url_params)}
                                     onClick={() => onTypeClick(typeTwoParam, setTypeTwoParam, type.name)}
                                 />
@@ -101,7 +103,7 @@ const Filter = (prop: Iprops) => {
                                     key={type.name}
                                     type="checkbox"
                                     name="type3"
-                                    checked={typeThreeParam.includes(type.name)}
+                                    defaultChecked={typeThreeParam.includes(type.name)}
                                     onChange={() => prop.setUrlParams(url_params)}
                                     onClick={() => onTypeClick(typeThreeParam, setTypeThreeParam, type.name, true)}
                                 />
@@ -112,6 +114,20 @@ const Filter = (prop: Iprops) => {
                 })}
             </div>
 
+        </div>
+        <div className={styles.filter__line}>
+            <div className={styles.filter__title}>재료 기반 검색</div>
+            <div className={styles.filter__content}>
+                <label>
+                    <input
+                        type="checkbox"
+                        name="available_only"
+                        defaultChecked={availableOnly}
+                        onClick={() => setAvailableOnly(!availableOnly)}
+                    />
+                    만들 수 있는 칵테일만
+                </label>
+            </div>
         </div>
     </div >
 }
