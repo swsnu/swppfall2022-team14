@@ -65,6 +65,20 @@ export const postMyIngredients = createAsyncThunk(
     },
 )
 
+export interface deleteIngredientProps {
+    user_id: number;
+    ingredient_id: number; // ingredient ids
+}
+
+export const deleteMyIngredients = createAsyncThunk(
+    "cocktail/deleteMyIngredientList", async (param: deleteIngredientProps, { dispatch }) => {
+        const response = await axios.delete(`/api/v1/store/${param.user_id}/${param.ingredient_id}/`);
+        dispatch(fetchMyIngredientList(param.user_id))
+        return response.data
+    },
+)
+
+
 
 export const getIngredient = createAsyncThunk(
     "ingredient/getIngredient/",

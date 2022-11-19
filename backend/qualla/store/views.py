@@ -8,9 +8,10 @@ from store.models import Store
 from django.db import IntegrityError
 from json import JSONDecodeError
 from ingredient.serializers import IngredientDetailSerializer
-
+from .serializers import StoreSerializer
 
 # Create your views here.
+
 
 @api_view(['GET', 'POST'])
 def user_store(request, user_id):
@@ -64,3 +65,19 @@ def user_store(request, user_id):
         #                "ABV": element.ABV, "price": element.price}
         #                for element in return_data_list]
         return JsonResponse({"Ingredients": return_data, "count": len(return_data_list)}, safe=False, status=201)
+
+
+@api_view(['DELETE'])
+def modify_user_store(request, user_id, ingredient_id):
+    if request.method == 'DELETE':
+        # need constraint check
+        try:
+            user_store = Store.objects.get(
+                user_id=user_id, ingredient_id=ingredient_id)
+        except Store.DoesNotExist:
+            return HttpResponseNotFound(f"No user store info found for user {user_id}, ingredient {ingredient_id}")
+
+        deleted_data = StoreSerializer(
+            user_store).data
+        user_store.delete()
+        return JsonResponse(deleted_data, status=200)

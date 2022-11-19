@@ -15,7 +15,7 @@ import ItemDetailPage from "../ItemDetailPage/ItemDetailPage";
 import IngredientItem from "../common/Components/IngredientItem";
 import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
 const MyIngredient = () => {
-    const dummy_user_id = 2
+    const dummy_user_id = 4
     const ingredientState = useSelector(selectIngredient)
     const dispatch = useDispatch<AppDispatch>()
 
@@ -35,7 +35,7 @@ const MyIngredient = () => {
             <div className={styles.right__sort}>sort</div>
         </div>
         <div className={styles.right__main}>
-            {ingredientState.myIngredientList.map(ingredient => <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} ABV={ingredient.ABV} />)}
+            {ingredientState.myIngredientList.map(ingredient => <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} ABV={ingredient.ABV} my_item={true} />)}
         </div>
         <AddIngredientModal isOpen={isAddIngredientOpen} setIsOpen={setIsAddIngredientOpen} user_id={dummy_user_id} />
     </>
