@@ -75,10 +75,7 @@ const NavBar = () => {
             )
         }
         else if (curFilter === 'CS') {
-            navigate({
-                pathname: `/custom`,
-                search: urlParams
-            })
+            navigate(`/custom`, { state: request_param })
         }
         else if (curFilter === 'IG') {
             navigate('/ingredient')
@@ -93,15 +90,15 @@ const NavBar = () => {
             <div className="nav__menu">
                 <div className="nav__menu-wrap" onClick={handleST}>Standard</div>
                 {
-                    curFilter === 'ST' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch} type={curFilter} /> : null
+                    curFilter === 'ST' && pop ? <NavFilter setFilterParam={setFilterParam} handleSearch={onClickSearch} type={curFilter} /> : null
                 }
                 <div className="nav__menu-wrap" onClick={handleCS}>Custom</div>
                 {
-                    curFilter === 'CS' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch} type={curFilter} /> : null
+                    curFilter === 'CS' && pop ? <NavFilter setFilterParam={setFilterParam} handleSearch={onClickSearch} type={curFilter} /> : null
                 }
                 <div className="nav__menu-wrap" onClick={handleIG}>Ingredient</div>
                 {
-                    curFilter === 'IG' && pop ? <NavFilter setUrlParams={setUrlParams} handleSearch={onClickSearch} type={curFilter} /> : null
+                    curFilter === 'IG' && pop ? <NavFilter setFilterParam={setFilterParam} handleSearch={onClickSearch} type={curFilter} /> : null
                 }
                 <div className="nav__menu-bigwrap">
                     <div className="nav__menu-page" onClick={handleUpload}>Upload</div>
