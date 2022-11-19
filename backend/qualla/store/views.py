@@ -61,9 +61,7 @@ def user_store(request, user_id):
 
         return_data = IngredientDetailSerializer(
             return_data_list, many=True).data
-        # return_data = [{"id": element.id, "name": element.name, "image": element.image,
-        #                "ABV": element.ABV, "price": element.price}
-        #                for element in return_data_list]
+
         return JsonResponse({"Ingredients": return_data, "count": len(return_data_list)}, safe=False, status=201)
 
 
