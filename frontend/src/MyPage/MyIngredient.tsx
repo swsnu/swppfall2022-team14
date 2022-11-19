@@ -13,21 +13,26 @@ import AddIngredientModal from "../common/Modals/AddIngredientModal";
 
 import ItemDetailPage from "../ItemDetailPage/ItemDetailPage";
 import IngredientItem from "../common/Components/IngredientItem";
-import { fetchIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
 const MyIngredient = () => {
     const ingredientState = useSelector(selectIngredient)
     const dispatch = useDispatch<AppDispatch>()
-    const buttonList = ['My liqour', 'My Custom Cocktail', 'My Favorites', 'My Comments', 'Info']
+
+    useEffect(() => {
+        dispatch(fetchMyIngredientList(4))
+    }, [])
+
     const [isInitMyLiqourOpen, setIsInitMyLiqourOpen] = useState(false);
     const onClickAdd = () => {
         setIsInitMyLiqourOpen(true)
     }
 
     useEffect(() => {
-        dispatch(fetchIngredientList())
-    })
+        dispatch(fetchMyIngredientList(4))
+    }, [])
 
 
+    console.log(ingredientState.ingredientList)
 
     return <>
         <div className={styles.right__header}>

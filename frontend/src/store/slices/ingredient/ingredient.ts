@@ -40,6 +40,17 @@ export const fetchIngredientList = createAsyncThunk(
     },
 )
 
+
+// TODO : ingredients/me/로 받을 수 있게끔 수정
+export const fetchMyIngredientList = createAsyncThunk(
+    "cocktail/fetchMyIngredientList", async (id: number) => {
+        const response = await axios.get(`/api/v1/store/${id}/`);
+        console.log(response.data)
+        return response.data
+    },
+)
+
+
 export const getIngredient = createAsyncThunk(
     "ingredient/getIngredient/",
     async (id: IngredientType["id"], { dispatch }) => {
@@ -76,6 +87,16 @@ export const ingredientSlice = createSlice({
         builder.addCase(getIngredient.rejected, (state, action) => {
             state.itemStatus = "failed"
         })
+        builder.addCase(fetchMyIngredientList.fulfilled, (state, action) => {
+            state.ingredientList = action.payload.Ingredients;
+            state.listStatus = "success"
+        });
+        builder.addCase(fetchMyIngredientList.pending, (state, action) => {
+            state.listStatus = "loading";
+        });
+        builder.addCase(fetchMyIngredientList.rejected, (state, action) => {
+            state.listStatus = "failed";
+        });
     },
 })
 
