@@ -8,7 +8,7 @@ export interface CocktailItemType {
     id: number,
     name: string,
     image: string,
-    type: "CS"|"ST",
+    type: "CS" | "ST",
     tags: string[],
     author_id: number | null,
     rate: number
@@ -23,7 +23,7 @@ export interface CocktailDetailType {
     ABV: number,
     price_per_glass: number
     tags: string[],
-    type: "CS"|"ST",
+    type: "CS" | "ST",
     author_id: number | null,
     created_at: Date,
     updated_at: Date,
@@ -53,15 +53,32 @@ const initialState: CocktailInfo = {
 
 
 export const fetchStandardCocktailList = createAsyncThunk(
-    "cocktail/fetchStandardCocktailList", async (params: string) => {
-        const response = await axios.get(`/api/v1/cocktails/?type=standard&${params}`);
+    "cocktail/fetchStandardCocktailList", async (params: any) => {
+        const response = await axios.get(`/api/v1/cocktails/?type=standard`,
+            {
+                params: {
+                    type_one: params.filter_param.type_one,
+                    type_two: params.filter_param.type_two,
+                    type_three: params.filter_param.type_three,
+                    name_param: params.name_param
+                }
+            }
+        );
         return response.data
     },
 )
 
 export const fetchCustomCocktailList = createAsyncThunk(
-    "cocktail/fetchCustomCocktailList", async (params: string) => {
-        const response = await axios.get(`/api/v1/cocktails/?type=custom&${params}`);
+    "cocktail/fetchCustomCocktailList", async (params: any) => {
+        const response = await axios.get(`/api/v1/cocktails/?type=custom`,
+            {
+                params: {
+                    type_one: params.filter_param.type_one,
+                    type_two: params.filter_param.type_two,
+                    type_three: params.filter_param.type_three,
+                    name_param: params.name_param
+                }
+            });
         return response.data
     },
 )
@@ -88,7 +105,7 @@ export const getCocktail = createAsyncThunk(
 
 export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
-    async (cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
+    async (cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate">, { dispatch }) => {
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
         dispatch(cocktailActions.addCocktail(response.data));
         return response.data
@@ -97,7 +114,7 @@ export const postCocktail = createAsyncThunk(
 
 export const editCocktail = createAsyncThunk(
     "cocktail/editCocktail",
-    async (cocktail: Omit<CocktailDetailType, "type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
+    async (cocktail: Omit<CocktailDetailType, "type" | "created_at" | "updated_at" | "rate">, { dispatch }) => {
         const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/`, cocktail);
         console.log(response.data);
         dispatch(cocktailActions.editCocktail(response.data));
@@ -115,7 +132,7 @@ export const cocktailSlice = createSlice({
         editCocktail: (state, action: PayloadAction<CocktailDetailType>) => {
             const editted = state.cocktailList.map((cocktail) => {
                 if (cocktail.id === action.payload.id) {
-                    return {...cocktail, name: action.payload.name, image: action.payload.image, tags: action.payload.tags};
+                    return { ...cocktail, name: action.payload.name, image: action.payload.image, tags: action.payload.tags };
                 } else {
                     return cocktail;
                 }

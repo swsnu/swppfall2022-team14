@@ -10,6 +10,12 @@ import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } fr
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 
+export interface Filterparam {
+    type_one: string[],
+    type_two: string[],
+    type_three: string[]
+}
+
 
 const InitPage = () => {
     const cocktailState = useSelector(selectCocktail)
@@ -17,10 +23,12 @@ const InitPage = () => {
 
     const [fakeLoginState, setFakeLoginState] = useState(false)
     // const [urlParams, setUrlParams] = useState<string>("")
-    const [urlParams, setUrlParams] = useState<string>("")
+    const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [] })
+    const [input, setInput] = useState('')
+    const request_param = { filter_param: filterParam, name_param: input }
 
     const navigate = useNavigate()
-    const [input, setInput] = useState('')
+
     const [isStandard, setIsStandard] = useState(true)
     const onClickToggle = (isStandard: boolean) => {
         setIsStandard(isStandard)
@@ -47,14 +55,10 @@ const InitPage = () => {
     }
     const onClickSearch = () => {
         // TODO : give params with filter information
-        if (isStandard) navigate({
-            pathname: `/standard`,
-            search: urlParams + `&text=${input}`,
-        })
-        else navigate({
-            pathname: `/custom`,
-            search: urlParams + `&text=${input}`,
-        })
+        if (isStandard) navigate(`/standard`,
+            { state: request_param }
+        )
+        else navigate(`/custom`, { state: request_param })
     }
 
     const onClickMyPage = () => {
@@ -90,7 +94,7 @@ const InitPage = () => {
                 <button className={styles.button} onClick={onClickSearch}>SEARCH</button>
             </div>
 
-            {isOpenFilter ? <Filter setUrlParams={setUrlParams} /> : null}
+            {isOpenFilter ? <Filter setUrlParams={setFilterParam} /> : null}
         </div>
         <div className={styles.main}>
             <div className={styles.main__inner}>

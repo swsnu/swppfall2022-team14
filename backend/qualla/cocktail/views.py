@@ -14,7 +14,7 @@ from .serializers import CocktailDetailSerializer, CocktailListSerializer, Cockt
 # FILTER FUNCTIONS HERE
 
 def process_text_param(request, filter_q):
-    text = request.query_params.get("text", None)
+    text = request.query_params.get("name_param", None)
 
     if (text is not None and text != ""):
         filter_q.add(Q(name__contains=text), Q.AND)
@@ -33,23 +33,10 @@ def process_get_list_params(request, filter_q):
         else:
             raise ValueError("invalid ABV type")
 
-    filter_type_one_list = request.query_params.get("filter_type_one", None)
-    filter_type_two_list = request.query_params.get("filter_type_two", None)
-    filter_type_ABV = request.query_params.get(
-        "filter_type_three", None)  # 도수
-
-    if (filter_type_one_list is None):
-        filter_type_one_list = ""
-    if (filter_type_two_list is None):
-        filter_type_two_list = ""
-
-    filter_type_one_list = filter_type_one_list.split('_')
-    filter_type_two_list = filter_type_two_list.split('_')
-
-    while ("" in filter_type_one_list):
-        filter_type_one_list.remove("")
-    while ("" in filter_type_two_list):
-        filter_type_two_list.remove("")
+    filter_type_one_list = request.query_params.getlist("type_one[]", None)
+    filter_type_two_list = request.query_params.getlist("type_two[]", None)
+    filter_type_ABV = request.query_params.getlist(
+        "type_three[]", None)  # 도수
 
     try:
         assert (all([x in ['CL', 'TP'] for x in filter_type_one_list]) and
@@ -62,9 +49,10 @@ def process_get_list_params(request, filter_q):
     for _type in filter_type_two_list:
         filter_q.add(Q(filter_type_two__contains=_type), Q.AND)
 
-    if (filter_type_ABV is not None and filter_type_ABV != ""):
+    if len(filter_type_ABV) != 0:
         try:
-            abv_range = get_ABV_range(filter_type_ABV)
+
+            abv_range = get_ABV_range(filter_type_ABV[0])
         except (ValueError):
             raise ValueError
         filter_q.add(Q(ABV__range=(abv_range)), Q.AND)
@@ -230,7 +218,8 @@ def retrieve_cocktail(request, pk):
                 ingredient = Ingredient.objects.get(id=i["id"])
             except Tag.DoesNotExist:
                 return HttpResponseNotFound("ingredient does not exist")
-            IngredientPrepare.objects.create(cocktail=cocktail, ingredient=ingredient)
+            IngredientPrepare.objects.create(
+                cocktail=cocktail, ingredient=ingredient)
 
         return JsonResponse(data=CocktailDetailSerializer(cocktail).data, status=200)
     # else:

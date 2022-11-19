@@ -38,14 +38,15 @@ const ListPage = () => {
     useEffect(() => {
         setPageType(params.type)
         console.log(pageType)
+        console.log(location.state)
     }, [pageType, location])
 
     useEffect(() => {
         if (pageType === 'standard') {
-            dispatch(fetchStandardCocktailList(location.search.replace("?", "")))
+            dispatch(fetchStandardCocktailList(location.state))
         }
         else if (pageType === 'custom') {
-            dispatch(fetchCustomCocktailList(location.search.replace("?", "")))
+            dispatch(fetchCustomCocktailList(location.state))
         }
         else if (pageType === 'ingredient') {
             dispatch(fetchIngredientList())
