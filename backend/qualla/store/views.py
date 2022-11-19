@@ -26,7 +26,7 @@ def user_store(request, user_id):
             store_ingredient.ingredient for store_ingredient in store_ingredients]
         data = IngredientDetailSerializer(my_ingredients, many=True).data
 
-        return JsonResponse(data, safe=False)
+        return JsonResponse({"Ingredients": data, "count": len(my_ingredients)}, safe=False)
     elif request.method == 'POST':
         try:
             user = User.objects.get(id=user_id)
@@ -63,4 +63,4 @@ def user_store(request, user_id):
         # return_data = [{"id": element.id, "name": element.name, "image": element.image,
         #                "ABV": element.ABV, "price": element.price}
         #                for element in return_data_list]
-        return JsonResponse(return_data, safe=False, status=201)
+        return JsonResponse({"Ingredients": return_data, "count": len(return_data_list)}, safe=False, status=201)
