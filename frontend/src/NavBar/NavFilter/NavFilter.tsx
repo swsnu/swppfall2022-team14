@@ -19,7 +19,7 @@ const NavFilter = (prop: Iprops) => {
     const typeOneList: ParamList[] = [{ name: "CL", label: "클래식" }, { name: "TP", label: "트로피컬" }]
     const typeTwoList: ParamList[] = [{ name: "LONG", label: "롱드링크" }, { name: "SHORT", label: "숏드링크" }, { name: "SHOT", label: "샷" }]
     const typeThreeList: ParamList[] = [{ name: "weak", label: "15도 이하" }, { name: "medium", label: "15 ~ 30도" }, { name: "strong", label: "30 ~ 40도" }, { name: "extreme", label: "40도 이상" }]
-    const [search, setSearch] = useState('')
+    const [input, setInput] = useState('')
     const [typeOneParam, setTypeOneParam] = useState<string[]>([])
     const [typeTwoParam, setTypeTwoParam] = useState<string[]>([])
     const [typeThreeParam, setTypeThreeParam] = useState<string[]>([])
@@ -32,13 +32,12 @@ const NavFilter = (prop: Iprops) => {
     }
     const ingredientState = useSelector(selectIngredient)
     const my_ingredient_id_list = ingredientState.myIngredientList.map(ingredient => ingredient.id)
-    const [input, setInput] = useState('')
+
     const request_param = { filter_param: url_params, name_param: input, my_ingredient_param: availableOnly ? my_ingredient_id_list : null }
 
     const navigate = useNavigate()
     const onClickSearch = () => {
         // TODO : give params with filter information
-        console.log(prop.type)
         if (prop.type === 'ST') navigate(`/standard`,
             { state: request_param }
         )
@@ -53,6 +52,7 @@ const NavFilter = (prop: Iprops) => {
                 setParam([])
             else
                 setParam([type_name])
+
         }
         else {// 필터값 중복 가능
             if (param.includes(type_name)) //  배열에서 제거
@@ -68,7 +68,7 @@ const NavFilter = (prop: Iprops) => {
                 <div className="navfilter__wrap">
                     <div className={"navfilter__title"}>Text 검색 </div>
                     <div className={"navfilter__content"}>
-                        <input className="navfilter__search-text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="     검색어를 입력하세요" />
+                        <input className="navfilter__search-text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="     검색어를 입력하세요" />
                     </div>
                 </div>
                 <button className="navfilter__btn" onClick={onClickSearch}>검색하기</button>
@@ -90,7 +90,7 @@ const NavFilter = (prop: Iprops) => {
                                             type="checkbox"
                                             name="type1"
                                             defaultChecked={typeOneParam.includes(type.name)}
-                                            onClick={() => onTypeClick(typeOneParam, setTypeOneParam, type.name)}
+                                            onChange={() => onTypeClick(typeOneParam, setTypeOneParam, type.name)}
                                         />
                                         {type.label}
                                     </label>
@@ -111,7 +111,7 @@ const NavFilter = (prop: Iprops) => {
                                             type="checkbox"
                                             name="type2"
                                             defaultChecked={typeTwoParam.includes(type.name)}
-                                            onClick={() => onTypeClick(typeTwoParam, setTypeTwoParam, type.name)}
+                                            onChange={() => onTypeClick(typeTwoParam, setTypeTwoParam, type.name)}
                                         />
                                         {type.label}
                                     </label>
@@ -130,8 +130,8 @@ const NavFilter = (prop: Iprops) => {
                                         <input
                                             key={type.name}
                                             type="checkbox" name="type3"
-                                            defaultChecked={typeThreeParam.includes(type.name)}
-                                            onClick={() => onTypeClick(typeThreeParam, setTypeThreeParam, type.name, true)}
+                                            checked={typeThreeParam.includes(type.name)}
+                                            onChange={() => onTypeClick(typeThreeParam, setTypeThreeParam, type.name, true)}
                                         />
                                         {type.label}
                                     </label>
@@ -157,7 +157,7 @@ const NavFilter = (prop: Iprops) => {
                 <div className="navfilter__wrap">
                     <div className={"navfilter__title"}>Text 검색 </div>
                     <div className={"navfilter__content"}>
-                        <input className="navfilter__search-text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="     검색어를 입력하세요" />
+                        <input className="navfilter__search-text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="     검색어를 입력하세요" />
                     </div>
                 </div>
                 <button className="navfilter__btn" onClick={onClickSearch}>검색하기</button>

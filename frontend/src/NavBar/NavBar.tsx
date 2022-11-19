@@ -12,20 +12,6 @@ const NavBar = () => {
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
 
-    const dummy_user_id = 4;
-    useEffect(() => {
-        dispatch(fetchMyIngredientList(dummy_user_id))
-    }, [])
-
-    const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [], available_only: false })
-    const ingredientState = useSelector(selectIngredient)
-    const my_ingredient_id_list = ingredientState.myIngredientList.map(ingredient => ingredient.id)
-    const [input, setInput] = useState('')
-    const request_param = { filter_param: filterParam, name_param: input, my_ingredient_param: filterParam.available_only ? my_ingredient_id_list : null }
-
-
-
-
 
     //BELOW
 
@@ -67,38 +53,20 @@ const NavBar = () => {
         navigate('/mypage')
     }
 
-    const onClickSearch = () => {
-        /* istanbul ignore else */
-        if (curFilter === 'ST') {
-            navigate(`/standard`,
-                { state: request_param }
-            )
-        }
-        else if (curFilter === 'CS') {
-            navigate(`/custom`, { state: request_param })
-        }
-        else if (curFilter === 'IG') {
-            navigate('/ingredient')
-        }
-        else {
-            // console.log("TYPE NOT MATCH")
-        }
-        // window.location.reload()
-    }
     return (
         <div className="nav">
             <div className="nav__menu">
                 <div className="nav__menu-wrap" onClick={handleST}>Standard</div>
                 {
-                    curFilter === 'ST' && pop ? <NavFilter setFilterParam={setFilterParam} handleSearch={onClickSearch} type={curFilter} /> : null
+                    curFilter === 'ST' && pop ? <NavFilter type={'ST'} /> : null
                 }
                 <div className="nav__menu-wrap" onClick={handleCS}>Custom</div>
                 {
-                    curFilter === 'CS' && pop ? <NavFilter setFilterParam={setFilterParam} handleSearch={onClickSearch} type={curFilter} /> : null
+                    curFilter === 'CS' && pop ? <NavFilter type={'CS'} /> : null
                 }
                 <div className="nav__menu-wrap" onClick={handleIG}>Ingredient</div>
                 {
-                    curFilter === 'IG' && pop ? <NavFilter setFilterParam={setFilterParam} handleSearch={onClickSearch} type={curFilter} /> : null
+                    curFilter === 'IG' && pop ? <NavFilter type={'IG'} /> : null
                 }
                 <div className="nav__menu-bigwrap">
                     <div className="nav__menu-page" onClick={handleUpload}>Upload</div>

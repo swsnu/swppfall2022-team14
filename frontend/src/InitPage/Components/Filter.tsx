@@ -103,7 +103,7 @@ const Filter = (prop: Iprops) => {
                                     key={type.name}
                                     type="checkbox"
                                     name="type3"
-                                    defaultChecked={typeThreeParam.includes(type.name)}
+                                    checked={typeThreeParam.includes(type.name)}
                                     onChange={() => prop.setUrlParams(url_params)}
                                     onClick={() => onTypeClick(typeThreeParam, setTypeThreeParam, type.name, true)}
                                 />
