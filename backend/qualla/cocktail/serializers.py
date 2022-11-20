@@ -28,14 +28,17 @@ class CocktailListSerializer(serializers.ModelSerializer):
         return [t.tag.content for t in obj.tags.all()]
     
     def get_is_bookmarked(self, obj):
-        user = self.context['user']
-        if user.is_authenticated:
-            try:
-                Bookmark.objects.get(user=user.id, cocktail=obj.id)
-            except Bookmark.DoesNotExist:
-                return False
-            return True
-        return False
+        try:
+            user = self.context['user']
+            if user.is_authenticated:
+                try:
+                    Bookmark.objects.get(user=user.id, cocktail=obj.id)
+                except Bookmark.DoesNotExist:
+                    return False
+                return True
+            return False
+        except KeyError:
+            return False
 
 class CocktailDetailSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
@@ -64,15 +67,17 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
         return [t.tag.content for t in obj.tags.all()]
     
     def get_is_bookmarked(self, obj):
-        user = self.context['user']
-        if user.is_authenticated:
-            try:
-                Bookmark.objects.get(user=user.id, cocktail=obj.id)
-            except Bookmark.DoesNotExist:
-                return False
-            return True
-        return False
-
+        try:
+            user = self.context['user']
+            if user.is_authenticated:
+                try:
+                    Bookmark.objects.get(user=user.id, cocktail=obj.id)
+                except Bookmark.DoesNotExist:
+                    return False
+                return True
+            return False
+        except KeyError:
+            return False
 
 class CocktailPostSerializer(serializers.ModelSerializer):
     image = serializers.CharField(max_length=500, default="default_img.png")

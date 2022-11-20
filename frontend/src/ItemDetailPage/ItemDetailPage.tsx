@@ -2,12 +2,17 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { selectCocktail, getCocktail } from "../store/slices/cocktail/cocktail";
+import { selectCocktail, getCocktail, toggleBookmark } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
 import { fetchCommentListByCocktailId, postComment, selectComment } from "../store/slices/comment/comment";
 import NavBar from "../NavBar/NavBar";
+
+import axios from 'axios';
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
 interface User {
     id: number;
     name: string;
@@ -48,6 +53,10 @@ export default function ItemDetailPage() {
         setContent("")
     }
 
+    const toggleBookmarkHandler = () => {
+        dispatch(toggleBookmark(Number(id)));
+    }
+
     if (cocktailState.itemStatus == "loading") {
         return <div>Loading ..</div>
     }
@@ -69,8 +78,9 @@ export default function ItemDetailPage() {
                         <div className="title">
                             <div className="title__name">
                                 {cocktail.name}
-                                <button className="title__bookmark-button">
-                                    bookmark
+                                <button className="title__bookmark-button"
+                                onClick={() => toggleBookmarkHandler()}>
+                                    {(cocktail.is_bookmarked)? "Remove from Bookmark" : "Add in Bookmark"}
                                 </button>
                                 {isCustom &&
                                     <div className="title__author">

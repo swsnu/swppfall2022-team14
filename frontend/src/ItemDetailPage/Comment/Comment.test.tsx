@@ -37,6 +37,7 @@ const commentAuthor : CommentType = {
         tags: ["CS1","CS2"],
         author_id: 1,
         rate: 1,
+        is_bookmarked: false,
     },
     author_id: 1,
     content: "content1",
@@ -55,6 +56,7 @@ const commentOther : CommentType = {
         tags: ["CS1","CS2"],
         author_id: 1,
         rate: 1,
+        is_bookmarked: false,
     },
     author_id: 2,
     content: "content2",
@@ -73,6 +75,7 @@ const commentMore : CommentType = {
         tags: ["CS1","CS2"],
         author_id: 1,
         rate: 1,
+        is_bookmarked: false,
     },
     author_id: 2,
     content: "content2",
@@ -134,6 +137,7 @@ describe("<Comment />", () => {
             tags: ["CS1","CS2"],
             author_id: 1,
             rate: 1,
+            is_bookmarked: false,
         }
 
         const { container } = render(
@@ -168,6 +172,7 @@ describe("<Comment />", () => {
             tags: ["CS1","CS2"],
             author_id: 1,
             rate: 1,
+            is_bookmarked: false,
         }
 
         const { container } = render(
@@ -191,6 +196,7 @@ describe("<Comment />", () => {
             tags: ["CS1","CS2"],
             author_id: 1,
             rate: 1,
+            is_bookmarked: false,
         }
 
         const { container } = render(
@@ -214,6 +220,7 @@ describe("<Comment />", () => {
             tags: ["CS1","CS2"],
             author_id: 1,
             rate: 1,
+            is_bookmarked: false,
         }
 
         const { container } = render(
@@ -246,6 +253,7 @@ describe("<Comment />", () => {
             tags: ["CS1","CS2"],
             author_id: 1,
             rate: 1,
+            is_bookmarked: false,
         }
 
         const { container } = render(

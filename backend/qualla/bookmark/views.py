@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from bookmark.models import Bookmark
 from cocktail.models import Cocktail
-from cocktail.serializers import CocktailListSerializer
+from cocktail.serializers import CocktailListSerializer, CocktailDetailSerializer
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
@@ -25,6 +25,11 @@ def toggle_bookmark(request, cocktail_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
     user = request.user
+
+    try:
+        cocktail=Cocktail.objects.get(id=cocktail_id)
+    except Cocktail.DoesNotExist:
+        return HttpResponse("Cocktail does not exist", status=404)
     try:
         Bookmark.objects.get(cocktail=cocktail_id, user=user).delete()
         return HttpResponse(status=200)

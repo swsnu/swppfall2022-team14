@@ -180,7 +180,7 @@ def cocktail_list(request):
             IngredientPrepare.objects.create(
                 cocktail=cocktail, ingredient=ingredient)
 
-        return JsonResponse(data=CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=201)
+        return JsonResponse(CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=201)
     # else:
     #     return HttpResponseNotAllowed(['GET', 'POST'])
 
@@ -192,8 +192,7 @@ def retrieve_cocktail(request, pk):
             cocktail = Cocktail.objects.get(id=pk)
         except Cocktail.DoesNotExist:
             return HttpResponseNotFound(f"No Cocktails matches id={pk}")
-        data = CocktailDetailSerializer(cocktail, context={'user': request.user}).data
-        return JsonResponse(data, safe=False)
+        return JsonResponse(CocktailDetailSerializer(cocktail, context={'user': request.user}).data, safe=False)
     elif request.method == 'PUT':
         try:
             cocktail = Cocktail.objects.get(id=pk)
