@@ -32,7 +32,7 @@ const InitPage = () => {
     const [input, setInput] = useState('')
     const my_ingredient_id_list = ingredientState.myIngredientList.map(ingredient => ingredient.id)
 
-    const request_param = { filter_param: filterParam, name_param: input, my_ingredient_param: filterParam.available_only ? my_ingredient_id_list : null }
+    const request_param = { filter_param: filterParam, name_param: input }
 
     const navigate = useNavigate()
 

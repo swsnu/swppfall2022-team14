@@ -1,6 +1,6 @@
 from functools import partial
 from json import JSONDecodeError
-from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse, HttpResponse
 from django.db import IntegrityError
 from django.db.models import Q
 from ingredient_prepare.models import IngredientPrepare
@@ -58,8 +58,38 @@ def process_get_list_params(request, filter_q):
         filter_q.add(Q(ABV__range=(abv_range)), Q.AND)
 
 
+# user - store 정보 활용하여 내가 만들 수 있는 칵테일 필터
+def get_only_available_cocktails(request, filter_q):
+    if not request.user.is_authenticated:
+        raise AttributeError
+    user = request.user
+    store_ingredients = user.store.all()
+
+    # 내 재료 id list
+    my_ingredients = [
+        store_ingredient.ingredient.id for store_ingredient in store_ingredients]
+
+    cocktail_all = Cocktail.objects.all()
+    available_cocktails_id = []
+
+    for cocktail in cocktail_all:
+        ingredient_prepare = [
+            str(ingredient_prepare.ingredient.id) for ingredient_prepare in cocktail.ingredient_prepare.all()]
+
+        # 만약 해당 칵테일 재료가 내 재료의 subset이면
+        if set(ingredient_prepare).issubset(set(my_ingredients)):
+            available_cocktails_id.append(cocktail.id)
+
+    # 매칭된 칵테일 없음 없음
+    if (not available_cocktails_id):
+        filter_q.add(Q(id__in=[-1]), Q.AND)
+    else:
+        filter_q.add(Q(id__in=available_cocktails_id), Q.AND)
+
+
 def get_cocktail_list_by_ingredient(request, filter_q):
     # return list of Cocktail ID that is available
+
     request_ingredient = request.query_params.getlist(
         "ingredients[]", None)  # ingredient id list
     cocktail_all = Cocktail.objects.all()
@@ -94,11 +124,17 @@ def cocktail_list(request):
         except (ValueError, AssertionError) as e:
             return HttpResponseBadRequest('Invalid ABV or Filter Type', e)
 
-        # Add ingredient filter
-        get_cocktail_list_by_ingredient(request, filter_q)
+        # Add ingredient filter : 나중에 재료만으로 검색 기능 추가시 활용.
+        # get_cocktail_list_by_ingredient(request, filter_q)
 
         # Add text filter
         process_text_param(request, filter_q)
+
+        if request.query_params.get("available_only", None) == 'true':
+            try:
+                get_only_available_cocktails(request, filter_q)
+            except AttributeError:
+                return HttpResponse(status=401)
 
         # Add Type Filter
         type = request.GET.get('type')

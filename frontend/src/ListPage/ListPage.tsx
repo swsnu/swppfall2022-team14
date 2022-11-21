@@ -52,7 +52,8 @@ const ListPage = () => {
                 type_two: location.state.filter_param.type_two,
                 type_three: location.state.filter_param.type_three,
                 name_param: location.state.name_param,
-                my_ingredient_id_list: location.state.my_ingredient_param
+                available_only: location.state.filter_param.available_only
+                // my_ingredient_id_list: location.state.my_ingredient_param
             }
             console.log(param)
             if (pageType === 'standard') {

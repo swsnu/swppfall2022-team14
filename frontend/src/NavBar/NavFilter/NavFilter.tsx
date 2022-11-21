@@ -31,9 +31,9 @@ const NavFilter = (prop: Iprops) => {
         available_only: availableOnly
     }
     const ingredientState = useSelector(selectIngredient)
-    const my_ingredient_id_list = ingredientState.myIngredientList.map(ingredient => ingredient.id)
+    // const my_ingredient_id_list = ingredientState.myIngredientList.map(ingredient => ingredient.id)
 
-    const request_param = { filter_param: url_params, name_param: input, my_ingredient_param: availableOnly ? my_ingredient_id_list : null }
+    const request_param = { filter_param: url_params, name_param: input }
 
     const navigate = useNavigate()
     const onClickSearch = () => {
