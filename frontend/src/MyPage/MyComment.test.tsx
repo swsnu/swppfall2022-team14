@@ -54,20 +54,21 @@ const commentState: CommentInfo = {
 
 const ingredientState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
 }
 
-const mockStore = getMockStore({cocktail: cocktaiState, ingredient: ingredientState, comment: commentState});
+const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState });
 
 describe("<MyComment />", () => {
     it("should render items without errors", () => {
-        render(    
+        render(
             <Provider store={mockStore}>
-                <MyComment/>
+                <MyComment />
             </Provider>
-        ); 
+        );
         const items = screen.getAllByTestId("spyComment_1");
         expect(items).toHaveLength(1);
         expect(mockDispatch).toBeCalledTimes(1)
