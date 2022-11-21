@@ -8,7 +8,7 @@ import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiquorModal"
 import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
-import { logoutUser, selectUser } from '../store/slices/user/user';
+import {getUser, logoutUser, selectUser} from '../store/slices/user/user';
 import { AppDispatch } from "../store"
 
 
@@ -72,6 +72,11 @@ const InitPage = () => {
         navigate(`/mypage`)
     }
 
+    const onClickUserInfo = async () => {
+        const res = dispatch(getUser())
+        console.log(res)
+    }
+
     useEffect(() => {
         if (isStandard) {
             dispatch(fetchStandardCocktailList(""))
@@ -88,6 +93,7 @@ const InitPage = () => {
             {loginState && isOpenProfile ? <div>
                 <button onClick={onClickMyPage}>My Page</button>
                 <button onClick={onClicklogout}>Logout</button>
+                <button onClick={onClickUserInfo}>Get Info</button>
             </div> : null}
         </div>
         <div className={styles.nav}>

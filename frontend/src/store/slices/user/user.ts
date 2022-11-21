@@ -66,6 +66,15 @@ export const logoutUser = createAsyncThunk(
     }
 );
 
+export const getUser = createAsyncThunk(
+    "user/getUser",
+    async (_, { dispatch }) => {
+        const response = await axios.get('/api/v1/user/me/');
+        console.log(response.data)
+        return response.data
+    }
+);
+
 export const userSlice = createSlice({
     name: "user",
     initialState,

@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react";
 import AddIngredientModal from "./Modals/AddIngredientModal"
 import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { AppDispatch } from "../store";
-import { CocktailDetailType, IngredientPrepareType, postCocktail, selectCocktail } from "../store/slices/cocktail/cocktail";
+import {
+    CocktailDetailType,
+    IngredientPrepareType,
+    postCocktail,
+    PostForm,
+    selectCocktail
+} from "../store/slices/cocktail/cocktail";
 import './CreateCustomPage.scss';
 import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
+import {selectUser} from "../store/slices/user/user";
 
 export default function CreateCustomPage() {
     const [name, setName] = useState<string>("");
@@ -27,6 +34,7 @@ export default function CreateCustomPage() {
     };
 
     const dispatch = useDispatch<AppDispatch>();
+    const userState = useSelector(selectUser)
 
     useEffect(() => {
         if (newIngredient){
@@ -66,20 +74,26 @@ export default function CreateCustomPage() {
     }
 
     const createCocktailHandler = async () => {
-        const response = await dispatch(postCocktail({
-            name: name,
-            image:"https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
-            introduction:introduction,
-            recipe: recipe,
-            ABV: ABV,
-            price_per_glass: price,
-            tags: tagList,
-            author_id:1,
-            ingredients: ingredientList
-        }))
-
-        console.log(response)
-        navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
+        if(userState.user?.id !== null && userState.token !== null){
+            console.log(userState.user?.id)
+            const data : PostForm = {
+                cocktail:{
+                    name: name,
+                    image:"https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
+                    introduction:introduction,
+                    recipe: recipe,
+                    ABV: ABV,
+                    price_per_glass: price,
+                    tags: tagList,
+                    author_id: Number(userState.user?.id),
+                    ingredients: ingredientList
+                },
+                token: userState.token
+            }
+            const response = await dispatch(postCocktail(data))
+            console.log(response)
+            navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
+        }
     }
 
     return (

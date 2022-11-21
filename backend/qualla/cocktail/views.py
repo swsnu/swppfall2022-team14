@@ -7,8 +7,9 @@ from ingredient_prepare.models import IngredientPrepare
 from ingredient.models import Ingredient
 from tag.models import Tag, CocktailTag
 from .models import Cocktail
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer
+from rest_framework import permissions, authentication
 
 
 # FILTER FUNCTIONS HERE
@@ -94,7 +95,7 @@ def get_cocktail_list_by_ingredient(request, filter_q):
         filter_q.add(Q(id__in=available_cocktails_id), Q.AND)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def cocktail_list(request):
     if request.method == 'GET':
 
@@ -140,11 +141,22 @@ def cocktail_list(request):
         #    return JsonResponse({"cocktails": data, "count": custom_cocktails.count()}, safe=False)
         # else:
         #     return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
-    elif request.method == 'POST':
-        data = request.data.copy()
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def cocktail_post(request):
+    if request.method == 'POST':
+        try:
+            if request.user.is_authenticated:
+                data = request.data.copy()
+            else:
+                return HttpResponseBadRequest("Not Logined User")
+        except (KeyError, JSONDecodeError) as e:
+            return HttpResponseBadRequest("Unvalid Token")
 
         # TODO: change fields that is derived automatically
-        data['author_id'] = 1
+        #data['author_id'] = 1
         data['type'] = 'CS'
 
         serializer = CocktailPostSerializer(
@@ -181,8 +193,6 @@ def cocktail_list(request):
                 cocktail=cocktail, ingredient=ingredient)
 
         return JsonResponse(data=CocktailDetailSerializer(cocktail).data, status=201)
-    # else:
-    #     return HttpResponseNotAllowed(['GET', 'POST'])
 
 
 @api_view(['GET', 'PUT'])
