@@ -32,7 +32,8 @@ const standard_cocktail1_item: CocktailItemType = {
     type: "ST",
     tags: [],
     author_id: null,
-    rate: 0
+    rate: 0,
+    is_bookmarked: false,
 }
 
 const custom_cocktail1_item: CocktailItemType = {
@@ -42,7 +43,8 @@ const custom_cocktail1_item: CocktailItemType = {
     type: "CS",
     tags: [],
     author_id: 1,
-    rate: 0
+    rate: 0,
+    is_bookmarked: false,
 }
 
 const stubInitialStandardCocktaiState: CocktailInfo = {
