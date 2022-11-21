@@ -51,7 +51,8 @@ const fakeCocktailItemCS : CocktailDetailType = {
         price: 1,
         introduction: "iintro",
         amount : "1 oz",
-    }]
+    }],
+    is_bookmarked: false,
 }
 const fakeCocktailItemST : CocktailDetailType = {
     id: 1,
@@ -75,7 +76,8 @@ const fakeCocktailItemST : CocktailDetailType = {
         price: 1,
         introduction: "iintro",
         amount : "1 oz",
-    }]
+    }],
+    is_bookmarked: false,
 }
 const commentNotParent : CommentType = {
     id: 1,
@@ -87,13 +89,14 @@ const commentNotParent : CommentType = {
         tags: ["CS1","CS2"],
         author_id: 1,
         rate: 1,
+        is_bookmarked: false,
     },
     author_id: 1,
     content: "content1",
     created_at: new Date(Date.now()),
     updated_at: new Date(Date.now()),
     parent_comment: 1, // if null comment is root comment
-    is_deleted: false
+    is_deleted: false,
 }
 const fakeCustomCocktail : CocktailInfo = {
     cocktailList: [],
@@ -122,6 +125,7 @@ const commentAuthor : CommentType = {
         tags: ["CS1","CS2"],
         author_id: 1,
         rate: 1,
+        is_bookmarked: false,
     },
     author_id: 1,
     content: "content1",
