@@ -4,9 +4,9 @@ import { useNavigate } from "react-router";
 import {useDispatch, useSelector} from "react-redux";
 import { AppDispatch } from "../store";
 import {
+    authPostCocktail,
     CocktailDetailType,
     IngredientPrepareType,
-    postCocktail,
     PostForm,
     selectCocktail
 } from "../store/slices/cocktail/cocktail";
@@ -90,7 +90,7 @@ export default function CreateCustomPage() {
                 },
                 token: userState.token
             }
-            const response = await dispatch(postCocktail(data))
+            const response = await dispatch(authPostCocktail(data))
             console.log(response)
             navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
         }

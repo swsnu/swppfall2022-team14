@@ -95,6 +95,15 @@ export const getCocktail = createAsyncThunk(
 export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
     async (cocktail: PostForm, { dispatch }) => {
+        const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
+        dispatch(cocktailActions.addCocktail(response.data));
+        return response.data;
+    }
+)
+
+export const authPostCocktail = createAsyncThunk(
+    "cocktail/postCocktail",
+    async (cocktail: PostForm, { dispatch }) => {
 
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/post/', cocktail.cocktail,{
             headers: {
