@@ -14,12 +14,12 @@ from .serializers import StoreSerializer
 
 
 @api_view(['GET', 'POST'])
-def user_store(request, user_id):
+def user_store(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    user = request.user
+
     if request.method == 'GET':
-        try:
-            user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
-            return HttpResponseNotFound(f"No User matches id={user_id}")
 
         store_ingredients = user.store.all()
         # id, name, image, ABV, price
@@ -29,10 +29,6 @@ def user_store(request, user_id):
 
         return JsonResponse({"Ingredients": data, "count": len(my_ingredients)}, safe=False)
     elif request.method == 'POST':
-        try:
-            user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
-            return HttpResponseNotFound(f"No User matches id={user_id}")
 
         ingredient_id_list = request.data['ingredients']
         return_data_list = []
@@ -61,19 +57,22 @@ def user_store(request, user_id):
 
         return_data = IngredientDetailSerializer(
             return_data_list, many=True).data
-
         return JsonResponse({"Ingredients": return_data, "count": len(return_data_list)}, safe=False, status=201)
 
 
 @api_view(['DELETE'])
-def modify_user_store(request, user_id, ingredient_id):
+def modify_user_store(request, ingredient_id):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    user = request.user
+
     if request.method == 'DELETE':
         # need constraint check
         try:
             user_store = Store.objects.get(
-                user_id=user_id, ingredient_id=ingredient_id)
+                user=user, ingredient_id=ingredient_id)
         except Store.DoesNotExist:
-            return HttpResponseNotFound(f"No user store info found for user {user_id}, ingredient {ingredient_id}")
+            return HttpResponseNotFound(f"No user store info found for user id {user.id}, ingredient {ingredient_id}")
 
         deleted_data = StoreSerializer(
             user_store).data
