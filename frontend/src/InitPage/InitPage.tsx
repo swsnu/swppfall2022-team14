@@ -17,7 +17,8 @@ const InitPage = () => {
     const userState = useSelector(selectUser)
     const dispatch = useDispatch<AppDispatch>()
 
-    const [loginState, setLoginState] = useState(false)
+    const loginState = userState.isLogin;
+    //const [loginState, setLoginState] = useState(false)
     // const [urlParams, setUrlParams] = useState<string>("")
     const [urlParams, setUrlParams] = useState<string>("")
 
@@ -45,14 +46,15 @@ const InitPage = () => {
         setIsInitMyLiqourOpen(true)
     }
     const onClicklogout = async () => {
+        console.log(userState.token)
         const result = await dispatch(logoutUser());
-        setLoginState(false);
-        return;
+        console.log(result)
         if (result.type === `${logoutUser.typePrefix}/fulfilled`) {
-            setLoginState(false);
+            alert("logout 성공")
         } else {
             alert("Error on logout");
         }
+
     }
     const onClickSearch = () => {
         // TODO : give params with filter information
@@ -108,7 +110,7 @@ const InitPage = () => {
             </div>
         </div>
         <button className={styles['my-liquor']} onClick={onClickMyLiqour}>My Liquor</button>
-        <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} setLoginState={setLoginState} />
+        <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
         <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
 
     </div >

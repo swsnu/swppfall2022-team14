@@ -1,36 +1,68 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../..";
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export interface UserType {
-    username: string;
-    password: string;
-    nickname: string;
-    intro: string;
-    profile_img: string;
+    id: string | null,
+    username: string | null;
+    password: string | null;
+    nickname: string | null;
+    intro: string | null;
+    profile_img: string | null;
 }
 
 export interface UserInfo {
     user: UserType | null;
+    token: string | null;
+    isLogin: boolean;
 }
 
 const initialState: UserInfo = {
-    user: null,
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password:  null,
+        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
 };
+
+export const registerUser = createAsyncThunk(
+    "user/registerUser",
+    async (user: Pick<UserType, "username" | "password">, { dispatch }) => {
+        const response = await axios.post('/api/v1/auth/signup/', user);
+
+        return response.data;
+    }
+)
 
 export const loginUser = createAsyncThunk(
     "user/loginUser",
     async (user: Pick<UserType, "username" | "password">, { dispatch }) => {
-        const response = await axios.put('/api/v1/auth/login/', user);
-        dispatch(userActions.loginUser(response.data));
+        const response = await axios.post('/api/v1/auth/login/', user);
+
+        console.log("Login Backend")
+        console.log(response.data)
+
+        dispatch(userActions.loginUser(response.data.user_data));
+        dispatch(userActions.setToken(response.data.token))
+
+        return response.data;
+
     }
 );
 
 export const logoutUser = createAsyncThunk(
     "user/logoutUser",
-    async (_data, { dispatch }) => {
-        const response = await axios.put('/api/v1/auth/logout/');
-        dispatch(userActions.logoutUser(response.data));
+    async (_, { dispatch }) => {
+        const response = await axios.post('/api/v1/auth/logout/');
+        dispatch(userActions.logoutUser());
+        return response.data
     }
 );
 
@@ -38,17 +70,47 @@ export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
+        setToken: (
+            state,
+            action: PayloadAction<string>
+        ) => {
+            state.token = action.payload;
+            localStorage.setItem("token",action.payload)
+        },
         loginUser: (
             state,
             action: PayloadAction<UserType>
         ) => {
+            state.isLogin = true;
             state.user = action.payload;
+            if(action.payload.id){
+                localStorage.setItem("id",action.payload.id)
+            }
+            if(action.payload.username){
+                localStorage.setItem("username",action.payload.username)
+            }
+            if(action.payload.intro){
+                localStorage.setItem("intro",action.payload.intro)
+            }
+            if(action.payload.profile_img){
+                localStorage.setItem("profile_img",action.payload.profile_img)
+            }
+            if(action.payload.nickname){
+                localStorage.setItem("nickname",action.payload.nickname)
+            }
         },
         logoutUser: (
             state,
-            _action: PayloadAction<UserType>
         ) => {
             state.user = null;
+            state.token = null;
+            state.isLogin = false;
+            localStorage.removeItem("token")
+            localStorage.removeItem("id")
+            localStorage.removeItem("username")
+            localStorage.removeItem("intro")
+            localStorage.removeItem("profile_img")
+            localStorage.removeItem("nickname")
         },
     },
 });
