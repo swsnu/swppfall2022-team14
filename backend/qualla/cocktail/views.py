@@ -193,6 +193,8 @@ def cocktail_post(request):
                 cocktail=cocktail, ingredient=ingredient)
 
         return JsonResponse(CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=201)
+        # else:
+        #     return HttpResponseNotAllowed(['GET', 'POST'])
 
 
 @api_view(['GET', 'PUT'])
