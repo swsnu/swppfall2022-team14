@@ -192,7 +192,7 @@ def cocktail_post(request):
             IngredientPrepare.objects.create(
                 cocktail=cocktail, ingredient=ingredient)
 
-        return JsonResponse(data=CocktailDetailSerializer(cocktail).data, status=201)
+        return JsonResponse(CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=201)
 
 
 @api_view(['GET', 'PUT'])
