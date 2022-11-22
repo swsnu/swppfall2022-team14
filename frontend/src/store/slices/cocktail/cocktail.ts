@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import {AppDispatch, RootState} from "../..";
+import { AppDispatch, RootState } from "../..";
 import ingredient, { IngredientType } from "../ingredient/ingredient";
 import { useSelector } from "react-redux"
-import {selectUser} from "../user/user";
+import { selectUser } from "../user/user";
 
 export interface CocktailItemType {
     id: number,
@@ -46,7 +46,7 @@ export interface CocktailInfo {
 }
 
 export interface PostForm {
-    cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate"|"is_bookmarked">;
+    cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked">;
     token: string;
 }
 
@@ -110,7 +110,7 @@ export const fetchCustomCocktailList = createAsyncThunk(
 
 export const fetchMyCocktailList = createAsyncThunk(
     "cocktail/fetchMyCocktailList", async () => {
-        const response = await axios.get('/api/v1/cocktails/me');
+        const response = await axios.get('/api/v1/bookmark/me');
         return response.data
     },
 )
@@ -130,7 +130,7 @@ export const getCocktail = createAsyncThunk(
 
 export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
-    async (cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate"|"is_bookmarked">, { dispatch }) => {
+    async (cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked">, { dispatch }) => {
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
         dispatch(cocktailActions.addCocktail(response.data));
         return response.data;
@@ -141,7 +141,7 @@ export const authPostCocktail = createAsyncThunk(
     "cocktail/postCocktail",
     async (cocktail: PostForm, { dispatch }) => {
 
-        const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/post/', cocktail.cocktail,{
+        const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/post/', cocktail.cocktail, {
             headers: {
                 Authorization: `Token ${cocktail.token}`,
             },
@@ -153,7 +153,7 @@ export const authPostCocktail = createAsyncThunk(
 
 export const editCocktail = createAsyncThunk(
     "cocktail/editCocktail",
-    async (cocktail: Omit<CocktailDetailType, "type"|"created_at"|"updated_at"|"rate"|"is_bookmarked">, { dispatch }) => {
+    async (cocktail: Omit<CocktailDetailType, "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked">, { dispatch }) => {
         const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/`, cocktail);
         console.log(response.data);
         dispatch(cocktailActions.editCocktail(response.data));
@@ -163,14 +163,14 @@ export const editCocktail = createAsyncThunk(
 
 export const toggleBookmark = createAsyncThunk(
     "cocktail/toggleBookmark",
-   async (cocktail_id:number) => {
-        await axios.put(`/api/v1/bookmark/cocktails/${cocktail_id}/`,{
+    async (cocktail_id: number) => {
+        await axios.put(`/api/v1/bookmark/cocktails/${cocktail_id}/`, {
             headers: {
                 'X-csrftoken': 'eR4TF9Bfxq6jxjl1v5Hqi9YmEW7DUkpx'
             }
         });
-        return {cocktail_id: cocktail_id}
-   }
+        return { cocktail_id: cocktail_id }
+    }
 )
 
 export const cocktailSlice = createSlice({
@@ -242,12 +242,12 @@ export const cocktailSlice = createSlice({
         //Bookmark
         builder.addCase(toggleBookmark.fulfilled, (state, action) => {
             state.cocktailList.forEach((c, i) => {
-                if(c.id === action.payload.cocktail_id){
+                if (c.id === action.payload.cocktail_id) {
                     state.cocktailList[i].is_bookmarked = !state.cocktailList[i].is_bookmarked
                 }
             })
 
-            if(state.cocktailItem && state.cocktailItem.id === action.payload.cocktail_id){
+            if (state.cocktailItem && state.cocktailItem.id === action.payload.cocktail_id) {
                 state.cocktailItem.is_bookmarked = !state.cocktailItem.is_bookmarked
             }
         })

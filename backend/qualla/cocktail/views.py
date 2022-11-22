@@ -75,7 +75,7 @@ def get_only_available_cocktails(request, filter_q):
 
     for cocktail in cocktail_all:
         ingredient_prepare = [
-            str(ingredient_prepare.ingredient.id) for ingredient_prepare in cocktail.ingredient_prepare.all()]
+            ingredient_prepare.ingredient.id for ingredient_prepare in cocktail.ingredient_prepare.all()]
 
         # 만약 해당 칵테일 재료가 내 재료의 subset이면
         if set(ingredient_prepare).issubset(set(my_ingredients)):

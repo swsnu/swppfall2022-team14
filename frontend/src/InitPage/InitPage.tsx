@@ -8,9 +8,10 @@ import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiquorModal"
 import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
-import {getUser, logoutUser, selectUser} from '../store/slices/user/user';
+import { getUser, logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
 import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
+import RecommendModal from "./Modals/RecommendModal";
 
 export interface Filterparam {
     type_one: string[],
@@ -88,6 +89,12 @@ const InitPage = () => {
         console.log(res)
     }
 
+    const [isRecommendOpen, setIsRecommendOpen] = useState(false);
+    const onClickRecommendButton = () => {
+        setIsRecommendOpen(true)
+    }
+
+
     useEffect(() => {
         if (isStandard) {
             dispatch(fetchStandardCocktailList(null))
@@ -96,8 +103,8 @@ const InitPage = () => {
         }
     }, [isStandard])
     useEffect(() => {
-        if(userState.isLogin && userState.user?.id !== null){
-            dispatch(fetchMyIngredientList(Number(userState.user?.id)))
+        if (userState.isLogin && userState.user?.id !== null) {
+            dispatch(fetchMyIngredientList())
         }
 
     }, [])
@@ -117,6 +124,7 @@ const InitPage = () => {
             <div className={`${styles['flex-box']} ${styles.nav__left}`}>
                 <button className={styles.button} onClick={() => onClickToggle(true)} disabled={isStandard}>스탠다드</button>
                 <button className={styles.button} onClick={() => onClickToggle(false)} disabled={!isStandard}>커스텀</button>
+                <button className={styles.button} onClick={onClickRecommendButton}>재료추천받기</button>
             </div>
             <div className={`${styles['flex-box']} ${styles.nav__right}`}>
                 <input className={styles.nav__input} placeholder="칵테일 이름 검색" value={input} onChange={(e) => setInput(e.target.value)} />
@@ -135,6 +143,7 @@ const InitPage = () => {
         <button className={styles['my-liquor']} onClick={onClickMyLiqour}>My Liquor</button>
         <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
         <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
+        <RecommendModal isOpen={isRecommendOpen} setIsOpen={setIsRecommendOpen} />
 
     </div >
 }

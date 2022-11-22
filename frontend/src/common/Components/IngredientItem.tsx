@@ -25,7 +25,7 @@ const IngredientItem = (prop: Pick<CocktailDetailType, "image" | "name" | "ABV" 
     }
 
     return <div className={styles.item} onClick={onClickItem}>
-        <button className={styles.item__delete} onClick={onClickDelete}>X</button>
+        {prop.my_item ? <button className={styles.item__delete} onClick={onClickDelete}>X</button> : null}
         <img className={styles.item__image} src={prop.image} />
         <div className={styles.item__name}>{prop.name}</div>
         <div className={styles.item__ABV}>{prop.ABV} 도</div>
