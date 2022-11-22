@@ -8,7 +8,10 @@ import InitPage, { Filterparam } from "./InitPage";
 import { Iprops as FilterProp } from "./Components/Filter";
 import { prop as LoginModalProp } from "./Modals/LoginModal";
 import { prop as InitMyLiquorModalProp } from "./Modals/InitMyLiquorModal";
+import { UserInfo } from "../store/slices/user/user";
+import React from 'react'
 
+// eslint-disable-next-line react/display-name
 jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid="spyCocktail">
         <img className="item__image" src={prop.image} />
@@ -20,10 +23,7 @@ jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "imag
     </div>
 ));
 
-
-
-
-
+// eslint-disable-next-line react/display-name
 jest.mock("./Components/Filter", () => (prop: FilterProp) => {
     const mockFilterParam: Filterparam = { type_one: [], type_two: [], type_three: [], available_only: false }
     return (
@@ -38,12 +38,14 @@ jest.mock("./Components/Filter", () => (prop: FilterProp) => {
     )
 });
 
+// eslint-disable-next-line react/display-name
 jest.mock("./Modals/LoginModal", () => (prop: LoginModalProp) => (
     <div data-testid="spyLoginModal">
-        <button onClick={() => { prop.setLoginState(true); prop.setIsOpen(false); }}>Login</button>
+        <button onClick={() => { prop.setIsOpen(false); }}>Login</button>
     </div>
 ));
 
+// eslint-disable-next-line react/display-name
 jest.mock("./Modals/InitMyLiquorModal", () => (prop: InitMyLiquorModalProp) => (
     <div data-testid="spyInitMyLiquorModal" />
 ));
@@ -95,6 +97,20 @@ const stubIngredientInitialState: IngredientInfo = {
     listStatus: "loading",
 };
 
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password:  null,
+        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+
+
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
@@ -107,7 +123,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderInitPage = (isStandard: Boolean = true) => {
+const renderInitPage = (isStandard = true) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -127,6 +143,7 @@ const renderInitPage = (isStandard: Boolean = true) => {
                 },
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
+                user: stubUserInitialState,
             },
         }
     );

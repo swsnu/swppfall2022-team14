@@ -6,10 +6,13 @@ import CreateCustomPage from './CreateCustomPage/CreateCustomPage';
 import EditCustomPage from './EditCustomPage/EditCustomPage';
 import MyPage from './MyPage/MyPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import React from 'react';
+import React, {useEffect} from 'react';
 import ListPage from "./ListPage/ListPage";
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "./store";
 
 function App() {
+
   return (
     <div className="App">
       <BrowserRouter>

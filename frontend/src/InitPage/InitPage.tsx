@@ -8,6 +8,7 @@ import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiquorModal"
 import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
+import {getUser, logoutUser, selectUser} from '../store/slices/user/user';
 import { AppDispatch } from "../store"
 import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
 
@@ -24,9 +25,11 @@ const InitPage = () => {
     const ingredientState = useSelector(selectIngredient)
 
     const cocktailState = useSelector(selectCocktail)
+    const userState = useSelector(selectUser)
     const dispatch = useDispatch<AppDispatch>()
 
-    const [fakeLoginState, setFakeLoginState] = useState(false)
+    const loginState = userState.isLogin;
+    //const [loginState, setLoginState] = useState(false)
     // const [urlParams, setUrlParams] = useState<string>("")
     const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [], available_only: false })
     const [input, setInput] = useState('')
@@ -57,8 +60,16 @@ const InitPage = () => {
     const onClickMyLiqour = () => {
         setIsInitMyLiqourOpen(true)
     }
-    const onClicklogout = () => {
-        setFakeLoginState(false)
+    const onClicklogout = async () => {
+        console.log(userState.token)
+        const result = await dispatch(logoutUser(userState.token));
+        console.log(result)
+        if (result.type === `${logoutUser.typePrefix}/fulfilled`) {
+            alert("logout 성공")
+        } else {
+            alert("Error on logout");
+        }
+
     }
     const onClickSearch = () => {
         // TODO : give params with filter information
@@ -72,6 +83,11 @@ const InitPage = () => {
         navigate(`/mypage`)
     }
 
+    const onClickUserInfo = async () => {
+        const res = dispatch(getUser())
+        console.log(res)
+    }
+
     useEffect(() => {
         if (isStandard) {
             dispatch(fetchStandardCocktailList(null))
@@ -80,17 +96,21 @@ const InitPage = () => {
         }
     }, [isStandard])
     useEffect(() => {
-        dispatch(fetchMyIngredientList(dummy_user_id))
+        if(userState.isLogin && userState.user?.id !== null){
+            dispatch(fetchMyIngredientList(Number(userState.user?.id)))
+        }
+
     }, [])
 
 
 
     return <div className={styles.margin}>
         <div className={styles.header}>
-            {fakeLoginState ? <button onClick={onClickProfile}>내 프로필</button> : <div className={`${styles.button} ${styles.header__login}`} onClick={onClickLogin}>로그인</div>}
-            {fakeLoginState && isOpenProfile ? <div>
+            {loginState ? <button onClick={onClickProfile}>내 프로필</button> : <div className={`${styles.button} ${styles.header__login}`} onClick={onClickLogin}>로그인</div>}
+            {loginState && isOpenProfile ? <div>
                 <button onClick={onClickMyPage}>My Page</button>
                 <button onClick={onClicklogout}>Logout</button>
+                <button onClick={onClickUserInfo}>Get Info</button>
             </div> : null}
         </div>
         <div className={styles.nav}>
@@ -113,7 +133,7 @@ const InitPage = () => {
             </div>
         </div>
         <button className={styles['my-liquor']} onClick={onClickMyLiqour}>My Liquor</button>
-        <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} setLoginState={setFakeLoginState} />
+        <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
         <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
 
     </div >

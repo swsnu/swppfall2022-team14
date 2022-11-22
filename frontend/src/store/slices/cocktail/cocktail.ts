@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { RootState } from "../..";
+import {AppDispatch, RootState} from "../..";
 import ingredient, { IngredientType } from "../ingredient/ingredient";
-
+import { useSelector } from "react-redux"
+import {selectUser} from "../user/user";
 
 export interface CocktailItemType {
     id: number,
@@ -42,6 +43,11 @@ export interface CocktailInfo {
     cocktailItem: CocktailDetailType | null,
     itemStatus: string,
     listStatus: string
+}
+
+export interface PostForm {
+    cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate"|"is_bookmarked">;
+    token: string;
 }
 
 const initialState: CocktailInfo = {
@@ -126,6 +132,20 @@ export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
     async (cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate"|"is_bookmarked">, { dispatch }) => {
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
+        dispatch(cocktailActions.addCocktail(response.data));
+        return response.data;
+    }
+)
+
+export const authPostCocktail = createAsyncThunk(
+    "cocktail/postCocktail",
+    async (cocktail: PostForm, { dispatch }) => {
+
+        const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/post/', cocktail.cocktail,{
+            headers: {
+                Authorization: `Token ${cocktail.token}`,
+            },
+        });
         dispatch(cocktailActions.addCocktail(response.data));
         return response.data
     }
