@@ -58,7 +58,8 @@ const stubCocktailInitialState: CocktailInfo = {
         ingredients: [
             { ...stubIngredientInitialState.ingredientList[0], amount: "1 oz" },
             { ...stubIngredientInitialState.ingredientList[1], amount: "5 oz" },
-        ]
+        ],
+        is_bookmarked: false
     },
     itemStatus: "success",
     listStatus: "success",

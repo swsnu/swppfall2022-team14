@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import styles from './AddIngredientModal.module.scss'
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchIngredientList, fetchMyIngredientList, IngredientType, postIngredientProps, postMyIngredients, selectIngredient } from '../../store/slices/ingredient/ingredient';
+import { fetchIngredientList, fetchMyIngredientList, IngredientType, PostIngredientProps, postMyIngredients, selectIngredient } from '../../store/slices/ingredient/ingredient';
 import { AppDispatch } from '../../store';
 interface prop {
     isOpen: boolean;
@@ -27,7 +27,7 @@ const AddIngredientModal = (props: prop) => {
         dispatch(fetchIngredientList())
     }, [])
 
-    const onClickEdit = async (body: postIngredientProps) => {
+    const onClickEdit = async (body: PostIngredientProps) => {
         dispatch(postMyIngredients(body))
         await dispatch(fetchMyIngredientList(user_id))
         setNewIngredients([])

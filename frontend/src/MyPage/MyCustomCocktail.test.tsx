@@ -30,7 +30,8 @@ const custom_cocktail1_item: CocktailItemType = {
     type: "CS",
     tags: [],
     author_id: 1,
-    rate: 0
+    rate: 0,
+    is_bookmarked: false,
 }
 
 const cocktaiState: CocktailInfo = {

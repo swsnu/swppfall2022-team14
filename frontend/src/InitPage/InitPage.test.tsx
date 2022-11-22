@@ -57,6 +57,7 @@ const cocktailList: CocktailItemType[] = [
         tags: ["TAG_1", "TAG_2"],
         author_id: null,
         rate: 5,
+        is_bookmarked: false
     },
     {
         id: 2,
@@ -66,6 +67,7 @@ const cocktailList: CocktailItemType[] = [
         tags: ["TAG_1"],
         author_id: null,
         rate: 4,
+        is_bookmarked: false
     },
     {
         id: 3,
@@ -75,6 +77,7 @@ const cocktailList: CocktailItemType[] = [
         tags: ["TAG_2"],
         author_id: 1,
         rate: 3,
+        is_bookmarked: false
     },
 ];
 

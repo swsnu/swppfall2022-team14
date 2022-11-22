@@ -11,7 +11,8 @@ export interface CocktailItemType {
     type: "CS" | "ST",
     tags: string[],
     author_id: number | null,
-    rate: number
+    rate: number,
+    is_bookmarked: boolean
 }
 
 export interface CocktailDetailType {
@@ -28,7 +29,8 @@ export interface CocktailDetailType {
     created_at: Date,
     updated_at: Date,
     rate: number,
-    ingredients: IngredientPrepareType[]
+    ingredients: IngredientPrepareType[],
+    is_bookmarked: boolean
 }
 
 export interface IngredientPrepareType extends IngredientType {
@@ -122,7 +124,7 @@ export const getCocktail = createAsyncThunk(
 
 export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
-    async (cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate">, { dispatch }) => {
+    async (cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate"|"is_bookmarked">, { dispatch }) => {
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
         dispatch(cocktailActions.addCocktail(response.data));
         return response.data
@@ -131,12 +133,24 @@ export const postCocktail = createAsyncThunk(
 
 export const editCocktail = createAsyncThunk(
     "cocktail/editCocktail",
-    async (cocktail: Omit<CocktailDetailType, "type" | "created_at" | "updated_at" | "rate">, { dispatch }) => {
+    async (cocktail: Omit<CocktailDetailType, "type"|"created_at"|"updated_at"|"rate"|"is_bookmarked">, { dispatch }) => {
         const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/`, cocktail);
         console.log(response.data);
         dispatch(cocktailActions.editCocktail(response.data));
         return response.data
     }
+)
+
+export const toggleBookmark = createAsyncThunk(
+    "cocktail/toggleBookmark",
+   async (cocktail_id:number) => {
+        await axios.put(`/api/v1/bookmark/cocktails/${cocktail_id}/`,{
+            headers: {
+                'X-csrftoken': 'eR4TF9Bfxq6jxjl1v5Hqi9YmEW7DUkpx'
+            }
+        });
+        return {cocktail_id: cocktail_id}
+   }
 )
 
 export const cocktailSlice = createSlice({
@@ -204,6 +218,19 @@ export const cocktailSlice = createSlice({
         builder.addCase(getCocktail.rejected, (state, action) => {
             state.itemStatus = "failed";
         });
+
+        //Bookmark
+        builder.addCase(toggleBookmark.fulfilled, (state, action) => {
+            state.cocktailList.forEach((c, i) => {
+                if(c.id === action.payload.cocktail_id){
+                    state.cocktailList[i].is_bookmarked = !state.cocktailList[i].is_bookmarked
+                }
+            })
+
+            if(state.cocktailItem && state.cocktailItem.id === action.payload.cocktail_id){
+                state.cocktailItem.is_bookmarked = !state.cocktailItem.is_bookmarked
+            }
+        })
     },
 })
 export const cocktailActions = cocktailSlice.actions;

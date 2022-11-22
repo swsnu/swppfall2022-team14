@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router"
 import { CocktailDetailType } from "../../store/slices/cocktail/cocktail";
 import styles from './IngredientItem.module.scss'
-import React, { Component } from 'react';
+import React from 'react';
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { deleteMyIngredients } from "../../store/slices/ingredient/ingredient";
