@@ -31,12 +31,14 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'store.apps.StoreConfig',
     'cocktail.apps.CocktailConfig',
     'ingredient.apps.IngredientConfig',
     'comment.apps.CommentConfig',
     'ingredient_prepare.apps.IngredientPrepareConfig',
     'tag.apps.TagConfig',
     'user.apps.UserConfig',
+    'bookmark.apps.BookmarkConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

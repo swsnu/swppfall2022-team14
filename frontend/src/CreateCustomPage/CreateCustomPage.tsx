@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import AddIngredientModal from "./Modals/AddIngredientModal"
 import { useNavigate } from "react-router";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
 import {
     authPostCocktail,
@@ -13,7 +13,7 @@ import {
 import './CreateCustomPage.scss';
 import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
-import {selectUser} from "../store/slices/user/user";
+import { selectUser } from "../store/slices/user/user";
 
 export default function CreateCustomPage() {
     const [name, setName] = useState<string>("");
@@ -26,7 +26,7 @@ export default function CreateCustomPage() {
 
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
-    const [newIngredient, setNewIngredient] = useState<IngredientType|null>(null);
+    const [newIngredient, setNewIngredient] = useState<IngredientType | null>(null);
 
     const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
@@ -37,7 +37,7 @@ export default function CreateCustomPage() {
     const userState = useSelector(selectUser)
 
     useEffect(() => {
-        if (newIngredient){
+        if (newIngredient) {
             setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
             setNewIngredient(null);
         }
@@ -57,12 +57,12 @@ export default function CreateCustomPage() {
 
     const onKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
         if (tagItem.length !== 0 && e.key === 'Enter') {
-          submitTagItem()
+            submitTagItem()
         }
     }
-    
+
     const submitTagItem = () => {
-        const updatedTagList = [ ...tagList ]
+        const updatedTagList = [...tagList]
         updatedTagList.push(tagItem)
 
         setTagList(updatedTagList)
@@ -74,13 +74,13 @@ export default function CreateCustomPage() {
     }
 
     const createCocktailHandler = async () => {
-        if(userState.user?.id !== null && userState.token !== null){
+        if (userState.user?.id !== null && userState.token !== null) {
             console.log(userState.user?.id)
-            const data : PostForm = {
-                cocktail:{
+            const data: PostForm = {
+                cocktail: {
                     name: name,
-                    image:"https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
-                    introduction:introduction,
+                    image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
+                    introduction: introduction,
                     recipe: recipe,
                     ABV: ABV,
                     price_per_glass: price,
@@ -102,11 +102,11 @@ export default function CreateCustomPage() {
                 <div className="title__name">
                     <label>
                         Name:
-                        <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)}/>
+                        <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)} />
                     </label>
                 </div>
                 <button className="title__confirm-button"
-                onClick={() => createCocktailHandler()}>Confirm</button>
+                    onClick={() => createCocktailHandler()}>Confirm</button>
             </div>
             <div className="content">
                 <img
@@ -118,7 +118,7 @@ export default function CreateCustomPage() {
                     <div className='content__description'>
                         <label>
                             Description:<br />
-                            <textarea className='content__description-input' value={introduction} onChange={(e) => setIntroduction(e.target.value)}/>
+                            <textarea className='content__description-input' value={introduction} onChange={(e) => setIntroduction(e.target.value)} />
                         </label>
                     </div>
                     <div className="content__ingredient-box">
@@ -146,9 +146,9 @@ export default function CreateCustomPage() {
                                         onChange={(event) => onChangeAmount(idx, event.target.value)}
                                     />
                                     {idx !== ingredientList.length &&
-                                        <button 
+                                        <button
                                             data-testid="ingredientDeleteButton"
-                                            className="content__ingredient-delete-button" 
+                                            className="content__ingredient-delete-button"
                                             onClick={() => onClickIngredientDelete(idx)}
                                         >
                                             Delete
@@ -161,7 +161,7 @@ export default function CreateCustomPage() {
                     <div className='content__recipe'>
                         <label>
                             Recipe:<br />
-                            <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)}/>
+                            <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)} />
                         </label>
                     </div>
                     <div className='content__tag-box'>
@@ -171,7 +171,7 @@ export default function CreateCustomPage() {
                                 return (
                                     <div className="content__tag" key={`${tagItem}_${idx}`}>
                                         <span>{tagItem}</span>
-                                        <button 
+                                        <button
                                             data-testid="tagDeleteButton"
                                             onClick={() => onDeleteTagItem(tagItem)}
                                         >
@@ -180,7 +180,7 @@ export default function CreateCustomPage() {
                                     </div>
                                 )
                             })}
-                            <input 
+                            <input
                                 data-testid="tagInput"
                                 className='content__tag-input'
                                 type="text"
@@ -195,5 +195,5 @@ export default function CreateCustomPage() {
                 </div>
             </div>
         </div>
-        )
-    }
+    )
+}

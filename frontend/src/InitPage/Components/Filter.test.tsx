@@ -23,6 +23,7 @@ const stubCommentInitialState: CommentInfo = {
 
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
@@ -51,7 +52,7 @@ const renderFilter = () => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<Filter setUrlParams={ jest.fn() }/>} />
+                <Route path="/" element={<Filter setUrlParams={jest.fn()} />} />
             </Routes>
         </MemoryRouter>,
         {

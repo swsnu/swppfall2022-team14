@@ -13,7 +13,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-jest.mock("../common/Components/Item", () => (prop:Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
+jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid={`spyComment_${prop.id}`}>
     </div>
 ));
@@ -25,11 +25,12 @@ const standard_cocktail1_item: CocktailItemType = {
     type: "ST",
     tags: [],
     author_id: null,
-    rate: 0
+    rate: 0,
+    is_bookmarked: false,
 }
 
 const cocktaiState: CocktailInfo = {
-    cocktailList: [ standard_cocktail1_item ],
+    cocktailList: [standard_cocktail1_item],
     cocktailItem: null,
     itemStatus: "success",
     listStatus: "success",
@@ -43,20 +44,21 @@ const emptyCommentState: CommentInfo = {
 
 const emptyingredientState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
 }
 
-const mockStore = getMockStore({cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState});
+const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState });
 
 describe("<MyBookMark />", () => {
     it("should render items without errors", () => {
-        render(    
+        render(
             <Provider store={mockStore}>
-                <MyBookmark/>
+                <MyBookmark />
             </Provider>
-        ); 
+        );
         const items = screen.getAllByTestId("spyComment_1");
         expect(items).toHaveLength(1);
         expect(mockDispatch).toBeCalledTimes(1)

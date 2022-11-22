@@ -9,10 +9,11 @@ export interface CocktailItemType {
     id: number,
     name: string,
     image: string,
-    type: "CS"|"ST",
+    type: "CS" | "ST",
     tags: string[],
     author_id: number | null,
-    rate: number
+    rate: number,
+    is_bookmarked: boolean
 }
 
 export interface CocktailDetailType {
@@ -24,12 +25,13 @@ export interface CocktailDetailType {
     ABV: number,
     price_per_glass: number
     tags: string[],
-    type: "CS"|"ST",
+    type: "CS" | "ST",
     author_id: number | null,
     created_at: Date,
     updated_at: Date,
     rate: number,
-    ingredients: IngredientPrepareType[]
+    ingredients: IngredientPrepareType[],
+    is_bookmarked: boolean
 }
 
 export interface IngredientPrepareType extends IngredientType {
@@ -57,18 +59,52 @@ const initialState: CocktailInfo = {
 
 
 
+export interface FilterParamType {
+    type_one: string[];
+    type_two: string[];
+    type_three: string[];
+    name_param: string[];
+    available_only: boolean
+    // my_ingredient_id_list: number[];
+}
 
 export const fetchStandardCocktailList = createAsyncThunk(
-    "cocktail/fetchStandardCocktailList", async (params: string) => {
-        const response = await axios.get(`/api/v1/cocktails/?type=standard&${params}`);
-        return response.data
+    "cocktail/fetchStandardCocktailList", async (params: FilterParamType | null) => {
+        if (!params) {
+            const response = await axios.get(`/api/v1/cocktails/?type=standard`);
+            console.log(response.data)
+            return response.data
+        }
+        else {
+            const response = await axios.get(`/api/v1/cocktails/?type=standard`,
+                {
+                    params: params
+                }
+            );
+            console.log(response.data)
+            return response.data
+        }
+
     },
 )
 
 export const fetchCustomCocktailList = createAsyncThunk(
-    "cocktail/fetchCustomCocktailList", async (params: string) => {
-        const response = await axios.get(`/api/v1/cocktails/?type=custom&${params}`);
-        return response.data
+    "cocktail/fetchCustomCocktailList", async (params: FilterParamType | null) => {
+        if (!params) {
+            const response = await axios.get(`/api/v1/cocktails/?type=custom`);
+            console.log(response.data)
+            return response.data
+        }
+        else {
+            const response = await axios.get(`/api/v1/cocktails/?type=custom`,
+                {
+                    params: params
+                }
+            );
+            console.log(response.data)
+            return response.data
+        }
+
     },
 )
 
@@ -117,12 +153,24 @@ export const authPostCocktail = createAsyncThunk(
 
 export const editCocktail = createAsyncThunk(
     "cocktail/editCocktail",
-    async (cocktail: Omit<CocktailDetailType, "type"|"created_at"|"updated_at"|"rate">, { dispatch }) => {
+    async (cocktail: Omit<CocktailDetailType, "type"|"created_at"|"updated_at"|"rate"|"is_bookmarked">, { dispatch }) => {
         const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/`, cocktail);
         console.log(response.data);
         dispatch(cocktailActions.editCocktail(response.data));
         return response.data
     }
+)
+
+export const toggleBookmark = createAsyncThunk(
+    "cocktail/toggleBookmark",
+   async (cocktail_id:number) => {
+        await axios.put(`/api/v1/bookmark/cocktails/${cocktail_id}/`,{
+            headers: {
+                'X-csrftoken': 'eR4TF9Bfxq6jxjl1v5Hqi9YmEW7DUkpx'
+            }
+        });
+        return {cocktail_id: cocktail_id}
+   }
 )
 
 export const cocktailSlice = createSlice({
@@ -135,7 +183,7 @@ export const cocktailSlice = createSlice({
         editCocktail: (state, action: PayloadAction<CocktailDetailType>) => {
             const editted = state.cocktailList.map((cocktail) => {
                 if (cocktail.id === action.payload.id) {
-                    return {...cocktail, name: action.payload.name, image: action.payload.image, tags: action.payload.tags};
+                    return { ...cocktail, name: action.payload.name, image: action.payload.image, tags: action.payload.tags };
                 } else {
                     return cocktail;
                 }
@@ -190,6 +238,19 @@ export const cocktailSlice = createSlice({
         builder.addCase(getCocktail.rejected, (state, action) => {
             state.itemStatus = "failed";
         });
+
+        //Bookmark
+        builder.addCase(toggleBookmark.fulfilled, (state, action) => {
+            state.cocktailList.forEach((c, i) => {
+                if(c.id === action.payload.cocktail_id){
+                    state.cocktailList[i].is_bookmarked = !state.cocktailList[i].is_bookmarked
+                }
+            })
+
+            if(state.cocktailItem && state.cocktailItem.id === action.payload.cocktail_id){
+                state.cocktailItem.is_bookmarked = !state.cocktailItem.is_bookmarked
+            }
+        })
     },
 })
 export const cocktailActions = cocktailSlice.actions;

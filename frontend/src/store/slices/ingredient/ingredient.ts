@@ -14,12 +14,14 @@ export interface IngredientType {
 
 export interface IngredientInfo {
     ingredientList: IngredientType[],
+    myIngredientList: IngredientType[],
     ingredientItem: IngredientType | null,
     itemStatus: string,
     listStatus: string
 }
 const initialState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: {
         id: 1,
         name: 'name',
@@ -40,6 +42,44 @@ export const fetchIngredientList = createAsyncThunk(
     },
 )
 
+
+// TODO : ingredients/me/로 받을 수 있게끔 수정
+export const fetchMyIngredientList = createAsyncThunk(
+    "cocktail/fetchMyIngredientList", async (id: number) => {
+        const response = await axios.get(`/api/v1/store/${id}/`);
+        console.log(response.data)
+        return response.data
+    },
+)
+
+
+export interface PostIngredientProps {
+    id: number;
+    ingredients: number[] // ingredient ids
+}
+export const postMyIngredients = createAsyncThunk(
+    "cocktail/postMyIngredientList", async (param: PostIngredientProps, { dispatch }) => {
+        const response = await axios.post(`/api/v1/store/${param.id}/`, param);
+        dispatch(fetchMyIngredientList(param.id))
+        return response.data
+    },
+)
+
+export interface DeleteIngredientProps {
+    user_id: number;
+    ingredient_id: number; // ingredient ids
+}
+
+export const deleteMyIngredients = createAsyncThunk(
+    "cocktail/deleteMyIngredientList", async (param: DeleteIngredientProps, { dispatch }) => {
+        const response = await axios.delete(`/api/v1/store/${param.user_id}/${param.ingredient_id}/`);
+        dispatch(fetchMyIngredientList(param.user_id))
+        return response.data
+    },
+)
+
+
+
 export const getIngredient = createAsyncThunk(
     "ingredient/getIngredient/",
     async (id: IngredientType["id"], { dispatch }) => {
@@ -52,8 +92,7 @@ export const getIngredient = createAsyncThunk(
 export const ingredientSlice = createSlice({
     name: "ingredient",
     initialState,
-    reducers: {
-    },
+    reducers: {},
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(fetchIngredientList.fulfilled, (state, action) => {
@@ -76,6 +115,16 @@ export const ingredientSlice = createSlice({
         builder.addCase(getIngredient.rejected, (state, action) => {
             state.itemStatus = "failed"
         })
+        builder.addCase(fetchMyIngredientList.fulfilled, (state, action) => {
+            state.myIngredientList = action.payload.Ingredients;
+            state.listStatus = "success"
+        });
+        builder.addCase(fetchMyIngredientList.pending, (state, action) => {
+            state.listStatus = "loading";
+        });
+        builder.addCase(fetchMyIngredientList.rejected, (state, action) => {
+            state.listStatus = "failed";
+        });
     },
 })
 

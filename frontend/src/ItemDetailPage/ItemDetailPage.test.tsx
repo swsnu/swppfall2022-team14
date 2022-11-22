@@ -1,40 +1,40 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import React from 'react';
-import {getMockStore} from "../test-utils/mock";
-import {Provider} from "react-redux";
-import {CommentInfo, CommentType} from "../store/slices/comment/comment";
+import { getMockStore } from "../test-utils/mock";
+import { Provider } from "react-redux";
+import { CommentInfo, CommentType } from "../store/slices/comment/comment";
 import {
     CocktailDetailType,
     CocktailInfo,
 } from "../store/slices/cocktail/cocktail";
-import {IngredientInfo} from "../store/slices/ingredient/ingredient";
+import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import ItemDetailPage from "./ItemDetailPage";
 
 // eslint-disable-next-line react/display-name
-jest.mock("./Comment/Comment", () => (prop : CommentType) => (
+jest.mock("./Comment/Comment", () => (prop: CommentType) => (
     <div data-testid={`spyComment_${prop.id}`}>
     </div>
 ));
 
-const loadingCocktail : CocktailInfo = {
+const loadingCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
     itemStatus: "loading",
     listStatus: "loading"
 }
-const failedCocktail : CocktailInfo = {
+const failedCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
     itemStatus: "failed",
     listStatus: "loading"
 }
-const fakeCocktailItemCS : CocktailDetailType = {
+const fakeCocktailItemCS: CocktailDetailType = {
     id: 1,
     name: "name",
     image: "img",
     type: "CS",
-    tags: ["CS1","CS2"],
+    tags: ["CS1", "CS2"],
     author_id: 1,
     rate: 1,
     introduction: "intro",
@@ -50,15 +50,17 @@ const fakeCocktailItemCS : CocktailDetailType = {
         ABV: 1,
         price: 1,
         introduction: "iintro",
-        amount : "1 oz",
-    }]
+
+        amount: "1 oz",
+    }],
+    is_bookmarked: false,
 }
-const fakeCocktailItemST : CocktailDetailType = {
+const fakeCocktailItemST: CocktailDetailType = {
     id: 1,
     name: "name",
     image: "img",
     type: "ST",
-    tags: ["CS1","CS2"],
+    tags: ["CS1", "CS2"],
     author_id: 1,
     rate: 1,
     introduction: "intro",
@@ -74,54 +76,58 @@ const fakeCocktailItemST : CocktailDetailType = {
         ABV: 1,
         price: 1,
         introduction: "iintro",
-        amount : "1 oz",
-    }]
+
+        amount: "1 oz",
+    }],
+    is_bookmarked: false,
 }
-const commentNotParent : CommentType = {
+const commentNotParent: CommentType = {
     id: 1,
     cocktail: {
         id: 1,
         name: "name",
         image: "img",
         type: "CS",
-        tags: ["CS1","CS2"],
+        tags: ["CS1", "CS2"],
         author_id: 1,
         rate: 1,
+        is_bookmarked: false,
     },
     author_id: 1,
     content: "content1",
     created_at: new Date(Date.now()),
     updated_at: new Date(Date.now()),
     parent_comment: 1, // if null comment is root comment
-    is_deleted: false
+    is_deleted: false,
 }
-const fakeCustomCocktail : CocktailInfo = {
+const fakeCustomCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: fakeCocktailItemCS,
     itemStatus: "",
     listStatus: ""
 }
-const fakeStandardCocktail : CocktailInfo = {
+const fakeStandardCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: fakeCocktailItemST,
     itemStatus: "",
     listStatus: ""
 }
-const emptyComment : CommentInfo = {
+const emptyComment: CommentInfo = {
     commentList: [commentNotParent],
     commentItem: null,
     state: "EDIT"
 }
-const commentAuthor : CommentType = {
+const commentAuthor: CommentType = {
     id: 1,
     cocktail: {
         id: 1,
         name: "name",
         image: "img",
         type: "CS",
-        tags: ["CS1","CS2"],
+        tags: ["CS1", "CS2"],
         author_id: 1,
         rate: 1,
+        is_bookmarked: false,
     },
     author_id: 1,
     content: "content1",
@@ -130,23 +136,24 @@ const commentAuthor : CommentType = {
     parent_comment: null, // if null comment is root comment
     is_deleted: false
 }
-const fakeComment : CommentInfo = {
+const fakeComment: CommentInfo = {
     commentList: [commentAuthor],
     commentItem: null,
     state: null
 }
-const emptyIngredient : IngredientInfo = {
+const emptyIngredient: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading"
 }
 
-const loadingMockStore = getMockStore({cocktail: loadingCocktail,ingredient: emptyIngredient,comment: fakeComment})
-const failedMockStore = getMockStore({cocktail: failedCocktail,ingredient: emptyIngredient,comment: fakeComment})
-const emptyCommentMockStore = getMockStore({cocktail: fakeCustomCocktail,ingredient: emptyIngredient,comment: emptyComment})
-const itemDetailMockStore = getMockStore({cocktail: fakeCustomCocktail,ingredient: emptyIngredient,comment: fakeComment})
-const itemDetailMockStore_ST = getMockStore({cocktail: fakeStandardCocktail,ingredient: emptyIngredient,comment: fakeComment})
+const loadingMockStore = getMockStore({ cocktail: loadingCocktail, ingredient: emptyIngredient, comment: fakeComment })
+const failedMockStore = getMockStore({ cocktail: failedCocktail, ingredient: emptyIngredient, comment: fakeComment })
+const emptyCommentMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: emptyComment })
+const itemDetailMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment })
+const itemDetailMockStore_ST = getMockStore({ cocktail: fakeStandardCocktail, ingredient: emptyIngredient, comment: fakeComment })
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -170,7 +177,7 @@ describe("<Comment />", () => {
             <Provider store={loadingMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage/>}/>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -182,7 +189,7 @@ describe("<Comment />", () => {
             <Provider store={failedMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage/>}/>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -194,7 +201,7 @@ describe("<Comment />", () => {
             <Provider store={itemDetailMockStore}>
                 <MemoryRouter initialEntries={['/miss/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage/>}/>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -206,7 +213,7 @@ describe("<Comment />", () => {
             <Provider store={itemDetailMockStore_ST}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage/>}/>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -218,7 +225,7 @@ describe("<Comment />", () => {
             <Provider store={emptyCommentMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage/>}/>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -232,7 +239,7 @@ describe("<Comment />", () => {
             <Provider store={itemDetailMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage/>}/>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -249,7 +256,7 @@ describe("<Comment />", () => {
         expect(mockNavigate).toHaveBeenCalledWith("/ingredient/1")
 
         const inputBox = screen.getByRole("textbox")
-        fireEvent.change(inputBox, { target: {value: "edit_comment"}});
+        fireEvent.change(inputBox, { target: { value: "edit_comment" } });
         const addButton = screen.getByText("Add")
         fireEvent.click(addButton)
         expect(mockDispatch).toBeCalledTimes(3)
