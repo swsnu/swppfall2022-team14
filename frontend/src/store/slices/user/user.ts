@@ -59,7 +59,7 @@ export const loginUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
     "user/logoutUser",
-    async (_, { dispatch }) => {
+    async (token: string | null, { dispatch }) => {
         localStorage.removeItem("token")
         localStorage.removeItem("id")
         localStorage.removeItem("username")
@@ -67,7 +67,11 @@ export const logoutUser = createAsyncThunk(
         localStorage.removeItem("profile_img")
         localStorage.removeItem("nickname")
 
-        const response = await axios.post('/api/v1/auth/logout/');
+        const response = await axios.post('/api/v1/auth/logout/',{},{
+            headers: {
+                Authorization: `Token ${token}`,
+            },
+        });
         dispatch(userActions.logoutUser());
         return response.data
     }

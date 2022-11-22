@@ -47,7 +47,7 @@ const InitPage = () => {
     }
     const onClicklogout = async () => {
         console.log(userState.token)
-        const result = await dispatch(logoutUser());
+        const result = await dispatch(logoutUser(userState.token));
         console.log(result)
         if (result.type === `${logoutUser.typePrefix}/fulfilled`) {
             alert("logout 성공")

@@ -2,11 +2,12 @@ from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 import json
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .models import User
 from .serializers import UserInfoSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from rest_framework import permissions, authentication
 
 
 @api_view(['POST'])
@@ -28,12 +29,15 @@ def signup(request):
 @api_view(['POST'])
 def signin(request):
     if request.method == 'POST':
-        req_data = json.loads(request.body.decode())
+        req_data = request.data.copy()
         username = req_data['username']
         password = req_data['password']
+        
 
         user = authenticate(username=username, password=password)
+
         if user is not None:
+
             login(request, user)
 
             token = Token.objects.get(user=user)

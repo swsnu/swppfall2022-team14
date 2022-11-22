@@ -60,7 +60,7 @@ const LoginModal = (props: prop) => {
     };
 
     const onClickLogout = async () => {
-        const res = await dispatch(logoutUser())
+        const res = await dispatch(logoutUser(userState.token))
     };
 
     const onClickRegister = async () => {
