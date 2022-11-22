@@ -38,6 +38,7 @@ const stubIngredientInitialState: IngredientInfo = {
             price: 100
         },
     ],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
@@ -53,7 +54,7 @@ const renderAddIngredientModal = () => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<AddIngredientModal isOpen={true} close={ jest.fn() } addedIngredientList={[]} setNewIngrdient={ jest.fn() } />} />
+                <Route path="/" element={<AddIngredientModal isOpen={true} close={jest.fn()} addedIngredientList={[]} setNewIngrdient={jest.fn()} />} />
             </Routes>
         </MemoryRouter>,
         {

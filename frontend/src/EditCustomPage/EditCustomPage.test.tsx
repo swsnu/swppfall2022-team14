@@ -33,6 +33,7 @@ const stubIngredientInitialState: IngredientInfo = {
             price: 100
         },
     ],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
@@ -67,13 +68,13 @@ const stubCocktailInitialState: CocktailInfo = {
 jest.mock("../CreateCustomPage/Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) => {
     return (
         <div>
-            <button 
+            <button
                 data-testid="addIngredientButton"
                 onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[0])}
             >
                 INGREDIENT_1
             </button>
-            <button 
+            <button
                 data-testid="addIngredientButton"
                 onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[1])}
             >
@@ -86,7 +87,7 @@ jest.mock("../CreateCustomPage/Modals/AddIngredientModal", () => (prop: AddIngre
                 Close
             </button>
         </div>
-        
+
     )
 });
 
@@ -115,7 +116,7 @@ const renderEditCustomPage = (status: string = "success") => {
         </MemoryRouter>,
         {
             preloadedState: {
-                cocktail: { ...stubCocktailInitialState, itemStatus: status},
+                cocktail: { ...stubCocktailInitialState, itemStatus: status },
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
             },
@@ -172,7 +173,7 @@ describe("<EditCustomPage />", () => {
         const ingredientInput = screen.getAllByTestId("ingredientInput")[2];
         fireEvent.click(ingredientInput);
         const closeAddIngredientModalButton = screen.getAllByTestId("closeAddIngredientModalButton")[2];
-        fireEvent.click(closeAddIngredientModalButton); 
+        fireEvent.click(closeAddIngredientModalButton);
     });
     it("should render empty string when cocktail item is null", async () => {
         renderWithProviders(
@@ -183,7 +184,7 @@ describe("<EditCustomPage />", () => {
             </MemoryRouter>,
             {
                 preloadedState: {
-                    cocktail: { ...stubCocktailInitialState, cocktailItem: null},
+                    cocktail: { ...stubCocktailInitialState, cocktailItem: null },
                     comment: stubCommentInitialState,
                     ingredient: stubIngredientInitialState,
                 },

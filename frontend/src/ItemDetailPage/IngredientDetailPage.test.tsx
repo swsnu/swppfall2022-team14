@@ -1,25 +1,25 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import React from 'react';
-import {getMockStore} from "../test-utils/mock";
-import {Provider} from "react-redux";
-import {CocktailInfo} from "../store/slices/cocktail/cocktail";
-import {CommentInfo} from "../store/slices/comment/comment";
-import {IngredientInfo} from "../store/slices/ingredient/ingredient";
+import { getMockStore } from "../test-utils/mock";
+import { Provider } from "react-redux";
+import { CocktailInfo } from "../store/slices/cocktail/cocktail";
+import { CommentInfo } from "../store/slices/comment/comment";
+import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import IngredientDetailPage from './IngredientDetailPage';
 
-const emptyCocktail : CocktailInfo = {
+const emptyCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
     itemStatus: "loading",
     listStatus: "loading"
 }
-const emptyComment : CommentInfo = {
+const emptyComment: CommentInfo = {
     commentList: [],
     commentItem: null,
     state: null
 }
-const loadingIngredient : IngredientInfo = {
+const loadingIngredient: IngredientInfo = {
     ingredientList: [],
     ingredientItem: {
         id: 1,
@@ -29,11 +29,13 @@ const loadingIngredient : IngredientInfo = {
         ABV: 42.4,
         price: 200
     },
+    myIngredientList: [],
     itemStatus: "loading",
     listStatus: "loading"
 }
-const failedIngredient : IngredientInfo = {
+const failedIngredient: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: {
         id: 1,
         name: 'name',
@@ -45,8 +47,9 @@ const failedIngredient : IngredientInfo = {
     itemStatus: "failed",
     listStatus: "loading"
 }
-const noABVIngredient : IngredientInfo = {
+const noABVIngredient: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: {
         id: 1,
         name: 'name',
@@ -58,8 +61,9 @@ const noABVIngredient : IngredientInfo = {
     itemStatus: "",
     listStatus: "loading"
 }
-const fakeIngredient : IngredientInfo = {
+const fakeIngredient: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: {
         id: 1,
         name: 'name',
@@ -72,10 +76,10 @@ const fakeIngredient : IngredientInfo = {
     listStatus: "loading"
 }
 
-const loadingMockStore = getMockStore({cocktail: emptyCocktail,ingredient: loadingIngredient,comment: emptyComment})
-const failedMockStore = getMockStore({cocktail: emptyCocktail,ingredient: failedIngredient,comment: emptyComment})
-const noAVBIngredientMockStore = getMockStore({cocktail: emptyCocktail,ingredient: noABVIngredient,comment: emptyComment})
-const fakeIngredientMockStore = getMockStore({cocktail: emptyCocktail,ingredient: fakeIngredient,comment: emptyComment})
+const loadingMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: loadingIngredient, comment: emptyComment })
+const failedMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: failedIngredient, comment: emptyComment })
+const noAVBIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: noABVIngredient, comment: emptyComment })
+const fakeIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: fakeIngredient, comment: emptyComment })
 
 
 const mockNavigate = jest.fn();
@@ -99,7 +103,7 @@ describe("<Comment />", () => {
             <Provider store={loadingMockStore}>
                 <MemoryRouter initialEntries={['/ingredient/1']}>
                     <Routes>
-                        <Route path="/ingredient/:id" element={<IngredientDetailPage/>}/>
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -111,7 +115,7 @@ describe("<Comment />", () => {
             <Provider store={failedMockStore}>
                 <MemoryRouter initialEntries={['/ingredient/1']}>
                     <Routes>
-                        <Route path="/ingredient/:id" element={<IngredientDetailPage/>}/>
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -124,7 +128,7 @@ describe("<Comment />", () => {
             <Provider store={fakeIngredientMockStore}>
                 <MemoryRouter initialEntries={['/ingredient/1']}>
                     <Routes>
-                        <Route path="/ingredient/:id" element={<IngredientDetailPage/>}/>
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -138,7 +142,7 @@ describe("<Comment />", () => {
             <Provider store={noAVBIngredientMockStore}>
                 <MemoryRouter initialEntries={['/ingredient/1']}>
                     <Routes>
-                        <Route path="/ingredient/:id" element={<IngredientDetailPage/>}/>
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>

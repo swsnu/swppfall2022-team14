@@ -39,6 +39,7 @@ const stubIngredientInitialState: IngredientInfo = {
             price: 100
         },
     ],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
@@ -47,13 +48,13 @@ const stubIngredientInitialState: IngredientInfo = {
 jest.mock("./Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) => {
     return (
         <div>
-            <button 
+            <button
                 data-testid="addIngredientButton"
                 onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[0])}
             >
                 INGREDIENT_1
             </button>
-            <button 
+            <button
                 data-testid="addIngredientButton"
                 onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[1])}
             >
@@ -66,7 +67,7 @@ jest.mock("./Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) =>
                 Close
             </button>
         </div>
-        
+
     )
 });
 
@@ -160,7 +161,7 @@ describe("<CreateCustomPage />", () => {
         const ingredientInput = screen.getByTestId("ingredientInput");
         fireEvent.click(ingredientInput);
         const closeAddIngredientModalButton = screen.getByTestId("closeAddIngredientModalButton");
-        fireEvent.click(closeAddIngredientModalButton); 
+        fireEvent.click(closeAddIngredientModalButton);
     });
     it("should call onKeyPress when enter pressed", async () => {
         renderCreateCustomPage();
