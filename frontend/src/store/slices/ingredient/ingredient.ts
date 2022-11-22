@@ -43,7 +43,6 @@ export const fetchIngredientList = createAsyncThunk(
 )
 
 
-// TODO : ingredients/me/로 받을 수 있게끔 수정
 export const fetchMyIngredientList = createAsyncThunk(
     "cocktail/fetchMyIngredientList", async () => {
         const response = await axios.get(`/api/v1/store/`);
@@ -51,6 +50,15 @@ export const fetchMyIngredientList = createAsyncThunk(
         return response.data
     },
 )
+
+export const getRecommendIngredientList = createAsyncThunk(
+    "cocktail/getRecommendIngredientList", async () => {
+        const response = await axios.get(`/api/v1/ingredients/recommend/`);
+        console.log(response.data)
+        return response.data
+    },
+)
+
 
 
 export interface PostIngredientProps {
