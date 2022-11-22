@@ -37,7 +37,7 @@ const renderNavFilter = (type: string) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<NavFilter setUrlParams={jest.fn()} handleSearch={jest.fn()} type={type} />} />
+                <Route path="/" element={<NavFilter type={type} />} />
             </Routes>
         </MemoryRouter>,
         {

@@ -11,7 +11,7 @@ jest.mock("./NavFilter/NavFilter", () => (prop: NavFilterProp) => {
     if (prop.type === "IG") {
         return (
             <div data-testid="spyNavFilter">
-                <button className="navfilter__btn" onClick={prop.handleSearch}>검색하기</button>
+                <button className="navfilter__btn">검색하기</button>
             </div>
         )
     } else {
@@ -20,12 +20,12 @@ jest.mock("./NavFilter/NavFilter", () => (prop: NavFilterProp) => {
                 <div className="navfilter_wrap">
                     <div className="navfilter__title">Type 1</div>
                     <div className="navfilter__content">
-                        <button onClick={() => prop.setUrlParams("?filter_type_one=_CL&text=")}>
+                        <button>
                             클래식
                         </button>
                     </div>
                 </div>
-                <button className="navfilter__btn" onClick={prop.handleSearch}>검색하기</button>
+                <button className="navfilter__btn">검색하기</button>
             </div>
         )
     }

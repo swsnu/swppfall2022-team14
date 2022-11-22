@@ -8,7 +8,7 @@ export interface CocktailItemType {
     id: number,
     name: string,
     image: string,
-    type: "CS"|"ST",
+    type: "CS" | "ST",
     tags: string[],
     author_id: number | null,
     rate: number,
@@ -24,7 +24,7 @@ export interface CocktailDetailType {
     ABV: number,
     price_per_glass: number
     tags: string[],
-    type: "CS"|"ST",
+    type: "CS" | "ST",
     author_id: number | null,
     created_at: Date,
     updated_at: Date,
@@ -53,18 +53,52 @@ const initialState: CocktailInfo = {
 
 
 
+export interface FilterParamType {
+    type_one: string[];
+    type_two: string[];
+    type_three: string[];
+    name_param: string[];
+    available_only: boolean
+    // my_ingredient_id_list: number[];
+}
 
 export const fetchStandardCocktailList = createAsyncThunk(
-    "cocktail/fetchStandardCocktailList", async (params: string) => {
-        const response = await axios.get(`/api/v1/cocktails/?type=standard&${params}`);
-        return response.data
+    "cocktail/fetchStandardCocktailList", async (params: FilterParamType | null) => {
+        if (!params) {
+            const response = await axios.get(`/api/v1/cocktails/?type=standard`);
+            console.log(response.data)
+            return response.data
+        }
+        else {
+            const response = await axios.get(`/api/v1/cocktails/?type=standard`,
+                {
+                    params: params
+                }
+            );
+            console.log(response.data)
+            return response.data
+        }
+
     },
 )
 
 export const fetchCustomCocktailList = createAsyncThunk(
-    "cocktail/fetchCustomCocktailList", async (params: string) => {
-        const response = await axios.get(`/api/v1/cocktails/?type=custom&${params}`);
-        return response.data
+    "cocktail/fetchCustomCocktailList", async (params: FilterParamType | null) => {
+        if (!params) {
+            const response = await axios.get(`/api/v1/cocktails/?type=custom`);
+            console.log(response.data)
+            return response.data
+        }
+        else {
+            const response = await axios.get(`/api/v1/cocktails/?type=custom`,
+                {
+                    params: params
+                }
+            );
+            console.log(response.data)
+            return response.data
+        }
+
     },
 )
 
@@ -129,7 +163,7 @@ export const cocktailSlice = createSlice({
         editCocktail: (state, action: PayloadAction<CocktailDetailType>) => {
             const editted = state.cocktailList.map((cocktail) => {
                 if (cocktail.id === action.payload.id) {
-                    return {...cocktail, name: action.payload.name, image: action.payload.image, tags: action.payload.tags};
+                    return { ...cocktail, name: action.payload.name, image: action.payload.image, tags: action.payload.tags };
                 } else {
                     return cocktail;
                 }
