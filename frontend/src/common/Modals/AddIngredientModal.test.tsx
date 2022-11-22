@@ -1,8 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import AddIngredientModal from "./AddIngredientModal";
+import React from 'react';
 
 const setIsOpen = jest.fn()
 
+// eslint-disable-next-line react/display-name
 jest.mock('react-modal', () => (props: {className:any, isOpen:boolean, onRequestClose:any, children:React.ReactNode}) => {
     props.onRequestClose()
     if(props.isOpen) return (<div data-testid={`spyModal_opened`}>{props.children}</div>)

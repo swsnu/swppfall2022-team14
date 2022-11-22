@@ -6,6 +6,8 @@ import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import EditCustomPage from "./EditCustomPage";
 import { IProps as AddIngredientModalProp } from "../CreateCustomPage/Modals/AddIngredientModal";
+import {UserInfo} from "../store/slices/user/user";
+import React from 'react';
 
 
 const stubCommentInitialState: CommentInfo = {
@@ -63,6 +65,21 @@ const stubCocktailInitialState: CocktailInfo = {
     listStatus: "success",
 };
 
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password:  null,
+        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+
+
+// eslint-disable-next-line react/display-name
 jest.mock("../CreateCustomPage/Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) => {
     return (
         <div>
@@ -105,7 +122,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderEditCustomPage = (status: string = "success") => {
+const renderEditCustomPage = (status = "success") => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -117,6 +134,7 @@ const renderEditCustomPage = (status: string = "success") => {
                 cocktail: { ...stubCocktailInitialState, itemStatus: status},
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
+                user: stubUserInitialState
             },
         }
     );
@@ -185,6 +203,7 @@ describe("<EditCustomPage />", () => {
                     cocktail: { ...stubCocktailInitialState, cocktailItem: null},
                     comment: stubCommentInitialState,
                     ingredient: stubIngredientInitialState,
+                    user: stubUserInitialState
                 },
             }
         );

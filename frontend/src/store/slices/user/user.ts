@@ -60,6 +60,13 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
     "user/logoutUser",
     async (_, { dispatch }) => {
+        localStorage.removeItem("token")
+        localStorage.removeItem("id")
+        localStorage.removeItem("username")
+        localStorage.removeItem("intro")
+        localStorage.removeItem("profile_img")
+        localStorage.removeItem("nickname")
+
         const response = await axios.post('/api/v1/auth/logout/');
         dispatch(userActions.logoutUser());
         return response.data
@@ -114,12 +121,6 @@ export const userSlice = createSlice({
             state.user = null;
             state.token = null;
             state.isLogin = false;
-            localStorage.removeItem("token")
-            localStorage.removeItem("id")
-            localStorage.removeItem("username")
-            localStorage.removeItem("intro")
-            localStorage.removeItem("profile_img")
-            localStorage.removeItem("nickname")
         },
     },
 });

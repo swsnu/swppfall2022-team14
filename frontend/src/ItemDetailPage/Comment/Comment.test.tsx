@@ -8,6 +8,7 @@ import {IngredientInfo} from "../../store/slices/ingredient/ingredient";
 import {CocktailInfo, CocktailItemType} from "../../store/slices/cocktail/cocktail";
 import {Provider} from "react-redux";
 import Comment from "./Comment";
+import {UserInfo} from "../../store/slices/user/user";
 
 // eslint-disable-next-line react/display-name
 jest.mock("./Reply", () => (prop : CommentType) => (
@@ -101,10 +102,22 @@ const moreComment : CommentInfo = {
     commentItem: commentAuthor,
     state: "EDIT"
 }
-const commentMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: initComment})
-const commentEditMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: editComment})
-const commentReplyMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: replyComment})
-const commentMoreMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: moreComment})
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password:  null,
+        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+const commentMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: initComment, user:stubUserInitialState})
+const commentEditMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: editComment, user:stubUserInitialState})
+const commentReplyMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: replyComment, user:stubUserInitialState})
+const commentMoreMockStore = getMockStore({cocktail: emptyCocktail,ingredient: emptyIngredient,comment: moreComment, user:stubUserInitialState})
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({

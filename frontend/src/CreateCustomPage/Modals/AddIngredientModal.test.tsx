@@ -5,6 +5,8 @@ import { CocktailInfo } from "../../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../../store/slices/comment/comment";
 import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
 import AddIngredientModal from "./AddIngredientModal";
+import React from 'react';
+import {UserInfo} from "../../store/slices/user/user";
 
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
@@ -43,6 +45,19 @@ const stubIngredientInitialState: IngredientInfo = {
     listStatus: "loading",
 };
 
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password:  null,
+        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
@@ -61,6 +76,7 @@ const renderAddIngredientModal = () => {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
+                user: stubUserInitialState,
             },
         }
     );

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Item from "./Item";
+import React from 'react';
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
