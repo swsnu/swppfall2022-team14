@@ -28,7 +28,7 @@ const RecommendModal = (props: prop) => {
     const { isOpen, setIsOpen } = props;
     const dispatch = useDispatch<AppDispatch>();
     const [ingredients, setIngredients] = useState<IngredientType[]>([])
-    const [availableCocktailsArray, setAvailableCocktailsArray] = useState<AvailableCocktailMap[]>([])
+    const [availableCocktailsArray, setAvailableCocktailsArray] = useState<AvailableCocktailMap[] | null>([])
 
     useEffect(() => {
         async function getRecommend() {
@@ -62,8 +62,10 @@ const RecommendModal = (props: prop) => {
                 {ingredients.map((ingredient, idx) =>
                     <div key={ingredient.id} className={styles.container__item}>
                         <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} ABV={ingredient.ABV} id={ingredient.id} />
-                        이 재료만 있으면 만들 수 있는 칵테일들:
-                        {availableCocktailsArray[idx].cocktails.map(cocktail => cocktail.cocktail_name)}
+                        {availableCocktailsArray ? <div>이 재료만 있으면 만들 수 있는 칵테일들:
+                            {availableCocktailsArray[idx].cocktails.map(cocktail => cocktail.cocktail_name)}</div>
+                            : "통상적으로 많이 들어가는 재료"
+                        }
                     </div>
 
                 )}
