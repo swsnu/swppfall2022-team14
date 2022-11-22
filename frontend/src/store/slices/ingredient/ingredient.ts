@@ -45,8 +45,8 @@ export const fetchIngredientList = createAsyncThunk(
 
 // TODO : ingredients/me/로 받을 수 있게끔 수정
 export const fetchMyIngredientList = createAsyncThunk(
-    "cocktail/fetchMyIngredientList", async (id: number) => {
-        const response = await axios.get(`/api/v1/store/${id}/`);
+    "cocktail/fetchMyIngredientList", async () => {
+        const response = await axios.get(`/api/v1/store/`);
         console.log(response.data)
         return response.data
     },
@@ -59,8 +59,8 @@ export interface PostIngredientProps {
 }
 export const postMyIngredients = createAsyncThunk(
     "cocktail/postMyIngredientList", async (param: PostIngredientProps, { dispatch }) => {
-        const response = await axios.post(`/api/v1/store/${param.id}/`, param);
-        dispatch(fetchMyIngredientList(param.id))
+        const response = await axios.post(`/api/v1/store/`, param);
+        dispatch(fetchMyIngredientList())
         return response.data
     },
 )
@@ -72,8 +72,8 @@ export interface DeleteIngredientProps {
 
 export const deleteMyIngredients = createAsyncThunk(
     "cocktail/deleteMyIngredientList", async (param: DeleteIngredientProps, { dispatch }) => {
-        const response = await axios.delete(`/api/v1/store/${param.user_id}/${param.ingredient_id}/`);
-        dispatch(fetchMyIngredientList(param.user_id))
+        const response = await axios.delete(`/api/v1/store/${param.ingredient_id}/`);
+        dispatch(fetchMyIngredientList())
         return response.data
     },
 )

@@ -8,7 +8,7 @@ import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiquorModal"
 import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
-import {getUser, logoutUser, selectUser} from '../store/slices/user/user';
+import { getUser, logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
 import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
 
@@ -96,8 +96,8 @@ const InitPage = () => {
         }
     }, [isStandard])
     useEffect(() => {
-        if(userState.isLogin && userState.user?.id !== null){
-            dispatch(fetchMyIngredientList(Number(userState.user?.id)))
+        if (userState.isLogin && userState.user?.id !== null) {
+            dispatch(fetchMyIngredientList())
         }
 
     }, [])

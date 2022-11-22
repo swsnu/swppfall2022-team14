@@ -29,7 +29,7 @@ const AddIngredientModal = (props: prop) => {
 
     const onClickEdit = async (body: PostIngredientProps) => {
         dispatch(postMyIngredients(body))
-        await dispatch(fetchMyIngredientList(user_id))
+        await dispatch(fetchMyIngredientList())
         setNewIngredients([])
         setIsOpen(false)
     }
