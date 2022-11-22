@@ -214,7 +214,7 @@ def cocktail_post(request):
             except Ingredient.DoesNotExist:
                 return HttpResponseNotFound("ingredient does not exist")
             IngredientPrepare.objects.create(
-                cocktail=cocktail, ingredient=ingredient)
+                cocktail=cocktail, ingredient=ingredient, amount=i["amount"])
 
         return JsonResponse(CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=201)
     # else:
@@ -266,7 +266,7 @@ def retrieve_cocktail(request, pk):
             except Tag.DoesNotExist:
                 return HttpResponseNotFound("ingredient does not exist")
             IngredientPrepare.objects.create(
-                cocktail=cocktail, ingredient=ingredient)
+                cocktail=cocktail, ingredient=ingredient, amount=i["amount"])
 
         return JsonResponse(data=CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=200)
     # else:

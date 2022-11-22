@@ -10,6 +10,7 @@ export interface IngredientType {
     ABV: number,
     price: number,
     introduction: string,
+    unit: string[]
 }
 
 export interface IngredientInfo {
@@ -22,14 +23,7 @@ export interface IngredientInfo {
 const initialState: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
-    ingredientItem: {
-        id: 1,
-        name: 'name',
-        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-        introduction: '소개',
-        ABV: 42.4,
-        price: 200
-    },
+    ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading"
 }
