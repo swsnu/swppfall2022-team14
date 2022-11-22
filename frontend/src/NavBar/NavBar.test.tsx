@@ -6,12 +6,15 @@ import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import NavBar from "./NavBar";
 import { Iprops as NavFilterProp } from "./NavFilter/NavFilter";
+import {UserInfo} from "../store/slices/user/user";
+import React from 'react'
 
+// eslint-disable-next-line react/display-name
 jest.mock("./NavFilter/NavFilter", () => (prop: NavFilterProp) => {
     if (prop.type === "IG") {
         return (
             <div data-testid="spyNavFilter">
-                <button className="navfilter__btn" onClick={prop.handleSearch}>검색하기</button>
+                <button className="navfilter__btn">검색하기</button>
             </div>
         )
     } else {
@@ -20,12 +23,12 @@ jest.mock("./NavFilter/NavFilter", () => (prop: NavFilterProp) => {
                 <div className="navfilter_wrap">
                     <div className="navfilter__title">Type 1</div>
                     <div className="navfilter__content">
-                        <button onClick={() => prop.setUrlParams("?filter_type_one=_CL&text=")}>
+                        <button>
                             클래식
                         </button>
                     </div>
                 </div>
-                <button className="navfilter__btn" onClick={prop.handleSearch}>검색하기</button>
+                <button className="navfilter__btn">검색하기</button>
             </div>
         )
     }
@@ -52,6 +55,19 @@ const stubIngredientInitialState: IngredientInfo = {
     listStatus: "loading",
 };
 
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password:  null,
+        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
@@ -76,6 +92,7 @@ const renderNavBar = () => {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
+                user: stubUserInitialState,
             },
         }
     );
