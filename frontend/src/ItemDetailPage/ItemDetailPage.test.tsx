@@ -10,6 +10,7 @@ import {
 } from "../store/slices/cocktail/cocktail";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import ItemDetailPage from "./ItemDetailPage";
+import {UserInfo} from "../store/slices/user/user";
 
 // eslint-disable-next-line react/display-name
 jest.mock("./Comment/Comment", () => (prop: CommentType) => (
@@ -149,11 +150,24 @@ const emptyIngredient: IngredientInfo = {
     listStatus: "loading"
 }
 
-const loadingMockStore = getMockStore({ cocktail: loadingCocktail, ingredient: emptyIngredient, comment: fakeComment })
-const failedMockStore = getMockStore({ cocktail: failedCocktail, ingredient: emptyIngredient, comment: fakeComment })
-const emptyCommentMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: emptyComment })
-const itemDetailMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment })
-const itemDetailMockStore_ST = getMockStore({ cocktail: fakeStandardCocktail, ingredient: emptyIngredient, comment: fakeComment })
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password:  null,
+        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+
+const loadingMockStore = getMockStore({ cocktail: loadingCocktail, ingredient: emptyIngredient, comment: fakeComment, user:stubUserInitialState })
+const failedMockStore = getMockStore({ cocktail: failedCocktail, ingredient: emptyIngredient, comment: fakeComment, user:stubUserInitialState })
+const emptyCommentMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: emptyComment, user:stubUserInitialState })
+const itemDetailMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment, user:stubUserInitialState })
+const itemDetailMockStore_ST = getMockStore({ cocktail: fakeStandardCocktail, ingredient: emptyIngredient, comment: fakeComment, user:stubUserInitialState })
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({

@@ -6,6 +6,7 @@ import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import { getMockStore } from "../test-utils/mock";
 import MyBookmark from "./MyBookmark";
+import {UserInfo} from "../store/slices/user/user";
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -50,7 +51,20 @@ const emptyingredientState: IngredientInfo = {
     listStatus: "success",
 }
 
-const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState });
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password:  null,
+        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+
+const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: stubUserInitialState});
 
 describe("<MyBookMark />", () => {
     it("should render items without errors", () => {

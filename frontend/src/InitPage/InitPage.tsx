@@ -96,7 +96,10 @@ const InitPage = () => {
         }
     }, [isStandard])
     useEffect(() => {
-        dispatch(fetchMyIngredientList(dummy_user_id))
+        if(userState.isLogin && userState.user?.id !== null){
+            dispatch(fetchMyIngredientList(Number(userState.user?.id)))
+        }
+
     }, [])
 
 

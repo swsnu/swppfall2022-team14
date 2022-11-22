@@ -14,13 +14,15 @@ import AddIngredientModal from "../common/Modals/AddIngredientModal";
 import ItemDetailPage from "../ItemDetailPage/ItemDetailPage";
 import IngredientItem from "../common/Components/IngredientItem";
 import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
+import {selectUser} from "../store/slices/user/user";
 const MyIngredient = () => {
     const dummy_user_id = 4
     const ingredientState = useSelector(selectIngredient)
     const dispatch = useDispatch<AppDispatch>()
+    const userState = useSelector(selectUser)
 
     useEffect(() => {
-        dispatch(fetchMyIngredientList(dummy_user_id))
+        dispatch(fetchMyIngredientList(Number(userState.user?.id)))
     }, [])
 
     const [isAddIngredientOpen, setIsAddIngredientOpen] = useState(false);

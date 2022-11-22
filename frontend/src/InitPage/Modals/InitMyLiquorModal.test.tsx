@@ -72,7 +72,7 @@ const renderInitMyLiqourModal = () => {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
-                user: stubUserInitialState
+                user: stubUserInitialState,
             },
         }
     );

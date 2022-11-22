@@ -59,10 +59,6 @@ const LoginModal = (props: prop) => {
         }
     };
 
-    const onClickLogout = async () => {
-        const res = await dispatch(logoutUser(userState.token))
-    };
-
     const onClickRegister = async () => {
 
         const data = {
@@ -111,7 +107,6 @@ const LoginModal = (props: prop) => {
                         {isLoginMode ? <button className={styles.login} onClick={onClickLogin}>Login</button> : null}
                         {!isLoginMode ? <button className={styles.login} onClick={onClickRegister}>Register</button> : null}
                     </div>
-                    <button className={styles.login} onClick={onClickLogout}>Logout</button>
                     <div onClick={onClickMode}>{isLoginMode ? "register" : "login"}</div>
 
                 </div>

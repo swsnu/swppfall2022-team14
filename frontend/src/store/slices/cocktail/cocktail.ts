@@ -46,7 +46,7 @@ export interface CocktailInfo {
 }
 
 export interface PostForm {
-    cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate">;
+    cocktail: Omit<CocktailDetailType, "id"|"type"|"created_at"|"updated_at"|"rate"|"is_bookmarked">;
     token: string;
 }
 

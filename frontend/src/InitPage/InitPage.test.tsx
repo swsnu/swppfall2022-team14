@@ -97,6 +97,20 @@ const stubIngredientInitialState: IngredientInfo = {
     listStatus: "loading",
 };
 
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password:  null,
+        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+
+
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
@@ -129,6 +143,7 @@ const renderInitPage = (isStandard = true) => {
                 },
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
+                user: stubUserInitialState,
             },
         }
     );
