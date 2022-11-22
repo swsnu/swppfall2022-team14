@@ -10,12 +10,12 @@ import React from 'react';
 
 import { render, screen, waitFor } from "@testing-library/react"
 
-jest.mock("./Item/Item", () => (prop:Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
+jest.mock("./Item/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid={`spyComment_${prop.id}`}>
     </div>
 ));
 
-jest.mock("./Ingr/Ingr", () => (prop:Pick<IngredientType, "image" | "name" | "id">) => (
+jest.mock("./Ingr/Ingr", () => (prop: Pick<IngredientType, "image" | "name" | "id">) => (
     <div data-testid={`spyComment_${prop.id}`}>
     </div>
 ));
@@ -77,14 +77,15 @@ const ingredient: IngredientType = {
 
 const ingredientState: IngredientInfo = {
     ingredientList: [ingredient],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
 }
 
-const standardMockStore = getMockStore({cocktail: stubInitialStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState});
+const standardMockStore = getMockStore({ cocktail: stubInitialStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState });
 
-const customMockStore = getMockStore({cocktail: stubInitialCustomCocktaiState, ingredient: ingredientState, comment: emptyCommentState});
+const customMockStore = getMockStore({ cocktail: stubInitialCustomCocktaiState, ingredient: ingredientState, comment: emptyCommentState });
 
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
@@ -102,15 +103,15 @@ describe("<ListPage />", () => {
     });
 
     it("should render standard cocktail without errors", () => {
-        render(    
+        render(
             <Provider store={standardMockStore}>
                 <MemoryRouter initialEntries={['/standard']}>
                     <Routes>
-                        <Route path="/:type" element={<ListPage/>}/>
+                        <Route path="/:type" element={<ListPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
-        ); 
+        );
         const items = screen.getAllByTestId("spyComment_1");
         expect(items).toHaveLength(1);
     });
@@ -120,7 +121,7 @@ describe("<ListPage />", () => {
             <Provider store={customMockStore}>
                 <MemoryRouter initialEntries={['/custom']}>
                     <Routes>
-                        <Route path="/:type" element={<ListPage/>}/>
+                        <Route path="/:type" element={<ListPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -134,7 +135,7 @@ describe("<ListPage />", () => {
             <Provider store={customMockStore}>
                 <MemoryRouter initialEntries={['/ingredient']}>
                     <Routes>
-                        <Route path="/:type" element={<ListPage/>}/>
+                        <Route path="/:type" element={<ListPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -150,16 +151,16 @@ describe("<ListPage />", () => {
             itemStatus: "success",
             listStatus: "loading",
         };
-        const mockStore = getMockStore({cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState});
-        const {container} = render(    
+        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState });
+        const { container } = render(
             <Provider store={mockStore}>
                 <MemoryRouter initialEntries={['/standard']}>
                     <Routes>
-                        <Route path="/:type" element={<ListPage/>}/>
+                        <Route path="/:type" element={<ListPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
-        ); 
+        );
         expect(container).toBeTruthy();
     });
 
@@ -170,16 +171,16 @@ describe("<ListPage />", () => {
             itemStatus: "success",
             listStatus: "failed",
         };
-        const mockStore = getMockStore({cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState});
-        const {container} = render(    
+        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState });
+        const { container } = render(
             <Provider store={mockStore}>
                 <MemoryRouter initialEntries={['/standard']}>
                     <Routes>
-                        <Route path="/:type" element={<ListPage/>}/>
+                        <Route path="/:type" element={<ListPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
-        ); 
+        );
         expect(container).toBeTruthy();
     });
 })

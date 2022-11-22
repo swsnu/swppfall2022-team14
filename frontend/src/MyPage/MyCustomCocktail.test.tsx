@@ -18,7 +18,7 @@ jest.mock("react-router", () => ({
     useNavigate: () => mockNavigate,
 }));
 
-jest.mock("../common/Components/Item", () => (prop:Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
+jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid={`spyCocktail_${prop.id}`}>
     </div>
 ));
@@ -49,12 +49,13 @@ const commentState: CommentInfo = {
 
 const ingredientState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
 }
 
-const mockStore = getMockStore({cocktail: cocktaiState, ingredient: ingredientState, comment: commentState});
+const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState });
 
 
 describe("<MyCustomCocktail />", () => {
@@ -63,9 +64,9 @@ describe("<MyCustomCocktail />", () => {
     });
 
     it("should render comment without errors", () => {
-        render(        
+        render(
             <Provider store={mockStore}>
-                <MyCustomCocktail/>
+                <MyCustomCocktail />
             </Provider>
         );
         expect(mockDispatch).toBeCalledTimes(1)
@@ -73,13 +74,13 @@ describe("<MyCustomCocktail />", () => {
     });
 
     it("should handle create cocktail click", async () => {
-        render(        
+        render(
             <Provider store={mockStore}>
-                <MyCustomCocktail/>
+                <MyCustomCocktail />
             </Provider>
         );
         const element = screen.getByText("Add");
         fireEvent.click(element)
-        await waitFor(() => {expect(mockNavigate).toBeCalledWith("/custom/create")})
+        await waitFor(() => { expect(mockNavigate).toBeCalledWith("/custom/create") })
     });
 })

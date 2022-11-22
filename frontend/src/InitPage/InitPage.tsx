@@ -9,18 +9,33 @@ import InitMyLiqourModal from "./Modals/InitMyLiquorModal"
 import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
+import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
+
+export interface Filterparam {
+    type_one: string[],
+    type_two: string[],
+    type_three: string[],
+    available_only: boolean
+}
 
 
 const InitPage = () => {
+    const dummy_user_id = 4;
+    const ingredientState = useSelector(selectIngredient)
+
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
 
     const [fakeLoginState, setFakeLoginState] = useState(false)
     // const [urlParams, setUrlParams] = useState<string>("")
-    const [urlParams, setUrlParams] = useState<string>("")
+    const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [], available_only: false })
+    const [input, setInput] = useState('')
+    const my_ingredient_id_list = ingredientState.myIngredientList.map(ingredient => ingredient.id)
+
+    const request_param = { filter_param: filterParam, name_param: input }
 
     const navigate = useNavigate()
-    const [input, setInput] = useState('')
+
     const [isStandard, setIsStandard] = useState(true)
     const onClickToggle = (isStandard: boolean) => {
         setIsStandard(isStandard)
@@ -47,14 +62,10 @@ const InitPage = () => {
     }
     const onClickSearch = () => {
         // TODO : give params with filter information
-        if (isStandard) navigate({
-            pathname: `/standard`,
-            search: urlParams + `&text=${input}`,
-        })
-        else navigate({
-            pathname: `/custom`,
-            search: urlParams + `&text=${input}`,
-        })
+        if (isStandard) navigate(`/standard`,
+            { state: request_param }
+        )
+        else navigate(`/custom`, { state: request_param })
     }
 
     const onClickMyPage = () => {
@@ -63,11 +74,14 @@ const InitPage = () => {
 
     useEffect(() => {
         if (isStandard) {
-            dispatch(fetchStandardCocktailList(""))
+            dispatch(fetchStandardCocktailList(null))
         } else {
-            dispatch(fetchCustomCocktailList(""))
+            dispatch(fetchCustomCocktailList(null))
         }
     }, [isStandard])
+    useEffect(() => {
+        dispatch(fetchMyIngredientList(dummy_user_id))
+    }, [])
 
 
 
@@ -90,7 +104,7 @@ const InitPage = () => {
                 <button className={styles.button} onClick={onClickSearch}>SEARCH</button>
             </div>
 
-            {isOpenFilter ? <Filter setUrlParams={setUrlParams} /> : null}
+            {isOpenFilter ? <Filter setUrlParams={setFilterParam} /> : null}
         </div>
         <div className={styles.main}>
             <div className={styles.main__inner}>

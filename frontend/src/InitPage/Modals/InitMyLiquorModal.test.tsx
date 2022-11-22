@@ -21,12 +21,13 @@ const stubCommentInitialState: CommentInfo = {
 
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
 };
 
-jest.mock("react-modal", () => (props: {className: any, isOpen: boolean, onRequestClose: any, children: React.ReactNode}) => {
+jest.mock("react-modal", () => (props: { className: any, isOpen: boolean, onRequestClose: any, children: React.ReactNode }) => {
     props.onRequestClose()
     if (props.isOpen) return (
         <div data-testid={"spyModal_opened"}>
@@ -46,7 +47,7 @@ const renderInitMyLiqourModal = () => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<InitMyLiqourModal isOpen={true} setIsOpen={ jest.fn() }/>} />
+                <Route path="/" element={<InitMyLiqourModal isOpen={true} setIsOpen={jest.fn()} />} />
             </Routes>
         </MemoryRouter>,
         {

@@ -4,7 +4,7 @@ import { renderWithProviders } from "../test-utils/mock";
 import { CocktailItemType } from "../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
-import InitPage from "./InitPage";
+import InitPage, { Filterparam } from "./InitPage";
 import { Iprops as FilterProp } from "./Components/Filter";
 import { prop as LoginModalProp } from "./Modals/LoginModal";
 import { prop as InitMyLiquorModalProp } from "./Modals/InitMyLiquorModal";
@@ -20,12 +20,17 @@ jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "imag
     </div>
 ));
 
+
+
+
+
 jest.mock("./Components/Filter", () => (prop: FilterProp) => {
+    const mockFilterParam: Filterparam = { type_one: [], type_two: [], type_three: [], available_only: false }
     return (
         <div data-testid="spyFilter">
             <div className="filter__title">Type 1</div>
             <div className="filter__content">
-                <button onClick={() => prop.setUrlParams("?filter_type_one=_CL")}>
+                <button onClick={() => prop.setUrlParams(mockFilterParam)}>
                     클래식
                 </button>
             </div>
@@ -84,6 +89,7 @@ const stubCommentInitialState: CommentInfo = {
 
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
@@ -101,7 +107,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderInitPage = (isStandard: Boolean=true) => {
+const renderInitPage = (isStandard: Boolean = true) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -111,10 +117,10 @@ const renderInitPage = (isStandard: Boolean=true) => {
         {
             preloadedState: {
                 cocktail: {
-                    cocktailList: 
-                        isStandard ? 
-                        cocktailList.filter((cocktail) => cocktail.type === "ST") :
-                        cocktailList.filter((cocktail) => cocktail.type === "CS"),
+                    cocktailList:
+                        isStandard ?
+                            cocktailList.filter((cocktail) => cocktail.type === "ST") :
+                            cocktailList.filter((cocktail) => cocktail.type === "CS"),
                     cocktailItem: null,
                     itemStatus: "loading",
                     listStatus: "loading",
