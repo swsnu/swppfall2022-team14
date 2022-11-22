@@ -18,3 +18,8 @@ class IngredientListSerializer(serializers.ModelSerializer):
 class IngredientDetailSerializer(IngredientListSerializer):
     class Meta(IngredientListSerializer.Meta):
         fields = IngredientListSerializer.Meta.fields + ("introduction",)
+
+
+class IngredientRecommendSerializer(IngredientListSerializer):
+    class Meta(IngredientListSerializer.Meta):
+        fields = IngredientListSerializer.Meta.fields + ("cocktails",)

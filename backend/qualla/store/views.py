@@ -4,7 +4,7 @@ from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResp
 from rest_framework.decorators import api_view
 from user.models import User
 from ingredient.models import Ingredient
-from store.models import Store
+from .models import Store
 from django.db import IntegrityError
 from json import JSONDecodeError
 from ingredient.serializers import IngredientDetailSerializer
