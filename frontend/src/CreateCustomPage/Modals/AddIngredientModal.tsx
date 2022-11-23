@@ -12,15 +12,17 @@ export interface IProps {
     close: () => void;
     addedIngredientList: string[];
     setNewIngrdient: React.Dispatch<React.SetStateAction<IngredientType|null>>;
+    setDefaultUnit: React.Dispatch<React.SetStateAction<string|null>>
 }
 
 const AddIngredientModal = (props: IProps) => {
-    const { isOpen, close, addedIngredientList, setNewIngrdient } = props;
+    const { isOpen, close, addedIngredientList, setNewIngrdient, setDefaultUnit} = props;
     const ingredientState = useSelector(selectIngredient)
     const dispatch = useDispatch<AppDispatch>()
 
     const onClickIngredient = (ingredient: IngredientType) => {
         setNewIngrdient(ingredient);
+        setDefaultUnit(ingredient.unit[0])
         close();
     };
 

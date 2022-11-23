@@ -3,7 +3,7 @@ from ingredient.models import Ingredient
 
 
 class IngredientListSerializer(serializers.ModelSerializer):
-
+    unit = serializers.SerializerMethodField()
     class Meta:
         model = Ingredient
         fields = (
@@ -11,9 +11,12 @@ class IngredientListSerializer(serializers.ModelSerializer):
             "name",
             "image",
             "ABV",
-            "price"
+            "price",
+            "unit"
         )
 
+    def get_unit(self, obj):
+        return obj.unit_list()
 
 class IngredientDetailSerializer(IngredientListSerializer):
     class Meta(IngredientListSerializer.Meta):

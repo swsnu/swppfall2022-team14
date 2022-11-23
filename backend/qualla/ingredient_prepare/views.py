@@ -18,7 +18,7 @@ def ingredient_list(request, cocktail_id):
         ingredient_prepare = cocktail.ingredient_prepare.all()
         # id, name, image, ABV, price, amount
         return_data = [{"id": element.ingredient.id, "name": element.ingredient.name, "image": element.ingredient.image,
-                       "ABV": element.ingredient.ABV, "price": element.ingredient.price, "amount": element.amount}
+                       "ABV": element.ingredient.ABV, "price": element.ingredient.price, "amount": element.amount, "unit":element.ingredient.unit_list()}
                        for element in ingredient_prepare]
 
         return JsonResponse(return_data, safe=False)

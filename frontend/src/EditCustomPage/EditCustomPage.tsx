@@ -3,10 +3,11 @@ import AddIngredientModal from "../CreateCustomPage/Modals/AddIngredientModal"
 import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { CocktailDetailType, IngredientPrepareType, editCocktail, getCocktail, selectCocktail } from "../store/slices/cocktail/cocktail";
+import { CocktailDetailType, IngredientPrepareType, editCocktail, getCocktail, selectCocktail, PostForm } from "../store/slices/cocktail/cocktail";
 import './EditCustomPage.scss';
 import React from 'react';
-import { IngredientType } from "../store/slices/ingredient/ingredient";
+import { IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { selectUser } from "../store/slices/user/user";
 
 export default function EditCustomPage() {
     const { id } = useParams();
@@ -22,10 +23,13 @@ export default function EditCustomPage() {
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
     const [newIngredient, setNewIngredient] = useState<IngredientType|null>(null);
+    const [unitList, setUnitList] = useState<string[]>([]);
+    const [newUnit, setNewUnit] = useState<string|null>(null);
 
     const cocktailState = useSelector(selectCocktail);
     const cocktail = cocktailState.cocktailItem;
     const dispatch = useDispatch<AppDispatch>();
+    const userState = useSelector(selectUser)
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
@@ -39,23 +43,26 @@ export default function EditCustomPage() {
             setTagList(cocktail.tags);
             setABV(cocktail.ABV);
             setPrice(cocktail.price_per_glass);
-            setIngredientList(cocktail.ingredients);
         }
     }, [cocktail]);
 
     const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
         setIngredientList(ingredientList.filter((_value, idx) => idx !== selectedIdx));
+        setUnitList(unitList.filter((_value, idx) => idx !== selectedIdx))
     };
 
     useEffect(() => {
-        if(newIngredient){
+        if(newIngredient && newUnit){
             setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
             setNewIngredient(null);
+            setUnitList([...unitList, newUnit])
+            setNewUnit(null)
         }
-    }, [newIngredient])
+    }, [newIngredient, newUnit])
 
     const onChangeAmount = (selectedIdx: number, changedAmount: string) => {
+        if(changedAmount[0] === "0" || changedAmount[0] === "-") return
         setIngredientList(
             ingredientList.map((ingredient, idx) => {
                 if (idx !== selectedIdx) {
@@ -66,6 +73,14 @@ export default function EditCustomPage() {
             })
         );
     };
+
+    const onChangeIngredientUnit = (selectedIdx: number, unit:string)=> {
+        console.log(selectedIdx)
+        console.log(unit)
+        const units = unitList
+        units[selectedIdx] = unit
+        setUnitList(units)
+    }
 
     const onKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
         if (tagItem.length !== 0 && e.key === 'Enter') {
@@ -86,21 +101,28 @@ export default function EditCustomPage() {
     }
 
     const editCocktailHandler = async () => {
-        const response = await dispatch(editCocktail({
-            id: Number(id),
-            name: name,
-            image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
-            introduction: introduction,
-            recipe: recipe,
-            ABV: ABV,
-            price_per_glass: price,
-            tags: tagList,
-            author_id: 1,
-            ingredients: ingredientList
-        }))
-
-        console.log(response)
-        navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
+        if(userState.user?.id !== null && userState.token !== null){
+            const ingredients = ingredientList.map((ingr, ind) => {
+                return {...ingr, amount: ingr.amount +" "+ unitList[ind]}
+            })
+            const data:PostForm = {
+                cocktail: {
+                    name: name,
+                    image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
+                    introduction: introduction,
+                    recipe: recipe,
+                    ABV: ABV,
+                    price_per_glass: price,
+                    tags: tagList,
+                    author_id: 1,
+                    ingredients: ingredients
+                },
+                token: userState.token
+            }
+            console.log(data)
+            const response = await dispatch(editCocktail({data:data, id:Number(id!)}))
+            navigate(`/custom/${(response.payload as CocktailDetailType).id}`)            
+        }
     }
 
     if (cocktailState.itemStatus == "loading") {
@@ -137,7 +159,7 @@ export default function EditCustomPage() {
                         </div>
                         <div className="content__ingredient-box">
                             Ingredient:
-                            {[...ingredientList, { name: "", amount: undefined }].map((ingredient, idx) => {
+                            {[...ingredientList, { name: "", amount: undefined, unit:[""] }].map((ingredient, idx) => {
                                 return (
                                     <div className="content__ingredient" key={`${ingredient.name}_${idx}`}>
                                         <input
@@ -152,13 +174,27 @@ export default function EditCustomPage() {
                                             close={() => setOpen(false)}
                                             addedIngredientList={ingredientList.map((ingredient) => { return ingredient.name })}
                                             setNewIngrdient={setNewIngredient}
+                                            setDefaultUnit={setNewUnit}
                                         />
                                         <input
                                             data-testid="ingredientAmountInput"
                                             className="content__ingredient-input"
                                             value={ingredient.amount ?? ""}
+                                            type="number"
                                             onChange={(event) => onChangeAmount(idx, event.target.value)}
+                                            min="0"
                                         />
+                                        <select 
+                                        onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
+                                            {ingredient.unit.map((u) => {
+                                                return <option
+                                                    key={"key"+u}
+                                                    value={u}
+                                                    >
+                                                {u}
+                                            </option>
+                                        })}
+                                    </select>
                                         {idx !== ingredientList.length &&
                                             <button 
                                                 data-testid="ingredientDeleteButton"

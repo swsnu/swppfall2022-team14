@@ -153,8 +153,12 @@ export const authPostCocktail = createAsyncThunk(
 
 export const editCocktail = createAsyncThunk(
     "cocktail/editCocktail",
-    async (cocktail: Omit<CocktailDetailType, "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked">, { dispatch }) => {
-        const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/`, cocktail);
+    async (cocktail: {data:PostForm, id:number}, { dispatch }) => {
+        const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/edit/`, cocktail.data.cocktail, {
+            headers: {
+                Authorization: `Token ${cocktail.data.token}`
+            }
+        });
         console.log(response.data);
         dispatch(cocktailActions.editCocktail(response.data));
         return response.data
