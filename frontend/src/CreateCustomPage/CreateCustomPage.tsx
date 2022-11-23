@@ -28,7 +28,7 @@ export default function CreateCustomPage() {
     const [isOpen, setOpen] = useState(false);
     const [newIngredient, setNewIngredient] = useState<IngredientType | null>(null);
     const [unitList, setUnitList] = useState<string[]>([]);
-    const [newUnit, setNewUnit] = useState<string|null>(null);
+    const [newUnit, setNewUnit] = useState<string | null>(null);
 
     const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
@@ -39,7 +39,7 @@ export default function CreateCustomPage() {
     const userState = useSelector(selectUser)
 
     const onChangeAmount = (selectedIdx: number, changedAmount: string) => {
-        if(changedAmount[0] === "0" || changedAmount[0] === "-") return
+        if (changedAmount[0] === "0" || changedAmount[0] === "-") return
         setIngredientList(
             ingredientList.map((ingredient, idx) => {
                 if (idx !== selectedIdx) {
@@ -51,7 +51,7 @@ export default function CreateCustomPage() {
         );
     };
 
-    const onChangeIngredientUnit = (selectedIdx: number, unit:string)=> {
+    const onChangeIngredientUnit = (selectedIdx: number, unit: string) => {
         console.log(selectedIdx)
         console.log(unit)
         const units = unitList
@@ -80,7 +80,7 @@ export default function CreateCustomPage() {
     const createCocktailHandler = async () => {
         if (userState.user?.id !== null && userState.token !== null) {
             const ingredients = ingredientList.map((ingr, ind) => {
-                return {...ingr, amount: ingr.amount +" "+ unitList[ind]}
+                return { ...ingr, amount: ingr.amount + " " + unitList[ind] }
             })
             const data: PostForm = {
                 cocktail: {
@@ -145,7 +145,7 @@ export default function CreateCustomPage() {
                     </div>
                     <div className="content__ingredient-box">
                         Ingredient:
-                        {[...ingredientList, { name: "", amount: undefined, unit:[""] }].map((ingredient, idx) => {
+                        {[...ingredientList, { name: "", amount: undefined, unit: [""] }].map((ingredient, idx) => {
                             return (
                                 <div className="content__ingredient" key={`${ingredient.name}_${idx}`}>
                                     <input
@@ -170,11 +170,11 @@ export default function CreateCustomPage() {
                                         onChange={(event) => onChangeAmount(idx, event.target.value)}
                                         min="0"
                                     />
-                                    <select 
-                                    onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
+                                    <select
+                                        onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
                                         {ingredient.unit.map((u) => {
                                             return <option
-                                                key={"key"+u}
+                                                key={"key" + u}
                                                 value={u}
                                             >
                                                 {u}

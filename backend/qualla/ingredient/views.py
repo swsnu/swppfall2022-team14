@@ -4,7 +4,7 @@ from .models import Ingredient
 from rest_framework.decorators import api_view
 from .serializers import IngredientListSerializer, IngredientDetailSerializer, IngredientRecommendSerializer
 from cocktail.models import Cocktail
-
+from django.db.models import Q
 
 @api_view(['GET'])
 def ingredient_list(request):
@@ -32,8 +32,7 @@ def retrieve_ingredient(request, pk):
 
 
 # 최대 추천 재료 수
-num_recommend = 3
-
+num_recommend = 5
 
 @api_view(['GET'])
 def recommend_ingredient(request):
@@ -53,7 +52,9 @@ def recommend_ingredient(request):
         ingredient_prepare = [
             ingredient_prepare.ingredient.id for ingredient_prepare in cocktail.ingredient_prepare.all()]
 
+
         needed_ingredient = list(set(ingredient_prepare) - set(my_ingredients))
+
 
         if len(needed_ingredient) == 1:
             if needed_ingredient[0] not in score_map:
@@ -61,24 +62,37 @@ def recommend_ingredient(request):
             else:
                 score_map[needed_ingredient[0]].append(cocktail)
 
+
+    
+    # 만들 수 있는 칵테일이 많아지는 재료들 top k개 id
+
     score_map_sorted = sorted(
         score_map.items(), key=lambda item: len(item[1]), reverse=True)
-
-    if len(score_map_sorted) == 0:  # 가능해지는 칵테일이 없음 :통상적으로 많이 들어가는 재료 리턴 (sort by # ingredient_prepare)
-        ingredient_all = Ingredient.objects.all()
-        sorted_ingredients_by_prepares = sorted(
-            ingredient_all, key=lambda x: len(x.ingredient_prepare.all()), reverse=True)[:num_recommend]
-        data = IngredientListSerializer(
-            sorted_ingredients_by_prepares, many=True).data
-
-        return JsonResponse({"Ingredients": data, "possible_cocktails": None, "count": len(sorted_ingredients_by_prepares)}, safe=False)
-    else:  # top k 재료 리턴
-        recommended_ingredient_list = [{"ingredient_id": marked_ingredient[0], "cocktails":[{"cocktail_name": cocktail.name, "cocktail_id": cocktail.id} for cocktail in marked_ingredient[1]]}
+    recommended_ingredient_list = [{"ingredient_id": marked_ingredient[0], "cocktails":[{"name": cocktail.name, "id": cocktail.id, "type":cocktail.type} for cocktail in marked_ingredient[1]]}
                                        for marked_ingredient in score_map_sorted[:num_recommend]]
 
-        ingredients = Ingredient.objects.filter(
-            id__in=[x['ingredient_id']
-                    for x in recommended_ingredient_list])
+    recommend_ids = [x['ingredient_id']
+                for x in recommended_ingredient_list]
 
-        data = IngredientListSerializer(ingredients, many=True).data
-        return JsonResponse({"Ingredients": data, "possible_cocktails": recommended_ingredient_list, "count": ingredients.count()}, safe=False)
+    ingredients = Ingredient.objects.filter(
+        id__in=recommend_ids)
+    
+    # 만약 위에서 구한 id 개수 k개 이하일 때 --> 남은 재료들은 칵테일들에 많이 들어가는 재료들로 추천
+    if len(recommended_ingredient_list) < num_recommend:
+        num_ingredients_to_prepare = num_recommend - len(recommended_ingredient_list)
+        # 위에서 구한 재료들을 제외하고 len(ingredient_prepare) 큰 순서로 추출
+        ingredient_all = Ingredient.objects.filter(~Q(id__in=recommend_ids))
+        sorted_ingredients_by_prepares_ids = [x.id for x in sorted(
+            ingredient_all, key=lambda x: len(x.ingredient_prepare.all()), reverse=True)[:num_ingredients_to_prepare]]
+        
+        general_recommended_ingredients = Ingredient.objects.filter(
+        id__in=sorted_ingredients_by_prepares_ids)
+        
+        ingredients = ingredients | general_recommended_ingredients
+
+        recommended_ingredient_list = recommended_ingredient_list + num_ingredients_to_prepare*[None]
+    
+    # breakpoint()
+    
+    data = IngredientListSerializer(ingredients, many=True).data
+    return JsonResponse({"Ingredients": data, "possible_cocktails": recommended_ingredient_list, "count": ingredients.count()}, safe=False)

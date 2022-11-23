@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import React from 'react';
-import { CocktailDetailType, CocktailItemType, fetchCustomCocktailList, fetchMyCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
+import { CocktailDetailType, CocktailItemType, fetchCustomCocktailList, fetchMyBookmarkCocktailList, fetchMyCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
@@ -13,7 +13,7 @@ const MyBookmark = () => {
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
     useEffect(() => {
-        dispatch(fetchMyCocktailList())
+        dispatch(fetchMyBookmarkCocktailList())
     }, [])
 
     return <>
