@@ -20,5 +20,17 @@
             margin-right: 30px;
             border: 1px solid black;
         }
+
+        .container__cocktail-names {
+            display: flex;
+        }
+
+        .container__cocktail-name {
+            width: max-content;
+            height: 20px;
+            background-color: lightcyan;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
     }
 }
