@@ -7,3 +7,5 @@ db.sqlite3
 db.sqlite3-journal
 docker/
 qualla/db.sqlite3
+./qualla/db.sqlite3
+
