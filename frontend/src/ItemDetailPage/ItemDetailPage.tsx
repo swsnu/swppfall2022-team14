@@ -10,6 +10,7 @@ import { fetchCommentListByCocktailId, postComment, selectComment } from "../sto
 import NavBar from "../NavBar/NavBar";
 
 import axios from 'axios';
+import { selectUser } from "../store/slices/user/user";
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
@@ -52,9 +53,12 @@ export default function ItemDetailPage() {
         dispatch(postComment(data));
         setContent("")
     }
-
+    const userState = useSelector(selectUser)
     const toggleBookmarkHandler = () => {
-        dispatch(toggleBookmark(Number(id)));
+        if(userState.token && userState.isLogin){
+            console.log({cocktail_id:Number(id), token:userState.token})
+            dispatch(toggleBookmark({cocktail_id:Number(id), token:userState.token}));
+        }
     }
 
     if (cocktailState.itemStatus == "loading") {
