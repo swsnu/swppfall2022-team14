@@ -32,7 +32,13 @@ export default function EditCustomPage() {
     const userState = useSelector(selectUser)
 
     useEffect(() => {
-        dispatch(getCocktail(Number(id)));
+        if(!userState.isLogin){
+            navigate(-1)
+            console.log("먼저 로그인 해주세요")
+        }
+        else{
+            dispatch(getCocktail(Number(id)));
+        }
     }, []);
 
     useEffect(() => {

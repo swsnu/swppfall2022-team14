@@ -10,7 +10,8 @@ import { fetchCommentListByCocktailId, postComment, selectComment } from "../sto
 import NavBar from "../NavBar/NavBar";
 
 import axios from 'axios';
-import { selectUser } from "../store/slices/user/user";
+import LoginModal from "../InitPage/Modals/LoginModal";
+import {selectUser} from "../store/slices/user/user";
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
@@ -30,11 +31,13 @@ export default function ItemDetailPage() {
     const dispatch = useDispatch<AppDispatch>();
     const cocktailState = useSelector(selectCocktail);
     const commentState = useSelector(selectComment);
+    const userState = useSelector(selectUser)
     const navigate = useNavigate()
     const onIngredientClick = (id: number) => {
         navigate(`/ingredient/${id}`)
     }
     const [content, setContent] = useState<string>("")
+    const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false)
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
@@ -45,20 +48,37 @@ export default function ItemDetailPage() {
     const isCustom = cocktail?.type === "CS";
 
     const createCommentHandler = () => {
-        const data = {
-            content: content,
-            parent_comment: null,
-            cocktail: Number(id)
+        if(userState.isLogin){
+            const data = {
+                content: content,
+                parent_comment: null,
+                cocktail: Number(id)
+            }
+            dispatch(postComment(data));
+            setContent("")
         }
-        dispatch(postComment(data));
-        setContent("")
+        else{
+            setIsLoginOpen(true)
+        }
     }
-    const userState = useSelector(selectUser)
+
     const toggleBookmarkHandler = () => {
-        if(userState.token && userState.isLogin){
-            console.log({cocktail_id:Number(id), token:userState.token})
+        if(userState.isLogin && userState.token){
             dispatch(toggleBookmark({cocktail_id:Number(id), token:userState.token}));
         }
+        else{
+            setIsLoginOpen(true)
+        }
+    }
+
+    const handleRate = () => {
+        if(userState.isLogin){
+            alert("준비중입니다.")
+        }
+        else{
+            setIsLoginOpen(true)
+        }
+
     }
 
     if (cocktailState.itemStatus == "loading") {
@@ -98,7 +118,7 @@ export default function ItemDetailPage() {
                             >
                                 Edit
                             </button>
-                            <button className="title__rate-button">rate button</button>
+                            <button className="title__rate-button" onClick={handleRate}>rate button</button>
                             <div className="title__rate">{cocktail.rate.toFixed(1)} / 5.0</div>
                         </div>
                         <div className="content">
@@ -148,6 +168,7 @@ export default function ItemDetailPage() {
                         </div>
                     </div>
                 </div>
+                <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
             </div>
         )
     }
