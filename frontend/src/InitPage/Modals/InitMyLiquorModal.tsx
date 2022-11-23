@@ -41,7 +41,8 @@ const InitMyLiqourModal = (props: prop) => {
             <button onClick={() => setIsOpen(false)}>X</button>
             <div className={styles.container}>
                 <div>
-                {ingredientState.myIngredientList.map(ingredient => <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} ABV={ingredient.ABV} my_item={true} />)}                </div>
+                    {ingredientState.myIngredientList.map(ingredient => <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} ABV={ingredient.ABV} my_item={true} />)}
+                </div>
             </div>
 
         </Modal >
