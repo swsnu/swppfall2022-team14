@@ -220,55 +220,57 @@ def cocktail_post(request):
     # else:
     #     return HttpResponseNotAllowed(['GET', 'POST'])
 
+@api_view(['PUT'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def cocktail_edit(request, pk):
+    try:
+        cocktail = Cocktail.objects.get(id=pk)
+    except Cocktail.DoesNotExist:
+        return HttpResponseNotFound(f"No Cocktails matches id={pk}")
+    serializer = CocktailDetailSerializer(
+        cocktail, data=request.data, partial=True, context={'user': request.user})
+    data = request.data.copy()
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
 
-@api_view(['GET', 'PUT'])
+    CocktailTag.objects.filter(cocktail=pk).delete()
+    try:
+        tags = data['tags']
+    except (KeyError, JSONDecodeError) as e:
+        tags = []
+    for t in tags:
+        try:
+            tag = Tag.objects.get(content=t)
+        except Tag.DoesNotExist:
+            tag = Tag.objects.create(content=t)
+        # try:
+        CocktailTag.objects.create(tag=tag, cocktail=cocktail)
+        # except IntegrityError:
+        #     return HttpResponseBadRequest("tag must not be duplicated")
+
+    try:
+        ingredient_list = data['ingredients']
+    except (KeyError, JSONDecodeError) as e:
+        ingredient_list = []
+    IngredientPrepare.objects.filter(cocktail=cocktail).delete()
+    for i in ingredient_list:
+        try:
+            ingredient = Ingredient.objects.get(id=i["id"])
+        except Ingredient.DoesNotExist:
+            return HttpResponseNotFound("ingredient does not exist")
+        IngredientPrepare.objects.create(
+            cocktail=cocktail, ingredient=ingredient, amount=i["amount"])
+    return JsonResponse(data=CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=200)
+
+@api_view(['GET'])
 def retrieve_cocktail(request, pk):
-    if request.method == 'GET':
-        try:
-            cocktail = Cocktail.objects.get(id=pk)
-        except Cocktail.DoesNotExist:
-            return HttpResponseNotFound(f"No Cocktails matches id={pk}")
-        return JsonResponse(CocktailDetailSerializer(cocktail, context={'user': request.user}).data, safe=False)
-    elif request.method == 'PUT':
-        try:
-            cocktail = Cocktail.objects.get(id=pk)
-        except Cocktail.DoesNotExist:
-            return HttpResponseNotFound(f"No Cocktails matches id={pk}")
-        serializer = CocktailDetailSerializer(
-            cocktail, data=request.data, partial=True, context={'user': request.user})
-        data = request.data.copy()
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        CocktailTag.objects.filter(cocktail=pk).delete()
-        try:
-            tags = data['tags']
-        except (KeyError, JSONDecodeError) as e:
-            tags = []
-        for t in tags:
-            try:
-                tag = Tag.objects.get(content=t)
-            except Tag.DoesNotExist:
-                tag = Tag.objects.create(content=t)
-            # try:
-            CocktailTag.objects.create(tag=tag, cocktail=cocktail)
-            # except IntegrityError:
-            #     return HttpResponseBadRequest("tag must not be duplicated")
-
-        try:
-            ingredient_list = data['ingredients']
-        except (KeyError, JSONDecodeError) as e:
-            ingredient_list = []
-        IngredientPrepare.objects.filter(cocktail=cocktail).delete()
-        for i in ingredient_list:
-            try:
-                ingredient = Ingredient.objects.get(id=i["id"])
-            except Tag.DoesNotExist:
-                return HttpResponseNotFound("ingredient does not exist")
-            IngredientPrepare.objects.create(
-                cocktail=cocktail, ingredient=ingredient, amount=i["amount"])
-
-        return JsonResponse(data=CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=200)
+    try:
+        cocktail = Cocktail.objects.get(id=pk)
+    except Cocktail.DoesNotExist:
+        return HttpResponseNotFound(f"No Cocktails matches id={pk}")
+    return JsonResponse(CocktailDetailSerializer(cocktail, context={'user': request.user}).data, safe=False)
+        
     # else:
     #     return HttpResponseNotAllowed(['GET', 'PUT'])
 

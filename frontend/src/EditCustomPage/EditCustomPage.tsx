@@ -3,10 +3,11 @@ import AddIngredientModal from "../CreateCustomPage/Modals/AddIngredientModal"
 import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { CocktailDetailType, IngredientPrepareType, editCocktail, getCocktail, selectCocktail } from "../store/slices/cocktail/cocktail";
+import { CocktailDetailType, IngredientPrepareType, editCocktail, getCocktail, selectCocktail, PostForm } from "../store/slices/cocktail/cocktail";
 import './EditCustomPage.scss';
 import React from 'react';
 import { IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { selectUser } from "../store/slices/user/user";
 
 export default function EditCustomPage() {
     const { id } = useParams();
@@ -27,8 +28,8 @@ export default function EditCustomPage() {
 
     const cocktailState = useSelector(selectCocktail);
     const cocktail = cocktailState.cocktailItem;
-    const ingredientState = useSelector(selectIngredient)
     const dispatch = useDispatch<AppDispatch>();
+    const userState = useSelector(selectUser)
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
@@ -42,13 +43,13 @@ export default function EditCustomPage() {
             setTagList(cocktail.tags);
             setABV(cocktail.ABV);
             setPrice(cocktail.price_per_glass);
-            setIngredientList(cocktail.ingredients);
         }
     }, [cocktail]);
 
     const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
         setIngredientList(ingredientList.filter((_value, idx) => idx !== selectedIdx));
+        setUnitList(unitList.filter((_value, idx) => idx !== selectedIdx))
     };
 
     useEffect(() => {
@@ -100,24 +101,28 @@ export default function EditCustomPage() {
     }
 
     const editCocktailHandler = async () => {
-        const ingredients = ingredientList.map((ingr, ind) => {
-            return {...ingr, amount: ingr.amount +" "+ unitList[ind]}
-        })
-        const response = await dispatch(editCocktail({
-            id: Number(id),
-            name: name,
-            image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
-            introduction: introduction,
-            recipe: recipe,
-            ABV: ABV,
-            price_per_glass: price,
-            tags: tagList,
-            author_id: 1,
-            ingredients: ingredients
-        }))
-
-        console.log(response)
-        navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
+        if(userState.user?.id !== null && userState.token !== null){
+            const ingredients = ingredientList.map((ingr, ind) => {
+                return {...ingr, amount: ingr.amount +" "+ unitList[ind]}
+            })
+            const data:PostForm = {
+                cocktail: {
+                    name: name,
+                    image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
+                    introduction: introduction,
+                    recipe: recipe,
+                    ABV: ABV,
+                    price_per_glass: price,
+                    tags: tagList,
+                    author_id: 1,
+                    ingredients: ingredients
+                },
+                token: userState.token
+            }
+            console.log(data)
+            const response = await dispatch(editCocktail({data:data, id:Number(id!)}))
+            navigate(`/custom/${(response.payload as CocktailDetailType).id}`)            
+        }
     }
 
     if (cocktailState.itemStatus == "loading") {
