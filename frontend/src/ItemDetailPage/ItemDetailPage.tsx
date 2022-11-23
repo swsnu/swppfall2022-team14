@@ -63,8 +63,8 @@ export default function ItemDetailPage() {
     }
 
     const toggleBookmarkHandler = () => {
-        if(userState.isLogin){
-            dispatch(toggleBookmark(Number(id)));
+        if(userState.isLogin && userState.token){
+            dispatch(toggleBookmark({cocktail_id:Number(id), token:userState.token}));
         }
         else{
             setIsLoginOpen(true)
