@@ -91,7 +91,12 @@ const InitPage = () => {
 
     const [isRecommendOpen, setIsRecommendOpen] = useState(false);
     const onClickRecommendButton = () => {
-        setIsRecommendOpen(true)
+        if(userState.isLogin){
+            setIsRecommendOpen(true)
+        }
+        else{
+            setIsLoginOpen(true)
+        }
     }
 
 
