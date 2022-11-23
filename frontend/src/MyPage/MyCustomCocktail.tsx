@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
 import Item from "../common/Components/Item";
+import { selectUser } from "../store/slices/user/user";
 
 
 
@@ -18,8 +19,11 @@ const MyCustomCocktail = () => {
         navigate('/custom/create')
     }
 
+    const userState = useSelector(selectUser)
     useEffect(() => {
-        dispatch(fetchMyCocktailList())
+        if(userState.isLogin && userState.token){
+            dispatch(fetchMyCocktailList(userState.token))
+        }
     }, [])
 
     return <>
