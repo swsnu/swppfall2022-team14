@@ -176,13 +176,13 @@ export const editCocktail = createAsyncThunk(
 
 export const toggleBookmark = createAsyncThunk(
     "cocktail/toggleBookmark",
-    async (cocktail_id: number) => {
-        await axios.put(`/api/v1/bookmark/cocktails/${cocktail_id}/`, {
+    async (data: {cocktail_id: number, token:string}) => {
+        await axios.put(`/api/v1/bookmark/cocktails/${data.cocktail_id}/`, null, {
             headers: {
-                'X-csrftoken': 'eR4TF9Bfxq6jxjl1v5Hqi9YmEW7DUkpx'
-            }
+                Authorization: `Token ${data.token}`,
+            },
         });
-        return { cocktail_id: cocktail_id }
+        return { cocktail_id: data.cocktail_id }
     }
 )
 

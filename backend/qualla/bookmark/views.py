@@ -6,8 +6,12 @@ from cocktail.models import Cocktail
 from cocktail.serializers import CocktailListSerializer, CocktailDetailSerializer
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework import permissions, authentication
 
 @api_view(['GET'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def bookmarked_cocktails_by_user(request):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
@@ -21,7 +25,10 @@ def bookmarked_cocktails_by_user(request):
     return JsonResponse({"cocktails": data, "count": len(cocktails)}, safe=False)
 
 @api_view(['PUT'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def toggle_bookmark(request, cocktail_id):
+    print(request.user)
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
     user = request.user

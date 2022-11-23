@@ -12,12 +12,24 @@ import MyCustomCocktail from "./MyCustomCocktail";
 import MyComment from "./MyComment";
 import MyInfo from "./MyInfo";
 import NavBar from "../NavBar/NavBar";
+import {selectUser} from "../store/slices/user/user";
 interface ButtonInfo {
     name: string;
     component: JSX.Element;
 }
 
 const MyPage = () => {
+
+    const userState = useSelector(selectUser)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(!userState.isLogin){
+            navigate(-1)
+            console.log("먼저 로그인 해주세요")
+        }
+    },[])
+
     const buttonList: ButtonInfo[] = [{ name: 'My Ingredient', component: <MyIngredient /> },
     { name: 'My Custom Cocktail', component: < MyCustomCocktail /> },
     { name: 'My Favorites', component: <MyBookmark /> },
@@ -29,7 +41,6 @@ const MyPage = () => {
         setButtonClickState(e.currentTarget.name)
     }
 
-
     return <div className={styles.main}>
         <div className="list__navbar">
             <NavBar />
@@ -39,7 +50,7 @@ const MyPage = () => {
         </div>
         <div className={styles.right}>
             <div className={styles.right__inner}>
-                {/* 클릭된 버튼의 name으로 buttonList에서 component를 찾아 Render 
+                {/* 클릭된 버튼의 name으로 buttonList에서 component를 찾아 Render
                     추후 항목이 추가되면 buttonList를 수정하면 됨.*/}
                 {buttonList.filter(button => button.name == buttonClickState)[0].component}
             </div>

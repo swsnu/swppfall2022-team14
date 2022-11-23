@@ -38,15 +38,6 @@ export default function CreateCustomPage() {
     const dispatch = useDispatch<AppDispatch>();
     const userState = useSelector(selectUser)
 
-    useEffect(() => {
-        if (newIngredient && newUnit) {
-            setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
-            setNewIngredient(null);
-            setUnitList([...unitList, newUnit])
-            setNewUnit(null)
-        }
-    }, [newIngredient, newUnit])
-
     const onChangeAmount = (selectedIdx: number, changedAmount: string) => {
         if (changedAmount[0] === "0" || changedAmount[0] === "-") return
         setIngredientList(
@@ -110,6 +101,22 @@ export default function CreateCustomPage() {
             navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
         }
     }
+
+    useEffect(() => {
+        if(!userState.isLogin){
+            navigate(-1)
+            console.log("먼저 로그인 해주세요")
+        }
+    },[])
+
+    useEffect(() => {
+        if (newIngredient && newUnit) {
+            setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
+            setNewIngredient(null);
+            setUnitList([...unitList, newUnit])
+            setNewUnit(null)
+        }
+    }, [newIngredient, newUnit])
 
     return (
         <div className="item-detail">
