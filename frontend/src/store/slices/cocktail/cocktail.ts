@@ -108,9 +108,18 @@ export const fetchCustomCocktailList = createAsyncThunk(
     },
 )
 
+
+export const fetchMyBookmarkCocktailList = createAsyncThunk(
+    "cocktail/fetchMyBookmarkCocktailList", async () => {
+        const response = await axios.get('/api/v1/bookmark/me');
+        return response.data
+    },
+)
+
+
 export const fetchMyCocktailList = createAsyncThunk(
     "cocktail/fetchMyCocktailList", async () => {
-        const response = await axios.get('/api/v1/bookmark/me');
+        const response = await axios.get('/api/v1/cocktails/me');
         return response.data
     },
 )
@@ -153,7 +162,7 @@ export const authPostCocktail = createAsyncThunk(
 
 export const editCocktail = createAsyncThunk(
     "cocktail/editCocktail",
-    async (cocktail: {data:PostForm, id:number}, { dispatch }) => {
+    async (cocktail: { data: PostForm, id: number }, { dispatch }) => {
         const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/edit/`, cocktail.data.cocktail, {
             headers: {
                 Authorization: `Token ${cocktail.data.token}`
@@ -228,6 +237,18 @@ export const cocktailSlice = createSlice({
             state.listStatus = "loading";
         });
         builder.addCase(fetchMyCocktailList.rejected, (state, action) => {
+            state.listStatus = "failed";
+        });
+
+        //MyCocktailList
+        builder.addCase(fetchMyBookmarkCocktailList.fulfilled, (state, action) => {
+            state.cocktailList = action.payload.cocktails;
+            state.listStatus = "success";
+        });
+        builder.addCase(fetchMyBookmarkCocktailList.pending, (state, action) => {
+            state.listStatus = "loading";
+        });
+        builder.addCase(fetchMyBookmarkCocktailList.rejected, (state, action) => {
             state.listStatus = "failed";
         });
 

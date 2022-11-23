@@ -275,10 +275,14 @@ def retrieve_cocktail(request, pk):
     #     return HttpResponseNotAllowed(['GET', 'PUT'])
 
 
+
 @api_view(['GET'])
 def retrieve_my_cocktail(request):
-    if request.method == 'GET':
-        # TODO: author_id=request.user.id
-        cocktails = Cocktail.objects.filter(author_id=1, type='CS')
-        data = CocktailListSerializer(cocktails, many=True, context={'user': request.user}).data
-        return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
+    user = request.user
+    if not user.is_authenticated:
+        return HttpResponse(status=401)
+    
+    # TODO: author_id=request.user.id
+    cocktails = Cocktail.objects.filter(author_id=user.id, type='CS')
+    data = CocktailListSerializer(cocktails, many=True, context={'user': request.user}).data
+    return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
