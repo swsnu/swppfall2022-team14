@@ -68,12 +68,13 @@ const RecommendModal = (props: prop) => {
         <Modal className={styles['recommend-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
             <button onClick={onClickClose} > X</button >
             <div className={styles.container}>
-                {ingredients.map((ingredient, idx) =>
+                {ingredients.map((ingredient) =>
                     <div key={ingredient.id} className={styles.container__item}>
                         <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} ABV={ingredient.ABV} id={ingredient.id} />
-                        {availableCocktailsArray[idx] ? <div>이 재료만 있으면 만들 수 있는 칵테일들:
+                        {/* TODO: Component로 빼기 */}
+                        {availableCocktailsArray.find(info => info?.ingredient_id === ingredient.id) ? <div>이 재료만 있으면 만들 수 있는 칵테일들:
                             <div className={styles["container__cocktail-names"]}>
-                                {availableCocktailsArray[idx].cocktails.map(cocktail => <div className={styles["container__cocktail-name"]} key={cocktail.id} onClick={() => onClickCocktailName(cocktail.id, cocktail.type)}>{cocktail.name}</div>)}
+                                {availableCocktailsArray.find(info => info.ingredient_id === ingredient.id)?.cocktails.map(cocktail => <div className={styles["container__cocktail-name"]} key={cocktail.id} onClick={() => onClickCocktailName(cocktail.id, cocktail.type)}>{cocktail.name}</div>)}
                             </div>
                         </div>
                             : "통상적으로 많이 들어가는 재료"

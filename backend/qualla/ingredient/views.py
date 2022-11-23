@@ -34,7 +34,6 @@ def retrieve_ingredient(request, pk):
 # 최대 추천 재료 수
 num_recommend = 5
 
-
 @api_view(['GET'])
 def recommend_ingredient(request):
     if not request.user.is_authenticated:
@@ -53,7 +52,9 @@ def recommend_ingredient(request):
         ingredient_prepare = [
             ingredient_prepare.ingredient.id for ingredient_prepare in cocktail.ingredient_prepare.all()]
 
+
         needed_ingredient = list(set(ingredient_prepare) - set(my_ingredients))
+
 
         if len(needed_ingredient) == 1:
             if needed_ingredient[0] not in score_map:
@@ -62,7 +63,7 @@ def recommend_ingredient(request):
                 score_map[needed_ingredient[0]].append(cocktail)
 
 
-
+    
     # 만들 수 있는 칵테일이 많아지는 재료들 top k개 id
 
     score_map_sorted = sorted(
@@ -73,6 +74,9 @@ def recommend_ingredient(request):
     recommend_ids = [x['ingredient_id']
                 for x in recommended_ingredient_list]
 
+    ingredients = Ingredient.objects.filter(
+        id__in=recommend_ids)
+    
     # 만약 위에서 구한 id 개수 k개 이하일 때 --> 남은 재료들은 칵테일들에 많이 들어가는 재료들로 추천
     if len(recommended_ingredient_list) < num_recommend:
         num_ingredients_to_prepare = num_recommend - len(recommended_ingredient_list)
@@ -81,10 +85,14 @@ def recommend_ingredient(request):
         sorted_ingredients_by_prepares_ids = [x.id for x in sorted(
             ingredient_all, key=lambda x: len(x.ingredient_prepare.all()), reverse=True)[:num_ingredients_to_prepare]]
         
-        recommend_ids = recommend_ids + sorted_ingredients_by_prepares_ids
+        general_recommended_ingredients = Ingredient.objects.filter(
+        id__in=sorted_ingredients_by_prepares_ids)
+        
+        ingredients = ingredients | general_recommended_ingredients
+
         recommended_ingredient_list = recommended_ingredient_list + num_ingredients_to_prepare*[None]
     
-    ingredients = Ingredient.objects.filter(
-        id__in=recommend_ids)
+    # breakpoint()
+    
     data = IngredientListSerializer(ingredients, many=True).data
     return JsonResponse({"Ingredients": data, "possible_cocktails": recommended_ingredient_list, "count": ingredients.count()}, safe=False)
