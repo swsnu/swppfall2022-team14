@@ -110,16 +110,24 @@ export const fetchCustomCocktailList = createAsyncThunk(
 
 
 export const fetchMyBookmarkCocktailList = createAsyncThunk(
-    "cocktail/fetchMyBookmarkCocktailList", async () => {
-        const response = await axios.get('/api/v1/bookmark/me');
+    "cocktail/fetchMyBookmarkCocktailList", async (token: string) => {
+        const response = await axios.get('/api/v1/bookmark/me', {
+            headers:{
+                Authorization: `Token ${token}`,
+            }
+        });
         return response.data
     },
 )
 
 
 export const fetchMyCocktailList = createAsyncThunk(
-    "cocktail/fetchMyCocktailList", async () => {
-        const response = await axios.get('/api/v1/cocktails/me');
+    "cocktail/fetchMyCocktailList", async (token: string) => {
+        const response = await axios.get('/api/v1/cocktails/me', {
+            headers:{
+                Authorization: `Token ${token}`,
+            }
+        });
         return response.data
     },
 )
