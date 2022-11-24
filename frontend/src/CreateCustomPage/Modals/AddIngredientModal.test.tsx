@@ -29,7 +29,8 @@ const stubIngredientInitialState: IngredientInfo = {
             image: 'INGREDIENT_IMAGE_1',
             introduction: 'INGREDIENT_INTRO_1',
             ABV: 40,
-            price: 200
+            price: 200,
+            unit: ['oz', 'ml']
         },
         {
             id: 2,
@@ -37,7 +38,8 @@ const stubIngredientInitialState: IngredientInfo = {
             image: 'INGREDIENT_IMAGE_2',
             introduction: 'INGREDIENT_INTRO_2',
             ABV: 20,
-            price: 100
+            price: 100,
+            unit: ['oz']
         },
     ],
     myIngredientList: [],
@@ -57,7 +59,7 @@ const stubUserInitialState: UserInfo = {
     },
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
-}
+};
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -69,7 +71,7 @@ const renderAddIngredientModal = () => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<AddIngredientModal isOpen={true} close={jest.fn()} addedIngredientList={[]} setNewIngrdient={jest.fn()} />} />
+                <Route path="/" element={<AddIngredientModal isOpen={true} close={jest.fn()} addedIngredientList={[]} setNewIngrdient={jest.fn()} setDefaultUnit={jest.fn()} />} />
             </Routes>
         </MemoryRouter>,
         {
