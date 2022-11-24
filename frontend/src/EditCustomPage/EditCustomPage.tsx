@@ -6,7 +6,7 @@ import { AppDispatch } from "../store";
 import { CocktailDetailType, IngredientPrepareType, editCocktail, getCocktail, selectCocktail, PostForm } from "../store/slices/cocktail/cocktail";
 import './EditCustomPage.scss';
 import React from 'react';
-import { IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
 
 export default function EditCustomPage() {
@@ -192,7 +192,8 @@ export default function EditCustomPage() {
                                             min="0"
                                         />
                                         <select 
-                                        onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
+                                            data-testid="ingredientUnitSelect"
+                                            onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
                                             {ingredient.unit.map((u) => {
                                                 return <option
                                                     key={"key"+u}

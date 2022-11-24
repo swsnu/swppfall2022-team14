@@ -127,7 +127,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderEditCustomPage = (status = "success") => {
+const renderEditCustomPage = (status = "success", isLogin: boolean = true, isUserNull: boolean = false, isCocktailNull: boolean = false) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -136,10 +136,18 @@ const renderEditCustomPage = (status = "success") => {
         </MemoryRouter>,
         {
             preloadedState: {
-                cocktail: { ...stubCocktailInitialState, itemStatus: status },
+                cocktail: (
+                    isCocktailNull ?
+                    { ...stubCocktailInitialState, cocktailItem: null } :
+                    { ...stubCocktailInitialState, itemStatus: status }
+                ),
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
-                user: stubUserInitialState
+                user: (
+                    isUserNull ?
+                    { ...stubUserInitialState, user: null, token: null } :
+                    { ...stubUserInitialState, isLogin: isLogin }
+                )
             },
         }
     );
@@ -170,6 +178,21 @@ describe("<EditCustomPage />", () => {
         const confirmButton = screen.getByText("Confirm");
         fireEvent.click(confirmButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/custom/1"));
+    });
+    it("should operate onChangeAmount correctly", async () => {
+        renderEditCustomPage();
+        const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
+        fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
+        const addIngredientButton2 = screen.getAllByTestId("addIngredientButton")[1];
+        fireEvent.click(addIngredientButton2);
+        const ingredientAmountInput2 = screen.getAllByTestId("ingredientAmountInput")[1];
+        fireEvent.change(ingredientAmountInput2, { target: { value: "5" } });
+        fireEvent.change(ingredientAmountInput2, { target: { value: "0" } });
+    });
+    it("should operate onChangeIngredientUnit correctly", async () => {
+        renderEditCustomPage();
+        const ingredientUnitSelect = screen.getAllByTestId("ingredientUnitSelect")[0];
+        fireEvent.change(ingredientUnitSelect, { target: { value: "ml" } });
     });
     it("should delete ingredient when ingredient delete button clicked", async () => {
         renderEditCustomPage();
@@ -218,5 +241,16 @@ describe("<EditCustomPage />", () => {
         const tagInput = screen.getByTestId("tagInput");
         fireEvent.change(tagInput, { target: { value: "TAG" } })
         fireEvent.keyPress(tagInput, { key: "A", charCode: 65 });
+    });
+    it("should alert when not login", async () => {
+        renderEditCustomPage("success", false);
+    });
+    it("should not edit cocktail when user is null", async () => {
+        renderEditCustomPage("success", true, true);
+        const confirmButton = screen.getByText("Confirm");
+        fireEvent.click(confirmButton);
+    });
+    it("should not load when cocktail is null", async () => {
+        renderEditCustomPage("success", true, false, true);
     });
 });
