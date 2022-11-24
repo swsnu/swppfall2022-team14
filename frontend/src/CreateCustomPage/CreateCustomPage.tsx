@@ -8,7 +8,6 @@ import {
     CocktailDetailType,
     IngredientPrepareType,
     PostForm,
-    selectCocktail
 } from "../store/slices/cocktail/cocktail";
 import './CreateCustomPage.scss';
 import React from 'react';
@@ -171,6 +170,7 @@ export default function CreateCustomPage() {
                                         min="0"
                                     />
                                     <select
+                                        data-testid="ingredientUnitSelect"
                                         onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
                                         {ingredient.unit.map((u) => {
                                             return <option
