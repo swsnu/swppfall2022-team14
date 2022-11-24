@@ -76,7 +76,7 @@ const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: emp
 const mockLoggedOutStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedOutState});
 
 describe("<MyBookMark />", () => {
-    it("should render items without errors", () => {
+    it("should render items with logged in without errors", () => {
         render(
             <Provider store={mockLoggedInStore}>
                 <MyBookmark />
@@ -87,7 +87,7 @@ describe("<MyBookMark />", () => {
         expect(mockDispatch).toBeCalledTimes(1);
     });
 
-    it("should render items without errors", () => {
+    it("should render items with logged out without errors", () => {
         render(
             <Provider store={mockLoggedOutStore}>
                 <MyBookmark />

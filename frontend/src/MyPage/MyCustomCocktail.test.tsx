@@ -56,20 +56,30 @@ const ingredientState: IngredientInfo = {
     listStatus: "success",
 }
 
-const stubUserInitialState: UserInfo = {
+
+const loggedInState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password:  null,
-        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "1",
+        username: "USERNAME",
+        password: null,
+        nickname: null,
+        intro: null,
+        profile_img: null,
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
+    token: "TOKEN",
+    isLogin: true
 }
 
-const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user:stubUserInitialState });
+
+const loggedOutState: UserInfo = {
+    user: null,
+    token: null,
+    isLogin: false
+}
+
+
+const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user:loggedInState });
+const mockLoggedOutStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user:loggedOutState });
 
 
 describe("<MyCustomCocktail />", () => {
@@ -77,9 +87,9 @@ describe("<MyCustomCocktail />", () => {
         jest.clearAllMocks();
     });
 
-    it("should render comment without errors", () => {
+    it("should render custom cocktail with logged in without errors", () => {
         render(
-            <Provider store={mockStore}>
+            <Provider store={mockLoggedInStore}>
                 <MyCustomCocktail />
             </Provider>
         );
@@ -89,12 +99,21 @@ describe("<MyCustomCocktail />", () => {
 
     it("should handle create cocktail click", async () => {
         render(
-            <Provider store={mockStore}>
+            <Provider store={mockLoggedInStore}>
                 <MyCustomCocktail />
             </Provider>
         );
         const element = screen.getByText("Add");
         fireEvent.click(element)
         await waitFor(() => { expect(mockNavigate).toBeCalledWith("/custom/create") })
+    });
+
+    it("should render custom cocktail with logged out without errors", async () => {
+        render(
+            <Provider store={mockLoggedOutStore}>
+                <MyCustomCocktail />
+            </Provider>
+        );
+        screen.getByTestId("spyCocktail_2");    
     });
 })
