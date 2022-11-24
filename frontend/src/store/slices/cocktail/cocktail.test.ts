@@ -19,7 +19,7 @@ import reducer, {
 import { fetchCustomCocktailList, fetchStandardCocktailList, fetchMyCocktailList } from "./cocktail";
 import { getCocktail, postCocktail } from "./cocktail"
 
-describe("userInfo reducer", () => {
+describe("cocktail reducer", () => {
     let store: EnhancedStore<
         { cocktail: CocktailInfo },
         AnyAction,
