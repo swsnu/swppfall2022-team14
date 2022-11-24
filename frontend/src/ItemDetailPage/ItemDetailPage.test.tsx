@@ -10,7 +10,7 @@ import {
 } from "../store/slices/cocktail/cocktail";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import ItemDetailPage from "./ItemDetailPage";
-import {UserInfo} from "../store/slices/user/user";
+import { UserInfo } from "../store/slices/user/user";
 
 // eslint-disable-next-line react/display-name
 jest.mock("./Comment/Comment", () => (prop: CommentType) => (
@@ -23,13 +23,15 @@ const loadingCocktail: CocktailInfo = {
     cocktailItem: null,
     itemStatus: "loading",
     listStatus: "loading"
-}
+};
+
 const failedCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
     itemStatus: "failed",
     listStatus: "loading"
-}
+};
+
 const fakeCocktailItemCS: CocktailDetailType = {
     id: 1,
     name: "name",
@@ -51,11 +53,12 @@ const fakeCocktailItemCS: CocktailDetailType = {
         ABV: 1,
         price: 1,
         introduction: "iintro",
-
-        amount: "1 oz",
+        unit: ['oz', 'ml'],
+        amount: "10"
     }],
     is_bookmarked: false,
-}
+};
+
 const fakeCocktailItemST: CocktailDetailType = {
     id: 1,
     name: "name",
@@ -77,11 +80,12 @@ const fakeCocktailItemST: CocktailDetailType = {
         ABV: 1,
         price: 1,
         introduction: "iintro",
-
-        amount: "1 oz",
+        unit: ['oz', 'ml'],
+        amount: "10"
     }],
     is_bookmarked: false,
-}
+};
+
 const commentNotParent: CommentType = {
     id: 1,
     cocktail: {
@@ -100,24 +104,62 @@ const commentNotParent: CommentType = {
     updated_at: new Date(Date.now()),
     parent_comment: 1, // if null comment is root comment
     is_deleted: false,
-}
+};
+
 const fakeCustomCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: fakeCocktailItemCS,
     itemStatus: "",
     listStatus: ""
-}
+};
+
 const fakeStandardCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: fakeCocktailItemST,
     itemStatus: "",
     listStatus: ""
-}
+};
+
+const notBookmarkedCocktailItem: CocktailDetailType = {
+    id: 1,
+    name: "name",
+    image: "img",
+    type: "ST",
+    tags: ["CS1", "CS2"],
+    author_id: 1,
+    rate: 1,
+    introduction: "intro",
+    recipe: "recipe",
+    ABV: 1,
+    price_per_glass: 1,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now()),
+    ingredients: [{
+        id: 1,
+        name: "iname",
+        image: "iimg",
+        ABV: 1,
+        price: 1,
+        introduction: "iintro",
+        unit: ['oz', 'ml'],
+        amount: "10"
+    }],
+    is_bookmarked: true,
+};
+
+const notBookmarkedCocktail: CocktailInfo = {
+    cocktailList: [],
+    cocktailItem: notBookmarkedCocktailItem,
+    itemStatus: "",
+    listStatus: ""
+};
+
 const emptyComment: CommentInfo = {
     commentList: [commentNotParent],
     commentItem: null,
     state: "EDIT"
-}
+};
+
 const commentAuthor: CommentType = {
     id: 1,
     cocktail: {
@@ -136,52 +178,64 @@ const commentAuthor: CommentType = {
     updated_at: new Date(Date.now()),
     parent_comment: null, // if null comment is root comment
     is_deleted: false
-}
+};
+
 const fakeComment: CommentInfo = {
     commentList: [commentAuthor],
     commentItem: null,
     state: null
-}
+};
+
 const emptyIngredient: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading"
-}
+};
 
 const stubUserInitialState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password:  null,
-        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "TEST_ID",
+        username: "TEST_USERNAME",
+        password: "TEST_PASSWORD",
+        nickname: "TEST_NICKNAME",
+        intro: "TEST_INTRO",
+        profile_img: "TEST_PROFILE_IMG",
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
-}
+    token: "TEST_TOKEN",
+    isLogin: true
+};
 
-const loadingMockStore = getMockStore({ cocktail: loadingCocktail, ingredient: emptyIngredient, comment: fakeComment, user:stubUserInitialState })
-const failedMockStore = getMockStore({ cocktail: failedCocktail, ingredient: emptyIngredient, comment: fakeComment, user:stubUserInitialState })
-const emptyCommentMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: emptyComment, user:stubUserInitialState })
-const itemDetailMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment, user:stubUserInitialState })
-const itemDetailMockStore_ST = getMockStore({ cocktail: fakeStandardCocktail, ingredient: emptyIngredient, comment: fakeComment, user:stubUserInitialState })
+const emptyUserInitailState: UserInfo = {
+    user: null,
+    token: null,
+    isLogin: false
+};
+
+const loadingMockStore = getMockStore({ cocktail: loadingCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState });
+const failedMockStore = getMockStore({ cocktail: failedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState });
+const emptyCommentMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: emptyComment, user: stubUserInitialState });
+const itemDetailMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState });
+const itemDetailMockStore_ST = getMockStore({ cocktail: fakeStandardCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState });
+const notLoginMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment, user: emptyUserInitailState });
+const notBookmarkedMockStore = getMockStore({ cocktail: notBookmarkedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState });
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
 }));
+
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
     useDispatch: () => mockDispatch,
 }));
 
+jest.spyOn(window, 'alert').mockImplementation(() => {});
 
-describe("<Comment />", () => {
+describe("<ItemDetailPage />", () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -246,7 +300,7 @@ describe("<Comment />", () => {
         );
         const element = container.getElementsByClassName("main");
         expect(element).toHaveLength(1);
-        screen.getByText("bookmark")
+        screen.getByText("Add in Bookmark");
     });
     it("should render without errors", () => {
         const { container } = render(
@@ -260,12 +314,17 @@ describe("<Comment />", () => {
         );
         const element = container.getElementsByClassName("main");
         expect(element).toHaveLength(1);
-        screen.getByText("bookmark")
+        
+        const bookmarkButton = screen.getByText("Add in Bookmark");
+        fireEvent.click(bookmarkButton);
+
+        const rateButton = screen.getByText("rate button");
+        fireEvent.click(rateButton);
 
         const items = screen.getAllByTestId("spyComment_1");
         expect(items).toHaveLength(1);
 
-        const ingredientItem = screen.getByText("1 oz iname")
+        const ingredientItem = screen.getByText("10 iname")
         fireEvent.click(ingredientItem)
         expect(mockNavigate).toHaveBeenCalledWith("/ingredient/1")
 
@@ -273,18 +332,60 @@ describe("<Comment />", () => {
         fireEvent.change(inputBox, { target: { value: "edit_comment" } });
         const addButton = screen.getByText("Add")
         fireEvent.click(addButton)
-        expect(mockDispatch).toBeCalledTimes(3)
+        expect(mockDispatch).toBeCalledTimes(5)
         const editButton = screen.getByText("Edit")
         fireEvent.click(editButton)
         expect(mockNavigate).toHaveBeenCalledWith("/custom/1/edit")
     });
+    it("should change bookmark button when bookmarked", async () => {
+        const { container } = render(
+            <Provider store={notBookmarkedMockStore}>
+                <MemoryRouter initialEntries={['/standard/1']}>
+                    <Routes>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );     
+        const bookmarkButton = screen.getByText("Remove from Bookmark");
+    });
+    it("should not create comment when not login", async () => {
+        const { container } = render(
+            <Provider store={notLoginMockStore}>
+                <MemoryRouter initialEntries={['/custom/1']}>
+                    <Routes>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const addButton = screen.getByText("Add")
+        fireEvent.click(addButton)
+    });
+    it("should not add bookmark when not login", async () => {
+        const { container } = render(
+            <Provider store={notLoginMockStore}>
+                <MemoryRouter initialEntries={['/custom/1']}>
+                    <Routes>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const bookmarkButton = screen.getByText("Add in Bookmark");
+        fireEvent.click(bookmarkButton)
+    });
+    it("should not set rate when not login", async () => {
+        const { container } = render(
+            <Provider store={notLoginMockStore}>
+                <MemoryRouter initialEntries={['/custom/1']}>
+                    <Routes>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const rateButton = screen.getByText("rate button");
+        fireEvent.click(rateButton)
+    });
 })
-
-
-
-
-
-
-
-
-
