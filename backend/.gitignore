@@ -8,4 +8,8 @@ db.sqlite3-journal
 docker/
 qualla/db.sqlite3
 ./qualla/db.sqlite3
+.DS_Store
+backend/.DS_Store
+qualla/.DS_Store
+
 
