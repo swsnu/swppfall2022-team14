@@ -49,6 +49,7 @@ export default function EditCustomPage() {
             setTagList(cocktail.tags);
             setABV(cocktail.ABV);
             setPrice(cocktail.price_per_glass);
+            setIngredientList(cocktail.ingredients);
         }
     }, [cocktail]);
 
@@ -111,7 +112,7 @@ export default function EditCustomPage() {
             const ingredients = ingredientList.map((ingr, ind) => {
                 return {...ingr, amount: ingr.amount +" "+ unitList[ind]}
             })
-            const data:PostForm = {
+            const data: PostForm = {
                 cocktail: {
                     name: name,
                     image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
