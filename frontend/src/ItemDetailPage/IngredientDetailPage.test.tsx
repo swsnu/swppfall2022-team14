@@ -7,7 +7,7 @@ import { CocktailInfo } from "../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import IngredientDetailPage from './IngredientDetailPage';
-import {UserInfo} from "../store/slices/user/user";
+import { UserInfo } from "../store/slices/user/user";
 
 const emptyCocktail: CocktailInfo = {
     cocktailList: [],
@@ -28,11 +28,14 @@ const loadingIngredient: IngredientInfo = {
         image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
         introduction: '소개',
         ABV: 42.4,
-        price: 200
+        price: 200,
+        unit: ['oz']
     },
     myIngredientList: [],
     itemStatus: "loading",
-    listStatus: "loading"
+    listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 const failedIngredient: IngredientInfo = {
     ingredientList: [],
@@ -43,10 +46,13 @@ const failedIngredient: IngredientInfo = {
         image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
         introduction: '소개',
         ABV: 42.4,
-        price: 200
+        price: 200,
+        unit: ['oz']
     },
     itemStatus: "failed",
-    listStatus: "loading"
+    listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 const noABVIngredient: IngredientInfo = {
     ingredientList: [],
@@ -57,10 +63,13 @@ const noABVIngredient: IngredientInfo = {
         image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
         introduction: '소개',
         ABV: 0,
-        price: 200
+        price: 200,
+        unit: ['oz']
     },
     itemStatus: "",
-    listStatus: "loading"
+    listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 const fakeIngredient: IngredientInfo = {
     ingredientList: [],
@@ -71,29 +80,32 @@ const fakeIngredient: IngredientInfo = {
         image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
         introduction: '소개',
         ABV: 42.4,
-        price: 200
+        price: 200,
+        unit: ['oz']
     },
     itemStatus: "",
-    listStatus: "loading"
+    listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 
 const stubUserInitialState: UserInfo = {
     user: {
         id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password:  null,
-        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password: null,
+        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
     },
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
 }
 
-const loadingMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: loadingIngredient, comment: emptyComment, user:stubUserInitialState })
-const failedMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: failedIngredient, comment: emptyComment, user:stubUserInitialState })
-const noAVBIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: noABVIngredient, comment: emptyComment, user:stubUserInitialState })
-const fakeIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: fakeIngredient, comment: emptyComment, user:stubUserInitialState })
+const loadingMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: loadingIngredient, comment: emptyComment, user: stubUserInitialState })
+const failedMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: failedIngredient, comment: emptyComment, user: stubUserInitialState })
+const noAVBIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: noABVIngredient, comment: emptyComment, user: stubUserInitialState })
+const fakeIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: fakeIngredient, comment: emptyComment, user: stubUserInitialState })
 
 
 const mockNavigate = jest.fn();

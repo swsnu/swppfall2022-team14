@@ -109,6 +109,8 @@ const stubIngredientInitialState: IngredientInfo = {
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
 };
 
 const stubUserInitialState: UserInfo = {
