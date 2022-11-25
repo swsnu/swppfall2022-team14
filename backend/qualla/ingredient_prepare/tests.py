@@ -7,38 +7,47 @@ from ingredient.models import Ingredient
 import json
 
 
-class CommentTestCase(TestCase):
+class Ingredient_PrepareTestCase(TestCase):
 
-    def test_lists(self):
-        client = Client()
-
+    def setUp(self):
         cocktail = Cocktail(id=1, ABV=0.0, price_per_glass=0.0, type='ST')
         cocktail.save()
-        ingredient = Ingredient(id=2, price=0, name="name1")
+        ingredient = Ingredient(id=1, price=0, name="name1")
         ingredient.save()
-        ingredient2 = Ingredient(id=3, price=0, name="name2")
+        ingredient2 = Ingredient(id=2, price=0, name="name2")
         ingredient2.save()
-        ingredient_prepare = IngredientPrepare(
-            cocktail=cocktail, ingredient=ingredient)
+        ingredient_prepare = IngredientPrepare(cocktail=cocktail, ingredient=ingredient, amount="1 oz")
         ingredient_prepare.save()
-        post_data = json.dumps({
-            "ingredient": 3,
-            "amount": "1 oz"})
-        response = client.get(
-            f'/api/v1/cocktails/1/ingredients/')
-        self.assertEqual(response.status_code, 200)
 
-        response = client.get(
-            f'/api/v1/cocktails/2/ingredients/')
+
+    def test_ingredient_lists(self):
+        client = Client()
+        post_data = json.dumps({"ingredient": 2, "amount": "1 oz"})
+        post_error = json.dumps({"ingredient": 2, "amount": "1oz"})
+        #get_list
+        response = client.get('/api/v1/cocktails/1/ingredients/')
+        self.assertEqual(response.status_code, 200)
+        #get_list not exist cocktail
+        response = client.get('/api/v1/cocktails/2/ingredients/')
         self.assertEqual(response.status_code, 404)
 
+
+        #post unit validation error
+        response = client.post(
+            f'/api/v1/cocktails/1/ingredients/', post_error, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+
+        #post not exist cocktail
         response = client.post(
             f'/api/v1/cocktails/2/ingredients/', post_data, content_type='application/json')
         self.assertEqual(response.status_code, 404)
-
+    
+        #post correct ingredient
         response = client.post(
             f'/api/v1/cocktails/1/ingredients/', post_data, content_type='application/json')
         self.assertEqual(response.status_code, 201)
+        #post exist ingredient
         response = client.post(
             f'/api/v1/cocktails/1/ingredients/', post_data, content_type='application/json')
         self.assertEqual(response.status_code, 400)
@@ -46,20 +55,10 @@ class CommentTestCase(TestCase):
     def test_ingredient_prepare_modify(self):
 
         client = Client()
-
-        cocktail = Cocktail(id=1, ABV=0.0, price_per_glass=0.0, type='ST')
-        cocktail.save()
-        ingredient = Ingredient(id=2, price=0, name="name1")
-        ingredient.save()
-        ingredient_prepare = IngredientPrepare(
-            cocktail=cocktail, ingredient=ingredient)
-        ingredient_prepare.save()
-        post_data = json.dumps({
-            "ingredient": 2,
-            "amount": "1 oz"})
+        post_data = json.dumps({"ingredient": 2, "amount": "1 oz"})
 
         response = client.put(
-            f'/api/v1/cocktails/1/ingredients/2/', post_data, content_type='application/json')
+            f'/api/v1/cocktails/1/ingredients/1/', post_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
         response = client.put(
             f'/api/v1/cocktails/1/ingredients/3/', post_data, content_type='application/json')
