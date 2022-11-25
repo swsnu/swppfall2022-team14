@@ -22,11 +22,11 @@ export interface UserInfo {
 const initialState: UserInfo = {
     user: {
         id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password:  null,
-        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password: null,
+        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
     },
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
@@ -35,24 +35,30 @@ const initialState: UserInfo = {
 export const registerUser = createAsyncThunk(
     "user/registerUser",
     async (user: Pick<UserType, "username" | "password">, { dispatch }) => {
-        const response = await axios.post('/api/v1/auth/signup/', user);
+        const response = await axios.post('/api/v1/auth/signup/', user)
+            .then(function (response) {
+                alert("가입 성공");
+                return response.data;
+            })
+            .catch(function (response) { alert("가입 실패") })
+            ;
 
-        return response.data;
+
     }
 )
 
 export const loginUser = createAsyncThunk(
     "user/loginUser",
     async (user: Pick<UserType, "username" | "password">, { dispatch }) => {
-        const response = await axios.post('/api/v1/auth/login/', user);
-
-        console.log("Login Backend")
-        console.log(response.data)
-
-        dispatch(userActions.loginUser(response.data.user_data));
-        dispatch(userActions.setToken(response.data.token))
-
-        return response.data;
+        const response = await axios.post('/api/v1/auth/login/', user)
+            .then(function (response) {
+                dispatch(userActions.loginUser(response.data.user_data));
+                dispatch(userActions.setToken(response.data.token))
+                return response.data
+            })
+            .catch(function (response) {
+                alert("로그인 실패")
+            });
 
     }
 );
@@ -67,13 +73,21 @@ export const logoutUser = createAsyncThunk(
         localStorage.removeItem("profile_img")
         localStorage.removeItem("nickname")
 
-        const response = await axios.post('/api/v1/auth/logout/',{},{
+        const response = await axios.post('/api/v1/auth/logout/', {}, {
             headers: {
                 Authorization: `Token ${token}`,
             },
-        });
-        dispatch(userActions.logoutUser());
-        return response.data
+        })
+            .then(function (response) {
+                dispatch(userActions.logoutUser());
+                return response.data
+            })
+            .catch(function (response) {
+                alert(
+                    "로그아웃 오류"
+                )
+            });
+
     }
 );
 
@@ -95,7 +109,7 @@ export const userSlice = createSlice({
             action: PayloadAction<string>
         ) => {
             state.token = action.payload;
-            localStorage.setItem("token",action.payload)
+            localStorage.setItem("token", action.payload)
         },
         loginUser: (
             state,
@@ -103,20 +117,20 @@ export const userSlice = createSlice({
         ) => {
             state.isLogin = true;
             state.user = action.payload;
-            if(action.payload.id){
-                localStorage.setItem("id",action.payload.id)
+            if (action.payload.id) {
+                localStorage.setItem("id", action.payload.id)
             }
-            if(action.payload.username){
-                localStorage.setItem("username",action.payload.username)
+            if (action.payload.username) {
+                localStorage.setItem("username", action.payload.username)
             }
-            if(action.payload.intro){
-                localStorage.setItem("intro",action.payload.intro)
+            if (action.payload.intro) {
+                localStorage.setItem("intro", action.payload.intro)
             }
-            if(action.payload.profile_img){
-                localStorage.setItem("profile_img",action.payload.profile_img)
+            if (action.payload.profile_img) {
+                localStorage.setItem("profile_img", action.payload.profile_img)
             }
-            if(action.payload.nickname){
-                localStorage.setItem("nickname",action.payload.nickname)
+            if (action.payload.nickname) {
+                localStorage.setItem("nickname", action.payload.nickname)
             }
         },
         logoutUser: (

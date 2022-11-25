@@ -9,7 +9,8 @@ import ListPage from "./ListPage"
 import React from 'react';
 
 import { render, screen, waitFor } from "@testing-library/react"
-import {UserInfo} from "../store/slices/user/user";
+import { UserInfo } from "../store/slices/user/user";
+import { FilterParamType } from "../store/slices/cocktail/cocktail"
 
 // eslint-disable-next-line react/display-name
 jest.mock("./Item/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
@@ -77,11 +78,14 @@ const ingredient: IngredientType = {
     ABV: 0,
     price: 0,
     introduction: "INTRODUCTION1",
+    unit: ['oz']
 }
 
 const ingredientState: IngredientInfo = {
     ingredientList: [ingredient],
     myIngredientList: [],
+    recommendIngredientList: [],
+    availableCocktails: [],
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
@@ -90,33 +94,49 @@ const ingredientState: IngredientInfo = {
 const stubUserInitialState: UserInfo = {
     user: {
         id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password:  null,
-        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password: null,
+        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
     },
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
 }
 
-const standardMockStore = getMockStore({ cocktail: stubInitialStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user:stubUserInitialState });
+const standardMockStore = getMockStore({ cocktail: stubInitialStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState });
 
-const customMockStore = getMockStore({ cocktail: stubInitialCustomCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user:stubUserInitialState });
+const customMockStore = getMockStore({ cocktail: stubInitialCustomCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState });
 
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
     useDispatch: () => jest.fn()
 }));
 
-jest.mock("react-router-dom", () => ({
-    ...jest.requireActual("react-router-dom"),
-    useLocation: () => jest.fn()
-}));
 
+
+
+jest.mock("react-router-dom", () => {
+    return {
+        ...jest.requireActual("react-router-dom"),
+        useLocation: () => {
+            return {
+                state: {
+                    filter_param: {
+                        type_one: ['a'],
+                        type_two: ['b'],
+                        type_three: ['c'],
+                        available_only: true
+                    },
+                    name_param: 'name'
+                }
+            }
+        }
+    };
+});
 describe("<ListPage />", () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        // jest.clearAllMocks();
     });
 
     it("should render standard cocktail without errors", () => {
@@ -168,7 +188,7 @@ describe("<ListPage />", () => {
             itemStatus: "success",
             listStatus: "loading",
         };
-        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user:stubUserInitialState });
+        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState });
         const { container } = render(
             <Provider store={mockStore}>
                 <MemoryRouter initialEntries={['/standard']}>
@@ -181,6 +201,47 @@ describe("<ListPage />", () => {
         expect(container).toBeTruthy();
     });
 
+    it("should handle filter search", () => {
+
+
+        jest.mock("react-router-dom", () => ({
+            ...jest.requireActual("react-router-dom"),
+            useLocation: () => ({
+                pathname: "localhost:3000/example/path",
+                state: {
+                    filter_param: {
+                        type_one: ['a'],
+                        type_two: ['b'],
+                        type_three: ['c'],
+                        available_only: true
+                    },
+                    name_param: 'name'
+                }
+            })
+        }));
+        const stubCocktaiState: CocktailInfo = {
+            cocktailList: [standard_cocktail1_item],
+            cocktailItem: null,
+            itemStatus: "success",
+            listStatus: "success",
+        };
+        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState });
+        const { container } = render(
+            <Provider store={mockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        expect(container).toBeTruthy();
+    });
+
+
+
+
+
     it("should render list when failed axios without errors", () => {
         const stubCocktaiState: CocktailInfo = {
             cocktailList: [standard_cocktail1_item],
@@ -188,7 +249,7 @@ describe("<ListPage />", () => {
             itemStatus: "success",
             listStatus: "failed",
         };
-        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user:stubUserInitialState });
+        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState });
         const { container } = render(
             <Provider store={mockStore}>
                 <MemoryRouter initialEntries={['/standard']}>

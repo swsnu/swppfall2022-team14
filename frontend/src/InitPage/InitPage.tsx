@@ -12,6 +12,7 @@ import { getUser, logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
 import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
 import RecommendModal from "./Modals/RecommendModal";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 export interface Filterparam {
     type_one: string[],
@@ -22,8 +23,6 @@ export interface Filterparam {
 
 
 const InitPage = () => {
-    const dummy_user_id = 4;
-    const ingredientState = useSelector(selectIngredient)
 
     const cocktailState = useSelector(selectCocktail)
     const userState = useSelector(selectUser)
@@ -34,7 +33,6 @@ const InitPage = () => {
     // const [urlParams, setUrlParams] = useState<string>("")
     const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [], available_only: false })
     const [input, setInput] = useState('')
-    const my_ingredient_id_list = ingredientState.myIngredientList.map(ingredient => ingredient.id)
 
     const request_param = { filter_param: filterParam, name_param: input }
 
@@ -62,14 +60,7 @@ const InitPage = () => {
         setIsInitMyLiqourOpen(true)
     }
     const onClicklogout = async () => {
-        console.log(userState.token)
         const result = await dispatch(logoutUser(userState.token));
-        console.log(result)
-        if (result.type === `${logoutUser.typePrefix}/fulfilled`) {
-            alert("logout 성공")
-        } else {
-            alert("Error on logout");
-        }
 
     }
     const onClickSearch = () => {
@@ -91,10 +82,10 @@ const InitPage = () => {
 
     const [isRecommendOpen, setIsRecommendOpen] = useState(false);
     const onClickRecommendButton = () => {
-        if(userState.isLogin){
+        if (userState.isLogin) {
             setIsRecommendOpen(true)
         }
-        else{
+        else {
             setIsLoginOpen(true)
         }
     }

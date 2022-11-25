@@ -13,17 +13,36 @@ export interface IngredientType {
     unit: string[]
 }
 
+interface CocktailShortInfo {
+    name: string;
+    type: string;
+    id: number;
+}
+
+interface AvailableCocktailMap {
+    ingredient_id: number;
+    cocktails: CocktailShortInfo[]
+
+}
+
 export interface IngredientInfo {
     ingredientList: IngredientType[],
     myIngredientList: IngredientType[],
     ingredientItem: IngredientType | null,
+    recommendIngredientList: IngredientType[],
+    availableCocktails: AvailableCocktailMap[],
     itemStatus: string,
     listStatus: string
 }
+
+
+
 const initialState: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
     ingredientItem: null,
+    recommendIngredientList: [],
+    availableCocktails: [],
     itemStatus: "loading",
     listStatus: "loading"
 }
@@ -125,6 +144,18 @@ export const ingredientSlice = createSlice({
             state.listStatus = "loading";
         });
         builder.addCase(fetchMyIngredientList.rejected, (state, action) => {
+            state.listStatus = "failed";
+        });
+        // 추천
+        builder.addCase(getRecommendIngredientList.fulfilled, (state, action) => {
+            state.recommendIngredientList = action.payload.Ingredients;
+            state.availableCocktails = action.payload.possible_cocktails;
+            state.listStatus = "success"
+        });
+        builder.addCase(getRecommendIngredientList.pending, (state, action) => {
+            state.listStatus = "loading";
+        });
+        builder.addCase(getRecommendIngredientList.rejected, (state, action) => {
             state.listStatus = "failed";
         });
     },

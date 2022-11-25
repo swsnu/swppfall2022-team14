@@ -1,5 +1,5 @@
 import { MemoryRouter, Route, Routes } from "react-router";
-import { screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent, waitFor } from "@testing-library/react";
 import { renderWithProviders } from "../../test-utils/mock";
 import { CocktailInfo } from "../../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../../store/slices/comment/comment";
@@ -21,13 +21,26 @@ const stubCommentInitialState: CommentInfo = {
     state: null,
 };
 
+
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
+    recommendIngredientList: [{ id: 1, name: '1', image: '1', ABV: 1, price: 1, introduction: '1', unit: ['1'] }],
+    availableCocktails: [{ ingredient_id: 1, cocktails: [{ name: 'cocktail1', type: 'ST', id: 1 }, { name: 'cocktail2', type: 'CS', id: 2 }, { name: 'cocktail3', type: 'NOTHING', id: 3 }] }],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
 };
+const stubIngredientInitialState2: IngredientInfo = {
+    ingredientList: [],
+    myIngredientList: [],
+    recommendIngredientList: [{ id: 1, name: '1', image: '1', ABV: 1, price: 1, introduction: '1', unit: ['1'] }],
+    availableCocktails: [],
+    ingredientItem: null,
+    itemStatus: "loading",
+    listStatus: "loading",
+};
+
 
 const stubUserInitialState: UserInfo = {
     user: {
@@ -60,7 +73,13 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderLoginModal = () => {
+const mockNavigate = jest.fn();
+jest.mock("react-router", () => ({
+    ...jest.requireActual("react-router"),
+    useNavigate: () => mockNavigate,
+}));
+
+const renderRecommendModal = (ingredient: IngredientInfo) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -72,75 +91,35 @@ const renderLoginModal = () => {
             preloadedState: {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
-                ingredient: stubIngredientInitialState,
+                ingredient: ingredient,
                 user: stubUserInitialState
             },
         }
     );
 };
 
+
+
 describe("<RecommendModal />", () => {
-    it("should render LoginModal", async () => {
-        renderLoginModal();
-        await screen.findByText("Login");
-    });
-    it("should render login inputs when login mode button clicked", async () => {
-        renderLoginModal();
-        const idInput = screen.getByLabelText("ID");
-        fireEvent.change(idInput, { target: { value: "TEST_ID" } });
-    });
-    it("should render register inputs when register mode button clicked", async () => {
-        renderLoginModal();
-        const registerModeButton = screen.getByText("register");
-        fireEvent.click(registerModeButton);
-        await screen.findByText("Register");
-        const nameInput = screen.getByLabelText("Name");
-        fireEvent.change(nameInput, { target: { value: "TEST_NAME" } });
-    });
-    it("should call onKeyPress when enter pressed", async () => {
-        renderLoginModal();
-        const idInput = screen.getByLabelText("ID");
-        fireEvent.keyPress(idInput, { key: "Enter", charCode: 13 });
-        fireEvent.keyPress(idInput, { key: "A", charCode: 65 });
-    });
-    it("should close login when confirmed", async () => {
-        renderLoginModal();
-        const idInput = screen.getByLabelText("ID");
-        fireEvent.change(idInput, { target: { value: "TEST_ID" } });
-        const passwordInput = screen.getByLabelText("Password");
-        fireEvent.change(passwordInput, { target: { value: "TEST_PASSWORD" } });
-        const loginButton = screen.getByText("Login");
-        fireEvent.click(loginButton);
-    });
-    it("should close register when confirmed", async () => {
-        renderLoginModal();
-        const registerModeButton = screen.getByText("register");
-        fireEvent.click(registerModeButton);
-        await screen.findByText("Register");
-        const nameInput = screen.getByLabelText("Name");
-        fireEvent.change(nameInput, { target: { value: "TEST_NAME" } });
-        const idInput = screen.getByLabelText("ID");
-        fireEvent.change(idInput, { target: { value: "TEST_ID" } });
-        const passwordInput = screen.getByLabelText("Password");
-        fireEvent.change(passwordInput, { target: { value: "TEST_PASSWORD" } });
-        const registerButton = screen.getByText("Register");
-        fireEvent.click(registerButton);
-    });
-    it("should alert error when id empty", async () => {
-        renderLoginModal();
-        const loginButton = screen.getByText("Login");
-        fireEvent.click(loginButton);
-    });
-    it("should alert error when password empty", async () => {
-        renderLoginModal();
-        const idInput = screen.getByLabelText("ID");
-        fireEvent.change(idInput, { target: { value: "TEST_ID" } });
-        const loginButton = screen.getByText("Login");
-        fireEvent.click(loginButton);
-    });
-    it("should close LoginModal when close button clicked", async () => {
-        renderLoginModal();
+    it("should render RecommendModal", async () => {
+        renderRecommendModal(stubIngredientInitialState);
         const closeButton = screen.getByText("X");
         fireEvent.click(closeButton);
     });
+    it("should handle available cocktail click", () => {
+        renderRecommendModal(stubIngredientInitialState);
+        const cocktailName = screen.getByText("cocktail1")
+        fireEvent.click(cocktailName)
+        expect(mockNavigate).toHaveBeenCalledWith("/standard/1");
+        const cocktailName2 = screen.getByText("cocktail2")
+        fireEvent.click(cocktailName2)
+        expect(mockNavigate).toHaveBeenCalledWith("/custom/2");
+        const cocktailName3 = screen.getByText("cocktail3")
+        fireEvent.click(cocktailName3)
+
+    })
+    it("should handle recommendation ingredients render branches", () => {
+        renderRecommendModal(stubIngredientInitialState2);
+    })
+
 });

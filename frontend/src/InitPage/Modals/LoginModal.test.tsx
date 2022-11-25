@@ -24,6 +24,8 @@ const stubCommentInitialState: CommentInfo = {
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
+    recommendIngredientList: [],
+    availableCocktails: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
@@ -94,8 +96,6 @@ describe("<LoginModal />", () => {
         const registerModeButton = screen.getByText("register");
         fireEvent.click(registerModeButton);
         await screen.findByText("Register");
-        const nameInput = screen.getByLabelText("Name");
-        fireEvent.change(nameInput, { target: { value: "TEST_NAME" } });
     });
     it("should call onKeyPress when enter pressed", async () => {
         renderLoginModal();
@@ -117,8 +117,6 @@ describe("<LoginModal />", () => {
         const registerModeButton = screen.getByText("register");
         fireEvent.click(registerModeButton);
         await screen.findByText("Register");
-        const nameInput = screen.getByLabelText("Name");
-        fireEvent.change(nameInput, { target: { value: "TEST_NAME" } });
         const idInput = screen.getByLabelText("ID");
         fireEvent.change(idInput, { target: { value: "TEST_ID" } });
         const passwordInput = screen.getByLabelText("Password");

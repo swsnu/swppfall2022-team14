@@ -55,7 +55,7 @@ const ListPage = () => {
                 available_only: location.state.filter_param.available_only
                 // my_ingredient_id_list: location.state.my_ingredient_param
             }
-            console.log(param)
+
             if (pageType === 'standard') {
                 dispatch(fetchStandardCocktailList(param))
             }
