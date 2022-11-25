@@ -88,7 +88,7 @@ def get_only_available_cocktails(request, filter_q):
         filter_q.add(Q(id__in=available_cocktails_id), Q.AND)
 
 
-def get_cocktail_list_by_ingredient(request, filter_q):
+"""def get_cocktail_list_by_ingredient(request, filter_q):
     # return list of Cocktail ID that is available
 
     request_ingredient = request.query_params.getlist(
@@ -110,7 +110,7 @@ def get_cocktail_list_by_ingredient(request, filter_q):
     if (not available_cocktails_id):
         filter_q.add(Q(id__in=[-1]), Q.AND)
     else:
-        filter_q.add(Q(id__in=available_cocktails_id), Q.AND)
+        filter_q.add(Q(id__in=available_cocktails_id), Q.AND)"""
 
 
 @api_view(['GET'])
@@ -167,8 +167,8 @@ def cocktail_list(request):
         #     return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
 
 @api_view(['POST'])
-@authentication_classes([authentication.TokenAuthentication])
-@permission_classes([permissions.IsAuthenticated])
+#@authentication_classes([authentication.TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
 def cocktail_post(request):
     if request.method == 'POST':
         try:
@@ -221,8 +221,8 @@ def cocktail_post(request):
     #     return HttpResponseNotAllowed(['GET', 'POST'])
 
 @api_view(['PUT'])
-@authentication_classes([authentication.TokenAuthentication])
-@permission_classes([permissions.IsAuthenticated])
+#@authentication_classes([authentication.TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
 def cocktail_edit(request, pk):
     try:
         cocktail = Cocktail.objects.get(id=pk)
