@@ -191,7 +191,9 @@ const emptyIngredient: IngredientInfo = {
     myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
-    listStatus: "loading"
+    listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
 };
 
 const stubUserInitialState: UserInfo = {
@@ -233,7 +235,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-jest.spyOn(window, 'alert').mockImplementation(() => {});
+jest.spyOn(window, 'alert').mockImplementation(() => { });
 
 describe("<ItemDetailPage />", () => {
     beforeEach(() => {
@@ -314,7 +316,7 @@ describe("<ItemDetailPage />", () => {
         );
         const element = container.getElementsByClassName("main");
         expect(element).toHaveLength(1);
-        
+
         const bookmarkButton = screen.getByText("Add in Bookmark");
         fireEvent.click(bookmarkButton);
 
@@ -346,7 +348,7 @@ describe("<ItemDetailPage />", () => {
                     </Routes>
                 </MemoryRouter>
             </Provider>
-        );     
+        );
         const bookmarkButton = screen.getByText("Remove from Bookmark");
     });
     it("should not create comment when not login", async () => {

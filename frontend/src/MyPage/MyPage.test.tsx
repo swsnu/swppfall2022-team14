@@ -63,6 +63,8 @@ const emptyIngredientState: IngredientInfo = {
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 
 const loggedInState: UserInfo = {
@@ -84,12 +86,12 @@ const loggedOutState: UserInfo = {
     isLogin: false
 }
 
-const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: emptyIngredientState, comment: emptyCommentState, user:loggedInState });
-const mockLoggedOutStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: emptyIngredientState, comment: emptyCommentState, user:loggedOutState });
+const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: emptyIngredientState, comment: emptyCommentState, user: loggedInState });
+const mockLoggedOutStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: emptyIngredientState, comment: emptyCommentState, user: loggedOutState });
 
 describe("<MyPage />", () => {
     it("should render without errors", () => {
-        render(<Provider store={mockLoggedInStore}><MyPage/></Provider>); 
+        render(<Provider store={mockLoggedInStore}><MyPage /></Provider>);
         const navBar = screen.getAllByTestId("spyNavBar");
         expect(navBar).toHaveLength(1);
         const myIngredient = screen.getAllByTestId("spyMyIngredient");
@@ -97,7 +99,7 @@ describe("<MyPage />", () => {
     });
 
     it("should handle view change button", () => {
-        render(<Provider store={mockLoggedInStore}><MyPage/></Provider>); 
+        render(<Provider store={mockLoggedInStore}><MyPage /></Provider>);
         const infoButton = screen.getByText("Info");
         fireEvent.click(infoButton);
         const myInfo = screen.getAllByTestId("spyMyInfo");
@@ -107,7 +109,7 @@ describe("<MyPage />", () => {
     it("should be redirected if not logged in", () => {
         const mockConsoleLog = jest.fn()
         console.log = mockConsoleLog
-        render(<Provider store={mockLoggedOutStore}><MyPage/></Provider>); 
+        render(<Provider store={mockLoggedOutStore}><MyPage /></Provider>);
         expect(mockNavigate).toBeCalledWith(-1)
         expect(mockConsoleLog).toBeCalledWith("먼저 로그인 해주세요")
     });

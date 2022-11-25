@@ -5,8 +5,8 @@ import { CocktailInfo } from "../../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../../store/slices/comment/comment";
 import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
 import NavFilter from "./NavFilter";
-import {UserInfo} from "../../store/slices/user/user";
-
+import { UserInfo } from "../../store/slices/user/user";
+import React from 'react';
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
@@ -23,6 +23,8 @@ const stubCommentInitialState: CommentInfo = {
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
+    recommendIngredientList: [],
+    availableCocktails: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
@@ -31,11 +33,11 @@ const stubIngredientInitialState: IngredientInfo = {
 const stubUserInitialState: UserInfo = {
     user: {
         id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password:  null,
-        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password: null,
+        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
     },
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
@@ -45,6 +47,11 @@ const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
     useDispatch: () => mockDispatch,
+}));
+const mockNavigate = jest.fn();
+jest.mock("react-router", () => ({
+    ...jest.requireActual("react-router"),
+    useNavigate: () => mockNavigate,
 }));
 
 const renderNavFilter = (type: string) => {
@@ -71,8 +78,34 @@ describe("<NavFilter />", () => {
         const searchBar = screen.getByPlaceholderText("검색어를 입력하세요");
         fireEvent.change(searchBar, { target: { value: "COCKTAIL" } });
         expect(searchBar).toHaveDisplayValue("COCKTAIL");
+
+
     });
-    it("should render ingredient NavFilter", async () => {
+    it("should handle click search button_st", async () => {
+        renderNavFilter("ST");
+        const searchButton = await screen.findByText("검색하기")
+        fireEvent.click(searchButton)
+        expect(mockNavigate).toBeCalledWith("/standard", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "" } })
+    });
+    it("should handle click search button_cs", async () => {
+        renderNavFilter("CS");
+        const searchButton = await screen.findByText("검색하기")
+        fireEvent.click(searchButton)
+        expect(mockNavigate).toBeCalledWith("/custom", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "" } })
+    });
+    it("should handle click search button_ig", async () => {
+        renderNavFilter("IG");
+        const searchButton = await screen.findByText("검색하기")
+        fireEvent.click(searchButton)
+        expect(mockNavigate).toBeCalledWith("/ingredient")
+    });
+    it("should handle click search button_invalid", async () => {
+        renderNavFilter("INVALID");
+        const searchButton = await screen.findByText("검색하기")
+        fireEvent.click(searchButton)
+    });
+    const newLocal = "should render ingredient NavFilter";
+    it(newLocal, async () => {
         renderNavFilter("IG");
         await screen.findByText("검색하기");
         const searchBar = screen.getByPlaceholderText("검색어를 입력하세요");
@@ -94,4 +127,17 @@ describe("<NavFilter />", () => {
         fireEvent.click(typeButton2);
         fireEvent.click(typeButton2);
     });
+    it("should handle theme click", () => {
+        renderNavFilter("ST");
+        const themebutton1 = screen.getByText("Theme1")
+        const themebutton2 = screen.getByText("Theme2")
+        fireEvent.click(themebutton1)
+        fireEvent.click(themebutton2)
+        fireEvent.change(themebutton1, { target: { checked: true } })
+    })
+    it("should handle available only feature", () => {
+        renderNavFilter("ST");
+        const availableOnly = screen.getByText("만들 수 있는 칵테일만")
+        fireEvent.click(availableOnly)
+    })
 });

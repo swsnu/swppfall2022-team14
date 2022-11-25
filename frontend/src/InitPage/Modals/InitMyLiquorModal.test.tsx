@@ -23,11 +23,23 @@ const stubCommentInitialState: CommentInfo = {
 
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
-    myIngredientList: [],
+    myIngredientList: [{ id: 1, name: '1', image: '1', ABV: 1, price: 1, introduction: '1', unit: ['1'] }],
+    recommendIngredientList: [],
+    availableCocktails: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
 };
+const stubIngredientInitialStateEmpty: IngredientInfo = {
+    ingredientList: [],
+    myIngredientList: [],
+    recommendIngredientList: [],
+    availableCocktails: [],
+    ingredientItem: null,
+    itemStatus: "loading",
+    listStatus: "loading",
+};
+
 
 const stubUserInitialState: UserInfo = {
     user: {
@@ -60,7 +72,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderInitMyLiqourModal = () => {
+const renderInitMyLiqourModal = (ingredient: IngredientInfo) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -71,7 +83,7 @@ const renderInitMyLiqourModal = () => {
             preloadedState: {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
-                ingredient: stubIngredientInitialState,
+                ingredient: ingredient,
                 user: stubUserInitialState,
             },
         }
@@ -79,12 +91,11 @@ const renderInitMyLiqourModal = () => {
 };
 
 describe("<InitMyLiquorModal />", () => {
-    it("should render InitMyLiquorModal", async () => {
-        renderInitMyLiqourModal();
-        await screen.findByText("내 술 목록");
+    it("should render InitMyLiquorModal", () => {
+        renderInitMyLiqourModal(stubIngredientInitialState);
     });
-    it("should close InitMyLiquorModal when close button clicked", async () => {
-        renderInitMyLiqourModal();
+    it("should close InitMyLiquorModal when close button clicked", () => {
+        renderInitMyLiqourModal(stubIngredientInitialStateEmpty);
         const closeButton = screen.getByText("X");
         fireEvent.click(closeButton);
     });

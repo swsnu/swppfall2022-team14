@@ -21,21 +21,6 @@ const InitMyLiqourModal = (props: prop) => {
 
 
 
-    //Modal.setAppElement('#root');
-    
-    /* eslint-disable */
-    // Use in future
-    /*
-    const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            return
-            //TODO : IMPLEMENT THIS
-        }
-    };
-    */
-    /* eslint-enable */
-
-
     return (
         <Modal className={styles['my-liqour-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
             <button onClick={() => setIsOpen(false)}>X</button>

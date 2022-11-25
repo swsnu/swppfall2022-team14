@@ -5,7 +5,7 @@ import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import { getMockStore } from "../test-utils/mock";
 import MyCustomCocktail from "./MyCustomCocktail";
-import {UserInfo} from "../store/slices/user/user";
+import { UserInfo } from "../store/slices/user/user";
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -54,6 +54,8 @@ const ingredientState: IngredientInfo = {
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 
 
@@ -78,8 +80,8 @@ const loggedOutState: UserInfo = {
 }
 
 
-const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user:loggedInState });
-const mockLoggedOutStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user:loggedOutState });
+const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: loggedInState });
+const mockLoggedOutStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: loggedOutState });
 
 
 describe("<MyCustomCocktail />", () => {
@@ -114,6 +116,6 @@ describe("<MyCustomCocktail />", () => {
                 <MyCustomCocktail />
             </Provider>
         );
-        screen.getByTestId("spyCocktail_2");    
+        screen.getByTestId("spyCocktail_2");
     });
 })

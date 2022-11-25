@@ -60,6 +60,8 @@ const ingredientState: IngredientInfo = {
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 
 const loggedInState: UserInfo = {
@@ -75,7 +77,7 @@ const loggedInState: UserInfo = {
     isLogin: true
 }
 
-const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user:loggedInState });
+const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: loggedInState });
 
 describe("<AddIngredientModal />", () => {
     beforeEach(() => {
@@ -84,9 +86,9 @@ describe("<AddIngredientModal />", () => {
 
     it("should render modal closed without errors", () => {
         const { container } = render(
-        <Provider store={mockLoggedInStore}>
-            <AddIngredientModal isOpen={false} setIsOpen={setIsOpen} user_id={4} />
-        </Provider>
+            <Provider store={mockLoggedInStore}>
+                <AddIngredientModal isOpen={false} setIsOpen={setIsOpen} user_id={4} />
+            </Provider>
         );
         expect(setIsOpen).toBeCalledWith(false)
         screen.getByTestId("spyModal_closed");
@@ -94,9 +96,9 @@ describe("<AddIngredientModal />", () => {
 
     it("should render modal opened without errors", () => {
         const { container } = render(
-        <Provider store={mockLoggedInStore}>
-            <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
-        </Provider>
+            <Provider store={mockLoggedInStore}>
+                <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
+            </Provider>
         );
         screen.getByTestId("spyModal_opened");
         screen.getByText("Add");
@@ -104,9 +106,9 @@ describe("<AddIngredientModal />", () => {
 
     it("should handle close modal button", () => {
         render(
-        <Provider store={mockLoggedInStore}>
-            <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
-        </Provider>
+            <Provider store={mockLoggedInStore}>
+                <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
+            </Provider>
         );
         const button = screen.getByText("X")
         fireEvent.click(button)
@@ -115,23 +117,23 @@ describe("<AddIngredientModal />", () => {
 
     it("should handle add ingredient", async () => {
         render(
-        <Provider store={mockLoggedInStore}>
-            <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
-        </Provider>
+            <Provider store={mockLoggedInStore}>
+                <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
+            </Provider>
         )
         const button = screen.getByText("INGREDIENT1")
         fireEvent.click(button)
-        await waitFor(() =>  expect(button).toBeDisabled());
+        await waitFor(() => expect(button).toBeDisabled());
     })
 
     it("should handle confirm add ingredient", async () => {
         render(
-        <Provider store={mockLoggedInStore}>
-            <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
-        </Provider>
+            <Provider store={mockLoggedInStore}>
+                <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
+            </Provider>
         )
         const button = screen.getByText("Add")
         fireEvent.click(button)
-        await waitFor(() =>  expect(mockDispatch).toBeCalledTimes(3));
+        await waitFor(() => expect(mockDispatch).toBeCalledTimes(3));
     })
 })

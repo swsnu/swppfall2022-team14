@@ -6,7 +6,7 @@ import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import NavBar from "./NavBar";
 import { Iprops as NavFilterProp } from "./NavFilter/NavFilter";
-import {UserInfo} from "../store/slices/user/user";
+import { UserInfo } from "../store/slices/user/user";
 import React from 'react'
 
 // eslint-disable-next-line react/display-name
@@ -53,16 +53,18 @@ const stubIngredientInitialState: IngredientInfo = {
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
 };
 
 const stubUserInitialState: UserInfo = {
     user: {
         id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password:  null,
-        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password: null,
+        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
     },
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)

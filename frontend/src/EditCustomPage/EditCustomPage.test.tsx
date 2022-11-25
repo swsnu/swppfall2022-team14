@@ -40,6 +40,8 @@ const stubIngredientInitialState: IngredientInfo = {
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
 };
 
 const stubCocktailInitialState: CocktailInfo = {
@@ -96,7 +98,7 @@ jest.mock("../CreateCustomPage/Modals/AddIngredientModal", () => (prop: AddIngre
                             prop.close();
                         }}
                     >
-                        INGREDIENT_{idx+1}
+                        INGREDIENT_{idx + 1}
                     </button>
                 )
             })}
@@ -138,15 +140,15 @@ const renderEditCustomPage = (status = "success", isLogin: boolean = true, isUse
             preloadedState: {
                 cocktail: (
                     isCocktailNull ?
-                    { ...stubCocktailInitialState, cocktailItem: null } :
-                    { ...stubCocktailInitialState, itemStatus: status }
+                        { ...stubCocktailInitialState, cocktailItem: null } :
+                        { ...stubCocktailInitialState, itemStatus: status }
                 ),
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
                 user: (
                     isUserNull ?
-                    { ...stubUserInitialState, user: null, token: null } :
-                    { ...stubUserInitialState, isLogin: isLogin }
+                        { ...stubUserInitialState, user: null, token: null } :
+                        { ...stubUserInitialState, isLogin: isLogin }
                 )
             },
         }

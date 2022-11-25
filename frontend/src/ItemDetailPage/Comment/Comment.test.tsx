@@ -27,7 +27,9 @@ const emptyIngredient: IngredientInfo = {
     myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
-    listStatus: "loading"
+    listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
 };
 
 const commentAuthor: CommentType = {

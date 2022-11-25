@@ -7,7 +7,7 @@ import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo, IngredientType } from "../store/slices/ingredient/ingredient";
 import { getMockStore } from "../test-utils/mock";
 import MyIngredient from "./MyIngredient";
-import {UserInfo} from "../store/slices/user/user";
+import { UserInfo } from "../store/slices/user/user";
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -53,6 +53,8 @@ const ingredientState: IngredientInfo = {
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 
 const loggedInState: UserInfo = {
@@ -68,7 +70,7 @@ const loggedInState: UserInfo = {
     isLogin: true
 }
 
-const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user:loggedInState });
+const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: loggedInState });
 
 
 describe("<MyIngredient />", () => {

@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import styles from './LoginModal.module.scss'
 import { toast } from 'react-toastify';
 import { AppDispatch } from '../../store';
-import {loginUser, logoutUser, registerUser, selectUser} from '../../store/slices/user/user';
+import { loginUser, logoutUser, registerUser, selectUser } from '../../store/slices/user/user';
 import React from 'react';
 
 export interface prop {
@@ -45,17 +45,18 @@ const LoginModal = (props: prop) => {
         } else {
             const data = { username: loginId, password: loginPassword };
             const result = await dispatch(loginUser(data));
+            setIsOpen(false)
 
-            if (result.type === `${loginUser.typePrefix}/fulfilled`) {
-                console.log("front - success")
-                console.log(result)
-                setIsOpen(false)
+            // if (result.type === `${loginUser.typePrefix}/fulfilled`) {
+            //     console.log("front - success")
+            //     console.log(result)
+            //     setIsOpen(false)
 
-            } else {
-                console.log("front - failed")
-                console.log(result)
-                alert("아이디 또는 비밀번호가 일치하지 않습니다.");
-            }
+            // } else {
+            //     console.log("front - failed")
+            //     console.log(result)
+            //     alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+            // }
         }
     };
 
@@ -66,15 +67,16 @@ const LoginModal = (props: prop) => {
             password: loginPassword
         }
         const result = await dispatch(registerUser(data))
-        if (result.type === `${registerUser.typePrefix}/fulfilled`) {
-            console.log("front - success")
-            console.log(result)
-            alert("계정 생성 성공")
-        } else {
-            console.log("front - failed")
-            console.log(result)
-            alert("계정 생성 실패");
-        }
+        setIsOpen(false)
+        // if (result.type === `${registerUser.typePrefix}/fulfilled`) {
+        //     console.log("front - success")
+        //     console.log(result)
+        //     alert("계정 생성 성공")
+        // } else {
+        //     console.log("front - failed")
+        //     console.log(result)
+        //     alert("계정 생성 실패");
+        // }
     };
     const onClickClose = () => {
         setName('');
