@@ -10,7 +10,7 @@ import {fetchCommentListByCocktailId, fetchMyCommentList} from "./comment";
 import {getComment, postComment, editComment} from "./comment"
 import {getCocktail} from "../cocktail/cocktail";
 
-describe("userInfo reducer", () => {
+describe("comment reducer", () => {
     let store: EnhancedStore<
         { comment: CommentInfo },
         AnyAction,

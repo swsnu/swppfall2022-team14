@@ -13,17 +13,18 @@ from rest_framework import permissions, authentication
 @api_view(['POST'])
 def signup(request):
     if request.method == 'POST':
-        req_data = json.loads(request.body.decode())
-        username = req_data['username']
-        password = req_data['password']
 
-        user = User.objects.create_user(username=username, password=password)
-        Token.objects.create(user=user)
+        try:
+            req_data = json.loads(request.body.decode())
+            username = req_data['username']
+            password = req_data['password']
 
-        return HttpResponse(status=201)
-    else:
-        #return HttpResponse(status = 300)
-        return HttpResponseNotAllowed(['POST'])
+            user = User.objects.create_user(username=username, password=password)
+            Token.objects.create(user=user)
+
+            return HttpResponse(status=201)
+        except:
+            return HttpResponse(status=400)
 
 
 @api_view(['POST'])
@@ -50,8 +51,6 @@ def signin(request):
             return Response(data)
         else:
             return HttpResponse(status=401)
-    else:
-        return HttpResponseNotAllowed(['POST'])
 
 
 @api_view(['POST'])
@@ -66,8 +65,6 @@ def signout(request):
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=401)
-    else:
-        return HttpResponseNotAllowed(['POST'])
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -107,12 +104,9 @@ def retrieve_my_info(request):
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=401)
-    else:
-        return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
 
 @ensure_csrf_cookie
+@api_view(['GET'])
 def token(request):
     if request.method == 'GET':
         return HttpResponse(status=204)
-    else:
-        return HttpResponse(status=213)

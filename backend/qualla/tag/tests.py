@@ -7,7 +7,7 @@ from ingredient.models import Ingredient
 import json
 
 
-class CommentTestCase(TestCase):
+class TagTestCase(TestCase):
 
     def test_cocktails_by_tag(self):
         client = Client()
