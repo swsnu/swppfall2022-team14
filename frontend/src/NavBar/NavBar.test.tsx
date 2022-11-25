@@ -221,5 +221,6 @@ describe("<NavBar />", () => {
         fireEvent.click(myLiquorButton);
         const myPageButton = screen.getByText("My Page");
         fireEvent.click(myPageButton);
+        expect(mockNavigate).not.toHaveBeenCalled()
     });
 });
