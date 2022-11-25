@@ -30,7 +30,8 @@ const stubIngredientInitialState: IngredientInfo = {
             image: 'INGREDIENT_IMAGE_1',
             introduction: 'INGREDIENT_INTRO_1',
             ABV: 40,
-            price: 200
+            price: 200,
+            unit: ['oz', 'ml']
         },
         {
             id: 2,
@@ -38,7 +39,8 @@ const stubIngredientInitialState: IngredientInfo = {
             image: 'INGREDIENT_IMAGE_2',
             introduction: 'INGREDIENT_INTRO_2',
             ABV: 20,
-            price: 100
+            price: 100,
+            unit: ['oz']
         },
     ],
     myIngredientList: [],
@@ -49,34 +51,36 @@ const stubIngredientInitialState: IngredientInfo = {
 
 const stubUserInitialState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password: null,
-        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "TEST_ID",
+        username: "TEST_USERNAME",
+        password: "TEST_PASSWORD",
+        nickname: "TEST_NICKNAME",
+        intro: "TEST_INTRO",
+        profile_img: "TEST_PROFILE_IMG",
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
-}
-
+    token: "TEST_TOKEN",
+    isLogin: true
+};
 
 // eslint-disable-next-line react/display-name
 jest.mock("./Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) => {
     return (
         <div>
-            <button
-                data-testid="addIngredientButton"
-                onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[0])}
-            >
-                INGREDIENT_1
-            </button>
-            <button
-                data-testid="addIngredientButton"
-                onClick={() => prop.setNewIngrdient(stubIngredientInitialState.ingredientList[1])}
-            >
-                INGREDIENT_2
-            </button>
+            {stubIngredientInitialState.ingredientList.map((ingredient, idx) => {
+                return (
+                    <button
+                        key={`${ingredient.name}_${idx}`}
+                        data-testid="addIngredientButton"
+                        onClick={() => {
+                            prop.setNewIngrdient(ingredient);
+                            prop.setDefaultUnit(ingredient.unit[0])
+                            prop.close();
+                        }}
+                    >
+                        INGREDIENT_{idx + 1}
+                    </button>
+                )
+            })}
             <button
                 data-testid="closeAddIngredientModalButton"
                 onClick={prop.close}
@@ -100,7 +104,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderCreateCustomPage = () => {
+const renderCreateCustomPage = (isLogin: boolean = true, isUserNull: boolean = false) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -112,7 +116,11 @@ const renderCreateCustomPage = () => {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
-                user: stubUserInitialState,
+                user: (
+                    isUserNull ?
+                        { ...stubUserInitialState, user: null, token: null } :
+                        { ...stubUserInitialState, isLogin: isLogin }
+                )
             },
         }
     );
@@ -134,7 +142,7 @@ describe("<CreateCustomPage />", () => {
         const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
         fireEvent.click(addIngredientButton);
         const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
-        fireEvent.change(ingredientAmountInput, { target: { value: "10 oz" } });
+        fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
         const recipeInput = screen.getByLabelText("Recipe:");
         fireEvent.change(recipeInput, { target: { value: "RECIPE" } });
         const tagInput = screen.getByTestId("tagInput");
@@ -160,11 +168,21 @@ describe("<CreateCustomPage />", () => {
         const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
         fireEvent.click(addIngredientButton);
         const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
-        fireEvent.change(ingredientAmountInput, { target: { value: "10 oz" } });
+        fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
         const addIngredientButton2 = screen.getAllByTestId("addIngredientButton")[1];
         fireEvent.click(addIngredientButton2);
         const ingredientAmountInput2 = screen.getAllByTestId("ingredientAmountInput")[1];
-        fireEvent.change(ingredientAmountInput2, { target: { value: "5 oz" } });
+        fireEvent.change(ingredientAmountInput2, { target: { value: "5" } });
+        fireEvent.change(ingredientAmountInput2, { target: { value: "0" } });
+    });
+    it("should operate onChangeIngredientUnit correctly", async () => {
+        renderCreateCustomPage();
+        const ingredientInput = screen.getByTestId("ingredientInput");
+        fireEvent.click(ingredientInput);
+        const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
+        fireEvent.click(addIngredientButton);
+        const ingredientUnitSelect = screen.getAllByTestId("ingredientUnitSelect")[0];
+        fireEvent.change(ingredientUnitSelect, { target: { value: "ml" } });
     });
     it("should delete tag when tag delete button clicked", async () => {
         renderCreateCustomPage();
@@ -186,5 +204,28 @@ describe("<CreateCustomPage />", () => {
         const tagInput = screen.getByTestId("tagInput");
         fireEvent.change(tagInput, { target: { value: "TAG" } })
         fireEvent.keyPress(tagInput, { key: "A", charCode: 65 });
+    });
+    it("should alert when not login", async () => {
+        renderCreateCustomPage(false);
+    });
+    it("should not create cocktail when user is null", async () => {
+        renderCreateCustomPage(true, true);
+        const nameInput = screen.getByLabelText("Name:");
+        fireEvent.change(nameInput, { target: { value: "NAME" } });
+        const descriptionInput = screen.getByLabelText("Description:");
+        fireEvent.change(descriptionInput, { target: { value: "DESCRIPTION" } });
+        const ingredientInput = screen.getByTestId("ingredientInput");
+        fireEvent.click(ingredientInput);
+        const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
+        fireEvent.click(addIngredientButton);
+        const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
+        fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
+        const recipeInput = screen.getByLabelText("Recipe:");
+        fireEvent.change(recipeInput, { target: { value: "RECIPE" } });
+        const tagInput = screen.getByTestId("tagInput");
+        fireEvent.change(tagInput, { target: { value: "TAG" } })
+        fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
+        const confirmButton = screen.getByText("Confirm");
+        fireEvent.click(confirmButton);
     });
 });

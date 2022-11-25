@@ -26,7 +26,6 @@ class IngredientPrepare(models.Model):
         ]
     
     def clean(self):
-        print(self.amount)
         if not self.amount.split(" ")[1] in self.ingredient.unit_list():
             raise ValidationError(('Ingredient Unit Error'))
 

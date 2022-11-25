@@ -31,7 +31,7 @@ const AddIngredientModal = (props: IProps) => {
     }, [])
 
     return (
-        <Modal className="modal" isOpen={isOpen}>
+        <Modal className="modal" isOpen={isOpen} ariaHideApp={false}>
             <div className="modal__ingredient-list">
                 {ingredientState.ingredientList.map((ingredient, idx) => {
                     return (

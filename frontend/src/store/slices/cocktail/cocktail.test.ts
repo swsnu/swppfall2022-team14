@@ -6,11 +6,20 @@ import {
 import axios from "axios";
 import { ThunkMiddleware } from "redux-thunk";
 import { Filterparam } from "../../../InitPage/InitPage";
-import reducer, { CocktailItemType, CocktailDetailType, IngredientPrepareType, CocktailInfo, cocktailActions, editCocktail, FilterParamType } from "./cocktail";
+import reducer, {
+    CocktailItemType,
+    CocktailDetailType,
+    IngredientPrepareType,
+    CocktailInfo,
+    cocktailActions,
+    editCocktail,
+    FilterParamType,
+    PostForm, fetchMyBookmarkCocktailList, authPostCocktail, toggleBookmark
+} from "./cocktail";
 import { fetchCustomCocktailList, fetchStandardCocktailList, fetchMyCocktailList } from "./cocktail";
 import { getCocktail, postCocktail } from "./cocktail"
 
-describe("userInfo reducer", () => {
+describe("cocktail reducer", () => {
     let store: EnhancedStore<
         { cocktail: CocktailInfo },
         AnyAction,
@@ -25,6 +34,7 @@ describe("userInfo reducer", () => {
         tags: ["CS1", "CS2"],
         author_id: 1,
         rate: 1,
+        is_bookmarked: false,
     }
     const fakeCocktailItemST = {
         id: 1,
@@ -34,6 +44,7 @@ describe("userInfo reducer", () => {
         tags: ["ST1", "ST2"],
         author_id: 1,
         rate: 1,
+        is_bookmarked: false,
     }
     const fakeCocktailItemST_2 = {
         id: 2,
@@ -43,6 +54,7 @@ describe("userInfo reducer", () => {
         tags: ["ST1", "ST2"],
         author_id: 1,
         rate: 1,
+        is_bookmarked: false,
     }
 
 
@@ -77,19 +89,22 @@ describe("userInfo reducer", () => {
             price: 1,
             introduction: "iintro",
             amount: 1,
-        }]
+        }],
+        is_bookmarked: false,
     }
-    const fakeDetailOmit = {
-        id: 1,
-        name: "name",
-        image: "img",
-        tags: ["ST1", "ST2"],
-        author_id: 1,
-        introduction: "intro",
-        recipe: "recipe",
-        ABV: 1,
-        price_per_glass: 1,
-        ingredients: []
+    const fakeDetailOmit : PostForm = {
+        cocktail: {
+            name: "name",
+            image: "img",
+            tags: ["ST1", "ST2"],
+            author_id: 1,
+            introduction: "intro",
+            recipe: "recipe",
+            ABV: 1,
+            price_per_glass: 1,
+            ingredients: [],
+        },
+        token: 'Token',
     }
 
 
@@ -112,6 +127,11 @@ describe("userInfo reducer", () => {
         await store.dispatch(fetchStandardCocktailList(mockFilterParam));
         expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemST])
     });
+    it("should handle fetchStandardCocktailList no params", async () => {
+        axios.get = jest.fn().mockResolvedValue({ data: { cocktails: [fakeCocktailItemST] } });
+        await store.dispatch(fetchStandardCocktailList(null));
+        expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemST])
+    });
     it("should handle fetchStandardCocktailList when failed", async () => {
         (axios.get as jest.Mock).mockImplementationOnce(() => {
             throw {
@@ -132,6 +152,11 @@ describe("userInfo reducer", () => {
         await store.dispatch(fetchCustomCocktailList(mockFilterParam));
         expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
+    it("should handle fetchCustomCocktailList no params", async () => {
+        axios.get = jest.fn().mockResolvedValue({ data: { cocktails: [fakeCocktailItemCS] } });
+        await store.dispatch(fetchCustomCocktailList(null));
+        expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
+    });
     it("should handle fetchCustomCocktailList when failed", async () => {
         (axios.get as jest.Mock).mockImplementationOnce(() => {
             throw {
@@ -147,11 +172,13 @@ describe("userInfo reducer", () => {
         expect(store.getState().cocktail.listStatus).toEqual('failed')
     });
     it("should handle fetchMyCocktailList", async () => {
+        const token = 'Token'
         axios.get = jest.fn().mockResolvedValue({ data: { cocktails: [fakeCocktailItemCS] } });
-        await store.dispatch(fetchMyCocktailList());
+        await store.dispatch(fetchMyCocktailList(token));
         expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
     it("should handle fetchMyCocktailList when failed", async () => {
+        const token = 'Token';
         (axios.get as jest.Mock).mockImplementationOnce(() => {
             throw {
                 response: {
@@ -161,7 +188,7 @@ describe("userInfo reducer", () => {
                 },
             };
         });
-        await store.dispatch(fetchMyCocktailList());
+        await store.dispatch(fetchMyCocktailList(token));
         expect(store.getState().cocktail.listStatus).toEqual('failed')
     });
 
@@ -187,19 +214,58 @@ describe("userInfo reducer", () => {
 
     it("should handle postCocktail", async () => {
         axios.post = jest.fn().mockResolvedValue({ data: fakeCocktailItemST });
-        await store.dispatch(postCocktail(fakeDetailOmit));
+        await store.dispatch(postCocktail(fakeDetailOmit.cocktail));
+        //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
+    });
+    it("should handle authPostCocktail", async () => {
+        axios.post = jest.fn().mockResolvedValue({ data: fakeCocktailItemST });
+        await store.dispatch(authPostCocktail(fakeDetailOmit));
         //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
 
     it("should handle editCocktail", async () => {
         axios.put = jest.fn().mockResolvedValue({ data: fakeCocktailItemST });
-        await store.dispatch(editCocktail(fakeDetailOmit));
+        await store.dispatch(editCocktail({data: fakeDetailOmit, id: 11}));
         //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
     it("should handle editCocktail when different id exists", async () => {
         axios.put = jest.fn().mockResolvedValue({ data: fakeCocktailItemST_2 });
-        await store.dispatch(editCocktail(fakeDetailOmit));
+        await store.dispatch(editCocktail({data: fakeDetailOmit, id: 11}));
         //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
+
+
+    it("should handle fetchMyBookmarkCocktailList", async () => {
+        const token = 'Token'
+        axios.get = jest.fn().mockResolvedValue({ data: { cocktails: [fakeCocktailItemCS] } });
+        await store.dispatch(fetchMyBookmarkCocktailList(token));
+        expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
+    });
+    it("should handle fetchMyBookmarkCocktailList when failed", async () => {
+        const token = 'Token';
+        axios.get = jest.fn().mockImplementationOnce(() => {
+            throw {
+                response: {
+                    data: {
+                        message: 'Error',
+                    },
+                },
+            };
+        });
+        await store.dispatch(fetchMyBookmarkCocktailList(token));
+        expect(store.getState().cocktail.listStatus).toEqual('failed')
+    });
+
+    it("should handle toggleBookmark", async () => {
+        const token = 'Token'
+        axios.put = jest.fn().mockResolvedValue({ data: { cocktail_id: 1 } });
+        await store.dispatch(toggleBookmark({cocktail_id: 1, token: token}));
+    });
+    it("should handle toggleBookmark", async () => {
+        const token = 'Token'
+        axios.put = jest.fn().mockResolvedValue({ data: { cocktail_id: 111 } });
+        await store.dispatch(toggleBookmark({cocktail_id: 111, token: token}));
+    });
+
 
 });

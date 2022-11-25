@@ -85,13 +85,13 @@ describe("<NavFilter />", () => {
         renderNavFilter("ST");
         const searchButton = await screen.findByText("검색하기")
         fireEvent.click(searchButton)
-        expect(mockNavigate).toBeCalledWith("/standard")
+        expect(mockNavigate).toBeCalledWith("/standard", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "" } })
     });
     it("should handle click search button_cs", async () => {
         renderNavFilter("CS");
         const searchButton = await screen.findByText("검색하기")
         fireEvent.click(searchButton)
-        expect(mockNavigate).toBeCalledWith("/custom")
+        expect(mockNavigate).toBeCalledWith("/custom", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "" } })
     });
     it("should handle click search button_ig", async () => {
         renderNavFilter("IG");

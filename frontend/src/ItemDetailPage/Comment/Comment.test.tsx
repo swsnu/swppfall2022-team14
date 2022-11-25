@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import Reply from './Reply'
 import React from 'react';
 import { CommentInfo, CommentType } from "../../store/slices/comment/comment";
 import { getMockStore } from "../../test-utils/mock";
@@ -21,14 +20,16 @@ const emptyCocktail: CocktailInfo = {
     cocktailItem: null,
     itemStatus: "loading",
     listStatus: "loading"
-}
+};
+
 const emptyIngredient: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading"
-}
+};
+
 const commentAuthor: CommentType = {
     id: 1,
     cocktail: {
@@ -47,7 +48,8 @@ const commentAuthor: CommentType = {
     updated_at: new Date(Date.now()),
     parent_comment: 1, // if null comment is root comment
     is_deleted: false
-}
+};
+
 const commentOther: CommentType = {
     id: 2,
     cocktail: {
@@ -66,7 +68,8 @@ const commentOther: CommentType = {
     updated_at: new Date(Date.now()),
     parent_comment: 1, // if null comment is root comment
     is_deleted: false
-}
+};
+
 const commentMore: CommentType = {
     id: 2,
     cocktail: {
@@ -85,55 +88,62 @@ const commentMore: CommentType = {
     updated_at: new Date(Date.now()),
     parent_comment: 11, // if null comment is root comment
     is_deleted: false
-}
+};
+
 const initComment: CommentInfo = {
     commentList: [commentAuthor, commentOther],
     commentItem: commentAuthor,
     state: null
-}
+};
+
 const editComment: CommentInfo = {
     commentList: [commentAuthor],
     commentItem: commentAuthor,
     state: "EDIT"
-}
+};
+
 const replyComment: CommentInfo = {
     commentList: [commentAuthor],
     commentItem: commentAuthor,
     state: "REPLY"
-}
+};
+
 const moreComment: CommentInfo = {
     commentList: [commentAuthor, commentOther, commentMore],
     commentItem: commentAuthor,
     state: "EDIT"
-}
+};
+
 const stubUserInitialState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password: null,
-        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "TEST_ID",
+        username: "TEST_USERNAME",
+        password: "TEST_PASSWORD",
+        nickname: "TEST_NICKNAME",
+        intro: "TEST_INTRO",
+        profile_img: "TEST_PROFILE_IMG",
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
-}
-const commentMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: initComment, user: stubUserInitialState })
-const commentEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: stubUserInitialState })
-const commentReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: stubUserInitialState })
-const commentMoreMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: moreComment, user: stubUserInitialState })
+    token: "TEST_TOKEN",
+    isLogin: true
+};
+
+const commentMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: initComment, user: stubUserInitialState });
+const commentEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: stubUserInitialState });
+const commentReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: stubUserInitialState });
+const commentNotLoginReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: { ...stubUserInitialState, isLogin: false } });
+const commentMoreMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: moreComment, user: stubUserInitialState });
 const mockNavigate = jest.fn();
 
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
 }));
+
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
     useDispatch: () => mockDispatch,
 }));
-
 
 describe("<Comment />", () => {
     beforeEach(() => {
@@ -296,5 +306,37 @@ describe("<Comment />", () => {
         expect(mockDispatch).toBeCalledTimes(2)
         fireEvent.click(replyButton)
         expect(mockDispatch).toBeCalledTimes(3)
+    });
+    it("should not create reply when not login", async () => {
+        const create = new Date()
+        const update = new Date()
+        const cocktail: CocktailItemType = {
+            id: 1,
+            name: "name",
+            image: "img",
+            type: "CS",
+            tags: ["CS1", "CS2"],
+            author_id: 1,
+            rate: 1,
+            is_bookmarked: false,
+        }
+
+        const { container } = render(
+            <Provider store={commentNotLoginReplyMockStore}>
+                <MemoryRouter initialEntries={['/custom/1']}>
+                    <Routes>
+                        <Route path="/:type/:id" element={<Comment key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const element = container.getElementsByClassName("comments__create");
+        expect(element).toHaveLength(1);
+
+        const textBox = screen.getByRole("textbox")
+        const addButton = screen.getByText("Add")
+
+        fireEvent.change(textBox, { target: { value: "edit_comment" } });
+        fireEvent.click(addButton)
     });
 })

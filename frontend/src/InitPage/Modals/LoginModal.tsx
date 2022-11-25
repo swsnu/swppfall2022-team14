@@ -88,7 +88,7 @@ const LoginModal = (props: prop) => {
 
 
     return (
-        <Modal className={styles['login-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+        <Modal className={styles['login-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)} ariaHideApp={false}>
             < button onClick={onClickClose} > X</button >
             <div className={styles.container}>
                 <div>

@@ -6,7 +6,7 @@ import { AppDispatch } from "../store";
 import { CocktailDetailType, IngredientPrepareType, editCocktail, getCocktail, selectCocktail, PostForm } from "../store/slices/cocktail/cocktail";
 import './EditCustomPage.scss';
 import React from 'react';
-import { IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
 
 export default function EditCustomPage() {
@@ -49,6 +49,7 @@ export default function EditCustomPage() {
             setTagList(cocktail.tags);
             setABV(cocktail.ABV);
             setPrice(cocktail.price_per_glass);
+            setIngredientList(cocktail.ingredients);
         }
     }, [cocktail]);
 
@@ -111,7 +112,7 @@ export default function EditCustomPage() {
             const ingredients = ingredientList.map((ingr, ind) => {
                 return {...ingr, amount: ingr.amount +" "+ unitList[ind]}
             })
-            const data:PostForm = {
+            const data: PostForm = {
                 cocktail: {
                     name: name,
                     image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
@@ -191,7 +192,8 @@ export default function EditCustomPage() {
                                             min="0"
                                         />
                                         <select 
-                                        onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
+                                            data-testid="ingredientUnitSelect"
+                                            onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
                                             {ingredient.unit.map((u) => {
                                                 return <option
                                                     key={"key"+u}

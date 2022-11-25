@@ -5,10 +5,23 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ThunkMiddleware } from "redux-thunk";
-import reducer, { IngredientType, IngredientInfo } from "./ingredient";
+
+import reducer, {
+    IngredientType,
+    IngredientInfo,
+    fetchMyIngredientList,
+    getRecommendIngredientList,
+    postMyIngredients, deleteMyIngredients
+} from "./ingredient";
 import { fetchIngredientList, getIngredient } from "./ingredient";
 
-describe("userInfo reducer", () => {
+const mockDispatch = jest.fn();
+jest.mock("react-redux", () => ({
+    ...jest.requireActual("react-redux"),
+    useDispatch: () => mockDispatch,
+}));
+
+describe("ingredient reducer", () => {
     let store: EnhancedStore<
         { ingredient: IngredientInfo },
         AnyAction,
@@ -30,17 +43,13 @@ describe("userInfo reducer", () => {
 
     it("should handle initial state", () => {
         expect(reducer(undefined, { type: "unknown" })).toEqual({
+            availableCocktails: [],
             ingredientList: [],
-            ingredientItem: {
-                id: 1,
-                name: 'name',
-                image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
-                introduction: '소개',
-                ABV: 42.4,
-                price: 200
-            },
+            ingredientItem: null,
+            myIngredientList: [],
             itemStatus: "loading",
-            listStatus: "loading"
+            listStatus: "loading",
+            recommendIngredientList: []
         });
     });
 
@@ -55,6 +64,17 @@ describe("userInfo reducer", () => {
         expect(store.getState().ingredient.listStatus).toEqual("failed")
     });
 
+    it("should handle fetchMyIngredientList", async () => {
+        axios.get = jest.fn().mockResolvedValue({ data: { Ingredients: [fakeIngredient] } });
+        await store.dispatch(fetchMyIngredientList());
+        expect(store.getState().ingredient.myIngredientList).toEqual([fakeIngredient])
+    });
+    it("should handle Error fetchMyIngredientList", async () => {
+        axios.get = jest.fn().mockRejectedValue({ data: { Ingredients: [fakeIngredient] } });
+        await store.dispatch(fetchMyIngredientList());
+        expect(store.getState().ingredient.listStatus).toEqual("failed")
+    });
+
     it("should handle getIngredient", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: fakeIngredient });
         await store.dispatch(getIngredient(1));
@@ -65,6 +85,24 @@ describe("userInfo reducer", () => {
         axios.get = jest.fn().mockRejectedValue({ data: fakeIngredient });
         await store.dispatch(getIngredient(1));
         expect(store.getState().ingredient.itemStatus).toEqual("failed")
+    });
+
+    it("should handle getRecommendIngredientList", async () => {
+        axios.get = jest.fn().mockResolvedValue({ data: fakeIngredient });
+        const response = await store.dispatch(getRecommendIngredientList());
+        expect(response.payload).toEqual(fakeIngredient)
+    });
+
+    it("should handle postMyIngredients", async () => {
+        axios.post = jest.fn().mockResolvedValue({ data: fakeIngredient });
+        const response = await store.dispatch(postMyIngredients({ id: 1, ingredients: [1] }));
+        expect(response.payload).toEqual(fakeIngredient)
+    });
+
+    it("should handle deleteMyIngredients", async () => {
+        axios.delete = jest.fn().mockResolvedValue({ data: fakeIngredient });
+        const response = await store.dispatch(deleteMyIngredients({ user_id: 1, ingredient_id: 1 }));
+        expect(response.payload).toEqual(fakeIngredient)
     });
 
 });

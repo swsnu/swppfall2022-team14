@@ -43,7 +43,6 @@ export const registerUser = createAsyncThunk(
             .catch(function (response) { alert("가입 실패") })
             ;
 
-
     }
 )
 

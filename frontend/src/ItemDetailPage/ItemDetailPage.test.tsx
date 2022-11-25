@@ -3,150 +3,77 @@ import { MemoryRouter, Route, Routes } from "react-router";
 import React from 'react';
 import { getMockStore } from "../test-utils/mock";
 import { Provider } from "react-redux";
-import { CommentInfo, CommentType } from "../store/slices/comment/comment";
-import {
-    CocktailDetailType,
-    CocktailInfo,
-} from "../store/slices/cocktail/cocktail";
+import { CocktailInfo } from "../store/slices/cocktail/cocktail";
+import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
-import ItemDetailPage from "./ItemDetailPage";
+import IngredientDetailPage from './IngredientDetailPage';
 import { UserInfo } from "../store/slices/user/user";
 
-// eslint-disable-next-line react/display-name
-jest.mock("./Comment/Comment", () => (prop: CommentType) => (
-    <div data-testid={`spyComment_${prop.id}`}>
-    </div>
-));
-
-const loadingCocktail: CocktailInfo = {
+const emptyCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
     itemStatus: "loading",
     listStatus: "loading"
 }
-const failedCocktail: CocktailInfo = {
-    cocktailList: [],
-    cocktailItem: null,
-    itemStatus: "failed",
-    listStatus: "loading"
-}
-const fakeCocktailItemCS: CocktailDetailType = {
-    id: 1,
-    name: "name",
-    image: "img",
-    type: "CS",
-    tags: ["CS1", "CS2"],
-    author_id: 1,
-    rate: 1,
-    introduction: "intro",
-    recipe: "recipe",
-    ABV: 1,
-    price_per_glass: 1,
-    created_at: new Date(Date.now()),
-    updated_at: new Date(Date.now()),
-    ingredients: [{
-        id: 1,
-        name: "iname",
-        image: "iimg",
-        ABV: 1,
-        price: 1,
-        introduction: "iintro",
-
-        amount: "1 oz",
-    }],
-    is_bookmarked: false,
-}
-const fakeCocktailItemST: CocktailDetailType = {
-    id: 1,
-    name: "name",
-    image: "img",
-    type: "ST",
-    tags: ["CS1", "CS2"],
-    author_id: 1,
-    rate: 1,
-    introduction: "intro",
-    recipe: "recipe",
-    ABV: 1,
-    price_per_glass: 1,
-    created_at: new Date(Date.now()),
-    updated_at: new Date(Date.now()),
-    ingredients: [{
-        id: 1,
-        name: "iname",
-        image: "iimg",
-        ABV: 1,
-        price: 1,
-        introduction: "iintro",
-
-        amount: "1 oz",
-    }],
-    is_bookmarked: false,
-}
-const commentNotParent: CommentType = {
-    id: 1,
-    cocktail: {
-        id: 1,
-        name: "name",
-        image: "img",
-        type: "CS",
-        tags: ["CS1", "CS2"],
-        author_id: 1,
-        rate: 1,
-        is_bookmarked: false,
-    },
-    author_id: 1,
-    content: "content1",
-    created_at: new Date(Date.now()),
-    updated_at: new Date(Date.now()),
-    parent_comment: 1, // if null comment is root comment
-    is_deleted: false,
-}
-const fakeCustomCocktail: CocktailInfo = {
-    cocktailList: [],
-    cocktailItem: fakeCocktailItemCS,
-    itemStatus: "",
-    listStatus: ""
-}
-const fakeStandardCocktail: CocktailInfo = {
-    cocktailList: [],
-    cocktailItem: fakeCocktailItemST,
-    itemStatus: "",
-    listStatus: ""
-}
 const emptyComment: CommentInfo = {
-    commentList: [commentNotParent],
-    commentItem: null,
-    state: "EDIT"
-}
-const commentAuthor: CommentType = {
-    id: 1,
-    cocktail: {
-        id: 1,
-        name: "name",
-        image: "img",
-        type: "CS",
-        tags: ["CS1", "CS2"],
-        author_id: 1,
-        rate: 1,
-        is_bookmarked: false,
-    },
-    author_id: 1,
-    content: "content1",
-    created_at: new Date(Date.now()),
-    updated_at: new Date(Date.now()),
-    parent_comment: null, // if null comment is root comment
-    is_deleted: false
-}
-const fakeComment: CommentInfo = {
-    commentList: [commentAuthor],
+    commentList: [],
     commentItem: null,
     state: null
 }
-const emptyIngredient: IngredientInfo = {
+const loadingIngredient: IngredientInfo = {
+    ingredientList: [],
+    ingredientItem: {
+        id: 1,
+        name: 'name',
+        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
+        introduction: '소개',
+        ABV: 42.4,
+        price: 200
+    },
+    myIngredientList: [],
+    itemStatus: "loading",
+    listStatus: "loading"
+}
+const failedIngredient: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
-    ingredientItem: null,
-    itemStatus: "loading",
+    ingredientItem: {
+        id: 1,
+        name: 'name',
+        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
+        introduction: '소개',
+        ABV: 42.4,
+        price: 200
+    },
+    itemStatus: "failed",
+    listStatus: "loading"
+}
+const noABVIngredient: IngredientInfo = {
+    ingredientList: [],
+    myIngredientList: [],
+    ingredientItem: {
+        id: 1,
+        name: 'name',
+        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
+        introduction: '소개',
+        ABV: 0,
+        price: 200
+    },
+    itemStatus: "",
+    listStatus: "loading"
+}
+const fakeIngredient: IngredientInfo = {
+    ingredientList: [],
+    myIngredientList: [],
+    ingredientItem: {
+        id: 1,
+        name: 'name',
+        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
+        introduction: '소개',
+        ABV: 42.4,
+        price: 200
+    },
+    itemStatus: "",
     listStatus: "loading"
 }
 
@@ -163,11 +90,11 @@ const stubUserInitialState: UserInfo = {
     isLogin: (localStorage.getItem("token") !== null)
 }
 
-const loadingMockStore = getMockStore({ cocktail: loadingCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState })
-const failedMockStore = getMockStore({ cocktail: failedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState })
-const emptyCommentMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: emptyComment, user: stubUserInitialState })
-const itemDetailMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState })
-const itemDetailMockStore_ST = getMockStore({ cocktail: fakeStandardCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState })
+const loadingMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: loadingIngredient, comment: emptyComment, user: stubUserInitialState })
+const failedMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: failedIngredient, comment: emptyComment, user: stubUserInitialState })
+const noAVBIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: noABVIngredient, comment: emptyComment, user: stubUserInitialState })
+const fakeIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: fakeIngredient, comment: emptyComment, user: stubUserInitialState })
+
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -180,7 +107,6 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-
 describe("<Comment />", () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -189,9 +115,9 @@ describe("<Comment />", () => {
     it("should render without errors loading Status", () => {
         const { container } = render(
             <Provider store={loadingMockStore}>
-                <MemoryRouter initialEntries={['/custom/1']}>
+                <MemoryRouter initialEntries={['/ingredient/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage />} />
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -201,84 +127,55 @@ describe("<Comment />", () => {
     it("should render without errors failed Status", () => {
         const { container } = render(
             <Provider store={failedMockStore}>
-                <MemoryRouter initialEntries={['/custom/1']}>
+                <MemoryRouter initialEntries={['/ingredient/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage />} />
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
         );
-        screen.getByText("Non existing cocktail")
+        screen.getByText("Non existing Ingredient")
     });
-    it("should render without errors type Miss match1", () => {
-        const { container } = render(
-            <Provider store={itemDetailMockStore}>
-                <MemoryRouter initialEntries={['/miss/1']}>
-                    <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage />} />
-                    </Routes>
-                </MemoryRouter>
-            </Provider>
-        );
-        screen.getByText("Type mismatch")
-    });
-    it("should render without errors type Miss match2", () => {
-        const { container } = render(
-            <Provider store={itemDetailMockStore_ST}>
-                <MemoryRouter initialEntries={['/custom/1']}>
-                    <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage />} />
-                    </Routes>
-                </MemoryRouter>
-            </Provider>
-        );
-        screen.getByText("Type mismatch")
-    });
+
     it("should render without errors empty parent_comment", () => {
         const { container } = render(
-            <Provider store={emptyCommentMockStore}>
-                <MemoryRouter initialEntries={['/custom/1']}>
+            <Provider store={fakeIngredientMockStore}>
+                <MemoryRouter initialEntries={['/ingredient/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage />} />
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
         );
         const element = container.getElementsByClassName("main");
         expect(element).toHaveLength(1);
-        screen.getByText("bookmark")
+        screen.getByText("소개")
     });
-    it("should render without errors", () => {
+    it("should render without errors empty parent_comment & no ABV", () => {
         const { container } = render(
-            <Provider store={itemDetailMockStore}>
-                <MemoryRouter initialEntries={['/custom/1']}>
+            <Provider store={noAVBIngredientMockStore}>
+                <MemoryRouter initialEntries={['/ingredient/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage />} />
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
         );
         const element = container.getElementsByClassName("main");
         expect(element).toHaveLength(1);
-        screen.getByText("bookmark")
-
-        const items = screen.getAllByTestId("spyComment_1");
-        expect(items).toHaveLength(1);
-
-        const ingredientItem = screen.getByText("1 oz iname")
-        fireEvent.click(ingredientItem)
-        expect(mockNavigate).toHaveBeenCalledWith("/ingredient/1")
-
-        const inputBox = screen.getByRole("textbox")
-        fireEvent.change(inputBox, { target: { value: "edit_comment" } });
-        const addButton = screen.getByText("Add")
-        fireEvent.click(addButton)
-        expect(mockDispatch).toBeCalledTimes(3)
-        const editButton = screen.getByText("Edit")
-        fireEvent.click(editButton)
-        expect(mockNavigate).toHaveBeenCalledWith("/custom/1/edit")
+        screen.getByText("소개")
+        screen.getByText("도수 없음")
     });
 })
+
+
+
+
+
+
+
+
+
 
 
 
