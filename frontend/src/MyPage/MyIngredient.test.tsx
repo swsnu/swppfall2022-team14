@@ -44,30 +44,32 @@ const ingredient: IngredientType = {
     ABV: 0,
     price: 0,
     introduction: "INTRODUCTION1",
+    unit: ["ml", "oz"]
 }
 
 const ingredientState: IngredientInfo = {
-    ingredientList: [ingredient],
-    myIngredientList: [],
+    ingredientList: [],
+    myIngredientList: [ingredient],
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
 }
 
-const stubUserInitialState: UserInfo = {
+const loggedInState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password:  null,
-        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "1",
+        username: "USERNAME",
+        password: null,
+        nickname: null,
+        intro: null,
+        profile_img: null,
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
+    token: "TOKEN",
+    isLogin: true
 }
 
-const mockStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user:stubUserInitialState });
+const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user:loggedInState });
+
 
 describe("<MyIngredient />", () => {
     beforeEach(() => {
@@ -75,14 +77,14 @@ describe("<MyIngredient />", () => {
     });
 
     it("should render without errors", () => {
-        render(<Provider store={mockStore}><MyIngredient /></Provider>);
+        render(<Provider store={mockLoggedInStore}><MyIngredient /></Provider>);
         screen.getByTestId("spyIngredient_1");
     });
 
     it("should handle add modal", async () => {
-        render(<Provider store={mockStore}><MyIngredient /></Provider>);
+        render(<Provider store={mockLoggedInStore}><MyIngredient /></Provider>);
         const addButton = screen.getByText("Add");
         fireEvent.click(addButton)
-        await waitFor(() => screen.getByTestId("spyIngredient_1"));
+        await waitFor(() => screen.getByTestId("spyModal"));
     });
 });

@@ -15,7 +15,7 @@ jest.mock("react-redux", () => ({
 }));
 
 jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
-    <div data-testid={`spyComment_${prop.id}`}>
+    <div data-testid={`spyItem_${prop.id}`}>
     </div>
 ));
 
@@ -51,30 +51,51 @@ const emptyingredientState: IngredientInfo = {
     listStatus: "success",
 }
 
-const stubUserInitialState: UserInfo = {
+const loggedInState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username:  (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password:  null,
-        nickname:  (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro:  (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img:  (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "1",
+        username: "USERNAME",
+        password: null,
+        nickname: null,
+        intro: null,
+        profile_img: null,
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
+    token: "TOKEN",
+    isLogin: true
 }
 
-const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: stubUserInitialState});
+
+const loggedOutState: UserInfo = {
+    user: null,
+    token: null,
+    isLogin: false
+}
+
+
+const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedInState});
+const mockLoggedOutStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedOutState});
 
 describe("<MyBookMark />", () => {
-    it("should render items without errors", () => {
+    it("should render items with logged in without errors", () => {
         render(
-            <Provider store={mockStore}>
+            <Provider store={mockLoggedInStore}>
                 <MyBookmark />
             </Provider>
         );
-        const items = screen.getAllByTestId("spyComment_1");
+        const items = screen.getAllByTestId("spyItem_1");
         expect(items).toHaveLength(1);
-        expect(mockDispatch).toBeCalledTimes(1)
+        expect(mockDispatch).toBeCalledTimes(1);
     });
+
+    it("should render items with logged out without errors", () => {
+        render(
+            <Provider store={mockLoggedOutStore}>
+                <MyBookmark />
+            </Provider>
+        );
+        const items = screen.getAllByTestId("spyItem_1");
+        expect(items).toHaveLength(1);
+        expect(mockDispatch).toBeCalledTimes(0);
+    });
+
 });
