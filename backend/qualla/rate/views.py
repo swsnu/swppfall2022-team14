@@ -14,8 +14,9 @@ def rate_list(request, cocktail_id):
         except Cocktail.DoesNotExist:
             return HttpResponseNotFound(f"No Cocktail matches id={cocktail_id}")
 
-        rate_list = cocktail.rate_set.all()
-        score = sum(rate.score for rate in rate_list) / len(rate_list)
+        rates = cocktail.rate_set.all()
+        data = RateSerializer(rates, many=True).data
+        score = sum(rate.score for rate in data) / len(data)
         return JsonResponse({"score": score}, safe=False)
     elif request.method == 'POST':
         user = request.user
