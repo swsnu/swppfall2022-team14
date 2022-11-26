@@ -126,14 +126,4 @@ describe("<AddIngredientModal />", () => {
         await waitFor(() => expect(button).toBeDisabled());
     })
 
-    it("should handle confirm add ingredient", async () => {
-        render(
-            <Provider store={mockLoggedInStore}>
-                <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
-            </Provider>
-        )
-        const button = screen.getByText("Add")
-        fireEvent.click(button)
-        await waitFor(() => expect(mockDispatch).toBeCalledTimes(3));
-    })
 })
