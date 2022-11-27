@@ -38,6 +38,7 @@ export default function ItemDetailPage() {
     }
     const [content, setContent] = useState<string>("")
     const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false)
+    const [rate, setRate] = useState<number>(0)
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
@@ -71,7 +72,7 @@ export default function ItemDetailPage() {
         }
     }
 
-    const handleRate = () => {
+    const onChangeRate = (changedRate: string) => {
         if(userState.isLogin){
             alert("준비중입니다.")
         }
@@ -118,7 +119,13 @@ export default function ItemDetailPage() {
                             >
                                 Edit
                             </button>
-                            <button className="title__rate-button" onClick={handleRate}>rate button</button>
+                            <input
+                                value={rate}
+                                type="number"
+                                onChange={(event) => onChangeRate(event.target.value)}
+                                min="1"
+                                max="5"
+                            />
                             <div className="title__rate">{cocktail.rate.toFixed(1)} / 5.0</div>
                         </div>
                         <div className="content">
