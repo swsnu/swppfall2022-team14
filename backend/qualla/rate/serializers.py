@@ -14,3 +14,14 @@ class RateSerializer(serializers.ModelSerializer):
             "user",
             "score",
         )
+
+
+class RatePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rate
+        fields = (
+            "id",
+            "cocktail",
+            "user",
+            "score",
+        )

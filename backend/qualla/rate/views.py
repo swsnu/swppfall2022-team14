@@ -3,7 +3,7 @@ import json
 from rest_framework.decorators import api_view
 from cocktail.models import Cocktail
 from .models import Rate
-from .serializers import RateSerializer
+from .serializers import RateSerializer, RatePostSerializer
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -16,20 +16,15 @@ def rate_list(request, cocktail_id):
 
         rates = cocktail.rate_set.all()
         data = RateSerializer(rates, many=True).data
-        score = sum(rate.score for rate in data) / len(data)
+        score = sum(rate['score'] for rate in data) / len(data)
         return JsonResponse({"score": score}, safe=False)
     elif request.method == 'POST':
         user = request.user
         if user.is_authenticated:
-            try:
-                cocktail = Cocktail.objects.get(id=cocktail_id)
-            except Cocktail.DoesNotExist:
-                return HttpResponseNotFound(f"No Cocktail matches id={cocktail_id}")
-
             data = request.data.copy()
             data['cocktail'] = cocktail_id
             data['user'] = user.id
-            serializer = RateSerializer(data=data, context={"request": request})
+            serializer = RatePostSerializer(data=data, context={"request": request})
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return JsonResponse(serializer.data, status=201)
