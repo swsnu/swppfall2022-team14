@@ -8,11 +8,10 @@ import './ItemDetailPage.scss';
 import React from 'react';
 import { fetchCommentListByCocktailId, postComment, selectComment } from "../store/slices/comment/comment";
 import NavBar from "../NavBar/NavBar";
-
 import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
 import {selectUser} from "../store/slices/user/user";
-import { postRate } from "../store/slices/rate/rate";
+import { postRate, editRate } from "../store/slices/rate/rate";
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
@@ -81,9 +80,13 @@ export default function ItemDetailPage() {
 
     const onChangeRate = (changedScore: string) => {
         if(userState.isLogin) {
+            const data = { cocktail_id: Number(id), score: Number(changedScore) };
+            if (score) {  // PUT score
+                dispatch(editRate(data));
+            } else {      // POST score
+                dispatch(postRate(data));
+            }
             setScore(Number(changedScore));
-            const data = { cocktail_id: Number(id), score: score };
-            dispatch(postRate(data));
         } else {
             setIsLoginOpen(true);
         }
