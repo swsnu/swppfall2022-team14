@@ -17,10 +17,21 @@ const initialState: RateInfo = {
     rate: null
 };
 
+export const postRate = createAsyncThunk(
+    "rate/postRate", async (rate: Pick<RateType, "cocktail_id" | "score">, { dispatch }) => {
+        const response = await axios.post(`api/v1/rates/${rate.cocktail_id}/`, { "score": rate.score });
+        dispatch(rateActions.addRate(response.data));
+    }
+)
+
 export const RateSlice = createSlice({
     name: "rate",
     initialState,
-    reducers: {},
+    reducers: {
+        addRate: (state, action: PayloadAction<RateType>) => {
+            state.rate = action.payload;
+        },
+    },
 });
 
 export const rateActions = RateSlice.actions;
