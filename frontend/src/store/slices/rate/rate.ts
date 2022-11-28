@@ -19,7 +19,7 @@ const initialState: RateInfo = {
 
 export const postRate = createAsyncThunk(
     "rate/postRate", async (rate: Pick<RateType, "cocktail_id" | "score">, { dispatch }) => {
-        const response = await axios.post(`api/v1/rates/${rate.cocktail_id}/`, { "score": rate.score });
+        const response = await axios.post(`/api/v1/rates/${rate.cocktail_id}/`, { "score": rate.score });
         dispatch(rateActions.addRate(response.data));
     }
 )

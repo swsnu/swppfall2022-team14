@@ -12,6 +12,7 @@ import NavBar from "../NavBar/NavBar";
 import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
 import {selectUser} from "../store/slices/user/user";
+import { postRate } from "../store/slices/rate/rate";
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
@@ -38,7 +39,7 @@ export default function ItemDetailPage() {
     }
     const [content, setContent] = useState<string>("")
     const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false)
-    const [rate, setRate] = useState<number>(0)
+    const [score, setScore] = useState<number>(0)
 
     const cocktail = cocktailState.cocktailItem;
     const isCustom = cocktail?.type === "CS";
@@ -50,7 +51,7 @@ export default function ItemDetailPage() {
 
     useEffect(() => {
         if (cocktail) {
-            setRate(cocktail.score);
+            setScore(cocktail.score);
         }
     }, [cocktail]);
 
@@ -78,14 +79,14 @@ export default function ItemDetailPage() {
         }
     }
 
-    const onChangeRate = (changedRate: string) => {
-        if(userState.isLogin){
-            alert("준비중입니다.")
+    const onChangeRate = (changedScore: string) => {
+        if(userState.isLogin) {
+            setScore(Number(changedScore));
+            const data = { cocktail_id: Number(id), score: score };
+            dispatch(postRate(data));
+        } else {
+            setIsLoginOpen(true);
         }
-        else{
-            setIsLoginOpen(true)
-        }
-
     }
 
     if (cocktailState.itemStatus == "loading") {
@@ -126,7 +127,7 @@ export default function ItemDetailPage() {
                                 Edit
                             </button>
                             <input
-                                value={rate}
+                                value={score}
                                 type="number"
                                 onChange={(event) => onChangeRate(event.target.value)}
                                 min="1"
