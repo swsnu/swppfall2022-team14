@@ -40,13 +40,19 @@ export default function ItemDetailPage() {
     const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false)
     const [rate, setRate] = useState<number>(0)
 
+    const cocktail = cocktailState.cocktailItem;
+    const isCustom = cocktail?.type === "CS";
+
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
         dispatch(fetchCommentListByCocktailId(Number(id)));
-    }, [id]);
+    }, []);
 
-    const cocktail = cocktailState.cocktailItem;
-    const isCustom = cocktail?.type === "CS";
+    useEffect(() => {
+        if (cocktail) {
+            setRate(cocktail.score);
+        }
+    }, [cocktail]);
 
     const createCommentHandler = () => {
         if(userState.isLogin){

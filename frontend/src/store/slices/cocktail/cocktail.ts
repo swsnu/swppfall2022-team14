@@ -31,7 +31,8 @@ export interface CocktailDetailType {
     updated_at: Date,
     rate: number,
     ingredients: IngredientPrepareType[],
-    is_bookmarked: boolean
+    is_bookmarked: boolean,
+    score: number
 }
 
 export interface IngredientPrepareType extends IngredientType {
