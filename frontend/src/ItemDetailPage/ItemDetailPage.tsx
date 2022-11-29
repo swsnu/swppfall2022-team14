@@ -8,10 +8,10 @@ import './ItemDetailPage.scss';
 import React from 'react';
 import { fetchCommentListByCocktailId, postComment, selectComment } from "../store/slices/comment/comment";
 import NavBar from "../NavBar/NavBar";
-
 import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
 import {selectUser} from "../store/slices/user/user";
+import { postRate, editRate } from "../store/slices/rate/rate";
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
@@ -38,14 +38,21 @@ export default function ItemDetailPage() {
     }
     const [content, setContent] = useState<string>("")
     const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false)
+    const [score, setScore] = useState<number>(0)
+
+    const cocktail = cocktailState.cocktailItem;
+    const isCustom = cocktail?.type === "CS";
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
         dispatch(fetchCommentListByCocktailId(Number(id)));
-    }, [id]);
+    }, []);
 
-    const cocktail = cocktailState.cocktailItem;
-    const isCustom = cocktail?.type === "CS";
+    useEffect(() => {
+        if (cocktail) {
+            setScore(cocktail.score);
+        }
+    }, [cocktail]);
 
     const createCommentHandler = () => {
         if(userState.isLogin){
@@ -71,14 +78,18 @@ export default function ItemDetailPage() {
         }
     }
 
-    const handleRate = () => {
-        if(userState.isLogin){
-            alert("준비중입니다.")
+    const onChangeRate = (changedScore: string) => {
+        if(userState.isLogin) {
+            const data = { cocktail_id: Number(id), score: Number(changedScore) };
+            if (score) {  // PUT score
+                dispatch(editRate(data));
+            } else {      // POST score
+                dispatch(postRate(data));
+            }
+            setScore(Number(changedScore));
+        } else {
+            setIsLoginOpen(true);
         }
-        else{
-            setIsLoginOpen(true)
-        }
-
     }
 
     if (cocktailState.itemStatus == "loading") {
@@ -118,7 +129,13 @@ export default function ItemDetailPage() {
                             >
                                 Edit
                             </button>
-                            <button className="title__rate-button" onClick={handleRate}>rate button</button>
+                            <input
+                                value={score}
+                                type="number"
+                                onChange={(event) => onChangeRate(event.target.value)}
+                                min="1"
+                                max="5"
+                            />
                             <div className="title__rate">{cocktail.rate.toFixed(1)} / 5.0</div>
                         </div>
                         <div className="content">

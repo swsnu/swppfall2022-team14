@@ -3,6 +3,7 @@ import cocktailReducer from './slices/cocktail/cocktail';
 import commentReducer from './slices/comment/comment';
 import ingredientReducer from './slices/ingredient/ingredient';
 import userReducer from "./slices/user/user";
+import rateReducer from "./slices/rate/rate";
 
 export const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
         comment: commentReducer,
         ingredient: ingredientReducer,
         user: userReducer,
+        rate: rateReducer,
     },
 });
 
