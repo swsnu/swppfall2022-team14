@@ -274,7 +274,17 @@ def retrieve_cocktail(request, pk):
     # else:
     #     return HttpResponseNotAllowed(['GET', 'PUT'])
 
-
+@api_view(['PUT'])
+def cocktail_rate_edit(request, pk):
+    try:
+        cocktail = Cocktail.objects.get(id=pk)
+    except Cocktail.DoesNotExist:
+        return HttpResponseNotFound(f"No Cocktails matches id={pk}")
+    
+    serializer = CocktailDetailSerializer(cocktail, data=request.data, partial=True, context={'user': request.user})
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return JsonResponse(serializer.data, status=200)
 
 @api_view(['GET'])
 def retrieve_my_cocktail(request):

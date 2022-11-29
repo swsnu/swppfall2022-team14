@@ -47,7 +47,7 @@ export interface CocktailInfo {
 }
 
 export interface PostForm {
-    cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked">;
+    cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score">;
     token: string;
 }
 
@@ -195,6 +195,14 @@ export const toggleBookmark = createAsyncThunk(
     }
 )
 
+export const updateRate = createAsyncThunk(
+    "cocktail/updateRate", async (cocktail_id: number, { dispatch }) => {
+        const rateResponse = await axios.get(`/api/v1/rates/${cocktail_id}/`);
+        const response = await axios.put(`/api/v1/cocktails/${cocktail_id}/rate/`, { "rate": rateResponse.data.score });
+        return response.data;
+    }
+);
+
 export const cocktailSlice = createSlice({
     name: "cocktail",
     initialState,
@@ -284,7 +292,11 @@ export const cocktailSlice = createSlice({
             if (state.cocktailItem && state.cocktailItem.id === action.payload.cocktail_id) {
                 state.cocktailItem.is_bookmarked = !state.cocktailItem.is_bookmarked
             }
-        })
+        });
+
+        builder.addCase(updateRate.fulfilled, (state, action) => {
+            state.cocktailItem = action.payload;
+        });
     },
 })
 export const cocktailActions = cocktailSlice.actions;

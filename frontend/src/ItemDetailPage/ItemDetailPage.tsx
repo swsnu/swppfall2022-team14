@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { selectCocktail, getCocktail, toggleBookmark } from "../store/slices/cocktail/cocktail";
+import { selectCocktail, getCocktail, toggleBookmark, updateRate } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
@@ -78,14 +78,15 @@ export default function ItemDetailPage() {
         }
     }
 
-    const onChangeRate = (changedScore: string) => {
+    const onChangeRate = async (changedScore: string) => {
         if(userState.isLogin) {
             const data = { cocktail_id: Number(id), score: Number(changedScore) };
             if (score) {  // PUT score
-                dispatch(editRate(data));
+                await dispatch(editRate(data));
             } else {      // POST score
-                dispatch(postRate(data));
+                await dispatch(postRate(data));
             }
+            dispatch(updateRate(Number(id)));
             setScore(Number(changedScore));
         } else {
             setIsLoginOpen(true);
@@ -136,7 +137,9 @@ export default function ItemDetailPage() {
                                 min="1"
                                 max="5"
                             />
-                            <div className="title__rate">{cocktail.rate.toFixed(1)} / 5.0</div>
+                            <div className="title__rate">
+                                {cocktail.rate.toFixed(1)} / 5.0
+                            </div>
                         </div>
                         <div className="content">
                             <img
