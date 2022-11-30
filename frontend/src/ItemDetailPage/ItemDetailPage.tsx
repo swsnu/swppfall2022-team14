@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { selectCocktail, getCocktail, toggleBookmark, updateRate, getAuthor } from "../store/slices/cocktail/cocktail";
+import { selectCocktail, getCocktail, toggleBookmark, updateRate } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
@@ -21,11 +21,6 @@ interface User {
 }
 
 export default function ItemDetailPage() {
-    const dummyUsers: User[] = [
-        { id: 1, name: "Kevin" },
-        { id: 2, name: "Sophie" },
-    ];
-
     const { type, id } = useParams();
 
     const dispatch = useDispatch<AppDispatch>();
@@ -51,11 +46,6 @@ export default function ItemDetailPage() {
     useEffect(() => {
         if (cocktail) {
             setScore(cocktail.score);
-
-            if (cocktail.author_id) {
-                dispatch(getAuthor(cocktail.author_id));
-
-            }
         }
     }, [cocktail]);
 
@@ -125,7 +115,7 @@ export default function ItemDetailPage() {
                                 </button>
                                 {isCustom &&
                                     <div className="title__author">
-                                        created by {dummyUsers.find(user => user.id === cocktail.author_id)?.name}
+                                        created by {cocktail.author_name}
                                     </div>
                                 }
                             </div>

@@ -143,7 +143,9 @@ export const getCocktail = createAsyncThunk(
         const response = await axios.get(`/api/v1/cocktails/${id}`)
         console.log(response.data)
 
-        return { ...response.data, ingredients: ingredient_response.data };
+        const author_response = await axios.get(`/api/v1/user/${response.data.author_id}/`);
+
+        return { ...response.data, ingredients: ingredient_response.data, author_name: author_response.data.username };
     }
 )
 
@@ -202,14 +204,6 @@ export const updateRate = createAsyncThunk(
         const response = await axios.put(`/api/v1/cocktails/${cocktail_id}/rate/`, { "rate": rate_response.data.score });
         const ingredient_response = await axios.get(`/api/v1/cocktails/${cocktail_id}/ingredients`);
         return { ...response.data, ingredients: ingredient_response.data };
-    }
-);
-
-
-export const getAuthor = createAsyncThunk(
-    "user/getAuthor", async (user_id: number) => {
-        const response = await axios.get(`/api/v1/user/${user_id}/`);
-        return response.data;
     }
 );
 
@@ -307,13 +301,6 @@ export const cocktailSlice = createSlice({
         //Rate
         builder.addCase(updateRate.fulfilled, (state, action) => {
             state.cocktailItem = action.payload;
-        });
-
-        //Author
-        builder.addCase(getAuthor.fulfilled, (state, action) => {
-            if (state.cocktailItem) {
-                state.cocktailItem.author_name = action.payload.username;
-            }
         });
     },
 })
