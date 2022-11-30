@@ -3,7 +3,7 @@ import axios from "axios";
 import { AppDispatch, RootState } from "../..";
 import ingredient, { IngredientType } from "../ingredient/ingredient";
 import { useSelector } from "react-redux"
-import { selectUser } from "../user/user";
+import { getUser, selectUser } from "../user/user";
 
 export interface CocktailItemType {
     id: number,
@@ -27,6 +27,7 @@ export interface CocktailDetailType {
     tags: string[],
     type: "CS" | "ST",
     author_id: number | null,
+    author_name: string | null,
     created_at: Date,
     updated_at: Date,
     rate: number,
@@ -204,6 +205,14 @@ export const updateRate = createAsyncThunk(
     }
 );
 
+
+export const getAuthor = createAsyncThunk(
+    "user/getAuthor", async (user_id: number) => {
+        const response = await axios.get(`/api/v1/user/${user_id}/`);
+        return response.data;
+    }
+);
+
 export const cocktailSlice = createSlice({
     name: "cocktail",
     initialState,
@@ -295,8 +304,16 @@ export const cocktailSlice = createSlice({
             }
         });
 
+        //Rate
         builder.addCase(updateRate.fulfilled, (state, action) => {
             state.cocktailItem = action.payload;
+        });
+
+        //Author
+        builder.addCase(getAuthor.fulfilled, (state, action) => {
+            if (state.cocktailItem) {
+                state.cocktailItem.author_name = action.payload.username;
+            }
         });
     },
 })

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { selectCocktail, getCocktail, toggleBookmark, updateRate } from "../store/slices/cocktail/cocktail";
+import { selectCocktail, getCocktail, toggleBookmark, updateRate, getAuthor } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
@@ -10,7 +10,7 @@ import { fetchCommentListByCocktailId, postComment, selectComment } from "../sto
 import NavBar from "../NavBar/NavBar";
 import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
-import {selectUser} from "../store/slices/user/user";
+import { selectUser } from "../store/slices/user/user";
 import { postRate, editRate } from "../store/slices/rate/rate";
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -51,6 +51,11 @@ export default function ItemDetailPage() {
     useEffect(() => {
         if (cocktail) {
             setScore(cocktail.score);
+
+            if (cocktail.author_id) {
+                dispatch(getAuthor(cocktail.author_id));
+
+            }
         }
     }, [cocktail]);
 

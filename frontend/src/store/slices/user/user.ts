@@ -99,13 +99,6 @@ export const getUser = createAsyncThunk(
     }
 );
 
-export const getUserById = createAsyncThunk(
-    "user/getUserById", async (user_id: number) => {
-        const response = await axios.get(`/api/v1/user/${user_id}/`);
-        return response.data;
-    }
-);
-
 export const userSlice = createSlice({
     name: "user",
     initialState,
