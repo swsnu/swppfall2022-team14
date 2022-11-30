@@ -197,9 +197,10 @@ export const toggleBookmark = createAsyncThunk(
 
 export const updateRate = createAsyncThunk(
     "cocktail/updateRate", async (cocktail_id: number, { dispatch }) => {
-        const rateResponse = await axios.get(`/api/v1/rates/${cocktail_id}/`);
-        const response = await axios.put(`/api/v1/cocktails/${cocktail_id}/rate/`, { "rate": rateResponse.data.score });
-        return response.data;
+        const rate_response = await axios.get(`/api/v1/rates/${cocktail_id}/`);
+        const response = await axios.put(`/api/v1/cocktails/${cocktail_id}/rate/`, { "rate": rate_response.data.score });
+        const ingredient_response = await axios.get(`/api/v1/cocktails/${cocktail_id}/ingredients`);
+        return { ...response.data, ingredients: ingredient_response.data };
     }
 );
 
