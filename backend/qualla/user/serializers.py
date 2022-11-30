@@ -14,3 +14,11 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "profile_img",
             "logged_in",
         )
+
+
+class UserNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "username",
+        )
