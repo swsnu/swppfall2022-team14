@@ -22,9 +22,9 @@ export default function EditCustomPage() {
 
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
-    const [newIngredient, setNewIngredient] = useState<IngredientType|null>(null);
+    const [newIngredient, setNewIngredient] = useState<IngredientType | null>(null);
     const [unitList, setUnitList] = useState<string[]>([]);
-    const [newUnit, setNewUnit] = useState<string|null>(null);
+    const [newUnit, setNewUnit] = useState<string | null>(null);
 
     const cocktailState = useSelector(selectCocktail);
     const cocktail = cocktailState.cocktailItem;
@@ -32,11 +32,11 @@ export default function EditCustomPage() {
     const userState = useSelector(selectUser)
 
     useEffect(() => {
-        if(!userState.isLogin){
+        if (!userState.isLogin) {
             navigate(-1)
             console.log("먼저 로그인 해주세요")
         }
-        else{
+        else {
             dispatch(getCocktail(Number(id)));
         }
     }, []);
@@ -60,7 +60,7 @@ export default function EditCustomPage() {
     };
 
     useEffect(() => {
-        if(newIngredient && newUnit){
+        if (newIngredient && newUnit) {
             setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
             setNewIngredient(null);
             setUnitList([...unitList, newUnit])
@@ -69,7 +69,7 @@ export default function EditCustomPage() {
     }, [newIngredient, newUnit])
 
     const onChangeAmount = (selectedIdx: number, changedAmount: string) => {
-        if(changedAmount[0] === "0" || changedAmount[0] === "-") return
+        if (changedAmount[0] === "0" || changedAmount[0] === "-") return
         setIngredientList(
             ingredientList.map((ingredient, idx) => {
                 if (idx !== selectedIdx) {
@@ -81,7 +81,7 @@ export default function EditCustomPage() {
         );
     };
 
-    const onChangeIngredientUnit = (selectedIdx: number, unit:string)=> {
+    const onChangeIngredientUnit = (selectedIdx: number, unit: string) => {
         console.log(selectedIdx)
         console.log(unit)
         const units = unitList
@@ -91,12 +91,12 @@ export default function EditCustomPage() {
 
     const onKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
         if (tagItem.length !== 0 && e.key === 'Enter') {
-          submitTagItem()
+            submitTagItem()
         }
     }
-    
+
     const submitTagItem = () => {
-        const updatedTagList = [ ...tagList ]
+        const updatedTagList = [...tagList]
         updatedTagList.push(tagItem)
 
         setTagList(updatedTagList)
@@ -108,9 +108,9 @@ export default function EditCustomPage() {
     }
 
     const editCocktailHandler = async () => {
-        if(userState.user?.id !== null && userState.token !== null){
+        if (userState.user?.id !== null && userState.token !== null) {
             const ingredients = ingredientList.map((ingr, ind) => {
-                return {...ingr, amount: ingr.amount +" "+ unitList[ind]}
+                return { ...ingr, amount: ingr.amount + " " + unitList[ind] }
             })
             const data: PostForm = {
                 cocktail: {
@@ -122,13 +122,13 @@ export default function EditCustomPage() {
                     price_per_glass: price,
                     tags: tagList,
                     author_id: 1,
-                    ingredients: ingredients
+                    ingredients: ingredients,
                 },
                 token: userState.token
             }
             console.log(data)
-            const response = await dispatch(editCocktail({data:data, id:Number(id!)}))
-            navigate(`/custom/${(response.payload as CocktailDetailType).id}`)            
+            const response = await dispatch(editCocktail({ data: data, id: Number(id!) }))
+            navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
         }
     }
 
@@ -145,11 +145,11 @@ export default function EditCustomPage() {
                     <div className="title__name">
                         <label>
                             Name:
-                            <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)}/>
+                            <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)} />
                         </label>
                     </div>
                     <button className="title__confirm-button"
-                    onClick={() => editCocktailHandler()}>Confirm</button>
+                        onClick={() => editCocktailHandler()}>Confirm</button>
                 </div>
                 <div className="content">
                     <img
@@ -161,12 +161,12 @@ export default function EditCustomPage() {
                         <div className='content__description'>
                             <label>
                                 Description:<br />
-                                <textarea className='content__description-input' value={introduction} onChange={(e) => setIntroduction(e.target.value)}/>
-                            </label>                        
+                                <textarea className='content__description-input' value={introduction} onChange={(e) => setIntroduction(e.target.value)} />
+                            </label>
                         </div>
                         <div className="content__ingredient-box">
                             Ingredient:
-                            {[...ingredientList, { name: "", amount: undefined, unit:[""] }].map((ingredient, idx) => {
+                            {[...ingredientList, { name: "", amount: undefined, unit: [""] }].map((ingredient, idx) => {
                                 return (
                                     <div className="content__ingredient" key={`${ingredient.name}_${idx}`}>
                                         <input
@@ -191,22 +191,22 @@ export default function EditCustomPage() {
                                             onChange={(event) => onChangeAmount(idx, event.target.value)}
                                             min="0"
                                         />
-                                        <select 
+                                        <select
                                             data-testid="ingredientUnitSelect"
                                             onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
                                             {ingredient.unit.map((u) => {
                                                 return <option
-                                                    key={"key"+u}
+                                                    key={"key" + u}
                                                     value={u}
-                                                    >
-                                                {u}
-                                            </option>
-                                        })}
-                                    </select>
+                                                >
+                                                    {u}
+                                                </option>
+                                            })}
+                                        </select>
                                         {idx !== ingredientList.length &&
-                                            <button 
+                                            <button
                                                 data-testid="ingredientDeleteButton"
-                                                className="content__ingredient-delete-button" 
+                                                className="content__ingredient-delete-button"
                                                 onClick={() => onClickIngredientDelete(idx)}
                                             >
                                                 Delete
@@ -219,7 +219,7 @@ export default function EditCustomPage() {
                         <div className='content__recipe'>
                             <label>
                                 Recipe:<br />
-                                <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)}/>
+                                <textarea className='content__recipe-input' value={recipe} onChange={(e) => setRecipe(e.target.value)} />
                             </label>
                         </div>
                         <div className='content__tag-box'>
@@ -229,9 +229,9 @@ export default function EditCustomPage() {
                                     return (
                                         <div className="content__tag" key={`${tagItem}_${idx}`}>
                                             <span>{tagItem}</span>
-                                            <button 
+                                            <button
                                                 data-testid="tagDeleteButton"
-                                                className="content__tag-delete-button" 
+                                                className="content__tag-delete-button"
                                                 onClick={() => onDeleteTagItem(tagItem)}
                                             >
                                                 X
@@ -239,7 +239,7 @@ export default function EditCustomPage() {
                                         </div>
                                     )
                                 })}
-                                <input 
+                                <input
                                     data-testid="tagInput"
                                     className='content__tag-input'
                                     type="text"

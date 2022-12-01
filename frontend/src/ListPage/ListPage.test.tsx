@@ -11,6 +11,7 @@ import React from 'react';
 import { render, screen, waitFor } from "@testing-library/react"
 import { UserInfo } from "../store/slices/user/user";
 import { FilterParamType } from "../store/slices/cocktail/cocktail"
+import { RateInfo } from "../store/slices/rate/rate"
 
 // eslint-disable-next-line react/display-name
 jest.mock("./Item/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
@@ -103,10 +104,12 @@ const stubUserInitialState: UserInfo = {
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
 }
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
+const standardMockStore = getMockStore({ cocktail: stubInitialStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState, rate: rateState });
 
-const standardMockStore = getMockStore({ cocktail: stubInitialStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState });
-
-const customMockStore = getMockStore({ cocktail: stubInitialCustomCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState });
+const customMockStore = getMockStore({ cocktail: stubInitialCustomCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState, rate: rateState });
 
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
@@ -188,7 +191,7 @@ describe("<ListPage />", () => {
             itemStatus: "success",
             listStatus: "loading",
         };
-        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState });
+        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState, rate: rateState });
         const { container } = render(
             <Provider store={mockStore}>
                 <MemoryRouter initialEntries={['/standard']}>
@@ -225,7 +228,7 @@ describe("<ListPage />", () => {
             itemStatus: "success",
             listStatus: "success",
         };
-        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState });
+        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState, rate: rateState });
         const { container } = render(
             <Provider store={mockStore}>
                 <MemoryRouter initialEntries={['/standard']}>
@@ -249,7 +252,7 @@ describe("<ListPage />", () => {
             itemStatus: "success",
             listStatus: "failed",
         };
-        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState });
+        const mockStore = getMockStore({ cocktail: stubCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState, rate: rateState });
         const { container } = render(
             <Provider store={mockStore}>
                 <MemoryRouter initialEntries={['/standard']}>
