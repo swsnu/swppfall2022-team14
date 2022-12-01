@@ -24,9 +24,9 @@ const MyPage = () => {
     const userState = useSelector(selectUser)
     const ingredientState = useSelector(selectIngredient)
     const navigate = useNavigate()
-
+    const dispatch = useDispatch<AppDispatch>()
     useEffect(() => {
-        const dispatch = useDispatch<AppDispatch>()
+
         dispatch(fetchIngredientList())
         if (!userState.isLogin) {
             navigate(-1)
