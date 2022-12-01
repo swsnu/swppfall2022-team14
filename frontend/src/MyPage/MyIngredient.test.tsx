@@ -7,6 +7,7 @@ import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo, IngredientType } from "../store/slices/ingredient/ingredient";
 import { getMockStore } from "../test-utils/mock";
 import MyIngredient from "./MyIngredient";
+import { UserInfo } from "../store/slices/user/user";
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -14,12 +15,12 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-jest.mock("../common/Components/IngredientItem", () => (prop:Pick<IngredientType, "image" | "name" | "ABV" | "id">) => (
+jest.mock("../common/Components/IngredientItem", () => (prop: Pick<IngredientType, "image" | "name" | "ABV" | "id">) => (
     <div data-testid={`spyIngredient_${prop.id}`}>
     </div>
 ));
 
-jest.mock("../common/Modals/AddIngredientModal", () => (prop:{isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>>}) => (
+jest.mock("../common/Modals/AddIngredientModal", () => (prop: { isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>> }) => (
     <div data-testid={`spyModal`}>
     </div>
 ));
@@ -43,16 +44,34 @@ const ingredient: IngredientType = {
     ABV: 0,
     price: 0,
     introduction: "INTRODUCTION1",
+    unit: ["ml", "oz"]
 }
 
 const ingredientState: IngredientInfo = {
-    ingredientList: [ingredient],
+    ingredientList: [],
+    myIngredientList: [ingredient],
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 
-let mockStore = getMockStore({cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState});
+const loggedInState: UserInfo = {
+    user: {
+        id: "1",
+        username: "USERNAME",
+        password: null,
+        nickname: null,
+        intro: null,
+        profile_img: null,
+    },
+    token: "TOKEN",
+    isLogin: true
+}
+
+const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: loggedInState });
+
 
 describe("<MyIngredient />", () => {
     beforeEach(() => {
@@ -60,14 +79,14 @@ describe("<MyIngredient />", () => {
     });
 
     it("should render without errors", () => {
-        render( <Provider store={mockStore}><MyIngredient/></Provider>);
+        render(<Provider store={mockLoggedInStore}><MyIngredient /></Provider>);
         screen.getByTestId("spyIngredient_1");
     });
 
     it("should handle add modal", async () => {
-        render( <Provider store={mockStore}><MyIngredient/></Provider>);
+        render(<Provider store={mockLoggedInStore}><MyIngredient /></Provider>);
         const addButton = screen.getByText("Add");
         fireEvent.click(addButton)
-        await waitFor(() => screen.getByTestId("spyIngredient_1"));
+        await waitFor(() => screen.getByTestId("spyModal"));
     });
 });

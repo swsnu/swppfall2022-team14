@@ -7,20 +7,22 @@ import { fetchIngredientList, IngredientType, selectIngredient } from '../../sto
 import { useEffect } from 'react';
 import { AppDispatch } from '../../store';
 
-interface IProps {
+export interface IProps {
     isOpen: boolean;
     close: () => void;
     addedIngredientList: string[];
     setNewIngrdient: React.Dispatch<React.SetStateAction<IngredientType|null>>;
+    setDefaultUnit: React.Dispatch<React.SetStateAction<string|null>>
 }
 
 const AddIngredientModal = (props: IProps) => {
-    const { isOpen, close, addedIngredientList, setNewIngrdient } = props;
+    const { isOpen, close, addedIngredientList, setNewIngrdient, setDefaultUnit} = props;
     const ingredientState = useSelector(selectIngredient)
     const dispatch = useDispatch<AppDispatch>()
 
     const onClickIngredient = (ingredient: IngredientType) => {
         setNewIngrdient(ingredient);
+        setDefaultUnit(ingredient.unit[0])
         close();
     };
 
@@ -29,11 +31,12 @@ const AddIngredientModal = (props: IProps) => {
     }, [])
 
     return (
-        <Modal className="modal" isOpen={isOpen}>
+        <Modal className="modal" isOpen={isOpen} ariaHideApp={false}>
             <div className="modal__ingredient-list">
                 {ingredientState.ingredientList.map((ingredient, idx) => {
                     return (
                         <button key={`${ingredient.name}_${idx}`}
+                            data-testid="ingredientButton"
                             className='modal__ingredient'
                             onClick={() => onClickIngredient(ingredient)}
                             disabled={addedIngredientList.includes(ingredient.name)}

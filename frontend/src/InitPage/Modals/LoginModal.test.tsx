@@ -5,6 +5,8 @@ import { CocktailInfo } from "../../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../../store/slices/comment/comment";
 import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
 import LoginModal from "./LoginModal";
+import React from 'react'
+import { UserInfo } from "../../store/slices/user/user";
 
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
@@ -21,12 +23,30 @@ const stubCommentInitialState: CommentInfo = {
 
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
+    recommendIngredientList: [],
+    availableCocktails: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
 };
 
-jest.mock("react-modal", () => (props: {className: any, isOpen: boolean, onRequestClose: any, children: React.ReactNode}) => {
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password: null,
+        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+
+// eslint-disable-next-line react/display-name
+jest.mock("react-modal", () => (props: { className: any, isOpen: boolean, onRequestClose: any, children: React.ReactNode }) => {
+
     props.onRequestClose()
     if (props.isOpen) return (
         <div data-testid={"spyModal_opened"}>
@@ -46,14 +66,16 @@ const renderLoginModal = () => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<LoginModal isOpen={true} setIsOpen={ jest.fn() } setLoginState={ jest.fn() } />} />
-            </Routes>
-        </MemoryRouter>,
+                <Route path="/" element={<LoginModal isOpen={true} setIsOpen={jest.fn()} />} />
+
+            </Routes >
+        </MemoryRouter >,
         {
             preloadedState: {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
+                user: stubUserInitialState
             },
         }
     );
@@ -74,8 +96,6 @@ describe("<LoginModal />", () => {
         const registerModeButton = screen.getByText("register");
         fireEvent.click(registerModeButton);
         await screen.findByText("Register");
-        const nameInput = screen.getByLabelText("Name");
-        fireEvent.change(nameInput, { target: { value: "TEST_NAME" } });
     });
     it("should call onKeyPress when enter pressed", async () => {
         renderLoginModal();
@@ -97,8 +117,6 @@ describe("<LoginModal />", () => {
         const registerModeButton = screen.getByText("register");
         fireEvent.click(registerModeButton);
         await screen.findByText("Register");
-        const nameInput = screen.getByLabelText("Name");
-        fireEvent.change(nameInput, { target: { value: "TEST_NAME" } });
         const idInput = screen.getByLabelText("ID");
         fireEvent.change(idInput, { target: { value: "TEST_ID" } });
         const passwordInput = screen.getByLabelText("Password");

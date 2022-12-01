@@ -8,8 +8,9 @@ import { ThunkMiddleware } from "redux-thunk";
 import reducer, {CommentInfo, deleteComment, commentActions} from "./comment";
 import {fetchCommentListByCocktailId, fetchMyCommentList} from "./comment";
 import {getComment, postComment, editComment} from "./comment"
+import {getCocktail} from "../cocktail/cocktail";
 
-describe("userInfo reducer", () => {
+describe("comment reducer", () => {
     let store: EnhancedStore<
         { comment: CommentInfo },
         AnyAction,
@@ -164,6 +165,7 @@ describe("userInfo reducer", () => {
                 tags: ["CS1","CS2"],
                 author_id: 1,
                 rate: 1,
+                is_bookmarked: false,
             },
             author_id: 1,
             content: "content1",
@@ -187,6 +189,7 @@ describe("userInfo reducer", () => {
                 tags: ["CS1","CS2"],
                 author_id: 1,
                 rate: 1,
+                is_bookmarked: false,
             },
             author_id: 1,
             content: "content1",
@@ -197,5 +200,43 @@ describe("userInfo reducer", () => {
         }));
         //expect(store.getState().comment.commentList).toEqual([fakeCommentChild])
     });
+
+    it("should handle postComment when failed", async () => {
+        (axios.get as jest.Mock).mockImplementationOnce(() => {
+            throw {
+                response: {
+                    data: {
+                        message: 'Error',
+                    },
+                },
+            };
+        });
+        await store.dispatch(postComment({cocktail: 1, parent_comment: null, content: "content"}));
+    });
+    it("should handle editComment when failed", async () => {
+        (axios.get as jest.Mock).mockImplementationOnce(() => {
+            throw {
+                response: {
+                    data: {
+                        message: 'Error',
+                    },
+                },
+            };
+        });
+        await store.dispatch(editComment({content: "edit", id: 1}));
+    });
+    it("should handle deleteComment when failed", async () => {
+        (axios.get as jest.Mock).mockImplementationOnce(() => {
+            throw {
+                response: {
+                    data: {
+                        message: 'Error',
+                    },
+                },
+            };
+        });
+        await store.dispatch(deleteComment(2));
+    });
+
 
 });

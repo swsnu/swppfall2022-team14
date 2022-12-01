@@ -31,18 +31,34 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'store.apps.StoreConfig',
     'cocktail.apps.CocktailConfig',
     'ingredient.apps.IngredientConfig',
     'comment.apps.CommentConfig',
     'ingredient_prepare.apps.IngredientPrepareConfig',
     'tag.apps.TagConfig',
+    'user.apps.UserConfig',
+    'bookmark.apps.BookmarkConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework.authtoken'
 ]
+
+RESTFRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [ # 기본적인 view 접근 권한 지정
+        'rest_framework.permissions.AllowAny'
+        # AllowAny, IsAuthenticated, IsAdminUser 등 설정하지 않았을 때 적용될 퍼미션 지정
+    ],
+	'DEFAULT_AUTHENTICATION_CLASSES': [
+    	'rest_framework.authentication.SessionAuthenticaiotn',
+        'rest_framework.authentication.BasicAuthenticaiotn',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,3 +144,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'user.User'

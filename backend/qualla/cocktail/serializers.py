@@ -2,12 +2,14 @@ from dataclasses import field
 from email.policy import default
 from django.forms import models
 from rest_framework import serializers
+from bookmark.models import Bookmark
 from cocktail.models import Cocktail
 import random
 
 
 class CocktailListSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
+    is_bookmarked = serializers.SerializerMethodField()
 
     class Meta:
         model = Cocktail
@@ -19,14 +21,28 @@ class CocktailListSerializer(serializers.ModelSerializer):
             "tags",
             "type",
             "author_id",
+            "is_bookmarked",
         )
 
     def get_tags(self, obj):
         return [t.tag.content for t in obj.tags.all()]
-
+    
+    def get_is_bookmarked(self, obj):
+        try:
+            user = self.context['user']
+            if user.is_authenticated:
+                try:
+                    Bookmark.objects.get(user=user.id, cocktail=obj.id)
+                except Bookmark.DoesNotExist:
+                    return False
+                return True
+            return False
+        except KeyError:
+            return False
 
 class CocktailDetailSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
+    is_bookmarked = serializers.SerializerMethodField()
 
     class Meta:
         model = Cocktail
@@ -43,12 +59,25 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
             "type",
             'author_id',
             'created_at',
-            'updated_at'
+            'updated_at',
+            "is_bookmarked",
         )
 
     def get_tags(self, obj):
         return [t.tag.content for t in obj.tags.all()]
-
+    
+    def get_is_bookmarked(self, obj):
+        try:
+            user = self.context['user']
+            if user.is_authenticated:
+                try:
+                    Bookmark.objects.get(user=user.id, cocktail=obj.id)
+                except Bookmark.DoesNotExist:
+                    return False
+                return True
+            return False
+        except KeyError:
+            return False
 
 class CocktailPostSerializer(serializers.ModelSerializer):
     image = serializers.CharField(max_length=500, default="default_img.png")

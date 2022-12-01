@@ -13,20 +13,21 @@ import AddIngredientModal from "../common/Modals/AddIngredientModal";
 
 import ItemDetailPage from "../ItemDetailPage/ItemDetailPage";
 import IngredientItem from "../common/Components/IngredientItem";
-import { fetchIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { selectUser } from "../store/slices/user/user";
 const MyIngredient = () => {
     const ingredientState = useSelector(selectIngredient)
     const dispatch = useDispatch<AppDispatch>()
-    const buttonList = ['My liqour', 'My Custom Cocktail', 'My Favorites', 'My Comments', 'Info']
-    const [isInitMyLiqourOpen, setIsInitMyLiqourOpen] = useState(false);
-    const onClickAdd = () => {
-        setIsInitMyLiqourOpen(true)
-    }
+    const userState = useSelector(selectUser)
 
     useEffect(() => {
-        dispatch(fetchIngredientList())
-    })
+        dispatch(fetchMyIngredientList())
+    }, [])
 
+    const [isAddIngredientOpen, setIsAddIngredientOpen] = useState(false);
+    const onClickAdd = () => {
+        setIsAddIngredientOpen(true)
+    }
 
 
     return <>
@@ -35,9 +36,9 @@ const MyIngredient = () => {
             <div className={styles.right__sort}>sort</div>
         </div>
         <div className={styles.right__main}>
-            {ingredientState.ingredientList.map(ingredient => <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} ABV={ingredient.ABV} />)}
+            {ingredientState.myIngredientList.map(ingredient => <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} ABV={ingredient.ABV} my_item={true} />)}
         </div>
-        <AddIngredientModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
+        <AddIngredientModal isOpen={isAddIngredientOpen} setIsOpen={setIsAddIngredientOpen} user_id={Number(userState.user?.id)} />
     </>
 }
 

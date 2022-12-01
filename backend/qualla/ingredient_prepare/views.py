@@ -5,6 +5,7 @@ from cocktail.models import Cocktail
 from .serializers import IngredientPrepareSerializer
 from django.db import IntegrityError
 from .models import IngredientPrepare
+from django.forms import ValidationError
 
 
 @api_view(['GET', 'POST'])
@@ -18,7 +19,7 @@ def ingredient_list(request, cocktail_id):
         ingredient_prepare = cocktail.ingredient_prepare.all()
         # id, name, image, ABV, price, amount
         return_data = [{"id": element.ingredient.id, "name": element.ingredient.name, "image": element.ingredient.image,
-                       "ABV": element.ingredient.ABV, "price": element.ingredient.price, "amount": element.amount}
+                       "ABV": element.ingredient.ABV, "price": element.ingredient.price, "amount": element.amount, "unit":element.ingredient.unit_list()}
                        for element in ingredient_prepare]
 
         return JsonResponse(return_data, safe=False)
@@ -38,11 +39,11 @@ def ingredient_list(request, cocktail_id):
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
+        except (ValidationError) as e:
+            return HttpResponseBadRequest("Validation Error")
         except (IntegrityError) as e:
             return HttpResponseBadRequest("Recipe Alread Exists")
         return JsonResponse(serializer.data, status=201)
-    # else:
-    #     return HttpResponseNotAllowed(['GET', 'POST'])
 
 
 @api_view(['PUT', 'DELETE'])
@@ -70,5 +71,3 @@ def ingredient_prepare_modify(request, cocktail_id, ingredient_id):
 
         ingredient_prepare.delete()
         return HttpResponse(status=200)
-    # else:
-    #     return HttpResponseNotAllowed(['PUT', 'DELETE'])

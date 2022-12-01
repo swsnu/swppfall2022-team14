@@ -5,6 +5,8 @@ import { CocktailInfo } from "../../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../../store/slices/comment/comment";
 import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
 import InitMyLiqourModal from "./InitMyLiquorModal";
+import { UserInfo } from "../../store/slices/user/user";
+import React from 'react'
 
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
@@ -21,12 +23,40 @@ const stubCommentInitialState: CommentInfo = {
 
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [{ id: 1, name: '1', image: '1', ABV: 1, price: 1, introduction: '1', unit: ['1'] }],
+    recommendIngredientList: [],
+    availableCocktails: [],
+    ingredientItem: null,
+    itemStatus: "loading",
+    listStatus: "loading",
+};
+const stubIngredientInitialStateEmpty: IngredientInfo = {
+    ingredientList: [],
+    myIngredientList: [],
+    recommendIngredientList: [],
+    availableCocktails: [],
     ingredientItem: null,
     itemStatus: "loading",
     listStatus: "loading",
 };
 
-jest.mock("react-modal", () => (props: {className: any, isOpen: boolean, onRequestClose: any, children: React.ReactNode}) => {
+
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password: null,
+        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+
+// eslint-disable-next-line react/display-name
+jest.mock("react-modal", () => (props: { className: any, isOpen: boolean, onRequestClose: any, children: React.ReactNode }) => {
+
     props.onRequestClose()
     if (props.isOpen) return (
         <div data-testid={"spyModal_opened"}>
@@ -42,30 +72,30 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-const renderInitMyLiqourModal = () => {
+const renderInitMyLiqourModal = (ingredient: IngredientInfo) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<InitMyLiqourModal isOpen={true} setIsOpen={ jest.fn() }/>} />
+                <Route path="/" element={<InitMyLiqourModal isOpen={true} setIsOpen={jest.fn()} />} />
             </Routes>
         </MemoryRouter>,
         {
             preloadedState: {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
-                ingredient: stubIngredientInitialState,
+                ingredient: ingredient,
+                user: stubUserInitialState,
             },
         }
     );
 };
 
 describe("<InitMyLiquorModal />", () => {
-    it("should render InitMyLiquorModal", async () => {
-        renderInitMyLiqourModal();
-        await screen.findByText("내 술 목록");
+    it("should render InitMyLiquorModal", () => {
+        renderInitMyLiqourModal(stubIngredientInitialState);
     });
-    it("should close InitMyLiquorModal when close button clicked", async () => {
-        renderInitMyLiqourModal();
+    it("should close InitMyLiquorModal when close button clicked", () => {
+        renderInitMyLiqourModal(stubIngredientInitialStateEmpty);
         const closeButton = screen.getByText("X");
         fireEvent.click(closeButton);
     });

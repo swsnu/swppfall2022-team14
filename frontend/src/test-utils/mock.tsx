@@ -6,6 +6,8 @@ import { AppStore, RootState } from "../store";
 import cocktailReducer from "../store/slices/cocktail/cocktail";
 import commentReducer from "../store/slices/comment/comment";
 import IngredientReducer from "../store/slices/ingredient/ingredient"
+import UserReducer from "../store/slices/user/user"
+import React from 'react'
 
 export const getMockStore = (preloadedState?: PreloadedState<RootState>) => {
     return configureStore({
@@ -13,6 +15,7 @@ export const getMockStore = (preloadedState?: PreloadedState<RootState>) => {
         cocktail: cocktailReducer,
         comment: commentReducer,
         ingredient: IngredientReducer,
+        user: UserReducer,
     },
         preloadedState,
     });

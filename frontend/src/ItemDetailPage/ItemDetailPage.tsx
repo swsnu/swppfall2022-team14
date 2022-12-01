@@ -2,12 +2,19 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { selectCocktail, getCocktail } from "../store/slices/cocktail/cocktail";
+import { selectCocktail, getCocktail, toggleBookmark } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
 import { fetchCommentListByCocktailId, postComment, selectComment } from "../store/slices/comment/comment";
 import NavBar from "../NavBar/NavBar";
+
+import axios from 'axios';
+import LoginModal from "../InitPage/Modals/LoginModal";
+import {selectUser} from "../store/slices/user/user";
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
 interface User {
     id: number;
     name: string;
@@ -24,11 +31,13 @@ export default function ItemDetailPage() {
     const dispatch = useDispatch<AppDispatch>();
     const cocktailState = useSelector(selectCocktail);
     const commentState = useSelector(selectComment);
+    const userState = useSelector(selectUser)
     const navigate = useNavigate()
     const onIngredientClick = (id: number) => {
         navigate(`/ingredient/${id}`)
     }
     const [content, setContent] = useState<string>("")
+    const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false)
 
     useEffect(() => {
         dispatch(getCocktail(Number(id)));
@@ -39,13 +48,37 @@ export default function ItemDetailPage() {
     const isCustom = cocktail?.type === "CS";
 
     const createCommentHandler = () => {
-        const data = {
-            content: content,
-            parent_comment: null,
-            cocktail: Number(id)
+        if(userState.isLogin){
+            const data = {
+                content: content,
+                parent_comment: null,
+                cocktail: Number(id)
+            }
+            dispatch(postComment(data));
+            setContent("")
         }
-        dispatch(postComment(data));
-        setContent("")
+        else{
+            setIsLoginOpen(true)
+        }
+    }
+
+    const toggleBookmarkHandler = () => {
+        if(userState.isLogin && userState.token){
+            dispatch(toggleBookmark({cocktail_id:Number(id), token:userState.token}));
+        }
+        else{
+            setIsLoginOpen(true)
+        }
+    }
+
+    const handleRate = () => {
+        if(userState.isLogin){
+            alert("준비중입니다.")
+        }
+        else{
+            setIsLoginOpen(true)
+        }
+
     }
 
     if (cocktailState.itemStatus == "loading") {
@@ -69,8 +102,9 @@ export default function ItemDetailPage() {
                         <div className="title">
                             <div className="title__name">
                                 {cocktail.name}
-                                <button className="title__bookmark-button">
-                                    bookmark
+                                <button className="title__bookmark-button"
+                                onClick={() => toggleBookmarkHandler()}>
+                                    {(cocktail.is_bookmarked)? "Remove from Bookmark" : "Add in Bookmark"}
                                 </button>
                                 {isCustom &&
                                     <div className="title__author">
@@ -78,7 +112,13 @@ export default function ItemDetailPage() {
                                     </div>
                                 }
                             </div>
-                            <button className="title__rate-button">rate button</button>
+                            <button 
+                                className="title__edit-button"
+                                onClick={(e) => navigate(`/custom/${id}/edit`)}
+                            >
+                                Edit
+                            </button>
+                            <button className="title__rate-button" onClick={handleRate}>rate button</button>
                             <div className="title__rate">{cocktail.rate.toFixed(1)} / 5.0</div>
                         </div>
                         <div className="content">
@@ -128,6 +168,7 @@ export default function ItemDetailPage() {
                         </div>
                     </div>
                 </div>
+                <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
             </div>
         )
     }

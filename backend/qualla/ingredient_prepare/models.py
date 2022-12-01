@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.forms import ValidationError
 
 from cocktail.models import Cocktail
 from ingredient.models import Ingredient
@@ -23,3 +24,11 @@ class IngredientPrepare(models.Model):
                 fields=['cocktail', 'ingredient'], name='unique_cocktail_ingredient_combination'
             )
         ]
+    
+    def clean(self):
+        if not self.amount.split(" ")[1] in self.ingredient.unit_list():
+            raise ValidationError(('Ingredient Unit Error'))
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)

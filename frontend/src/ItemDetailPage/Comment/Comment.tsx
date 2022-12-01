@@ -5,9 +5,15 @@ import { AppDispatch } from '../../store';
 import { CommentType, deleteComment, editComment, postComment, selectComment } from '../../store/slices/comment/comment';
 import Reply from './Reply';
 import { commentActions } from "../../store/slices/comment/comment"
+import {selectUser} from "../../store/slices/user/user";
+import LoginModal from "../../InitPage/Modals/LoginModal";
 
 const Comment = (props: CommentType) => {
     const dispatch = useDispatch<AppDispatch>();
+    const userState = useSelector(selectUser)
+
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
+
     const deleteCommentHandler = () => {
         dispatch(deleteComment(props.id));
     }
@@ -30,8 +36,13 @@ const Comment = (props: CommentType) => {
     }
 
     const replyCommentHandler = () => {
-        dispatch(postComment({cocktail: props.cocktail.id, parent_comment:props.id, content:replyContent}))
-        setReplyContent("")
+        if(userState.isLogin){
+            dispatch(postComment({cocktail: props.cocktail.id, parent_comment:props.id, content:replyContent}))
+            setReplyContent("")
+        }
+        else{
+            setIsLoginOpen(true)
+        }
     }
 
     if(commentState.commentItem?.id == props.id && commentState.state == "EDIT"){
@@ -118,6 +129,7 @@ const Comment = (props: CommentType) => {
                     </div>
                     </div>
                 }
+                <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
             </div>
         )
     }

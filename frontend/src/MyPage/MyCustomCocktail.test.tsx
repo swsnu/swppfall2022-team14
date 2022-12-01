@@ -5,6 +5,7 @@ import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import { getMockStore } from "../test-utils/mock";
 import MyCustomCocktail from "./MyCustomCocktail";
+import { UserInfo } from "../store/slices/user/user";
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -18,7 +19,7 @@ jest.mock("react-router", () => ({
     useNavigate: () => mockNavigate,
 }));
 
-jest.mock("../common/Components/Item", () => (prop:Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
+jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid={`spyCocktail_${prop.id}`}>
     </div>
 ));
@@ -30,7 +31,8 @@ const custom_cocktail1_item: CocktailItemType = {
     type: "CS",
     tags: [],
     author_id: 1,
-    rate: 0
+    rate: 0,
+    is_bookmarked: false,
 }
 
 const cocktaiState: CocktailInfo = {
@@ -48,12 +50,38 @@ const commentState: CommentInfo = {
 
 const ingredientState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 
-const mockStore = getMockStore({cocktail: cocktaiState, ingredient: ingredientState, comment: commentState});
+
+const loggedInState: UserInfo = {
+    user: {
+        id: "1",
+        username: "USERNAME",
+        password: null,
+        nickname: null,
+        intro: null,
+        profile_img: null,
+    },
+    token: "TOKEN",
+    isLogin: true
+}
+
+
+const loggedOutState: UserInfo = {
+    user: null,
+    token: null,
+    isLogin: false
+}
+
+
+const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: loggedInState });
+const mockLoggedOutStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: loggedOutState });
 
 
 describe("<MyCustomCocktail />", () => {
@@ -61,10 +89,10 @@ describe("<MyCustomCocktail />", () => {
         jest.clearAllMocks();
     });
 
-    it("should render comment without errors", () => {
-        render(        
-            <Provider store={mockStore}>
-                <MyCustomCocktail/>
+    it("should render custom cocktail with logged in without errors", () => {
+        render(
+            <Provider store={mockLoggedInStore}>
+                <MyCustomCocktail />
             </Provider>
         );
         expect(mockDispatch).toBeCalledTimes(1)
@@ -72,13 +100,22 @@ describe("<MyCustomCocktail />", () => {
     });
 
     it("should handle create cocktail click", async () => {
-        render(        
-            <Provider store={mockStore}>
-                <MyCustomCocktail/>
+        render(
+            <Provider store={mockLoggedInStore}>
+                <MyCustomCocktail />
             </Provider>
         );
         const element = screen.getByText("Add");
         fireEvent.click(element)
-        await waitFor(() => {expect(mockNavigate).toBeCalledWith("/custom/create")})
+        await waitFor(() => { expect(mockNavigate).toBeCalledWith("/custom/create") })
+    });
+
+    it("should render custom cocktail with logged out without errors", async () => {
+        render(
+            <Provider store={mockLoggedOutStore}>
+                <MyCustomCocktail />
+            </Provider>
+        );
+        screen.getByTestId("spyCocktail_2");
     });
 })

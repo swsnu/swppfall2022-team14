@@ -5,6 +5,7 @@ import { CommentInfo, CommentType } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import { getMockStore } from "../test-utils/mock";
 import MyComment from "./MyComment";
+import { UserInfo } from "../store/slices/user/user";
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -24,7 +25,8 @@ const standard_cocktail1_item: CocktailItemType = {
     type: "ST",
     tags: [],
     author_id: null,
-    rate: 0
+    rate: 0,
+    is_bookmarked: false,
 }
 
 const comment: CommentType = {
@@ -53,20 +55,36 @@ const commentState: CommentInfo = {
 
 const ingredientState: IngredientInfo = {
     ingredientList: [],
+    myIngredientList: [],
     ingredientItem: null,
     itemStatus: "success",
     listStatus: "success",
+    recommendIngredientList: [],
+    availableCocktails: []
 }
 
-const mockStore = getMockStore({cocktail: cocktaiState, ingredient: ingredientState, comment: commentState});
+const stubUserInitialState: UserInfo = {
+    user: {
+        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
+        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
+        password: null,
+        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
+        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
+        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+    },
+    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    isLogin: (localStorage.getItem("token") !== null)
+}
+
+const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: stubUserInitialState });
 
 describe("<MyComment />", () => {
     it("should render items without errors", () => {
-        render(    
+        render(
             <Provider store={mockStore}>
-                <MyComment/>
+                <MyComment />
             </Provider>
-        ); 
+        );
         const items = screen.getAllByTestId("spyComment_1");
         expect(items).toHaveLength(1);
         expect(mockDispatch).toBeCalledTimes(1)
