@@ -8,6 +8,7 @@ import { CocktailInfo, CocktailItemType } from "../../store/slices/cocktail/cock
 import { Provider } from "react-redux";
 import Comment from "./Comment";
 import { UserInfo } from "../../store/slices/user/user";
+import { RateInfo } from "../../store/slices/rate/rate";
 
 // eslint-disable-next-line react/display-name
 jest.mock("./Reply", () => (prop: CommentType) => (
@@ -128,12 +129,15 @@ const stubUserInitialState: UserInfo = {
     token: "TEST_TOKEN",
     isLogin: true
 };
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
 
-const commentMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: initComment, user: stubUserInitialState });
-const commentEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: stubUserInitialState });
-const commentReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: stubUserInitialState });
-const commentNotLoginReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: { ...stubUserInitialState, isLogin: false } });
-const commentMoreMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: moreComment, user: stubUserInitialState });
+const commentMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: initComment, user: stubUserInitialState, rate: rateState });
+const commentEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: stubUserInitialState, rate: rateState });
+const commentReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: stubUserInitialState, rate: rateState });
+const commentNotLoginReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: { ...stubUserInitialState, isLogin: false }, rate: rateState });
+const commentMoreMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: moreComment, user: stubUserInitialState, rate: rateState });
 const mockNavigate = jest.fn();
 
 jest.mock("react-router", () => ({

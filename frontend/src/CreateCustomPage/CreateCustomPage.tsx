@@ -91,7 +91,7 @@ export default function CreateCustomPage() {
                     price_per_glass: price,
                     tags: tagList,
                     author_id: Number(userState.user?.id),
-                    ingredients: ingredients
+                    ingredients: ingredients,
                 },
                 token: userState.token
             }
@@ -102,11 +102,11 @@ export default function CreateCustomPage() {
     }
 
     useEffect(() => {
-        if(!userState.isLogin){
+        if (!userState.isLogin) {
             navigate(-1)
             console.log("먼저 로그인 해주세요")
         }
-    },[])
+    }, [])
 
     useEffect(() => {
         if (newIngredient && newUnit) {

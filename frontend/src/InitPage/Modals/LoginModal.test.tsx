@@ -7,6 +7,7 @@ import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
 import LoginModal from "./LoginModal";
 import React from 'react'
 import { UserInfo } from "../../store/slices/user/user";
+import { RateInfo } from "../../store/slices/rate/rate";
 
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
@@ -30,7 +31,9 @@ const stubIngredientInitialState: IngredientInfo = {
     itemStatus: "loading",
     listStatus: "loading",
 };
-
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
 const stubUserInitialState: UserInfo = {
     user: {
         id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
@@ -75,7 +78,8 @@ const renderLoginModal = () => {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
-                user: stubUserInitialState
+                user: stubUserInitialState,
+                rate: rateState
             },
         }
     );

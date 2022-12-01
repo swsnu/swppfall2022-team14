@@ -8,6 +8,7 @@ import EditCustomPage from "./EditCustomPage";
 import { IProps as AddIngredientModalProp } from "../CreateCustomPage/Modals/AddIngredientModal";
 import { UserInfo } from "../store/slices/user/user";
 import React from 'react';
+import { RateInfo } from "../store/slices/rate/rate";
 
 const stubCommentInitialState: CommentInfo = {
     commentList: [],
@@ -64,7 +65,8 @@ const stubCocktailInitialState: CocktailInfo = {
             { ...stubIngredientInitialState.ingredientList[0], amount: "1 oz" },
             { ...stubIngredientInitialState.ingredientList[1], amount: "5 oz" },
         ],
-        is_bookmarked: false
+        is_bookmarked: false,
+        score: 1
     },
     itemStatus: "success",
     listStatus: "success",
@@ -83,6 +85,9 @@ const stubUserInitialState: UserInfo = {
     isLogin: true
 };
 
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
 // eslint-disable-next-line react/display-name
 jest.mock("../CreateCustomPage/Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) => {
     return (
@@ -149,7 +154,8 @@ const renderEditCustomPage = (status = "success", isLogin: boolean = true, isUse
                     isUserNull ?
                         { ...stubUserInitialState, user: null, token: null } :
                         { ...stubUserInitialState, isLogin: isLogin }
-                )
+                ),
+                rate: rateState
             },
         }
     );
@@ -233,7 +239,8 @@ describe("<EditCustomPage />", () => {
                     cocktail: { ...stubCocktailInitialState, cocktailItem: null },
                     comment: stubCommentInitialState,
                     ingredient: stubIngredientInitialState,
-                    user: stubUserInitialState
+                    user: stubUserInitialState,
+                    rate: rateState
                 },
             }
         );

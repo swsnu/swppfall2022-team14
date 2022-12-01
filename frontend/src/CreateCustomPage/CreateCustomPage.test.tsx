@@ -8,6 +8,7 @@ import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import CreateCustomPage from "./CreateCustomPage";
 import { IProps as AddIngredientModalProp } from "./Modals/AddIngredientModal";
 import { UserInfo } from "../store/slices/user/user";
+import { RateInfo } from '../store/slices/rate/rate';
 
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
@@ -63,6 +64,10 @@ const stubUserInitialState: UserInfo = {
     token: "TEST_TOKEN",
     isLogin: true
 };
+
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
 
 // eslint-disable-next-line react/display-name
 jest.mock("./Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) => {
@@ -122,7 +127,9 @@ const renderCreateCustomPage = (isLogin: boolean = true, isUserNull: boolean = f
                     isUserNull ?
                         { ...stubUserInitialState, user: null, token: null } :
                         { ...stubUserInitialState, isLogin: isLogin }
-                )
+                ),
+                rate: rateState
+
             },
         }
     );
