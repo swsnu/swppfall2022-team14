@@ -14,37 +14,34 @@ import cocktail, {
 } from "../store/slices/cocktail/cocktail";
 import NavBar from "../NavBar/NavBar";
 import qs from 'qs';
-import { fetchIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
 import Ingr from "./Ingr/Ingr";
+import { selectUser } from '../store/slices/user/user';
 
 
 const ListPage = () => {
 
     const dispatch = useDispatch<AppDispatch>()
-    const params = useParams()
+    const { type } = useParams<string>()
     const cocktailState = useSelector(selectCocktail)
     const ingrState = useSelector(selectIngredient)
-
-    const [pageType, setPageType] = useState<any>('')
+    const userState = useSelector(selectUser)
     const [list, setList] = useState<CocktailItemType[]>([])
     const [ingrList, setIngrList] = useState<IngredientType[]>([])
     const location = useLocation()
 
-    const pageStatus = pageType === 'ingredient' ? ingrState.listStatus : cocktailState.listStatus
+    const pageStatus = type === 'ingredient' ? ingrState.listStatus : cocktailState.listStatus
 
-    const query = qs.parse(location.search, {
-        ignoreQueryPrefix: true
-    });
 
-    useEffect(() => {
-        setPageType(params.type)
 
-    }, [pageType, location])
 
     useEffect(() => {
 
-        if (pageType === 'ingredient') {
+        if (type === 'ingredient') {
             dispatch(fetchIngredientList())
+            //TODO : get Ingredient Using Search Param
+            if (userState.isLogin)
+                dispatch(fetchMyIngredientList())
         }
         else if (location.state) {
             const param: FilterParamType = {
@@ -53,18 +50,17 @@ const ListPage = () => {
                 type_three: location.state.filter_param.type_three,
                 name_param: location.state.name_param,
                 available_only: location.state.filter_param.available_only
-                // my_ingredient_id_list: location.state.my_ingredient_param
             }
 
-            if (pageType === 'standard') {
+            if (type === 'standard') {
                 dispatch(fetchStandardCocktailList(param))
             }
-            else if (pageType === 'custom') {
+            else if (type === 'custom') {
                 dispatch(fetchCustomCocktailList(param))
             }
         }
 
-    }, [pageType, location])
+    }, [type, location])
 
 
     useEffect(() => {
@@ -84,10 +80,10 @@ const ListPage = () => {
         <div className="list__content">
             <div className="list__content-up">
                 <div className="list__content-search-wrap">
-                    Searched by [  Type 1 :  {query.filter_type_one?.toString()},  Type 2 :  {query.filter_type_two?.toString()},  Type 3 :  {query.filter_type_three?.toString()},  Text :  {query.text?.toString()} ]
+
                 </div>
             </div>
-            {pageType === 'ingredient' ?
+            {type === 'ingredient' ?
                 <div className="list__content-down">
                     <div className="list__content-item-wrap">
                         {/*TODO use Real data*/}

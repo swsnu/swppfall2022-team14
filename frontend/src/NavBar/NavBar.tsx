@@ -6,7 +6,7 @@ import { AppDispatch } from "../store";
 import { useNavigate, useParams } from "react-router";
 import { fetchMyIngredientList, selectIngredient } from '../store/slices/ingredient/ingredient';
 import { Filterparam } from '../InitPage/InitPage';
-import {selectUser} from "../store/slices/user/user";
+import { selectUser } from "../store/slices/user/user";
 import LoginModal from "../InitPage/Modals/LoginModal";
 import AddIngredientModal from "../common/Modals/AddIngredientModal";
 import IngredientItem from "../common/Components/IngredientItem";
@@ -21,11 +21,11 @@ const NavBar = () => {
 
     //BELOW
 
-    const [openIngr, setOpenIngr] = useState(false)
+    const [openMyIngr, setOpenMyIngr] = useState(false)
     const [curFilter, setCurFilter] = useState('ST')
     const [pop, setPop] = useState(false)
     const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isAddIngredientOpen, setIsAddIngredientOpen] = useState(false);
+    const [isAddIngredientModalOpen, setIsAddIngredientModalOpen] = useState(false);
 
     const handleST = () => {
         if (pop) {
@@ -52,10 +52,10 @@ const NavBar = () => {
         setCurFilter('IG')
     }
     const handleUpload = () => {
-        if(userState.isLogin){
+        if (userState.isLogin) {
             navigate('/custom/create')
         }
-        else{
+        else {
             setIsLoginOpen(true)
         }
     }
@@ -63,25 +63,25 @@ const NavBar = () => {
         navigate('/')
     }
     const handleMyPage = () => {
-        if(userState.isLogin){
+        if (userState.isLogin) {
             navigate('/mypage')
         }
-        else{
+        else {
             setIsLoginOpen(true)
         }
     }
     const handleMyIngr = () => {
-        if(userState.isLogin){
-            setOpenIngr(!openIngr)
+        if (userState.isLogin) {
+            setOpenMyIngr(!openMyIngr)
         }
-        else{
+        else {
             setIsLoginOpen(true)
         }
     }
 
     const handleAddIngr = () => {
-        setIsAddIngredientOpen(true)
-        dispatch(fetchMyIngredientList())
+        setIsAddIngredientModalOpen(true)
+
     }
 
     return (
@@ -107,7 +107,7 @@ const NavBar = () => {
                 </div>
             </div>
             {
-                openIngr ?
+                openMyIngr ?
                     <div className="nav__side">
                         <div className="nav__side-util">
                             <button onClick={handleAddIngr}>ADD</button>
@@ -118,31 +118,13 @@ const NavBar = () => {
                                 <div className="nav__side-ingr-abv">{ingredient.ABV}</div>
                             </div>
                         )}
-                        {/*TODO mapping ingr*/}
-                        {/*
-                        <div className="nav__side-ingr">
-                            <div className="nav__side-ingr-name">1234</div>
-                            <div className="nav__side-ingr-abv">3%</div>
-                        </div>
-                        <div className="nav__side-ingr">
-                            <div className="nav__side-ingr-name">asdfasdf</div>
-                            <div className="nav__side-ingr-abv">41%</div>
-                        </div>
-                        <div className="nav__side-ingr">
-                            <div className="nav__side-ingr-name">jtafsdf</div>
-                            <div className="nav__side-ingr-abv">123</div>
-                        </div>
-                        <div className="nav__side-ingr">
-                            <div className="nav__side-ingr-name">aqethadgva sdfa</div>
-                            <div className="nav__side-ingr-abv">23</div>
-                        </div>
-                        */}
+
                     </div>
                     :
                     null
             }
             <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
-            <AddIngredientModal isOpen={isAddIngredientOpen} setIsOpen={setIsAddIngredientOpen} user_id={Number(userState.user?.id)} />
+            {<AddIngredientModal isOpen={isAddIngredientModalOpen} setIsOpen={setIsAddIngredientModalOpen} user_id={Number(userState.user?.id)} />}
         </div>
     )
 }
