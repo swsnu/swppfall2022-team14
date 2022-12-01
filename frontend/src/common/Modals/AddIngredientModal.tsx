@@ -26,7 +26,6 @@ const AddIngredientModal = (props: prop) => {
 
     const onClickEdit = (body: PostIngredientProps) => {
         dispatch(postMyIngredients(body))
-        dispatch(fetchMyIngredientList())
         setNewIngredients([])
         setIsOpen(false)
     }

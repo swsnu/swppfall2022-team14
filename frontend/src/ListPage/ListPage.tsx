@@ -37,30 +37,23 @@ const ListPage = () => {
 
     useEffect(() => {
 
-        if (type === 'ingredient') {
-            dispatch(fetchIngredientList())
-            //TODO : get Ingredient Using Search Param
-            if (userState.isLogin)
-                dispatch(fetchMyIngredientList())
-        }
-        else if (location.state) {
-            const param: FilterParamType = {
-                type_one: location.state.filter_param.type_one,
-                type_two: location.state.filter_param.type_two,
-                type_three: location.state.filter_param.type_three,
-                name_param: location.state.name_param,
-                available_only: location.state.filter_param.available_only
-            }
-
-            if (type === 'standard') {
-                dispatch(fetchStandardCocktailList(param))
-            }
-            else if (type === 'custom') {
-                dispatch(fetchCustomCocktailList(param))
-            }
+        const param: FilterParamType | null = type === 'ingredient' ? null : {
+            type_one: location.state.filter_param.type_one,
+            type_two: location.state.filter_param.type_two,
+            type_three: location.state.filter_param.type_three,
+            name_param: location.state.name_param,
+            available_only: location.state.filter_param.available_only
         }
 
-    }, [type, location])
+        dispatch(fetchIngredientList())
+        if (userState.isLogin)
+            dispatch(fetchMyIngredientList())
+        if (type === 'standard')
+            dispatch(fetchStandardCocktailList(param))
+        else if (type === 'custom')
+            dispatch(fetchCustomCocktailList(param))
+
+    }, [location])
 
 
     useEffect(() => {
