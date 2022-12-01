@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import React from 'react';
-import { CocktailDetailType, CocktailItemType, fetchCustomCocktailList, fetchMyBookmarkCocktailList,  fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
+import { CocktailDetailType, CocktailItemType, fetchCustomCocktailList, fetchMyBookmarkCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
@@ -15,7 +15,7 @@ const MyBookmark = () => {
     const userState = useSelector(selectUser)
     const dispatch = useDispatch<AppDispatch>()
     useEffect(() => {
-        if(userState.isLogin && userState.token){
+        if (userState.isLogin && userState.token) {
             dispatch(fetchMyBookmarkCocktailList(userState.token))
         }
     }, [])
@@ -25,7 +25,7 @@ const MyBookmark = () => {
             <div className={styles.right__sort}>sort</div>
         </div>
         <div className={styles.right__main}>
-            {cocktailState.cocktailList.map(cocktail => {
+            {cocktailState.listStatus !== 'success' ? "" : cocktailState.cocktailList.map(cocktail => {
                 return <Item key={cocktail.id} image={cocktail.image}
                     name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />;
             })}
