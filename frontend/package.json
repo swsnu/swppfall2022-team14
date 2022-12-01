@@ -80,6 +80,6 @@
       "!src/test-utils/*"
     ]
   },
-  "proxy": "https://qualla.site/",
-  "homepage": "https://qualla.site/"
+  "proxy": "http://localhost:5000",
+  "homepage": "https://qualla.site"
 }
