@@ -145,6 +145,15 @@ export default function ItemDetailPage() {
                                 <p className="content__abv">{cocktail.ABV.toFixed(1)}% ABV</p>
                                 <p className="content__description">{cocktail.introduction}</p>
                                 <p className="content__recipe">{cocktail.recipe}</p>
+                                <p className='content__tags'>
+                                    {cocktail.tags.map((tag, idx) => {
+                                        return (
+                                            <div className="content__tag" key={`${tag}_${idx}`}>
+                                                <span>#{tag}</span>
+                                            </div>
+                                        )
+                                    })}
+                                </p>
                             </div>
                             <div>{cocktail.ingredients?.map(ingre => { return <div key={ingre.id} onClick={() => onIngredientClick(ingre.id)} className="content__ingredient">{ingre.amount} {ingre.name}</div> })}</div>
                             <p className="content__price">${cocktail.price_per_glass}</p>
