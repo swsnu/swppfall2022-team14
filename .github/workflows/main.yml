@@ -6,6 +6,10 @@ on:
     branches: [main,develop]
     paths:
       - 'frontend/**'
+  pull_request:
+    branches: develop
+    paths:
+      - 'frontend/**'
       
 defaults:
   run:
