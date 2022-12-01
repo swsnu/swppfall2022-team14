@@ -81,7 +81,9 @@ export interface PostIngredientProps {
 export const postMyIngredients = createAsyncThunk(
     "cocktail/postMyIngredientList", async (param: PostIngredientProps, { dispatch }) => {
         const response = await axios.post(`/api/v1/store/`, param);
-        dispatch(fetchMyIngredientList())
+
+        // dispatch(fetchMyIngredientList())
+        console.log(response.data)
         return response.data
     },
 )
@@ -157,6 +159,12 @@ export const ingredientSlice = createSlice({
         });
         builder.addCase(getRecommendIngredientList.rejected, (state, action) => {
             state.listStatus = "failed";
+        });
+        builder.addCase(postMyIngredients.fulfilled, (state, action) => {
+            const added_cocktails = action.payload.Ingredients
+            for (let i = 0; i < added_cocktails.length; i++) {
+                state.myIngredientList.push(added_cocktails[i])
+            }
         });
     },
 })

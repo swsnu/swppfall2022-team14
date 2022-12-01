@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import React from 'react';
-import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
+import { fetchCustomCocktailList, fetchMyCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
@@ -12,7 +12,8 @@ import MyCustomCocktail from "./MyCustomCocktail";
 import MyComment from "./MyComment";
 import MyInfo from "./MyInfo";
 import NavBar from "../NavBar/NavBar";
-import {selectUser} from "../store/slices/user/user";
+import { selectUser } from "../store/slices/user/user";
+import { fetchIngredientList, fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
 interface ButtonInfo {
     name: string;
     component: JSX.Element;
@@ -21,14 +22,23 @@ interface ButtonInfo {
 const MyPage = () => {
 
     const userState = useSelector(selectUser)
+    const ingredientState = useSelector(selectIngredient)
     const navigate = useNavigate()
-
+    const dispatch = useDispatch<AppDispatch>()
     useEffect(() => {
-        if(!userState.isLogin){
+
+        dispatch(fetchIngredientList())
+        if (!userState.isLogin) {
             navigate(-1)
             console.log("먼저 로그인 해주세요")
         }
-    },[])
+        else dispatch(fetchMyIngredientList())
+
+        if (userState.isLogin && userState.token) {
+            dispatch(fetchMyCocktailList(userState.token))
+        }
+
+    }, [])
 
     const buttonList: ButtonInfo[] = [{ name: 'My Ingredient', component: <MyIngredient /> },
     { name: 'My Custom Cocktail', component: < MyCustomCocktail /> },
