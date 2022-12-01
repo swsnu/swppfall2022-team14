@@ -80,6 +80,6 @@
       "!src/test-utils/*"
     ]
   },
-  "proxy": "http://localhost:8000",
-  "homepage": "https://qualla.site/react-app/"
+  "proxy": "https://qualla.site",
+  "homepage": "https://qualla.site"
 }
