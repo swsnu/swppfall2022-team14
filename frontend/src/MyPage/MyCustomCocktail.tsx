@@ -21,7 +21,7 @@ const MyCustomCocktail = () => {
 
     const userState = useSelector(selectUser)
     useEffect(() => {
-        if(userState.isLogin && userState.token){
+        if (userState.isLogin && userState.token) {
             dispatch(fetchMyCocktailList(userState.token))
         }
     }, [])
@@ -32,7 +32,7 @@ const MyCustomCocktail = () => {
             <div className={styles.right__sort}>sort</div>
         </div>
         <div className={styles.right__main}>
-            {cocktailState.cocktailList.map(cocktail => {
+            {cocktailState.listStatus !== 'success' ? "" : cocktailState.cocktailList.map(cocktail => {
                 return <Item key={cocktail.id} image={cocktail.image}
                     name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />;
             })}
