@@ -47,7 +47,7 @@ export interface CocktailInfo {
 }
 
 export interface PostForm {
-    cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked">;
+    cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score">;
     token: string;
 }
 
@@ -148,7 +148,7 @@ export const getCocktail = createAsyncThunk(
 
 export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
-    async (cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked">, { dispatch }) => {
+    async (cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score">, { dispatch }) => {
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
         dispatch(cocktailActions.addCocktail(response.data));
         return response.data;
