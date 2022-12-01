@@ -81,5 +81,5 @@
     ]
   },
   "proxy": "http://localhost:8000",
-  "homepage": "./"
+  "homepage": "."
 }
