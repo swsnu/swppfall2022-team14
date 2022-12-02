@@ -6,11 +6,6 @@ on:
     branches: develop
     paths:
       - 'frontend/**'
-  pull_request:
-    branches: develop
-    paths:
-      - 'frontend/**'
-
 defaults:
   run:
     working-directory: ./frontend
