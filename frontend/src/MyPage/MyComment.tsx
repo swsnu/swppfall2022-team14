@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router"
+import { useEffect } from "react"
 import React from 'react';
-import { CocktailDetailType, fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
-import ShortComment, { CommentType } from "./Components/ShortComment";
+import ShortComment from "./Components/ShortComment";
 import { fetchMyCommentList, selectComment } from "../store/slices/comment/comment";
 
 
@@ -13,9 +11,7 @@ import { fetchMyCommentList, selectComment } from "../store/slices/comment/comme
 
 const MyComment = () => {
 
-    const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
-    const buttonList = ['My liqour', 'My Custom Cocktail', 'My Favorites', 'My Comments', 'Info']
     const commentState = useSelector(selectComment)
 
     useEffect(() => {

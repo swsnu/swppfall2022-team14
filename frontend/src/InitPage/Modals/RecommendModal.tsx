@@ -1,30 +1,16 @@
-import { useState, SetStateAction, Dispatch, KeyboardEvent, useEffect } from 'react';
+import { SetStateAction, Dispatch, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-modal';
 import styles from './RecommendModal.module.scss'
 import { AppDispatch } from '../../store';
 import React from 'react';
-import { getRecommendIngredientList, IngredientType, selectIngredient } from '../../store/slices/ingredient/ingredient';
+import { getRecommendIngredientList, selectIngredient } from '../../store/slices/ingredient/ingredient';
 import IngredientItem from '../../common/Components/IngredientItem';
 import { useNavigate } from 'react-router';
-import { type } from 'os';
 
 export interface prop {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
-}
-
-
-interface CocktailShortInfo {
-    name: string;
-    type: string;
-    id: 1;
-}
-
-interface AvailableCocktailMap {
-    ingredient_id: number;
-    cocktails: CocktailShortInfo[]
-
 }
 
 const RecommendModal = (props: prop) => {

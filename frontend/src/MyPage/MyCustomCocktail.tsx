@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useNavigate } from "react-router"
 import React from 'react';
-import { CocktailDetailType, fetchCustomCocktailList, fetchMyCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
+import { fetchMyCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"

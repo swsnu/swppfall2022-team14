@@ -1,8 +1,5 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Filterparam } from '../../InitPage/InitPage';
-import { selectIngredient } from '../../store/slices/ingredient/ingredient';
 import './NavFilter.scss'
 
 interface ParamList {

@@ -7,10 +7,8 @@ import EditCustomPage from './EditCustomPage/EditCustomPage';
 import MyPage from './MyPage/MyPage';
 import Test from './Test'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import React, {useEffect} from 'react';
+import React from 'react';
 import ListPage from "./ListPage/ListPage";
-import {useDispatch} from "react-redux";
-import {AppDispatch} from "./store";
 
 function App() {
 

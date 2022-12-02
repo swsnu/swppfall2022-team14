@@ -127,7 +127,7 @@ export default function EditCustomPage() {
                 token: userState.token
             }
             console.log(data)
-            const response = await dispatch(editCocktail({ data: data, id: Number(id!) }))
+            const response = await dispatch(editCocktail({ data: data, id: Number(id) }))
             navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
         }
     }

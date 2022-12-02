@@ -1,9 +1,9 @@
-import { useState, SetStateAction, Dispatch, KeyboardEvent, useEffect } from 'react';
+import { useState, SetStateAction, Dispatch } from 'react';
 import Modal from 'react-modal';
 import styles from './AddIngredientModal.module.scss'
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchIngredientList, fetchMyIngredientList, IngredientType, PostIngredientProps, postMyIngredients, selectIngredient } from '../../store/slices/ingredient/ingredient';
+import { IngredientType, PostIngredientProps, postMyIngredients, selectIngredient } from '../../store/slices/ingredient/ingredient';
 import { AppDispatch } from '../../store';
 interface prop {
     isOpen: boolean;

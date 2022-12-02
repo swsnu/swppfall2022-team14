@@ -1,7 +1,6 @@
 import Modal from 'react-modal';
 import './AddIngredientModal.scss'
 import React from 'react';
-import { IngredientPrepareType } from '../../store/slices/cocktail/cocktail';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredientList, IngredientType, selectIngredient } from '../../store/slices/ingredient/ingredient';
 import { useEffect } from 'react';
