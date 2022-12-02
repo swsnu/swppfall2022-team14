@@ -7,6 +7,7 @@ import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import { getMockStore } from "../test-utils/mock";
 import MyBookmark from "./MyBookmark";
 import { UserInfo } from "../store/slices/user/user";
+import { RateInfo } from "../store/slices/rate/rate";
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -72,10 +73,12 @@ const loggedOutState: UserInfo = {
     token: null,
     isLogin: false
 }
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
 
-
-const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedInState });
-const mockLoggedOutStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedOutState });
+const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedInState, rate: rateState });
+const mockLoggedOutStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedOutState, rate: rateState });
 
 describe("<MyBookMark />", () => {
     it("should render items with logged in without errors", () => {

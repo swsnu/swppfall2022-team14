@@ -6,6 +6,7 @@ import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import { getMockStore } from "../test-utils/mock";
 import MyComment from "./MyComment";
 import { UserInfo } from "../store/slices/user/user";
+import { RateInfo } from "../store/slices/rate/rate";
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -75,8 +76,10 @@ const stubUserInitialState: UserInfo = {
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
 }
-
-const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: stubUserInitialState });
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
+const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: stubUserInitialState, rate: rateState });
 
 describe("<MyComment />", () => {
     it("should render items without errors", () => {

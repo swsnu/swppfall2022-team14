@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import { CocktailInfo } from "../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
+import { RateInfo } from "../store/slices/rate/rate";
 import { UserInfo } from "../store/slices/user/user";
 import { getMockStore } from "../test-utils/mock";
 import MyPage from "./MyPage";
@@ -86,8 +87,12 @@ const loggedOutState: UserInfo = {
     isLogin: false
 }
 
-const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: emptyIngredientState, comment: emptyCommentState, user: loggedInState });
-const mockLoggedOutStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: emptyIngredientState, comment: emptyCommentState, user: loggedOutState });
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
+
+const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: emptyIngredientState, comment: emptyCommentState, user: loggedInState, rate: rateState });
+const mockLoggedOutStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: emptyIngredientState, comment: emptyCommentState, user: loggedOutState, rate: rateState });
 
 describe("<MyPage />", () => {
     it("should render without errors", () => {

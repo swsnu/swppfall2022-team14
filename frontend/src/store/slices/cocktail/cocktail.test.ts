@@ -92,7 +92,7 @@ describe("cocktail reducer", () => {
         }],
         is_bookmarked: false,
     }
-    const fakeDetailOmit : PostForm = {
+    const fakeDetailOmit = {
         cocktail: {
             name: "name",
             image: "img",
@@ -102,7 +102,7 @@ describe("cocktail reducer", () => {
             recipe: "recipe",
             ABV: 1,
             price_per_glass: 1,
-            ingredients: [],
+            ingredients: []
         },
         token: 'Token',
     }
@@ -225,12 +225,12 @@ describe("cocktail reducer", () => {
 
     it("should handle editCocktail", async () => {
         axios.put = jest.fn().mockResolvedValue({ data: fakeCocktailItemST });
-        await store.dispatch(editCocktail({data: fakeDetailOmit, id: 11}));
+        await store.dispatch(editCocktail({ data: fakeDetailOmit, id: 11 }));
         //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
     it("should handle editCocktail when different id exists", async () => {
         axios.put = jest.fn().mockResolvedValue({ data: fakeCocktailItemST_2 });
-        await store.dispatch(editCocktail({data: fakeDetailOmit, id: 11}));
+        await store.dispatch(editCocktail({ data: fakeDetailOmit, id: 11 }));
         //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
 
@@ -259,12 +259,12 @@ describe("cocktail reducer", () => {
     it("should handle toggleBookmark", async () => {
         const token = 'Token'
         axios.put = jest.fn().mockResolvedValue({ data: { cocktail_id: 1 } });
-        await store.dispatch(toggleBookmark({cocktail_id: 1, token: token}));
+        await store.dispatch(toggleBookmark({ cocktail_id: 1, token: token }));
     });
     it("should handle toggleBookmark", async () => {
         const token = 'Token'
         axios.put = jest.fn().mockResolvedValue({ data: { cocktail_id: 111 } });
-        await store.dispatch(toggleBookmark({cocktail_id: 111, token: token}));
+        await store.dispatch(toggleBookmark({ cocktail_id: 111, token: token }));
     });
 
 

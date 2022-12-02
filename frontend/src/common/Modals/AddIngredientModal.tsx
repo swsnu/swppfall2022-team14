@@ -23,13 +23,9 @@ const AddIngredientModal = (props: prop) => {
         setNewIngredients([...newIngredients, ingredient_id]);
     };
 
-    useEffect(() => {
-        dispatch(fetchIngredientList())
-    }, [])
 
-    const onClickEdit = async (body: PostIngredientProps) => {
+    const onClickEdit = (body: PostIngredientProps) => {
         dispatch(postMyIngredients(body))
-        await dispatch(fetchMyIngredientList())
         setNewIngredients([])
         setIsOpen(false)
     }

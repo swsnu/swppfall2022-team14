@@ -7,6 +7,7 @@ import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
 import RecommendModal from "./RecommendModal";
 import React from 'react'
 import { UserInfo } from "../../store/slices/user/user";
+import { RateInfo } from "../../store/slices/rate/rate";
 
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
@@ -54,7 +55,9 @@ const stubUserInitialState: UserInfo = {
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
 }
-
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
 // eslint-disable-next-line react/display-name
 jest.mock("react-modal", () => (props: { className: any, isOpen: boolean, onRequestClose: any, children: React.ReactNode }) => {
 
@@ -92,7 +95,8 @@ const renderRecommendModal = (ingredient: IngredientInfo) => {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
                 ingredient: ingredient,
-                user: stubUserInitialState
+                user: stubUserInitialState,
+                rate: rateState
             },
         }
     );

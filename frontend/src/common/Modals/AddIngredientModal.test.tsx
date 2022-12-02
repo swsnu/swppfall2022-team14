@@ -7,6 +7,7 @@ import ingredient, { IngredientType, IngredientInfo } from "../../store/slices/i
 import { UserInfo } from "../../store/slices/user/user";
 import { getMockStore } from "../../test-utils/mock";
 import { Provider } from "react-redux";
+import { RateInfo } from "../../store/slices/rate/rate";
 
 const setIsOpen = jest.fn()
 
@@ -77,7 +78,11 @@ const loggedInState: UserInfo = {
     isLogin: true
 }
 
-const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: loggedInState });
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
+
+const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: loggedInState, rate: rateState });
 
 describe("<AddIngredientModal />", () => {
     beforeEach(() => {

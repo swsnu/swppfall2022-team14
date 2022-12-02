@@ -8,6 +8,7 @@ import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
 import { CocktailInfo, CocktailItemType } from "../../store/slices/cocktail/cocktail";
 import { Provider } from "react-redux";
 import { UserInfo } from "../../store/slices/user/user";
+import { RateInfo } from "../../store/slices/rate/rate";
 
 const emptyCocktail: CocktailInfo = {
     cocktailList: [],
@@ -84,9 +85,12 @@ const stubUserInitialState: UserInfo = {
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
 }
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
 
-const commentMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: initComment, user: stubUserInitialState })
-const commentEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: stubUserInitialState })
+const commentMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: initComment, user: stubUserInitialState, rate: rateState })
+const commentEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: stubUserInitialState, rate: rateState })
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({

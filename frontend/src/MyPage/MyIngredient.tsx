@@ -17,12 +17,8 @@ import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredi
 import { selectUser } from "../store/slices/user/user";
 const MyIngredient = () => {
     const ingredientState = useSelector(selectIngredient)
-    const dispatch = useDispatch<AppDispatch>()
     const userState = useSelector(selectUser)
 
-    useEffect(() => {
-        dispatch(fetchMyIngredientList())
-    }, [])
 
     const [isAddIngredientOpen, setIsAddIngredientOpen] = useState(false);
     const onClickAdd = () => {

@@ -11,6 +11,7 @@ import { prop as RecommendModalProp } from "./Modals/RecommendModal";
 import { prop as InitMyLiquorModalProp } from "./Modals/InitMyLiquorModal";
 import { UserInfo } from "../store/slices/user/user";
 import React from 'react'
+import { RateInfo } from "../store/slices/rate/rate";
 
 
 
@@ -140,7 +141,9 @@ const loggedInUserState: UserInfo = {
 }
 
 
-
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -176,6 +179,7 @@ const renderInitPage = (isStandard = true, user: UserInfo) => {
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
                 user: user,
+                rate: rateState
             },
         }
     );

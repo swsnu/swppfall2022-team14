@@ -9,6 +9,7 @@ import { Iprops as NavFilterProp } from "./NavFilter/NavFilter";
 import { UserInfo } from "../store/slices/user/user";
 import React from 'react'
 import NavFilter from "./NavFilter/NavFilter"
+import { RateInfo } from "../store/slices/rate/rate";
 
 // eslint-disable-next-line react/display-name
 // jest.mock("./NavFilter/NavFilter", () => (prop: NavFilterProp) => {
@@ -94,7 +95,9 @@ const stubUserInitialStateNotLogin: UserInfo = {
     isLogin: false
 }
 
-
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -121,6 +124,7 @@ const renderNavBar = (user: UserInfo) => {
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
                 user: user,
+                rate: rateState
             },
         }
     );

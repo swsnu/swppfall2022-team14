@@ -8,6 +8,7 @@ import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import IngredientDetailPage from './IngredientDetailPage';
 import { UserInfo } from "../store/slices/user/user";
+import { RateInfo } from "../store/slices/rate/rate";
 
 const emptyCocktail: CocktailInfo = {
     cocktailList: [],
@@ -102,10 +103,14 @@ const stubUserInitialState: UserInfo = {
     isLogin: (localStorage.getItem("token") !== null)
 }
 
-const loadingMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: loadingIngredient, comment: emptyComment, user: stubUserInitialState })
-const failedMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: failedIngredient, comment: emptyComment, user: stubUserInitialState })
-const noAVBIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: noABVIngredient, comment: emptyComment, user: stubUserInitialState })
-const fakeIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: fakeIngredient, comment: emptyComment, user: stubUserInitialState })
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
+
+const loadingMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: loadingIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState })
+const failedMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: failedIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState })
+const noAVBIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: noABVIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState })
+const fakeIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: fakeIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState })
 
 
 const mockNavigate = jest.fn();

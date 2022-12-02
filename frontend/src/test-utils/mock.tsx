@@ -7,16 +7,18 @@ import cocktailReducer from "../store/slices/cocktail/cocktail";
 import commentReducer from "../store/slices/comment/comment";
 import IngredientReducer from "../store/slices/ingredient/ingredient"
 import UserReducer from "../store/slices/user/user"
+import RateReducer from "../store/slices/rate/rate"
 import React from 'react'
 
 export const getMockStore = (preloadedState?: PreloadedState<RootState>) => {
     return configureStore({
-    reducer: { 
-        cocktail: cocktailReducer,
-        comment: commentReducer,
-        ingredient: IngredientReducer,
-        user: UserReducer,
-    },
+        reducer: {
+            cocktail: cocktailReducer,
+            comment: commentReducer,
+            ingredient: IngredientReducer,
+            user: UserReducer,
+            rate: RateReducer
+        },
         preloadedState,
     });
 };
@@ -37,6 +39,6 @@ export function renderWithProviders(
     function Wrapper({ children }: PropsWithChildren): JSX.Element {
         return <Provider store={store}>{children}</Provider>;
     }
-  
+
     return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
 }

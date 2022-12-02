@@ -11,6 +11,7 @@ import {
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
 import ItemDetailPage from "./ItemDetailPage";
 import { UserInfo } from "../store/slices/user/user";
+import { RateInfo } from "../store/slices/rate/rate";
 
 // eslint-disable-next-line react/display-name
 jest.mock("./Comment/Comment", () => (prop: CommentType) => (
@@ -57,6 +58,7 @@ const fakeCocktailItemCS: CocktailDetailType = {
         amount: "10"
     }],
     is_bookmarked: false,
+    score: 1
 };
 
 const fakeCocktailItemST: CocktailDetailType = {
@@ -84,6 +86,7 @@ const fakeCocktailItemST: CocktailDetailType = {
         amount: "10"
     }],
     is_bookmarked: false,
+    score: 1
 };
 
 const commentNotParent: CommentType = {
@@ -145,6 +148,7 @@ const notBookmarkedCocktailItem: CocktailDetailType = {
         amount: "10"
     }],
     is_bookmarked: true,
+    score: 1
 };
 
 const notBookmarkedCocktail: CocktailInfo = {
@@ -214,14 +218,16 @@ const emptyUserInitailState: UserInfo = {
     token: null,
     isLogin: false
 };
-
-const loadingMockStore = getMockStore({ cocktail: loadingCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState });
-const failedMockStore = getMockStore({ cocktail: failedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState });
-const emptyCommentMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: emptyComment, user: stubUserInitialState });
-const itemDetailMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState });
-const itemDetailMockStore_ST = getMockStore({ cocktail: fakeStandardCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState });
-const notLoginMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment, user: emptyUserInitailState });
-const notBookmarkedMockStore = getMockStore({ cocktail: notBookmarkedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState });
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
+const loadingMockStore = getMockStore({ cocktail: loadingCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: rateState });
+const failedMockStore = getMockStore({ cocktail: failedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: rateState });
+const emptyCommentMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState });
+const itemDetailMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: rateState });
+const itemDetailMockStore_ST = getMockStore({ cocktail: fakeStandardCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: rateState });
+const notLoginMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment, user: emptyUserInitailState, rate: rateState });
+const notBookmarkedMockStore = getMockStore({ cocktail: notBookmarkedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: rateState });
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({

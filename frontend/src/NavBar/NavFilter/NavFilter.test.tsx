@@ -7,6 +7,7 @@ import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
 import NavFilter from "./NavFilter";
 import { UserInfo } from "../../store/slices/user/user";
 import React from 'react';
+import { RateInfo } from "../../store/slices/rate/rate";
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
@@ -43,6 +44,11 @@ const stubUserInitialState: UserInfo = {
     isLogin: (localStorage.getItem("token") !== null)
 }
 
+
+const rateState: RateInfo = {
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+}
+
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
@@ -67,6 +73,7 @@ const renderNavFilter = (type: string) => {
                 comment: stubCommentInitialState,
                 ingredient: stubIngredientInitialState,
                 user: stubUserInitialState,
+                rate: rateState
             },
         }
     );
