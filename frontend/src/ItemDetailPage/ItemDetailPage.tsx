@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { selectCocktail, getCocktail, toggleBookmark } from "../store/slices/cocktail/cocktail";
+import { selectCocktail, getCocktail, toggleBookmark, updateRate } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
@@ -10,7 +10,7 @@ import { fetchCommentListByCocktailId, postComment, selectComment } from "../sto
 import NavBar from "../NavBar/NavBar";
 import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
-import {selectUser} from "../store/slices/user/user";
+import { selectUser } from "../store/slices/user/user";
 import { postRate, editRate } from "../store/slices/rate/rate";
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -21,11 +21,6 @@ interface User {
 }
 
 export default function ItemDetailPage() {
-    const dummyUsers: User[] = [
-        { id: 1, name: "Kevin" },
-        { id: 2, name: "Sophie" },
-    ];
-
     const { type, id } = useParams();
 
     const dispatch = useDispatch<AppDispatch>();
@@ -78,14 +73,15 @@ export default function ItemDetailPage() {
         }
     }
 
-    const onChangeRate = (changedScore: string) => {
+    const onChangeRate = async (changedScore: string) => {
         if(userState.isLogin) {
             const data = { cocktail_id: Number(id), score: Number(changedScore) };
             if (score) {  // PUT score
-                dispatch(editRate(data));
+                await dispatch(editRate(data));
             } else {      // POST score
-                dispatch(postRate(data));
+                await dispatch(postRate(data));
             }
+            dispatch(updateRate(Number(id)));
             setScore(Number(changedScore));
         } else {
             setIsLoginOpen(true);
@@ -119,7 +115,7 @@ export default function ItemDetailPage() {
                                 </button>
                                 {isCustom &&
                                     <div className="title__author">
-                                        created by {dummyUsers.find(user => user.id === cocktail.author_id)?.name}
+                                        created by {cocktail.author_name}
                                     </div>
                                 }
                             </div>
@@ -136,7 +132,9 @@ export default function ItemDetailPage() {
                                 min="1"
                                 max="5"
                             />
-                            <div className="title__rate">{cocktail.rate.toFixed(1)} / 5.0</div>
+                            <div className="title__rate">
+                                {cocktail.rate.toFixed(1)} / 5.0
+                            </div>
                         </div>
                         <div className="content">
                             <img
@@ -147,6 +145,15 @@ export default function ItemDetailPage() {
                                 <p className="content__abv">{cocktail.ABV.toFixed(1)}% ABV</p>
                                 <p className="content__description">{cocktail.introduction}</p>
                                 <p className="content__recipe">{cocktail.recipe}</p>
+                                <p className='content__tags'>
+                                    {cocktail.tags.map((tag, idx) => {
+                                        return (
+                                            <div className="content__tag" key={`${tag}_${idx}`}>
+                                                <span>#{tag}</span>
+                                            </div>
+                                        )
+                                    })}
+                                </p>
                             </div>
                             <div>{cocktail.ingredients?.map(ingre => { return <div key={ingre.id} onClick={() => onIngredientClick(ingre.id)} className="content__ingredient">{ingre.amount} {ingre.name}</div> })}</div>
                             <p className="content__price">${cocktail.price_per_glass}</p>

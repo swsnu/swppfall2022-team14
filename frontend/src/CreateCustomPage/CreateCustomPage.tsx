@@ -91,6 +91,7 @@ export default function CreateCustomPage() {
                     price_per_glass: price,
                     tags: tagList,
                     author_id: Number(userState.user?.id),
+                    author_name: userState.user?.username ?? null,
                     ingredients: ingredients,
                 },
                 token: userState.token
