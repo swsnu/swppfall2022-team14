@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import axios from "axios"
 import { RootState } from "../.."
 import { CocktailItemType } from "../cocktail/cocktail"
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export interface CommentType {
     id: number,

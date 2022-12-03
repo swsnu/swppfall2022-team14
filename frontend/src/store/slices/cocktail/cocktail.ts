@@ -4,6 +4,9 @@ import { AppDispatch, RootState } from "../..";
 import ingredient, { IngredientType } from "../ingredient/ingredient";
 import { useSelector } from "react-redux"
 import { selectUser } from "../user/user";
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
 
 export interface CocktailItemType {
     id: number,
@@ -112,7 +115,7 @@ export const fetchCustomCocktailList = createAsyncThunk(
 
 export const fetchMyBookmarkCocktailList = createAsyncThunk(
     "cocktail/fetchMyBookmarkCocktailList", async (token: string) => {
-        const response = await axios.get('/api/v1/bookmark/me', {
+        const response = await axios.get('/api/v1/bookmark/me/', {
             headers: {
                 Authorization: `Token ${token}`,
             }
@@ -124,7 +127,7 @@ export const fetchMyBookmarkCocktailList = createAsyncThunk(
 
 export const fetchMyCocktailList = createAsyncThunk(
     "cocktail/fetchMyCocktailList", async (token: string) => {
-        const response = await axios.get('/api/v1/cocktails/me', {
+        const response = await axios.get('/api/v1/cocktails/me/', {
             headers: {
                 Authorization: `Token ${token}`,
             }
@@ -136,10 +139,10 @@ export const fetchMyCocktailList = createAsyncThunk(
 export const getCocktail = createAsyncThunk(
     "cocktail/getCocktail",
     async (id: CocktailItemType["id"]) => {
-        const ingredient_response = await axios.get(`/api/v1/cocktails/${id}/ingredients`)
+        const ingredient_response = await axios.get(`/api/v1/cocktails/${id}/ingredients/`)
         console.log(ingredient_response.data)
 
-        const response = await axios.get(`/api/v1/cocktails/${id}`)
+        const response = await axios.get(`/api/v1/cocktails/${id}/`)
         console.log(response.data)
 
         return { ...response.data, ingredients: ingredient_response.data };

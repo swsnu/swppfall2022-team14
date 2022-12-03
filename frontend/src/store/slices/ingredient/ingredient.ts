@@ -3,6 +3,9 @@ import axios from "axios";
 import { stat } from "fs";
 import { RootState } from "../..";
 
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
 export interface IngredientType {
     id: number,
     name: string,

@@ -8,6 +8,7 @@ import { getRecommendIngredientList, IngredientType, selectIngredient } from '..
 import IngredientItem from '../../common/Components/IngredientItem';
 import { useNavigate } from 'react-router';
 import { type } from 'os';
+import {selectUser} from "../../store/slices/user/user";
 
 export interface prop {
     isOpen: boolean;
@@ -31,9 +32,12 @@ const RecommendModal = (props: prop) => {
     const { isOpen, setIsOpen } = props;
     const dispatch = useDispatch<AppDispatch>();
     const ingredientState = useSelector(selectIngredient)
-    useEffect(() => {
+    const userState = useSelector(selectUser)
 
-        dispatch(getRecommendIngredientList())
+    useEffect(() => {
+        if (userState.isLogin && userState.user?.id !== null) {
+            dispatch(getRecommendIngredientList())
+        }
 
     }, [isOpen])
 
