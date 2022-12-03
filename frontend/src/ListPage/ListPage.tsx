@@ -15,6 +15,7 @@ import NavBar from "../NavBar/NavBar";
 import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
 import Ingr from "./Ingr/Ingr";
 import { selectUser } from '../store/slices/user/user';
+import { Grid } from "@mui/material";
 
 
 const ListPage = () => {
@@ -29,9 +30,6 @@ const ListPage = () => {
     const location = useLocation()
 
     const pageStatus = type === 'ingredient' ? ingrState.listStatus : cocktailState.listStatus
-
-
-
 
     useEffect(() => {
 
@@ -57,10 +55,10 @@ const ListPage = () => {
     useEffect(() => {
         setList(cocktailState.cocktailList)
     }, [cocktailState.cocktailList])
+
     useEffect(() => {
         setIngrList(ingrState.ingredientList)
     }, [ingrState.ingredientList])
-    //param
 
     if (pageStatus === "loading") return <div></div> // Loading Window
     else if (pageStatus === "failed") return <div></div> // Failed Window
@@ -84,15 +82,26 @@ const ListPage = () => {
                 :
                 <div className="list__content-down">
                     <div className="list__content-item-wrap">
-                        {/*TODO use Real data*/}
-                        {list.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
-                            name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />)}
+                        <Grid container spacing={3}>
+                            {list.map((cocktail) => 
+                                <Grid key={cocktail.id} item xs={12} sm={6} md={3}>
+                                    <Item 
+                                        key={cocktail.id} 
+                                        image={cocktail.image}
+                                        name={cocktail.name} 
+                                        rate={cocktail.rate} 
+                                        type={cocktail.type} 
+                                        id={cocktail.id} 
+                                        tags={cocktail.tags}
+                                    />
+                                </Grid>
+                            )}
+                        </Grid>
                     </div>
                 </div>
             }
         </div >
     </div >
-
 }
 
 export default ListPage
