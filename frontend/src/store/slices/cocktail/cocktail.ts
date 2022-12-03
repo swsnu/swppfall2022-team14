@@ -3,7 +3,7 @@ import axios from "axios";
 import { AppDispatch, RootState } from "../..";
 import ingredient, { IngredientType } from "../ingredient/ingredient";
 import { useSelector } from "react-redux"
-import { selectUser } from "../user/user";
+import { getUser ,selectUser } from "../user/user";
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
