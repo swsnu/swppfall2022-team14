@@ -17,9 +17,12 @@ const RecommendModal = (props: prop) => {
     const { isOpen, setIsOpen } = props;
     const dispatch = useDispatch<AppDispatch>();
     const ingredientState = useSelector(selectIngredient)
-    useEffect(() => {
+    const userState = useSelector(selectUser)
 
-        dispatch(getRecommendIngredientList())
+    useEffect(() => {
+        if (userState.isLogin && userState.user?.id !== null) {
+            dispatch(getRecommendIngredientList())
+        }
 
     }, [isOpen])
 
