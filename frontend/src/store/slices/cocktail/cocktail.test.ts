@@ -98,6 +98,7 @@ describe("cocktail reducer", () => {
             image: "img",
             tags: ["ST1", "ST2"],
             author_id: 1,
+            author_name: "username",
             introduction: "intro",
             recipe: "recipe",
             ABV: 1,

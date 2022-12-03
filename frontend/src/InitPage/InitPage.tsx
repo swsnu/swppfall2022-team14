@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import Filter from "./Components/Filter"
 import Item from "../common/Components/Item"
@@ -10,9 +10,8 @@ import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } fr
 import { useDispatch, useSelector } from "react-redux"
 import { getUser, logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
-import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { fetchMyIngredientList } from "../store/slices/ingredient/ingredient";
 import RecommendModal from "./Modals/RecommendModal";
-import { PayloadAction } from "@reduxjs/toolkit";
 
 export interface Filterparam {
     type_one: string[],
@@ -60,8 +59,7 @@ const InitPage = () => {
         setIsInitMyLiqourOpen(true)
     }
     const onClicklogout = async () => {
-        const result = await dispatch(logoutUser(userState.token));
-
+        await dispatch(logoutUser(userState.token));
     }
     const onClickSearch = () => {
         // TODO : give params with filter information

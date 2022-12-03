@@ -1,19 +1,10 @@
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router"
+import { useState } from "react"
 import React from 'react';
-import { CocktailDetailType, fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch } from "../store"
+import { useSelector } from "react-redux"
 import styles from "./MyPage.module.scss"
-import Item from "../common/Components/Item"
 import AddIngredientModal from "../common/Modals/AddIngredientModal";
-
-
-
-
-import ItemDetailPage from "../ItemDetailPage/ItemDetailPage";
 import IngredientItem from "../common/Components/IngredientItem";
-import { fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { selectIngredient } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
 const MyIngredient = () => {
     const ingredientState = useSelector(selectIngredient)

@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { stat } from "fs";
 import { RootState } from "../..";
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -82,7 +81,7 @@ export interface PostIngredientProps {
     ingredients: number[] // ingredient ids
 }
 export const postMyIngredients = createAsyncThunk(
-    "cocktail/postMyIngredientList", async (param: PostIngredientProps, { dispatch }) => {
+    "cocktail/postMyIngredientList", async (param: PostIngredientProps) => {
         const response = await axios.post(`/api/v1/store/`, param);
 
         // dispatch(fetchMyIngredientList())
@@ -108,7 +107,7 @@ export const deleteMyIngredients = createAsyncThunk(
 
 export const getIngredient = createAsyncThunk(
     "ingredient/getIngredient/",
-    async (id: IngredientType["id"], { dispatch }) => {
+    async (id: IngredientType["id"]) => {
         const response = await axios.get(`/api/v1/ingredients/${id}/`)
         console.log(response.data)
         return response.data;
@@ -125,30 +124,30 @@ export const ingredientSlice = createSlice({
             state.ingredientList = action.payload.Ingredients;
             state.listStatus = "success"
         });
-        builder.addCase(fetchIngredientList.pending, (state, action) => {
+        builder.addCase(fetchIngredientList.pending, (state) => {
             state.listStatus = "loading";
         });
-        builder.addCase(fetchIngredientList.rejected, (state, action) => {
+        builder.addCase(fetchIngredientList.rejected, (state) => {
             state.listStatus = "failed";
         });
-        builder.addCase(getIngredient.pending, (state, action) => {
+        builder.addCase(getIngredient.pending, (state) => {
             state.itemStatus = "loading"
         });
         builder.addCase(getIngredient.fulfilled, (state, action) => {
             state.ingredientItem = action.payload;
             state.itemStatus = "success"
         });
-        builder.addCase(getIngredient.rejected, (state, action) => {
+        builder.addCase(getIngredient.rejected, (state) => {
             state.itemStatus = "failed"
         })
         builder.addCase(fetchMyIngredientList.fulfilled, (state, action) => {
             state.myIngredientList = action.payload.Ingredients;
             state.listStatus = "success"
         });
-        builder.addCase(fetchMyIngredientList.pending, (state, action) => {
+        builder.addCase(fetchMyIngredientList.pending, (state) => {
             state.listStatus = "loading";
         });
-        builder.addCase(fetchMyIngredientList.rejected, (state, action) => {
+        builder.addCase(fetchMyIngredientList.rejected, (state) => {
             state.listStatus = "failed";
         });
         // 추천
@@ -157,10 +156,10 @@ export const ingredientSlice = createSlice({
             state.availableCocktails = action.payload.possible_cocktails;
             state.listStatus = "success"
         });
-        builder.addCase(getRecommendIngredientList.pending, (state, action) => {
+        builder.addCase(getRecommendIngredientList.pending, (state) => {
             state.listStatus = "loading";
         });
-        builder.addCase(getRecommendIngredientList.rejected, (state, action) => {
+        builder.addCase(getRecommendIngredientList.rejected, (state) => {
             state.listStatus = "failed";
         });
         builder.addCase(postMyIngredients.fulfilled, (state, action) => {

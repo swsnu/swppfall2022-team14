@@ -1,11 +1,9 @@
-import { SetStateAction, Dispatch, KeyboardEvent } from 'react';
+import { SetStateAction, Dispatch } from 'react';
 import Modal from 'react-modal';
 import styles from './InitMyLiquorModal.module.scss'
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectIngredient } from '../../store/slices/ingredient/ingredient';
-import { AppDispatch } from '../../store';
-import { selectUser } from '../../store/slices/user/user';
 import IngredientItem from '../../common/Components/IngredientItem';
 export interface prop {
     isOpen: boolean;
@@ -16,10 +14,6 @@ const InitMyLiqourModal = (props: prop) => {
 
     const { isOpen, setIsOpen } = props;
     const ingredientState = useSelector(selectIngredient)
-    const dispatch = useDispatch<AppDispatch>()
-    const userState = useSelector(selectUser)
-
-
 
     return (
         <Modal className={styles['my-liqour-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>

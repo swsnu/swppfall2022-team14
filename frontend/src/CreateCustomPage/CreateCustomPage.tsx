@@ -20,8 +20,8 @@ export default function CreateCustomPage() {
     const [recipe, setRecipe] = useState<string>("");
     const [tagList, setTagList] = useState<string[]>([]);
     const [tagItem, setTagItem] = useState<string>("");
-    const [ABV, _setABV] = useState<number>(20);  // Temporary
-    const [price, _setPrice] = useState<number>(80000);  // Temporary
+    const [ABV] = useState<number>(20);  // Temporary
+    const [price] = useState<number>(80000);  // Temporary
 
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
@@ -91,7 +91,6 @@ export default function CreateCustomPage() {
                     price_per_glass: price,
                     tags: tagList,
                     author_id: Number(userState.user?.id),
-                    author_name: userState.user?.username ?? null,
                     ingredients: ingredients,
                 },
                 token: userState.token

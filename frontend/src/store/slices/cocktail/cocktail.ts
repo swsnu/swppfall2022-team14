@@ -1,9 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { AppDispatch, RootState } from "../..";
-import ingredient, { IngredientType } from "../ingredient/ingredient";
-import { useSelector } from "react-redux"
-import { getUser, selectUser } from "../user/user";
+import { RootState } from "../..";
+import { IngredientType } from "../ingredient/ingredient";
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -51,7 +49,7 @@ export interface CocktailInfo {
 }
 
 export interface PostForm {
-    cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score">;
+    cocktail: Omit<CocktailDetailType, "id" | "type" | "author_name" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score">;
     token: string;
 }
 
@@ -202,7 +200,7 @@ export const toggleBookmark = createAsyncThunk(
 )
 
 export const updateRate = createAsyncThunk(
-    "cocktail/updateRate", async (cocktail_id: number, { dispatch }) => {
+    "cocktail/updateRate", async (cocktail_id: number) => {
         const rate_response = await axios.get(`/api/v1/rates/${cocktail_id}/`);
         const response = await axios.put(`/api/v1/cocktails/${cocktail_id}/rate/`, { "rate": rate_response.data.score });
         const ingredient_response = await axios.get(`/api/v1/cocktails/${cocktail_id}/ingredients`);
@@ -234,10 +232,10 @@ export const cocktailSlice = createSlice({
             state.cocktailList = action.payload.cocktails;
             state.listStatus = "success";
         });
-        builder.addCase(fetchCustomCocktailList.pending, (state, action) => {
+        builder.addCase(fetchCustomCocktailList.pending, (state) => {
             state.listStatus = "loading";
         });
-        builder.addCase(fetchCustomCocktailList.rejected, (state, action) => {
+        builder.addCase(fetchCustomCocktailList.rejected, (state) => {
             state.listStatus = "failed";
         });
         //StandardCocktailList
@@ -245,10 +243,10 @@ export const cocktailSlice = createSlice({
             state.cocktailList = action.payload.cocktails;
             state.listStatus = "success";
         });
-        builder.addCase(fetchStandardCocktailList.pending, (state, action) => {
+        builder.addCase(fetchStandardCocktailList.pending, (state) => {
             state.listStatus = "loading";
         });
-        builder.addCase(fetchStandardCocktailList.rejected, (state, action) => {
+        builder.addCase(fetchStandardCocktailList.rejected, (state) => {
             state.listStatus = "failed";
         });
 
@@ -257,10 +255,10 @@ export const cocktailSlice = createSlice({
             state.cocktailList = action.payload.cocktails;
             state.listStatus = "success";
         });
-        builder.addCase(fetchMyCocktailList.pending, (state, action) => {
+        builder.addCase(fetchMyCocktailList.pending, (state) => {
             state.listStatus = "loading";
         });
-        builder.addCase(fetchMyCocktailList.rejected, (state, action) => {
+        builder.addCase(fetchMyCocktailList.rejected, (state) => {
             state.listStatus = "failed";
         });
 
@@ -269,10 +267,10 @@ export const cocktailSlice = createSlice({
             state.cocktailList = action.payload.cocktails;
             state.listStatus = "success";
         });
-        builder.addCase(fetchMyBookmarkCocktailList.pending, (state, action) => {
+        builder.addCase(fetchMyBookmarkCocktailList.pending, (state) => {
             state.listStatus = "loading";
         });
-        builder.addCase(fetchMyBookmarkCocktailList.rejected, (state, action) => {
+        builder.addCase(fetchMyBookmarkCocktailList.rejected, (state) => {
             state.listStatus = "failed";
         });
 
@@ -281,10 +279,10 @@ export const cocktailSlice = createSlice({
             state.cocktailItem = action.payload;
             state.itemStatus = "success";
         });
-        builder.addCase(getCocktail.pending, (state, action) => {
+        builder.addCase(getCocktail.pending, (state) => {
             state.itemStatus = "loading";
         });
-        builder.addCase(getCocktail.rejected, (state, action) => {
+        builder.addCase(getCocktail.rejected, (state) => {
             state.itemStatus = "failed";
         });
 

@@ -15,11 +15,6 @@ import { postRate, editRate } from "../store/slices/rate/rate";
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-interface User {
-    id: number;
-    name: string;
-}
-
 export default function ItemDetailPage() {
     const { type, id } = useParams();
 
@@ -121,7 +116,7 @@ export default function ItemDetailPage() {
                             </div>
                             <button 
                                 className="title__edit-button"
-                                onClick={(e) => navigate(`/custom/${id}/edit`)}
+                                onClick={() => navigate(`/custom/${id}/edit`)}
                             >
                                 Edit
                             </button>

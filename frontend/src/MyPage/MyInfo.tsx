@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router"
+import { useState } from "react"
 import React from 'react';
-import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
 
 
@@ -14,7 +10,7 @@ interface UserData {
 }
 
 const MyInfo = () => {
-    const [dummyUserData, setDummyUserData] = useState<UserData>({
+    const [dummyUserData] = useState<UserData>({
         name: "username",
         email: "email",
         info: "소개글"

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import React from 'react';
-import { fetchCustomCocktailList, fetchMyCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
+import { fetchMyCocktailList } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
@@ -13,7 +13,7 @@ import MyComment from "./MyComment";
 import MyInfo from "./MyInfo";
 import NavBar from "../NavBar/NavBar";
 import { selectUser } from "../store/slices/user/user";
-import { fetchIngredientList, fetchMyIngredientList, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { fetchIngredientList, fetchMyIngredientList } from "../store/slices/ingredient/ingredient";
 interface ButtonInfo {
     name: string;
     component: JSX.Element;
@@ -22,7 +22,6 @@ interface ButtonInfo {
 const MyPage = () => {
 
     const userState = useSelector(selectUser)
-    const ingredientState = useSelector(selectIngredient)
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
     useEffect(() => {

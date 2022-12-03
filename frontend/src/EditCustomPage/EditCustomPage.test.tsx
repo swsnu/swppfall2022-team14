@@ -58,6 +58,7 @@ const stubCocktailInitialState: CocktailInfo = {
         tags: ["TAG_1"],
         type: "CS",
         author_id: 1,
+        author_name: "username",
         created_at: new Date(),
         updated_at: new Date(),
         rate: 3,
