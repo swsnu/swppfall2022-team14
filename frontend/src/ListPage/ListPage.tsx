@@ -15,7 +15,7 @@ import NavBar from "../NavBar/NavBar";
 import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
 import Ingr from "./Ingr/Ingr";
 import { selectUser } from '../store/slices/user/user';
-import { Grid } from "@mui/material";
+import { Grid, Container, Typography } from "@mui/material";
 
 
 const ListPage = () => {
@@ -66,41 +66,32 @@ const ListPage = () => {
         <div className="list__navbar">
             <NavBar />
         </div>
-        <div className="list__content">
-            <div className="list__content-up">
-                <div className="list__content-search-wrap">
-
-                </div>
-            </div>
+        <Container>
+            <Typography variant="h4" sx={{ mb: 5 }}>
+                search filters
+            </Typography>
             {type === 'ingredient' ?
-                <div className="list__content-down">
-                    <div className="list__content-item-wrap">
-                        {/*TODO use Real data*/}
-                        {ingrList.map((ingredient) => <Ingr key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} />)}
-                    </div>
-                </div>
-                :
-                <div className="list__content-down">
-                    <div className="list__content-item-wrap">
-                        <Grid container spacing={3}>
-                            {list.map((cocktail) => 
-                                <Grid key={cocktail.id} item xs={12} sm={6} md={3}>
-                                    <Item 
-                                        key={cocktail.id} 
-                                        image={cocktail.image}
-                                        name={cocktail.name} 
-                                        rate={cocktail.rate} 
-                                        type={cocktail.type} 
-                                        id={cocktail.id} 
-                                        tags={cocktail.tags}
-                                    />
-                                </Grid>
-                            )}
+                <div className="list__content-item-wrap">
+                    {/*TODO use Real data*/}
+                    {ingrList.map((ingredient) => <Ingr key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} />)}
+                </div> :
+                <Grid container spacing={3}>
+                    {list.map((cocktail) => 
+                        <Grid key={cocktail.id} item xs={12} sm={6} md={3}>
+                            <Item 
+                                key={cocktail.id} 
+                                image={cocktail.image}
+                                name={cocktail.name} 
+                                rate={cocktail.rate} 
+                                type={cocktail.type} 
+                                id={cocktail.id} 
+                                tags={cocktail.tags}
+                            />
                         </Grid>
-                    </div>
-                </div>
+                    )}
+                </Grid>
             }
-        </div >
+        </Container>
     </div >
 }
 
