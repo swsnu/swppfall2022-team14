@@ -141,9 +141,12 @@ export const getCocktail = createAsyncThunk(
         const response = await axios.get(`/api/v1/cocktails/${id}`)
         console.log(response.data)
 
-        const author_response = await axios.get(`/api/v1/user/${response.data.author_id}/`);
-
-        return { ...response.data, ingredients: ingredient_response.data, author_name: author_response.data.username };
+        if (response.data.author_id > 0) {
+            const author_response = await axios.get(`/api/v1/user/${response.data.author_id}/`);
+            return { ...response.data, ingredients: ingredient_response.data, author_name: author_response.data.username };
+        } else {
+            return { ...response.data, ingredients: ingredient_response.data };
+        }
     }
 )
 
