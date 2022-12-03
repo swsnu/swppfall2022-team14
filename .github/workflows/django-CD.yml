@@ -53,7 +53,7 @@ jobs:
         run: |
           aws deploy create-deployment \
           --application-name qualla-codedeploy \
-          --deployment-group-name QuallBackendDeploy \
+          --deployment-group-name QuallaBackendDeploy \
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --file-exists-behavior OVERWRITE \
           --s3-location bucket=${{ secrets.DJANGO_AWS_BUCKET }},bundleType=zip,key=qualla-deploy.zip \
