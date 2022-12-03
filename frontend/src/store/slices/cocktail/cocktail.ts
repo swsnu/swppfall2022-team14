@@ -5,6 +5,10 @@ import ingredient, { IngredientType } from "../ingredient/ingredient";
 import { useSelector } from "react-redux"
 import { getUser, selectUser } from "../user/user";
 
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+
 export interface CocktailItemType {
     id: number,
     name: string,
