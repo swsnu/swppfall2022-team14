@@ -12,11 +12,8 @@ class IngredientPrepare(models.Model):
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.PROTECT, related_name='ingredient_prepare', null=False)
 
-    # amount : `${숫자} {단위}`, ex) 1 oz, 60 ml, 1 개, 1 꼬집
-    # 추후 도수 계산 시 oz, ml등의 단위에 대해서는 정량적 계산, 그 외의 경우에는 부피가 없음 가정
-    AMOUNT_REGEX = RegexValidator(r'(\d*\.?\d+)\s[a-z|A-Z|ㄱ-ㅎ|가-힣]+')
-    amount = models.CharField(
-        max_length=50, null=False, validators=[AMOUNT_REGEX])
+    amount = models.FloatField(null=False)
+    unit = models.CharField(max_length=50, null=False, default='oz|ml')
 
     class Meta:
         constraints = [
@@ -24,9 +21,9 @@ class IngredientPrepare(models.Model):
                 fields=['cocktail', 'ingredient'], name='unique_cocktail_ingredient_combination'
             )
         ]
-    
+
     def clean(self):
-        if not self.amount.split(" ")[1] in self.ingredient.unit_list():
+        if not self.amount in self.ingredient.unit_list():
             raise ValidationError(('Ingredient Unit Error'))
 
     def save(self, *args, **kwargs):

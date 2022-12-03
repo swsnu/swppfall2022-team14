@@ -6,10 +6,12 @@ from django.core.validators import RegexValidator
 class Cocktail(models.Model):
     name = models.CharField(max_length=50, null=False, unique=True)
     image = models.CharField(max_length=500, null=False)
+    name_eng = models.CharField(max_length=50, null=True, unique=True)
     introduction = models.CharField(max_length=500, null=False)
     recipe = models.CharField(max_length=1000, null=False)
     ABV = models.FloatField(null=False)
     price_per_glass = models.FloatField(null=False)
+    color = models.CharField(max_length=6, null=True)  # FFFFFF
 
     class CocktailType(models.TextChoices):
         STADARD = 'ST', ('Standard Cocktail')
@@ -36,3 +38,6 @@ class Cocktail(models.Model):
                 name='custom cocktail should have author'
             )
         ]
+
+    def __str__(self):
+        return "{} ({})".format(self.name, self.id)
