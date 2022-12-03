@@ -8,7 +8,6 @@ import { getUser, selectUser } from "../user/user";
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-
 export interface CocktailItemType {
     id: number,
     name: string,
@@ -31,6 +30,7 @@ export interface CocktailDetailType {
     tags: string[],
     type: "CS" | "ST",
     author_id: number | null,
+    author_name: string | null,
     created_at: Date,
     updated_at: Date,
     rate: number,
@@ -146,7 +146,9 @@ export const getCocktail = createAsyncThunk(
         const response = await axios.get(`/api/v1/cocktails/${id}/`)
         console.log(response.data)
 
-        return { ...response.data, ingredients: ingredient_response.data };
+        const author_response = await axios.get(`/api/v1/user/${response.data.author_id}/`);
+
+        return { ...response.data, ingredients: ingredient_response.data, author_name: author_response.data.username };
     }
 )
 
@@ -198,6 +200,15 @@ export const toggleBookmark = createAsyncThunk(
         return { cocktail_id: data.cocktail_id }
     }
 )
+
+export const updateRate = createAsyncThunk(
+    "cocktail/updateRate", async (cocktail_id: number, { dispatch }) => {
+        const rate_response = await axios.get(`/api/v1/rates/${cocktail_id}/`);
+        const response = await axios.put(`/api/v1/cocktails/${cocktail_id}/rate/`, { "rate": rate_response.data.score });
+        const ingredient_response = await axios.get(`/api/v1/cocktails/${cocktail_id}/ingredients`);
+        return { ...response.data, ingredients: ingredient_response.data };
+    }
+);
 
 export const cocktailSlice = createSlice({
     name: "cocktail",
@@ -288,7 +299,12 @@ export const cocktailSlice = createSlice({
             if (state.cocktailItem && state.cocktailItem.id === action.payload.cocktail_id) {
                 state.cocktailItem.is_bookmarked = !state.cocktailItem.is_bookmarked
             }
-        })
+        });
+
+        //Rate
+        builder.addCase(updateRate.fulfilled, (state, action) => {
+            state.cocktailItem = action.payload;
+        });
     },
 })
 export const cocktailActions = cocktailSlice.actions;

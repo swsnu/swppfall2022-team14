@@ -1,10 +1,10 @@
-from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
+from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 import json
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .models import User
-from .serializers import UserInfoSerializer
+from .serializers import UserInfoSerializer, UserNameSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import permissions, authentication
@@ -65,6 +65,17 @@ def signout(request):
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=401)
+
+
+@api_view(['GET'])
+def get_user(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return HttpResponseNotFound(f"No User matches id={user_id}")
+
+    data = UserNameSerializer(user).data
+    return JsonResponse({"username": data['username']}, safe=False)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])

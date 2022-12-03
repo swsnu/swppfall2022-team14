@@ -84,6 +84,14 @@
         border-radius: 10px;
         margin-bottom: 3px;
     }
+
+    &__tags {
+        text-align: left;
+    }
+
+    &__tag {
+        display: inline-flex;
+    }
 }
 
 .comments {
