@@ -1,11 +1,10 @@
 import './ListPage.scss'
 import React, { useEffect, useState } from 'react';
-import { BiSearchAlt2 } from "react-icons/bi";
 import Item from "./Item/Item";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { useLocation, useNavigate, useParams } from "react-router";
-import cocktail, {
+import { useLocation, useParams } from "react-router";
+import {
     CocktailItemType,
     fetchCustomCocktailList,
     fetchStandardCocktailList,
@@ -13,7 +12,6 @@ import cocktail, {
     selectCocktail
 } from "../store/slices/cocktail/cocktail";
 import NavBar from "../NavBar/NavBar";
-import qs from 'qs';
 import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
 import Ingr from "./Ingr/Ingr";
 import { selectUser } from '../store/slices/user/user';

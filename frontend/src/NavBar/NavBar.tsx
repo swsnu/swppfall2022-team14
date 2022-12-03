@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './NavBar.scss'
 import NavFilter from "./NavFilter/NavFilter";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../store";
-import { useNavigate, useParams } from "react-router";
-import { fetchMyIngredientList, selectIngredient } from '../store/slices/ingredient/ingredient';
-import { Filterparam } from '../InitPage/InitPage';
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { selectIngredient } from '../store/slices/ingredient/ingredient';
 import { selectUser } from "../store/slices/user/user";
 import LoginModal from "../InitPage/Modals/LoginModal";
 import AddIngredientModal from "../common/Modals/AddIngredientModal";
-import IngredientItem from "../common/Components/IngredientItem";
 
 const NavBar = () => {
 
-    const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
     const userState = useSelector(selectUser)
     const ingredientState = useSelector(selectIngredient)

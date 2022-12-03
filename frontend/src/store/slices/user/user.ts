@@ -34,31 +34,28 @@ const initialState: UserInfo = {
 
 export const registerUser = createAsyncThunk(
     "user/registerUser",
-    async (user: Pick<UserType, "username" | "password">, { dispatch }) => {
-        const response = await axios.post('/api/v1/auth/signup/', user)
+    async (user: Pick<UserType, "username" | "password">) => {
+        await axios.post('/api/v1/auth/signup/', user)
             .then(function (response) {
                 alert("가입 성공");
                 return response.data;
             })
-            .catch(function (response) { alert("가입 실패") })
-            ;
-
+            .catch(function () { alert("가입 실패") });
     }
 )
 
 export const loginUser = createAsyncThunk(
     "user/loginUser",
     async (user: Pick<UserType, "username" | "password">, { dispatch }) => {
-        const response = await axios.post('/api/v1/auth/login/', user)
+        await axios.post('/api/v1/auth/login/', user)
             .then(function (response) {
                 dispatch(userActions.loginUser(response.data.user_data));
                 dispatch(userActions.setToken(response.data.token))
                 return response.data
             })
-            .catch(function (response) {
+            .catch(function () {
                 alert("로그인 실패")
             });
-
     }
 );
 
@@ -72,7 +69,7 @@ export const logoutUser = createAsyncThunk(
         localStorage.removeItem("profile_img")
         localStorage.removeItem("nickname")
 
-        const response = await axios.post('/api/v1/auth/logout/', {}, {
+        await axios.post('/api/v1/auth/logout/', {}, {
             headers: {
                 Authorization: `Token ${token}`,
             },
@@ -81,18 +78,17 @@ export const logoutUser = createAsyncThunk(
                 dispatch(userActions.logoutUser());
                 return response.data
             })
-            .catch(function (response) {
+            .catch(function () {
                 alert(
                     "로그아웃 오류"
                 )
             });
-
     }
 );
 
 export const getUser = createAsyncThunk(
     "user/getUser",
-    async (_, { dispatch }) => {
+    async () => {
         const response = await axios.get('/api/v1/user/me/');
         console.log(response.data)
         return response.data

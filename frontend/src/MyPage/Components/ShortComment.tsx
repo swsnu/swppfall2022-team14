@@ -1,8 +1,7 @@
 import styles from './ShortComment.module.scss'
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router';
-import { useSelector } from 'react-redux';
-import { CocktailDetailType, CocktailItemType, selectCocktail } from '../../store/slices/cocktail/cocktail';
+import { CocktailItemType } from '../../store/slices/cocktail/cocktail';
 export interface CommentType {
     id: number
     cocktail: CocktailItemType;
