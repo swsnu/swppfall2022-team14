@@ -12,7 +12,8 @@ export interface IngredientType {
     ABV: number,
     price: number,
     introduction: string,
-    unit: string[]
+    unit: string,
+    color: string
 }
 
 interface CocktailShortInfo {
