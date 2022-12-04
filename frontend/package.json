@@ -86,6 +86,6 @@
       "!src/test-utils/*"
     ]
   },
-  "proxy": "http://ec2-13-125-144-254.ap-northeast-2.compute.amazonaws.com",
+  "proxy": "http://qualla.kro.kr/",
   "homepage": "."
 }
