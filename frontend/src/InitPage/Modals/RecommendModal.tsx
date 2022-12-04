@@ -8,7 +8,6 @@ import { getRecommendIngredientList, selectIngredient } from '../../store/slices
 import { selectUser } from '../../store/slices/user/user';
 import IngredientItem from '../../common/Components/IngredientItem';
 import { useNavigate } from 'react-router';
-import { selectUser } from '../../store/slices/user/user';
 
 export interface prop {
     isOpen: boolean;
