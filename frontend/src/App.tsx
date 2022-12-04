@@ -14,7 +14,23 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'light',
+    mode: 'dark',
+    primary: {
+      main : '#292929',
+      light: '#606060',
+      dark : '#252525',
+    },
+    secondary: {
+      main : '#313131',
+      light: '#ffffff'
+    },
+    text: {
+      primary: '#ffffff',
+    },
+    background: {
+      paper: '#202020',
+      default: '#202020'
+    }
   },
 });
 

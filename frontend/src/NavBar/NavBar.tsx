@@ -8,12 +8,13 @@ import { selectUser } from "../store/slices/user/user";
 import LoginModal from "../InitPage/Modals/LoginModal";
 import AddIngredientModal from "../common/Modals/AddIngredientModal";
 import { styled } from '@mui/material/styles';
-import { ListItemIcon, ListItemButton, ListItemText, Stack, IconButton } from '@mui/material';
+import { Box, ListItemIcon, ListItemButton, ListItemText, Stack, IconButton } from '@mui/material';
 import AbcIcon from '@mui/icons-material/Abc';
 import CottageIcon from '@mui/icons-material/Cottage';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import LiquorIcon from '@mui/icons-material/Liquor';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import LocalBarIcon from '@mui/icons-material/LocalBar';
 
 
 const StyledItem = styled(ListItemButton)({
@@ -102,35 +103,33 @@ const NavBar = () => {
     }
 
     return (
-        <Stack justifyContent="flex-start" sx={{ width: 1/4, px: 1, py: 10}}>
+        <Stack justifyContent="flex-start" sx={{ width: 1/4, px: 1}}>
+            <Box component="span" sx={{ height: 80, p: 2 }}>
+                <LocalBarIcon sx={{ fontSize: 50 }} />
+            </Box>
             <Stack 
                 direction="row" justifyContent="center" alignItems="center" spacing={1} 
                 sx={{ 
                     height: 50, 
-                    bgcolor: 'grey.200',
+                    bgcolor: 'primary.dark',
                     borderRadius: 4,
                     mb: 2,
                 }}>
-                <IconButton
-                    onClick={handleHome}
-                    >
-                    <CottageIcon />
-                </IconButton>
-                <IconButton
-                    onClick={handleMyIngr}
-                    >
-                    <LiquorIcon />
-                </IconButton>
-                <IconButton
-                    onClick={handleUpload}
-                    >
-                    <FileUploadIcon />
-                </IconButton>
-                <IconButton
-                    onClick={handleMyPage}
-                    >
-                    <PersonOutlineIcon />
-                </IconButton>
+                {[
+                    { onClick: handleHome,   icon: <CottageIcon />       },
+                    { onClick: handleMyIngr, icon: <LiquorIcon />        },
+                    { onClick: handleUpload, icon: <FileUploadIcon />    },
+                    { onClick: handleMyPage, icon: <PersonOutlineIcon /> },
+                ].map((btn, idx) => {
+                    return (
+                        <IconButton
+                            key={idx}
+                            onClick={btn.onClick}
+                            >
+                            {btn.icon}
+                        </IconButton>
+                    )
+                })}
             </Stack>
             {[
                 { title: "Standard"  , type: 'ST', onClick: handleST, icon: <AbcIcon /> },
@@ -140,14 +139,7 @@ const NavBar = () => {
                 return (
                     <Stack key={menu.title} spacing={0.5}>
                         <StyledItem
-                            sx={{
-                                '&.active': {
-                                color: 'text.primary',
-                                bgcolor: 'action.selected',
-                                fontWeight: 'fontWeightBold',
-                                },
-                            }}
-                            onClick={() => menu.onClick()}
+                            onClick={menu.onClick}
                         >
                             <StyledItemIcon>{menu.icon}</StyledItemIcon>
                             <ListItemText disableTypography primary={menu.title} />

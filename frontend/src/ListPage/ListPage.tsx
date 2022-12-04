@@ -65,8 +65,8 @@ const ListPage = () => {
     else return (
         <Stack direction="row" justifyContent="space-between" divider={<Divider orientation="vertical" flexItem />}>
             <NavBar />
-            <Container>
-                <Typography variant="h4" sx={{ mb: 5 }}>
+            <Container sx={{ py: 3 }} >
+                <Typography variant="h4" sx={{ mb: 3 }}>
                     search filters
                 </Typography>
                 {type === 'ingredient' ?
