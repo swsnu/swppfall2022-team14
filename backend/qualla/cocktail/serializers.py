@@ -18,6 +18,7 @@ class CocktailListSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "name_eng",
             "image",
             "rate",
             "tags",
@@ -29,7 +30,7 @@ class CocktailListSerializer(serializers.ModelSerializer):
 
     def get_tags(self, obj):
         return [t.tag.content for t in obj.tags.all()]
-    
+
     def get_is_bookmarked(self, obj):
         try:
             user = self.context['user']
@@ -48,13 +49,15 @@ class CocktailListSerializer(serializers.ModelSerializer):
             user = self.context['user']
             if user.is_authenticated:
                 try:
-                    score = Rate.objects.get(user=user.id, cocktail=obj.id).score
+                    score = Rate.objects.get(
+                        user=user.id, cocktail=obj.id).score
                 except Rate.DoesNotExist:
                     return 0
                 return score
             return 0
         except KeyError:
             return 0
+
 
 class CocktailDetailSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
@@ -66,6 +69,8 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "name_eng",
+            "color",
             "image",
             "introduction",
             "recipe",
@@ -83,7 +88,7 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
 
     def get_tags(self, obj):
         return [t.tag.content for t in obj.tags.all()]
-    
+
     def get_is_bookmarked(self, obj):
         try:
             user = self.context['user']
@@ -102,7 +107,8 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
             user = self.context['user']
             if user.is_authenticated:
                 try:
-                    score = Rate.objects.get(user=user.id, cocktail=obj.id).score
+                    score = Rate.objects.get(
+                        user=user.id, cocktail=obj.id).score
                 except Rate.DoesNotExist:
                     return 0
                 return score
@@ -110,11 +116,12 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
         except KeyError:
             return 0
 
+
 class CocktailPostSerializer(serializers.ModelSerializer):
     image = serializers.CharField(max_length=500, default="default_img.png")
-    ABV = serializers.FloatField(default=random.uniform(10.0, 50.0))
-    price_per_glass = serializers.FloatField(
-        default=random.randint(10, 100)*1000)
+    # ABV = serializers.FloatField(default=random.uniform(10.0, 50.0))
+    # price_per_glass = serializers.FloatField(
+    #     default=random.randint(10, 100)*1000)
 
     class Meta:
         model = Cocktail

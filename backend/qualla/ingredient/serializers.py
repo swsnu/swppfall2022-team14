@@ -4,11 +4,13 @@ from ingredient.models import Ingredient
 
 class IngredientListSerializer(serializers.ModelSerializer):
     unit = serializers.SerializerMethodField()
+
     class Meta:
         model = Ingredient
         fields = (
             "id",
             "name",
+            "name_eng",
             "image",
             "ABV",
             "price",
@@ -18,9 +20,11 @@ class IngredientListSerializer(serializers.ModelSerializer):
     def get_unit(self, obj):
         return obj.unit_list()
 
+
 class IngredientDetailSerializer(IngredientListSerializer):
     class Meta(IngredientListSerializer.Meta):
-        fields = IngredientListSerializer.Meta.fields + ("introduction",)
+        fields = IngredientListSerializer.Meta.fields + \
+            ("introduction", "color")
 
 
 class IngredientRecommendSerializer(IngredientListSerializer):
