@@ -7,6 +7,7 @@ import React from 'react';
 import { getRecommendIngredientList, selectIngredient } from '../../store/slices/ingredient/ingredient';
 import IngredientItem from '../../common/Components/IngredientItem';
 import { useNavigate } from 'react-router';
+import { selectUser } from '../../store/slices/user/user';
 
 export interface prop {
     isOpen: boolean;
