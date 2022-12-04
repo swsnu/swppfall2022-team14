@@ -19,7 +19,7 @@ python manage.py migrate --settings=qualla.settings.production
 cd /home/ubuntu/
 
 echo "[Deploy] : Running Uwsgi"
-uwsgi -i $UWSGI_INI &
+/home/ubuntu/.local/bin/uwsgi -i $UWSGI_INI &
 
 echo "[Deploy] : Running Nginx"
 sudo systemctl start nginx
