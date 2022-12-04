@@ -56,7 +56,8 @@ const fakeCocktailItemCS: CocktailDetailType = {
         price: 1,
         introduction: "iintro",
         unit: ['oz', 'ml'],
-        amount: "10"
+        amount: "10",
+        color: ""
     }],
     is_bookmarked: false,
     score: 1
@@ -85,7 +86,8 @@ const fakeCocktailItemST: CocktailDetailType = {
         price: 1,
         introduction: "iintro",
         unit: ['oz', 'ml'],
-        amount: "10"
+        amount: "10",
+        color: ""
     }],
     is_bookmarked: false,
     score: 1
@@ -148,7 +150,8 @@ const notBookmarkedCocktailItem: CocktailDetailType = {
         price: 1,
         introduction: "iintro",
         unit: ['oz', 'ml'],
-        amount: "10"
+        amount: "10",
+        color: ""
     }],
     is_bookmarked: true,
     score: 1

@@ -20,6 +20,8 @@ export interface CocktailItemType {
 export interface CocktailDetailType {
     id: number,
     name: string,
+    name_eng: string,
+    color: string,
     image: string,
     introduction: string,
     recipe: string,

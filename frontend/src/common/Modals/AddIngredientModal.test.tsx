@@ -44,7 +44,8 @@ const ingredient1: IngredientType = {
     ABV: 0,
     price: 0,
     introduction: "INTRODUCTION1",
-    unit: ["ml", "oz"]
+    unit: ["ml", "oz"],
+    color: ""
 }
 const ingredient2: IngredientType = {
     id: 2,
@@ -53,7 +54,8 @@ const ingredient2: IngredientType = {
     ABV: 0,
     price: 0,
     introduction: "INTRODUCTION1",
-    unit: ["ml", "oz"]
+    unit: ["ml", "oz"],
+    color: ""
 }
 const ingredientState: IngredientInfo = {
     ingredientList: [ingredient1, ingredient2],
