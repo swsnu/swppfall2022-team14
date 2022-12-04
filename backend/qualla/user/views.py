@@ -19,7 +19,8 @@ def signup(request):
             username = req_data['username']
             password = req_data['password']
 
-            user = User.objects.create_user(username=username, password=password)
+            user = User.objects.create_user(
+                username=username, password=password)
             Token.objects.create(user=user)
 
             return HttpResponse(status=201)
@@ -33,7 +34,6 @@ def signin(request):
         req_data = request.data.copy()
         username = req_data['username']
         password = req_data['password']
-        
 
         user = authenticate(username=username, password=password)
 
@@ -44,7 +44,6 @@ def signin(request):
             token = Token.objects.get(user=user)
             user.logged_in = True
             user.save()
-            
 
             user_data = UserInfoSerializer(user).data
             data = {'user_data': user_data, 'token': token.key}
@@ -115,6 +114,7 @@ def retrieve_my_info(request):
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=401)
+
 
 @ensure_csrf_cookie
 @api_view(['GET'])
