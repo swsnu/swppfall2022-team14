@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import './NavFilter.scss'
+import { Button, Stack, FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, TextField, Typography } from '@mui/material';
 
 interface ParamList {
     name: string;
@@ -60,7 +61,7 @@ const NavFilter = (prop: Iprops) => {
         else if (prop.type === 'IG') navigate(`/ingredient`)
     }
 
-    const onTypeClick = (param_type: "typeOne" | "typeTwo" | "typeThree", type_name: string) => {
+    const onTypeClick = (param_type: string, type_name: string) => {
         console.log(typeParam)
         if (param_type === "typeOne") {
             const param = typeParam.typeOne
@@ -75,7 +76,7 @@ const NavFilter = (prop: Iprops) => {
                 setTypeParam({ ...typeParam, typeTwo: param.concat(type_name) })
             else
                 setTypeParam({ ...typeParam, typeTwo: param.filter(value => value != type_name) })
-        } else {
+        } else if (param_type === "typeThree") {
             const param = typeParam.typeThree
             if (param.includes(type_name))
                 setTypeParam({ ...typeParam, typeThree: [] })
@@ -106,123 +107,163 @@ const NavFilter = (prop: Iprops) => {
 
     if (prop.type === 'IG') {
         return (
-            <div className="navfilter">
-                <div className="navfilter__wrap">
-                    <div className={"navfilter__title"}>Text 검색 </div>
-                    <div className={"navfilter__content"}>
-                        <input className="navfilter__search-text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="     검색어를 입력하세요" />
-                    </div>
-                </div>
-                <button className="navfilter__btn" onClick={onClickSearch}>검색하기</button>
-            </div>
+            <Stack 
+                spacing={2} 
+                sx={{ 
+                    textAlign: 'left', 
+                    p: 2, 
+                    bgcolor: 'primary.dark',
+                    borderRadius: 4,
+            }}>
+                <TextField 
+                    label="검색" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                    sx={{
+                        '& label.Mui-focused': {
+                            color: 'secondary.light',
+                        },
+                        '& .MuiInput-underline:after': {
+                            borderBottomColor: 'secondary.light',
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: 'secondary.light',
+                            },
+                        },
+                    }}    
+                />
+                <Button variant="contained" onClick={onClickSearch} 
+                    sx={{
+                        bgcolor: 'primary.dark', 
+                        borderRadius: 5,
+                        boxShadow: 3,
+                        '&:hover': {
+                            backgroundColor: 'secondary.main',
+                            boxShadow: 2,
+                        },
+                    }}
+                >
+                    검색
+                </Button>
+            </Stack>
         )
     }
     else {
         return (
-            <div className="navfilter">
-                <div className="navfilter__wrap">
-                    <div className={"navfilter__title"}>Theme</div>
-                    <div className={"navfilter__content"}>
+            <Stack 
+                spacing={2} 
+                sx={{ 
+                    textAlign: 'left', 
+                    p: 2, 
+                    bgcolor: 'primary.dark',
+                    borderRadius: 4,
+            }}>
+                <TextField 
+                    label="검색" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                    sx={{
+                        '& label.Mui-focused': {
+                            color: 'secondary.light',
+                        },
+                        '& .MuiInput-underline:after': {
+                            borderBottomColor: 'secondary.light',
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: 'secondary.light',
+                            },
+                        },
+                    }}    
+                />
+                <FormControl component="fieldset" variant="standard">
+                    <FormLabel component="legend">Theme</FormLabel>
+                    <FormGroup row>
                         {themeList.map((type) => {
                             return (
-                                <React.Fragment key={type.label}>
-                                    <label>
-                                        <button
+                                <FormControlLabel
+                                    key={type.label}
+                                    label={
+                                        <Typography sx={{ fontSize: 14, ml: -0.5 }}>
+                                            {type.label}
+                                        </Typography>
+                                    }
+                                    sx={{ mb: -1 }}
+                                    control={
+                                        <Checkbox
+                                            sx={{ '& .MuiSvgIcon-root': { fontSize: 14 } }}
+                                            onChange={() => onThemeClick(type)}
+                                        />
+                                    }
+                                />
+                            )
+                        })}
+                    </FormGroup>
+                </FormControl>
+                {[
+                    { title: "Type 1", list: typeOneList  , typeParamList: typeParam.typeOne  , name: "typeOne"   },
+                    { title: "Type 2", list: typeTwoList  , typeParamList: typeParam.typeTwo  , name: "typeTwo"   },
+                    { title: "Type 3", list: typeThreeList, typeParamList: typeParam.typeThree, name: "typeThree" },
+                ].map((filter) => {
+                    return (
+                        <FormControl key={filter.title} component="fieldset" variant="standard">
+                            <FormLabel component="legend">{filter.title}</FormLabel>
+                            <FormGroup row>
+                                {filter.list.map((type) => {
+                                    return (
+                                        <FormControlLabel
                                             key={type.label}
-                                            name="theme"
-                                            onClick={() => onThemeClick(type)}
+                                            label={
+                                                <Typography sx={{ fontSize: 14, ml: -0.5 }}>
+                                                    {type.label}
+                                                </Typography>
+                                            }
+                                            sx={{ mb: -1 }}
+                                            control={
+                                                <Checkbox
+                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 14 } }}
+                                                    checked={filter.typeParamList.includes(type.name)}
+                                                    onChange={() => onTypeClick(filter.name, type.name)}
+                                                />
+                                            }
                                         />
-                                        {type.label}
-                                    </label>
-                                </React.Fragment>
-                            )
-                        })}
-                    </div>
-                </div>
-                <div className="navfilter__wrap">
-                    <div className={"navfilter__title"}>Type 1</div>
-                    <div className={"navfilter__content"}>
-                        {typeOneList.map((type) => {
-                            return (
-                                <React.Fragment key={type.name}>
-                                    <label>
-                                        <input
-                                            key={type.name}
-                                            type="checkbox"
-                                            name="type1"
-                                            checked={typeParam.typeOne.includes(type.name)}
-                                            onChange={() => onTypeClick("typeOne", type.name)}
-                                        />
-                                        {type.label}
-                                    </label>
-                                </React.Fragment>
-                            )
-                        })}
-                    </div>
-                </div>
-                <div className="navfilter__wrap">
-                    <div className={"navfilter__title"}>Type 2</div>
-                    <div className={"navfilter__content"}>
-                        {typeTwoList.map((type) => {
-                            return (
-                                <React.Fragment key={type.name}>
-                                    <label>
-                                        <input
-                                            key={type.name}
-                                            type="checkbox"
-                                            name="type2"
-                                            checked={typeParam.typeTwo.includes(type.name)}
-                                            onChange={() => onTypeClick("typeTwo", type.name)}
-                                        />
-                                        {type.label}
-                                    </label>
-                                </React.Fragment>
-                            )
-                        })}
-                    </div>
-                </div>
-                <div className="navfilter__wrap">
-                    <div className={"navfilter__title"}>도수 </div>
-                    <div className={"navfilter__content"}>
-                        {typeThreeList.map((type) => {
-                            return (
-                                <React.Fragment key={type.name}>
-                                    <label>
-                                        <input
-                                            key={type.name}
-                                            type="checkbox" name="type3"
-                                            checked={typeParam.typeThree.includes(type.name)}
-                                            onChange={() => onTypeClick("typeThree", type.name)}
-                                        />
-                                        {type.label}
-                                    </label>
-                                </React.Fragment>
-                            )
-                        })}
-                    </div>
-                </div>
-                <div className="navfilter__wrap">
-                    <div className={"navfilter__title"}>재료 기반 검색</div>
-                    <div className={"navfilter__content"}>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="available_only"
-                                defaultChecked={availableOnly}
-                                onClick={() => setAvailableOnly(!availableOnly)}
-                            />
-                            만들 수 있는 칵테일만
-                        </label>
-                    </div>
-                </div>
-                <div className="navfilter__wrap">
-                    <div className={"navfilter__title"}>Text 검색 </div>
-                    <div className={"navfilter__content"}>
-                        <input className="navfilter__search-text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="     검색어를 입력하세요" />
-                    </div>
-                </div>
-                <button className="navfilter__btn" onClick={onClickSearch}>검색하기</button>
-            </div>
+                                    )
+                                })}
+                            </FormGroup>
+                        </FormControl>
+                    )
+                })}
+                <FormControl component="fieldset" variant="standard">
+                    <FormLabel component="legend">재료 기반 검색</FormLabel>
+                    <FormGroup row>
+                        <FormControlLabel
+                            label={
+                                <Typography sx={{ fontSize: 14, ml: -0.5 }}>
+                                    만들 수 있는 칵테일만
+                                </Typography>
+                            }
+                            sx={{ mb: -1 }}
+                            control={
+                                <Checkbox
+                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 14 } }}
+                                    defaultChecked={availableOnly}
+                                    onChange={() => setAvailableOnly(!availableOnly)}
+                                />
+                            }
+                        />
+                    </FormGroup>
+                </FormControl>
+                <Button variant="contained" onClick={onClickSearch} 
+                    sx={{
+                        bgcolor: 'primary.dark', 
+                        borderRadius: 5,
+                        boxShadow: 3,
+                        '&:hover': {
+                            backgroundColor: 'secondary.main',
+                            boxShadow: 2,
+                        },
+                    }}
+                >
+                    검색
+                </Button>
+            </Stack>
         )
     }
 }
