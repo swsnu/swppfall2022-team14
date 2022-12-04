@@ -35,7 +35,7 @@ const ListPage = () => {
 
     useEffect(() => {
 
-        const param: FilterParamType | null = type === 'ingredient' ? null : {
+        const param: FilterParamType | null = (type === 'ingredient' || !location.state) ? null : {
             type_one: location.state.filter_param.type_one,
             type_two: location.state.filter_param.type_two,
             type_three: location.state.filter_param.type_three,
