@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router";
 import { CocktailItemType } from "../../store/slices/cocktail/cocktail";
 import { Box, Card, Typography, Stack, Rating } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import { cyan } from '@mui/material/colors';
 
 
 const StyledProductImg = styled('img')({
@@ -38,7 +37,7 @@ const Item = (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | 
                     {prop.tags.slice(0, 2).map((tag) =>
                         <Box 
                             key={tag} 
-                            sx={{ bgcolor: cyan[100], borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                            sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                         >
                             #{tag}
                         </Box>

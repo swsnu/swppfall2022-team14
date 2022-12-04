@@ -63,7 +63,7 @@ const ListPage = () => {
     if (pageStatus === "loading") return <div></div> // Loading Window
     else if (pageStatus === "failed") return <div></div> // Failed Window
     else return (
-        <Stack direction="row" justifyContent="space-between" spacing={2} divider={<Divider orientation="vertical" flexItem />}>
+        <Stack direction="row" justifyContent="space-between" divider={<Divider orientation="vertical" flexItem />}>
             <NavBar />
             <Container>
                 <Typography variant="h4" sx={{ mb: 5 }}>
