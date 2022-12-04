@@ -103,7 +103,7 @@ const NavBar = () => {
     }
 
     return (
-        <Stack justifyContent="flex-start" sx={{ width: 1/4, px: 1}}>
+        <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1}}>
             <Box component="span" sx={{ height: 80, p: 2 }}>
                 <LocalBarIcon sx={{ fontSize: 50 }} />
             </Box>
