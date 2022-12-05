@@ -22,7 +22,7 @@ export default function CreateCustomPage() {
     const [tagItem, setTagItem] = useState<string>("");
     const [ABV] = useState<number>(20);  // Temporary
     const [price] = useState<number>(80000);  // Temporary
-
+    const [image, setImage] = useState<File|null>(null);
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
     const [newIngredient, setNewIngredient] = useState<IngredientType | null>(null);
@@ -130,10 +130,7 @@ export default function CreateCustomPage() {
                     onClick={() => createCocktailHandler()}>Confirm</button>
             </div>
             <div className="content">
-                <img
-                    className="content__image"
-                    src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"
-                />
+                <input type="file" onChange={(e) => setImage(e.target.files![0])}/>
                 <div className="content__description-box">
                     <p className="content__abv">Expected 20% ABV</p>
                     <div className='content__description'>
