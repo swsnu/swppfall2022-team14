@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import styles from "./Filter.module.scss"
 import React from 'react';
 import { Filterparam } from "../InitPage";
+import { Divider, Button, Stack, FormGroup, TextField, Typography } from '@mui/material';
 
 interface ParamList {
     name: string;
@@ -20,6 +21,9 @@ interface ThemeList {
 
 export interface Iprops {
     setUrlParams: Dispatch<SetStateAction<Filterparam>>
+    onClickSearch: () => void
+    input: string
+    setInput: Dispatch<SetStateAction<string>>
 }
 
 
@@ -50,7 +54,7 @@ const Filter = (prop: Iprops) => {
         type_three: typeParam.typeThree,
         available_only: availableOnly
     }
-    const onTypeClick = (param_type: "typeOne"|"typeTwo"|"typeThree", type_name: string) => {
+    const onTypeClick = (param_type: string, type_name: string) => {
         console.log(typeParam)
         if(param_type === "typeOne"){
             console.log("?")
@@ -66,7 +70,7 @@ const Filter = (prop: Iprops) => {
                 setTypeParam({...typeParam, typeTwo:param.concat(type_name)})
             else
                 setTypeParam({...typeParam, typeTwo:param.filter(value => value != type_name)})
-        }else{
+        }else if (param_type === "typeThree"){
             const param = typeParam.typeThree
             if (param.includes(type_name))
                 setTypeParam({...typeParam, typeThree:[]})
@@ -99,108 +103,112 @@ const Filter = (prop: Iprops) => {
 
     console.log(typeParam)
 
-    return <div className={styles.filter}>
-        <div className={styles.filter__line}>
-                    <div className={styles.filter__title}>Theme</div>
-                    <div className={styles.filter__content}>
-                        {themeList.map((type) => {
-                            return (
-                                <React.Fragment key={type.label}>
-                                    <label>
-                                        <button 
-                                            key={type.label} 
-                                            name="theme"
-                                            onChange={() => prop.setUrlParams(url_params)} 
-                                            onClick={() => onThemeClick(type)} 
-                                        />
-                                        {type.label} 
-                                    </label>
-                                </React.Fragment>
-                            )
-                        })}
-                    </div>
-                </div>
-        <div className={styles.filter__line}>
-            <div className={styles.filter__title}>Type 1</div>
-            <div className={styles.filter__content}>
-                {typeOneList.map((type) => {
-                    return (
-                        <React.Fragment key={type.name}>
-                            <label>
-                                <input
-                                    key={type.name}
-                                    type="checkbox"
-                                    name="type1"
-                                    checked={typeParam.typeOne.includes(type.name)} 
-                                    onChange={() => prop.setUrlParams(url_params)} 
-                                    onClick={() => onTypeClick("typeOne", type.name)} 
-                                />
-                                {type.label}
-                            </label>
-                        </React.Fragment>
-                    )
-                })}
-            </div>
-        </div>
-        <div className={styles.filter__line}>
-            <div className={styles.filter__title}>Type 2</div>
-            <div className={styles.filter__content}>
-                {typeTwoList.map((type) => {
-                    return (
-                        <React.Fragment key={type.name}>
-                            <label>
-                            <input 
-                                key={type.name} 
-                                type="checkbox" 
-                                name="type2"
-                                checked={typeParam.typeTwo.includes(type.name)} 
+    return (
+        <Stack spacing={2} alignItems='flex-start' sx={{ pl: 3 }}>
+            <Stack direction="row" spacing={1}>
+                <Typography variant="body1">
+                    Theme
+                </Typography>
+                <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
+                <FormGroup row sx={{ gap: 1 }}>
+                    {themeList.map((type) => {
+                        return (
+                            <Button 
+                                key={type.label} 
+                                size="small"
+                                sx={{ bgcolor: 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                                 onChange={() => prop.setUrlParams(url_params)} 
-                                onClick={() => onTypeClick("typeTwo", type.name)} 
-                            />
-                            {type.label} 
-                            </label>
-                        </React.Fragment>
-                    )
-                })}
-            </div>
-        </div>
-        <div className={styles.filter__line}>
-            <div className={styles.filter__title}>도수 </div>
-            <div className={styles.filter__content}>
-                {typeThreeList.map((type) => {
-                    return (
-                        <React.Fragment key={type.name}>
-                            <label>
-                                <input 
-                                    key={type.name} 
-                                    type="checkbox" name="type3"
-                                    checked={typeParam.typeThree.includes(type.name)} 
-                                    onChange={() => prop.setUrlParams(url_params)} 
-                                    onClick={() => onTypeClick("typeThree", type.name)} 
-                                />
-                                {type.label}
-                            </label>
-                        </React.Fragment>
-                    )
-                })}
-            </div>
-
-        </div>
-        <div className={styles.filter__line}>
-            <div className={styles.filter__title}>재료 기반 검색</div>
-            <div className={styles.filter__content}>
-                <label>
-                    <input
-                        type="checkbox"
-                        name="available_only"
-                        checked={availableOnly}
+                                onClick={() => onThemeClick(type)}
+                            >
+                                <Typography variant="caption" color='text.primary'>
+                                    {type.label}
+                                </Typography>
+                            </Button>
+                        )
+                    })}
+                </FormGroup>
+            </Stack>
+            {[
+                { title: "Type 1", list: typeOneList  , typeParamList: typeParam.typeOne  , name: "typeOne"   },
+                { title: "Type 2", list: typeTwoList  , typeParamList: typeParam.typeTwo  , name: "typeTwo"   },
+                { title: "Type 3", list: typeThreeList, typeParamList: typeParam.typeThree, name: "typeThree" },
+            ].map((filter) => {
+                return (
+                    <Stack direction="row" key={filter.title} spacing={1}>
+                        <Typography variant="body1">
+                            {filter.title}
+                        </Typography>
+                        <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
+                        <FormGroup row sx={{ gap: 1 }}>
+                            {filter.list.map((type) => {
+                                return (
+                                    <Button 
+                                        key={type.label} 
+                                        size="small"
+                                        sx={{ bgcolor: filter.typeParamList.includes(type.name) ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                        onChange={() => prop.setUrlParams(url_params)} 
+                                        onClick={() => onTypeClick(filter.name, type.name)}
+                                    >
+                                        <Typography variant="caption" color='text.primary'>
+                                            {type.label}
+                                        </Typography>
+                                    </Button>
+                                )
+                            })}
+                        </FormGroup>
+                    </Stack>
+                )
+            })}
+            <Stack direction="row" spacing={1}>
+                <Typography variant="body1">
+                    재료 기반 검색
+                </Typography>
+                <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
+                <FormGroup row sx={{ gap: 1 }}>
+                    <Button 
+                        size="small"
+                        sx={{ bgcolor: availableOnly ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                         onClick={() => setAvailableOnly(!availableOnly)}
-                    />
-                    만들 수 있는 칵테일만
-                </label>
-            </div>
-        </div>
-    </div >
+                    >
+                        <Typography variant="caption" color='text.primary'>
+                            만들 수 있는 칵테일만
+                        </Typography>
+                    </Button>
+                </FormGroup>
+            </Stack>
+            <Stack spacing={2} alignItems="stretch">
+                <TextField 
+                    label="추가 검색어" variant="standard" value={prop.input} onChange={(e) => prop.setInput(e.target.value)} 
+                    sx={{
+                        '& label.Mui-focused': {
+                            color: 'secondary.light',
+                        },
+                        '& .MuiInput-underline:after': {
+                            borderBottomColor: 'secondary.light',
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: 'secondary.light',
+                            },
+                        },
+                    }}    
+                />
+                <Button variant="contained" onClick={prop.onClickSearch} 
+                    sx={{
+                        bgcolor: 'primary.dark', 
+                        borderRadius: 5,
+                        boxShadow: 3,
+                        '&:hover': {
+                            backgroundColor: 'action.hover',
+                            boxShadow: 2,
+                        },
+                    }}
+                >
+                    검색
+                </Button>
+            </Stack>
+        </Stack >
+    )
 }
 
 

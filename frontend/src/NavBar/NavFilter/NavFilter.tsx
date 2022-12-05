@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import './NavFilter.scss'
-import { Box, Button, Stack, FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, TextField, Typography } from '@mui/material';
-import { BusinessTwoTone } from '@mui/icons-material';
+import { Button, Stack, FormGroup, TextField, Typography } from '@mui/material';
 
 interface ParamList {
     name: string;

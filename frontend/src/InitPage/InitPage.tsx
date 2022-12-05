@@ -12,10 +12,27 @@ import { getUser, logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
 import { fetchMyIngredientList } from "../store/slices/ingredient/ingredient";
 import RecommendModal from "./Modals/RecommendModal";
-import { Grid, IconButton, ToggleButtonGroup, ToggleButton, TextField, Stack } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import { Grid, IconButton, ListItemButton, ListItemIcon, ListItemText, ToggleButtonGroup, ToggleButton, TextField, Stack } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
+
+const StyledItem = styled(ListItemButton)({
+    position: 'relative',
+    justifyContent: "flex-start",
+    gap: 10,
+});
+
+const StyledItemIcon = styled(ListItemIcon)({
+    width: 22,
+    height: 22,
+    color: 'inherit',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 10,
+});
 
 export interface Filterparam {
     type_one: string[],
@@ -23,7 +40,6 @@ export interface Filterparam {
     type_three: string[],
     available_only: boolean
 }
-
 
 const InitPage = () => {
 
@@ -154,33 +170,38 @@ const InitPage = () => {
                         재료 추천
                     </ToggleButton>
                 </ToggleButtonGroup>
-                <Stack direction="row" spacing={1} alignItems='flex-end' justifyContent="flex-end">
-                    <TextField 
-                        label="추가 검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
-                        sx={{
-                            '& label.Mui-focused': {
-                                color: 'secondary.light',
-                            },
-                            '& .MuiInput-underline:after': {
-                                borderBottomColor: 'secondary.light',
-                            },
-                            '& .MuiOutlinedInput-root': {
-                                '&.Mui-focused fieldset': {
-                                    borderColor: 'secondary.light',
+                <Stack direction="row" spacing={1} alignItems='stretch'>
+                    <Stack direction="row" alignItems='center' sx={{ pl: 2, pr: 1, bgcolor: 'primary.main', borderRadius: 4 }}>
+                        <TextField 
+                            placeholder="검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                            sx={{
+                                '& label.Mui-focused': {
+                                    color: 'secondary.light',
                                 },
-                            },
-                        }}    
-                    />
-                    <IconButton onClick={onClickFilter}>
-                        <FilterAltIcon />
-                    </IconButton>
-                    <IconButton onClick={onClickSearch}>
-                        <SearchIcon />
-                    </IconButton>
+                                '& .MuiInput-underline:after': {
+                                    borderBottomColor: 'secondary.light',
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: 'secondary.light',
+                                    },
+                                },
+                            }}    
+                        />
+                        <IconButton onClick={onClickSearch}>
+                            <SearchIcon />
+                        </IconButton>
+                    </Stack>
+                    <StyledItem
+                        onClick={onClickFilter}
+                        sx={{ px: 2, bgcolor: 'primary.main', borderRadius: 4 }}
+                    >
+                        <ListItemText disableTypography primary="필터 검색" />
+                        <StyledItemIcon><FilterAltIcon /></StyledItemIcon>
+                    </StyledItem>
                 </Stack>
-
-                {isOpenFilter ? <Filter setUrlParams={setFilterParam} /> : null}
             </Stack>
+            {isOpenFilter ? <Filter setUrlParams={setFilterParam} onClickSearch={onClickSearch} input={input} setInput={setInput} /> : null}
             <Grid container spacing={3} columns={5} sx={{ width: 1, pr: 2 }}>
                 {cocktailState.cocktailList.map((cocktail) => 
                     <Grid key={cocktail.id} item xs={1}>
