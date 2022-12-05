@@ -126,8 +126,8 @@ export default function ItemDetailPage() {
                                 </IconButton>
                             }
                             <Checkbox
-                                icon={<BookmarkBorderIcon />}
-                                checkedIcon={<BookmarkIcon />}
+                                icon={<BookmarkBorderIcon sx={{ color: 'text.icon' }} />}
+                                checkedIcon={<BookmarkIcon sx={{ color: 'text.icon' }} />}
                                 onClick={toggleBookmarkHandler}
                             />
                             <Button variant="contained" onClick={handleRateOpen}
@@ -196,7 +196,10 @@ export default function ItemDetailPage() {
                                     {cocktail.introduction}
                                 </Typography>
                             </Stack>
-                            <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, p: 2 }}>
+                            <Typography variant="subtitle1">
+                                Recipe: 
+                            </Typography>
+                            <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, px: 2 }}>
                                 <Stack direction="row" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
                                     {cocktail.ingredients?.map((ingre) => { 
                                         return (
@@ -222,16 +225,13 @@ export default function ItemDetailPage() {
                     <Stack direction="row" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
                         {cocktail.tags.map((tag, idx) => { 
                             return (
-                                <Box 
-                                    key={`${tag}_${idx}`} 
-                                    sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
-                                >
+                                <Typography key={`${tag}_${idx}`} variant="body2" align='left'>
                                     #{tag}
-                                </Box>
+                                </Typography>
                             )
                         })}
                     </Stack>
-                    <Divider flexItem />
+                    {cocktail.tags.length !== 0 && <Divider flexItem />}
                     <div>
                         <div className="comments">
                             <div className="comments__create">

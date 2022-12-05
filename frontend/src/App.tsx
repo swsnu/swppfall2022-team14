@@ -30,7 +30,7 @@ const darkTheme = createTheme({
     background: {
       paper: '#202020',
       default: '#202020'
-    }
+    },
   },
 });
 
