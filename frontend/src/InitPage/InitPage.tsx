@@ -15,8 +15,13 @@ import RecommendModal from "./Modals/RecommendModal";
 import { styled } from '@mui/material/styles';
 import { Grid, IconButton, ListItemButton, ListItemIcon, ListItemText, ToggleButtonGroup, ToggleButton, TextField, Stack } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
+import LiquorIcon from '@mui/icons-material/Liquor';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+
 
 const StyledItem = styled(ListItemButton)({
     position: 'relative',
@@ -76,7 +81,7 @@ const InitPage = () => {
     const onClickMyLiqour = () => {
         setIsInitMyLiqourOpen(true)
     }
-    const onClicklogout = async () => {
+    const onClickLogout = async () => {
         await dispatch(logoutUser(userState.token));
         location.reload();
     }
@@ -141,18 +146,25 @@ const InitPage = () => {
 
     return (
         <Stack spacing={2} sx={{ width: 1, pl: 2, pr: 3, py: 2 }}>
-            <Stack direction="row" justifyContent="flex-end">
+            <Stack direction="row" justifyContent="flex-end" alignItems="center">
+                {loginState && isOpenProfile ? (
+                    <Stack direction="row" spacing={1} justifyContent="flex-end">
+                        <IconButton onClick={onClickMyPage}>
+                            <PersonOutlineIcon />
+                        </IconButton>
+                        <IconButton onClick={onClickLogout}>
+                            <LogoutIcon />
+                        </IconButton>
+                    </Stack> 
+                ) : null}
                 {loginState ? 
-                    <button onClick={onClickProfile}>내 프로필</button> : 
+                    <IconButton size="large" onClick={onClickProfile}>
+                        <AccountCircleIcon fontSize="large" />
+                    </IconButton> : 
                     <IconButton onClick={onClickLogin}>
                         <LoginIcon />
                     </IconButton>
                 }
-                {loginState && isOpenProfile ? <div>
-                    <button onClick={onClickMyPage}>My Page</button>
-                    <button onClick={onClicklogout}>Logout</button>
-                    <button onClick={onClickUserInfo}>Get Info</button>
-                </div> : null}
             </Stack>
             <Stack direction="row" justifyContent="space-between" sx={{ pl: 3 }}>
                 <ToggleButtonGroup
@@ -217,7 +229,17 @@ const InitPage = () => {
                     </Grid>
                 )}
             </Grid>
-            <button className={styles['my-liquor']} onClick={onClickMyLiqour}>My Liquor</button>
+            <IconButton
+                onClick={onClickMyLiqour}
+                size='large'
+                sx={{
+                    bgcolor: 'primary.light',
+                    position: 'fixed',
+                    right: 50,
+                    bottom: 50,
+                }}>
+                <LiquorIcon fontSize='large' />
+            </IconButton>
             <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
             <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
             <RecommendModal isOpen={isRecommendOpen} setIsOpen={setIsRecommendOpen} />
