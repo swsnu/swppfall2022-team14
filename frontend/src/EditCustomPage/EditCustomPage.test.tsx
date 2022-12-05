@@ -51,6 +51,8 @@ const stubCocktailInitialState: CocktailInfo = {
     cocktailItem: {
         id: 2,
         name: "COCKTAIL_NAME_2",
+        name_eng: "COCKTAIL_NAME_ENG_2",
+        color: "color",
         image: "COCKTAIL_IMAGE_2",
         introduction: "COCKTAIL_INTRO_2",
         recipe: "COCKTAIL_RECIPE_2",

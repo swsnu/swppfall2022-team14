@@ -164,7 +164,7 @@ export const getCocktail = createAsyncThunk(
 
 export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
-    async (cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score">, { dispatch }) => {
+    async (cocktail: CocktailPostType, { dispatch }) => {
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
         dispatch(cocktailActions.addCocktail(response.data));
         return response.data;

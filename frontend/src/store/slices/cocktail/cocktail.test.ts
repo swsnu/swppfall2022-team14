@@ -92,13 +92,14 @@ describe("cocktail reducer", () => {
         }],
         is_bookmarked: false,
     }
-    const fakeDetailOmit = {
+    const fakeDetailOmit: PostForm = {
         cocktail: {
             name: "name",
+            name_eng: "name_eng",
+            color: "ffffff",
             image: "img",
             tags: ["ST1", "ST2"],
             author_id: 1,
-            author_name: "username",
             introduction: "intro",
             recipe: "recipe",
             ABV: 1,
