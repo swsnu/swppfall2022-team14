@@ -205,15 +205,17 @@ export default function ItemDetailPage() {
                                 <Stack direction="row" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
                                     {cocktail.ingredients?.map((ingre) => { 
                                         return (
-                                            <Box 
+                                            <Button 
                                                 key={ingre.id} 
                                                 sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                                                 onClick={() => onIngredientClick(ingre.id)}
                                             >
-                                                {ingre.name}
-                                                &nbsp;
-                                                {ingre.amount  && ingre.amount}
-                                            </Box>
+                                                <Typography color='text.primary'>
+                                                    {ingre.name}
+                                                    &nbsp;
+                                                    {ingre.amount  && ingre.amount}
+                                                </Typography>
+                                            </Button>
                                         )
                                     })}
                                 </Stack>
