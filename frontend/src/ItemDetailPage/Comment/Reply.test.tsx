@@ -128,7 +128,7 @@ describe("<Reply />", () => {
             <Provider store={commentEditMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} author_name={"username"} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} />} />
+                        <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} author_name={"username"} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} accessible />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -161,7 +161,7 @@ describe("<Reply />", () => {
             <Provider store={commentMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} author_name={"username"} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} />} />
+                        <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} author_name={"username"} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} accessible />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>

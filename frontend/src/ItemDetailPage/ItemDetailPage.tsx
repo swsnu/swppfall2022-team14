@@ -235,7 +235,7 @@ export default function ItemDetailPage() {
                     </Stack>
                     {cocktail.tags.length !== 0 && <Divider flexItem />}
                     <Stack spacing={1} sx={{ width: 1, pt: 2 }}>
-                        <Typography variant="body2" align='left'>
+                        <Typography variant="h6" align='left'>
                             {userState.user?.username}
                         </Typography>
                         <TextField 
@@ -273,8 +273,8 @@ export default function ItemDetailPage() {
                             </Stack>
                         }
                     </Stack>
-                    <Stack spacing={1} sx={{ width: 1, pt: 2 }}>
-                        {commentState.commentList.map((comment) => {
+                    <Stack spacing={3} sx={{ width: 1, pt: 2 }}>
+                        {[...commentState.commentList].reverse().map((comment) => {
                             if (!comment.parent_comment) {
                                 return (
                                     <Comment
@@ -288,11 +288,9 @@ export default function ItemDetailPage() {
                                         parent_comment={null}
                                         is_deleted={comment.is_deleted}
                                         cocktail={comment.cocktail}
+                                        accessible={Number(userState.user?.id) == comment.author_id}
                                     />
                                 )
-                            }
-                            else {
-                                return null
                             }
                         })}
                     </Stack>

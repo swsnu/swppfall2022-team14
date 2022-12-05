@@ -5,44 +5,114 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { commentActions, deleteComment, editComment, selectComment } from '../../store/slices/comment/comment';
 import { CommentType } from '../../store/slices/comment/comment';
+import { Button, IconButton, Stack, TextField, Typography } from "@mui/material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-const Reply = (props: CommentType) => {
+interface AccessCommentType extends CommentType {
+    accessible: boolean;
+}
+
+const Reply = (props: AccessCommentType) => {
     const dispatch = useDispatch<AppDispatch>();
     const deleteCommentHandler = () => {
         dispatch(deleteComment(props.id));
     }
-    const accessible = (props.author_id == 1)
+    
     const commentState = useSelector(selectComment)
-    const [content, setContent] = useState<string>(props.content)
+    const [content, setContent] = useState<string>("")
+    const [openSetting, setOpenSetting] = useState(false)
+
+    const nullStateHandler = () => {
+        dispatch(commentActions.nullCommentState(props))
+    }
+
     const editStateHandler = () => {
         dispatch(commentActions.editCommentState(props))
+        setContent(props.content)
     }
 
     const editCommentHandler = () => {
         dispatch(editComment({id: props.id, content: content}))
     }
     
-    if(commentState.commentItem?.id == props.id && commentState.state == "EDIT"){
+    if (commentState.commentItem?.id == props.id && commentState.state == "EDIT") {
         return (
-            <div className="reply__edit">
-                <textarea id="reply_text" className="reply__input" value={content} onChange={(e) => setContent(e.target.value)}/>
-                <div className="reply__add-box">
-                    <button className="reply__add" onClick={() => editCommentHandler()}>
-                        Edit
-                    </button>
-                </div>
-            </div>
+            <Stack direction="row" spacing={1} alignItems='flex-start' sx={{ width: 1 }}>
+                <SubdirectoryArrowRightIcon fontSize='small' />
+                <Stack alignItems='flex-start' sx={{ width: 1 }}>
+                    <Typography variant="button" align='left' sx={{ mb: -0.5 }}>
+                        {props.author_name}
+                    </Typography>
+                    <TextField 
+                        variant="standard" 
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        multiline
+                        fullWidth 
+                    />
+                    <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ width: 1 }}>
+                        <Button 
+                            size="small"
+                            sx={{ bgcolor: 'background.default', borderRadius: 3, py: 1, textAlign: 'center' }}
+                            onClick={nullStateHandler}
+                        >
+                            <Typography variant="caption" color='text.primary'>
+                                취소
+                            </Typography>
+                        </Button>
+                        <Button 
+                            size="small"
+                            sx={{ 
+                                bgcolor: content ? 'primary.light' : 'background.default', borderRadius: 3, py: 1, textAlign: 'center',
+                            }}
+                            onClick={editCommentHandler}
+                            disabled={!content}
+                        >
+                            <Typography variant="caption" color='text.primary'>
+                                수정
+                            </Typography>
+                        </Button>
+                    </Stack>
+                </Stack>
+            </Stack>
         )
     }
     return (
-        <div className='reply'>
-            <div className='reply__content'>{props.content}</div>
-            <div className='reply__author'>written by {props.author_id}</div>
-            <div className='reply__button-box'>
-                {accessible && <button className='reply__edit-button' onClick={() => editStateHandler()}>Edit</button>}
-                {accessible && <button className='reply__delete-button' onClick={() => deleteCommentHandler()}>Delete</button>}
-            </div>
-        </div>
+        <Stack direction="row" spacing={1} alignItems='flex-start' sx={{ width: 1 }}>
+            <SubdirectoryArrowRightIcon fontSize='small' />
+            <Stack alignItems='flex-start' sx={{ width: 1 }}>
+                <Stack direction="row" alignItems='center' justifyContent="space-between" sx={{ width: 1, mb: -0.5 }}>
+                    <Typography variant="button" align='left'>
+                        {props.author_name}
+                    </Typography>
+                    {props.accessible && 
+                        (openSetting ?
+                            <Stack direction="row" spacing={0.5} justifyContent="flex-end">
+                                {props.accessible && 
+                                    <IconButton size='small' onClick={editStateHandler}>
+                                        <EditIcon fontSize='small' />
+                                    </IconButton>
+                                }
+                                {props.accessible && 
+                                    <IconButton size='small' onClick={deleteCommentHandler}>
+                                        <DeleteIcon fontSize='small' />
+                                    </IconButton>
+                                }
+                            </Stack> :
+                            <IconButton size='small' onClick={() => setOpenSetting(true)}>
+                                <MoreVertIcon fontSize='small' />
+                            </IconButton>
+                        )
+                    }
+                </Stack>
+                <Typography variant='body2' sx={{ whiteSpace: 'pre' }} align='left'>
+                    {props.content}
+                </Typography>
+            </Stack>
+        </Stack>
     )
 };
 
