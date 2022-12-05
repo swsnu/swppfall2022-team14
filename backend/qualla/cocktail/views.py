@@ -207,14 +207,15 @@ def cocktail_post(request):
             ingredient_list = data['ingredients']
         except (KeyError, JSONDecodeError) as e:
             ingredient_list = []
-        for i in ingredient_list:
+        for idx, ingredient in enumerate(ingredient_list):
             try:
-                ingredient = Ingredient.objects.get(id=i["id"])
+                _ingredient = Ingredient.objects.get(id=ingredient["id"])
 
             except Ingredient.DoesNotExist:
                 return HttpResponseNotFound("ingredient does not exist")
+
             IngredientPrepare.objects.create(
-                cocktail=cocktail, ingredient=ingredient, amount=i["amount"])
+                cocktail=cocktail, ingredient=_ingredient, amount=ingredient["amount"], unit=ingredient["unit"])
 
         return JsonResponse(CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=201)
     # else:

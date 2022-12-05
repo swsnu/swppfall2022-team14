@@ -34,8 +34,10 @@ def ingredient_list(request, cocktail_id):
             # When edit/post custom cocktail
             # Request with ingredient_id
             data['cocktail'] = cocktail_id
+
             serializer = IngredientPrepareSerializer(
                 data=data, context={"request": request})
+            
             serializer.is_valid(raise_exception=True)
             serializer.save()
 

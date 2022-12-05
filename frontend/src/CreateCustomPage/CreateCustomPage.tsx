@@ -92,7 +92,7 @@ export default function CreateCustomPage() {
         for (let i = 0; i < ingredientList.length; i++) {
             let ing_amount = Number(ingredientList[i].amount)
             const ing_color: string = ingredientList[i].color
-            console.log(ing_color)
+            console.log(ingredientList[i])
             if (['투명', '고체'].includes(ing_color))
                 continue
             const ing_color_rgb = hexToRgb(ing_color)
@@ -265,12 +265,12 @@ export default function CreateCustomPage() {
                                         className="content__ingredient-input"
                                         value={ingredient.amount ?? ""}
                                         type="number"
-                                        onChange={(event) => { onChangeAmount(idx, event.target.value); calculateABV(); }}
+                                        onChange={(event) => { onChangeAmount(idx, event.target.value); calculateABV(); calculatePrice(); calculateColor(); }}
                                         min="0"
                                     />
                                     <select
                                         data-testid="ingredientUnitSelect"
-                                        onChange={(e) => { onChangeIngredientUnit(idx, e.target.value); calculateABV(); }}>
+                                        onChange={(e) => { onChangeIngredientUnit(idx, e.target.value); calculateABV(); calculatePrice(); calculateColor(); }}>
                                         {ingredient.unit.map((u) => {
                                             return <option
                                                 key={"key" + u}

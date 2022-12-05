@@ -20,7 +20,7 @@ def comment_list(request, cocktail_id):
     elif request.method == 'POST':
 
         parent_comment = request.query_params.get("parent_comment", None)
-        # breakpoint()
+
         data = request.data.copy()
 
         data["cocktail"] = cocktail_id
