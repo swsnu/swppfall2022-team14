@@ -13,22 +13,8 @@ import './CreateCustomPage.scss';
 import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
+import { addVector, hexToRgb, rgbToHex } from "../common/utils/utils";
 
-function componentToHex(c: number) {
-    const hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-}
-function hexToRgb(hex: string) {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
-}
-function rgbToHex(r: number, g: number, b: number) {
-    return componentToHex(r) + componentToHex(g) + componentToHex(b);
-}
-
-function addVector(a: number[], b: number[]) {
-    return a.map((e, i) => e + b[i]);
-}
 
 export default function CreateCustomPage() {
     const [name, setName] = useState<string>("");
