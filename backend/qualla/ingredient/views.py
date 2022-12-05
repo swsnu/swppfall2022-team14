@@ -92,8 +92,5 @@ def recommend_ingredient(request):
 
         recommended_ingredient_list = recommended_ingredient_list + \
             num_ingredients_to_prepare*[None]
-
-    # breakpoint()
-
     data = IngredientListSerializer(ingredients, many=True).data
     return JsonResponse({"Ingredients": data, "possible_cocktails": recommended_ingredient_list, "count": ingredients.count()}, safe=False)
