@@ -4,7 +4,7 @@ const Test = () => {
     return(
         <div>
             <h1>
-                For Test
+                End .
             </h1>
         </div>
     )
