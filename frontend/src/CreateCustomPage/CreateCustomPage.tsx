@@ -167,11 +167,15 @@ export default function CreateCustomPage() {
                     onClick={() => createCocktailHandler()}>Confirm</button>
             </div>
             <div className="content">
+<<<<<<< HEAD
                 <div className="content__image-input">
                     {image ? <img src={image.url}/> : <img src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"/>}
                     <label htmlFor='file'>파일 찾기</label>
                     <input type="file" onChange={handleSelectFile} id='file' style={{"display":"none"}}/>
                 </div>
+=======
+                <input type="file" onChange={(e) => setImage(e.target.files![0])}/>
+>>>>>>> .
                 <div className="content__description-box">
                     <p className="content__abv">Expected 20% ABV</p>
                     <div className='content__description'>
