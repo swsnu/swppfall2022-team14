@@ -6,8 +6,10 @@ import { store } from './store';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import axios from 'axios';
 
 ReactModal.setAppElement('#root');
+axios.defaults.baseURL = 'https://qualla.kro.kr/';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
