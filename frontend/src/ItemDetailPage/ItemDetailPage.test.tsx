@@ -60,7 +60,9 @@ const fakeCocktailItemCS: CocktailDetailType = {
         color: ""
     }],
     is_bookmarked: false,
-    score: 1
+    score: 1,
+    name_eng: "",
+    color: ""
 };
 
 const fakeCocktailItemST: CocktailDetailType = {
@@ -90,7 +92,9 @@ const fakeCocktailItemST: CocktailDetailType = {
         color: ""
     }],
     is_bookmarked: false,
-    score: 1
+    score: 1,
+    name_eng: "",
+    color: ""
 };
 
 const commentNotParent: CommentType = {
@@ -154,7 +158,9 @@ const notBookmarkedCocktailItem: CocktailDetailType = {
         color: ""
     }],
     is_bookmarked: true,
-    score: 1
+    score: 1,
+    name_eng: "",
+    color: ""
 };
 
 const notBookmarkedCocktail: CocktailInfo = {
