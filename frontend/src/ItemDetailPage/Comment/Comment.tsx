@@ -7,6 +7,7 @@ import Reply from './Reply';
 import { commentActions } from "../../store/slices/comment/comment"
 import {selectUser} from "../../store/slices/user/user";
 import LoginModal from "../../InitPage/Modals/LoginModal";
+import { Stack, Typography } from "@mui/material";
 
 const Comment = (props: CommentType) => {
     const dispatch = useDispatch<AppDispatch>();
@@ -62,6 +63,7 @@ const Comment = (props: CommentType) => {
                                     key={`${comment.id}_comment`}
                                     id={comment.id}
                                     author_id={comment.author_id}
+                                    author_name={comment.author_name}
                                     content={comment.content}
                                     created_at={comment.created_at}
                                     updated_at={comment.updated_at}
@@ -82,7 +84,10 @@ const Comment = (props: CommentType) => {
         )
     }else{
         return (
-            <div>
+            <Stack alignItems='flex-start'>
+                <Typography variant="body2" align='left'>
+                    {props.author_name}
+                </Typography>
                 <div className='comment'>
                     <div className='comment__content'>{props.content}</div>
                     <div className='comment__author'>written by {props.author_id}</div>
@@ -100,6 +105,7 @@ const Comment = (props: CommentType) => {
                                     key={`${comment.id}_comment`}
                                     id={comment.id}
                                     author_id={comment.author_id}
+                                    author_name={comment.author_name}
                                     content={comment.content}
                                     created_at={comment.created_at}
                                     updated_at={comment.updated_at}
@@ -130,7 +136,7 @@ const Comment = (props: CommentType) => {
                     </div>
                 }
                 <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
-            </div>
+            </Stack>
         )
     }
 

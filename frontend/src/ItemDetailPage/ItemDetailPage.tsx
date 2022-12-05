@@ -12,7 +12,7 @@ import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
 import { selectUser } from "../store/slices/user/user";
 import { postRate, editRate, deleteRate } from "../store/slices/rate/rate";
-import { Box, Button, Checkbox, ImageListItem, Divider, IconButton, Modal, Rating, Stack, Typography } from "@mui/material";
+import { Box, Button, Checkbox, ImageListItem, Divider, IconButton, Modal, Rating, Stack, TextField, Typography } from "@mui/material";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import EditIcon from '@mui/icons-material/Edit';
@@ -37,6 +37,8 @@ export default function ItemDetailPage() {
     const [rateOpen, setRateOpen] = useState(false);
     const handleRateOpen = () => setRateOpen(true);
     const handleRateClose = () => setRateOpen(false);
+
+    const [openAddComment, setOpenAddComment] = useState(false);
 
     const cocktail = cocktailState.cocktailItem;
     const isCustom = cocktail?.type === "CS";
@@ -232,40 +234,68 @@ export default function ItemDetailPage() {
                         })}
                     </Stack>
                     {cocktail.tags.length !== 0 && <Divider flexItem />}
-                    <div>
-                        <div className="comments">
-                            <div className="comments__create">
-                                <textarea id="comment_text" className="comments__input" value={content} onChange={(e) => setContent(e.target.value)} />
-                                <div className="comments__add-box">
-                                    <button className="comments__add" onClick={() => createCommentHandler()}>
-                                        Add
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="comments_list">
-                                {commentState.commentList.map((comment) => {
-                                    if (!comment.parent_comment) {
-                                        return (
-                                            <Comment
-                                                key={`${comment.id}_comment`}
-                                                id={comment.id}
-                                                author_id={comment.author_id}
-                                                content={comment.content}
-                                                created_at={comment.created_at}
-                                                updated_at={comment.updated_at}
-                                                parent_comment={null}
-                                                is_deleted={comment.is_deleted}
-                                                cocktail={comment.cocktail}
-                                            />
-                                        )
-                                    }
-                                    else {
-                                        return null
-                                    }
-                                })}
-                            </div>
-                        </div>
-                    </div>
+                    <Stack spacing={1} sx={{ width: 1, pt: 2 }}>
+                        <Typography variant="body2" align='left'>
+                            {userState.user?.username}
+                        </Typography>
+                        <TextField 
+                            variant="standard" 
+                            placeholder="댓글 추가..." 
+                            onClick={() => setOpenAddComment(true)}
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            multiline
+                            fullWidth 
+                        />
+                        {openAddComment &&
+                            <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ width: 1 }}>
+                                <Button 
+                                    size="small"
+                                    sx={{ bgcolor: 'background.default', borderRadius: 3, py: 1, textAlign: 'center' }}
+                                    onClick={() => setOpenAddComment(false)}
+                                >
+                                    <Typography variant="caption" color='text.primary'>
+                                        취소
+                                    </Typography>
+                                </Button>
+                                <Button 
+                                    size="small"
+                                    sx={{ 
+                                        bgcolor: content ? 'primary.light' : 'background.default', borderRadius: 3, py: 1, textAlign: 'center',
+                                    }}
+                                    onClick={() => {createCommentHandler(); setOpenAddComment(false);}}
+                                    disabled={!content}
+                                >
+                                    <Typography variant="caption" color='text.primary'>
+                                        댓글
+                                    </Typography>
+                                </Button>
+                            </Stack>
+                        }
+                    </Stack>
+                    <Stack spacing={1} sx={{ width: 1, pt: 2 }}>
+                        {commentState.commentList.map((comment) => {
+                            if (!comment.parent_comment) {
+                                return (
+                                    <Comment
+                                        key={`${comment.id}_comment`}
+                                        id={comment.id}
+                                        author_id={comment.author_id}
+                                        author_name={comment.author_name}
+                                        content={comment.content}
+                                        created_at={comment.created_at}
+                                        updated_at={comment.updated_at}
+                                        parent_comment={null}
+                                        is_deleted={comment.is_deleted}
+                                        cocktail={comment.cocktail}
+                                    />
+                                )
+                            }
+                            else {
+                                return null
+                            }
+                        })}
+                    </Stack>
                 </Stack>
                 <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
             </Stack>

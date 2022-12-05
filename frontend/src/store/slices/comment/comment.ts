@@ -9,6 +9,7 @@ export interface CommentType {
     id: number,
     cocktail: CocktailItemType,
     author_id: number,
+    author_name: string,
     content: string,
     created_at: Date,
     updated_at: Date,

@@ -34,6 +34,7 @@ const comment: CommentType = {
     id: 1,
     cocktail: standard_cocktail1_item,
     author_id: 1,
+    author_name: "username",
     content: "COMMENT1",
     created_at: new Date(Date.now()),
     updated_at: new Date(Date.now()),
