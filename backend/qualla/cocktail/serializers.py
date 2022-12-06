@@ -127,6 +127,8 @@ class CocktailPostSerializer(serializers.ModelSerializer):
         model = Cocktail
         fields = (
             "name",
+            "name_eng",
+            "color",
             "image",
             "introduction",
             "recipe",

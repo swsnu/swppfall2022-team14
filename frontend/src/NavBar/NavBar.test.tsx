@@ -57,7 +57,8 @@ const ingredient: IngredientType = {
     ABV: 0,
     price: 0,
     introduction: "INTRODUCTION1",
-    unit: ["ml", "oz"]
+    unit: ["ml", "oz"],
+    color: ""
 }
 
 const stubIngredientInitialState: IngredientInfo = {

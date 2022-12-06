@@ -30,7 +30,8 @@ const loadingIngredient: IngredientInfo = {
         introduction: '소개',
         ABV: 42.4,
         price: 200,
-        unit: ['oz']
+        unit: ['oz'],
+        color: ""
     },
     myIngredientList: [],
     itemStatus: "loading",
@@ -48,7 +49,8 @@ const failedIngredient: IngredientInfo = {
         introduction: '소개',
         ABV: 42.4,
         price: 200,
-        unit: ['oz']
+        unit: ['oz'],
+        color: ""
     },
     itemStatus: "failed",
     listStatus: "loading",
@@ -65,7 +67,8 @@ const noABVIngredient: IngredientInfo = {
         introduction: '소개',
         ABV: 0,
         price: 200,
-        unit: ['oz']
+        unit: ['oz'],
+        color: ""
     },
     itemStatus: "",
     listStatus: "loading",
@@ -82,7 +85,8 @@ const fakeIngredient: IngredientInfo = {
         introduction: '소개',
         ABV: 42.4,
         price: 200,
-        unit: ['oz']
+        unit: ['oz'],
+        color: ""
     },
     itemStatus: "",
     listStatus: "loading",

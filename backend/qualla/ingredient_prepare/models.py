@@ -23,7 +23,8 @@ class IngredientPrepare(models.Model):
         ]
 
     def clean(self):
-        if not self.amount in self.ingredient.unit_list():
+
+        if not self.unit in self.ingredient.unit_list():
             raise ValidationError(('Ingredient Unit Error'))
 
     def save(self, *args, **kwargs):

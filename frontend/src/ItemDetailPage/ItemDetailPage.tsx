@@ -45,7 +45,7 @@ export default function ItemDetailPage() {
     }, [cocktail]);
 
     const createCommentHandler = () => {
-        if(userState.isLogin){
+        if (userState.isLogin) {
             const data = {
                 content: content,
                 parent_comment: null,
@@ -54,22 +54,22 @@ export default function ItemDetailPage() {
             dispatch(postComment(data));
             setContent("")
         }
-        else{
+        else {
             setIsLoginOpen(true)
         }
     }
 
     const toggleBookmarkHandler = () => {
-        if(userState.isLogin && userState.token){
-            dispatch(toggleBookmark({cocktail_id:Number(id), token:userState.token}));
+        if (userState.isLogin && userState.token) {
+            dispatch(toggleBookmark({ cocktail_id: Number(id), token: userState.token }));
         }
-        else{
+        else {
             setIsLoginOpen(true)
         }
     }
 
     const onChangeRate = async (changedScore: string) => {
-        if(userState.isLogin) {
+        if (userState.isLogin) {
             const data = { cocktail_id: Number(id), score: Number(changedScore) };
             if (score) {  // PUT score
                 await dispatch(editRate(data));
@@ -105,8 +105,8 @@ export default function ItemDetailPage() {
                             <div className="title__name">
                                 {cocktail.name}
                                 <button className="title__bookmark-button"
-                                onClick={() => toggleBookmarkHandler()}>
-                                    {(cocktail.is_bookmarked)? "Remove from Bookmark" : "Add in Bookmark"}
+                                    onClick={() => toggleBookmarkHandler()}>
+                                    {(cocktail.is_bookmarked) ? "Remove from Bookmark" : "Add in Bookmark"}
                                 </button>
                                 {isCustom &&
                                     <div className="title__author">
@@ -114,7 +114,7 @@ export default function ItemDetailPage() {
                                     </div>
                                 }
                             </div>
-                            <button 
+                            <button
                                 className="title__edit-button"
                                 onClick={() => navigate(`/custom/${id}/edit`)}
                             >
@@ -150,7 +150,7 @@ export default function ItemDetailPage() {
                                     })}
                                 </p>
                             </div>
-                            <div>{cocktail.ingredients?.map(ingre => { return <div key={ingre.id} onClick={() => onIngredientClick(ingre.id)} className="content__ingredient">{ingre.amount} {ingre.name}</div> })}</div>
+                            <div>{cocktail.ingredients?.map(ingre => { return <div key={ingre.id} onClick={() => onIngredientClick(ingre.id)} className="content__ingredient">{ingre.amount} {ingre.recipe_unit} {ingre.name}</div> })}</div>
                             <p className="content__price">${cocktail.price_per_glass}</p>
                         </div>
                         <div className="comments">

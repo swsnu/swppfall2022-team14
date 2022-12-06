@@ -11,6 +11,7 @@ class IngredientListSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "name_eng",
+            "color",
             "image",
             "ABV",
             "price",
@@ -24,7 +25,7 @@ class IngredientListSerializer(serializers.ModelSerializer):
 class IngredientDetailSerializer(IngredientListSerializer):
     class Meta(IngredientListSerializer.Meta):
         fields = IngredientListSerializer.Meta.fields + \
-            ("introduction", "color")
+            ("introduction",)
 
 
 class IngredientRecommendSerializer(IngredientListSerializer):
