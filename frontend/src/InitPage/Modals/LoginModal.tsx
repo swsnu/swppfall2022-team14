@@ -89,7 +89,6 @@ const LoginModal = (props: prop) => {
 
     return (
         <Modal className={styles['login-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)} ariaHideApp={false}>
-            < button onClick={onClickClose} > X</button >
             <div className={styles.container}>
                 <div>
                     <div className={styles.id}>
@@ -109,8 +108,7 @@ const LoginModal = (props: prop) => {
                         {isLoginMode ? <button className={styles.login} onClick={onClickLogin}>Login</button> : null}
                         {!isLoginMode ? <button className={styles.login} onClick={onClickRegister}>Register</button> : null}
                     </div>
-                    <div onClick={onClickMode}>{isLoginMode ? "register" : "login"}</div>
-
+                    <div onClick={onClickMode}>{isLoginMode ? "회원가입하러 가기" : "로그인하러 가기"}</div>
                 </div>
             </div>
 

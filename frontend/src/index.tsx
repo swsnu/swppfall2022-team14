@@ -6,6 +6,7 @@ import { store } from './store';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {ToastContainer} from "react-toastify";
 
 ReactModal.setAppElement('#root');
 
@@ -14,7 +15,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Provider store={store}><App /></Provider>
+      <ToastContainer/>
+      <Provider store={store}>
+          <App />
+      </Provider>
   </React.StrictMode>
 );
 
