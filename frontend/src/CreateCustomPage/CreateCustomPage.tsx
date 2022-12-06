@@ -13,6 +13,12 @@ import './CreateCustomPage.scss';
 import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
+import S3 from 'react-aws-s3-typescript'
+import {v4 as uuid} from 'uuid'
+export interface Image {
+    key:string;
+    url:string;
+}
 import { calculateABV, calculateColor, calculatePrice } from "../common/utils/utils";
 
 
@@ -23,6 +29,8 @@ export default function CreateCustomPage() {
     const [recipe, setRecipe] = useState<string>("");
     const [tagList, setTagList] = useState<string[]>([]);
     const [tagItem, setTagItem] = useState<string>("");
+    const [image, setImage] = useState<Image|null>(null);
+    
     const [expectedABV, setExpectedABV] = useState<number>(0);  // Temporary
     const [expectedPrice, setExpectedPrice] = useState<number>(0);  // Temporary
     const [expectedColor, setExpectedColor] = useState<string>('');
@@ -99,7 +107,7 @@ export default function CreateCustomPage() {
                 cocktail: {
                     name: name,
                     name_eng: nameEng,
-                    image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
+                    image: (image)? image.url:"https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
                     introduction: introduction,
                     recipe: recipe,
                     ABV: expectedABV,
@@ -116,7 +124,36 @@ export default function CreateCustomPage() {
             navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
         }
     }
+    
+    const S3_config = {
+        bucketName: process.env.REACT_APP_BUCKET_NAME!,
+        region: "ap-northeast-2",
+        accessKeyId: process.env.REACT_APP_ACCESS!,
+        secretAccessKey: process.env.REACT_APP_SECRET!,
+    }
 
+    const handleSelectFile = async (e:React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.files){
+            const file = e.target.files[0]
+            if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
+                const S3Client = new S3(S3_config)
+                // delete previous image
+                if(image !== null){
+                    await S3Client.deleteFile(image.key)
+                }
+                
+                // upload file and setImage(S3 Link)
+                const fileName = 'cocktail' + '/' + uuid()
+                const response = await S3Client.uploadFile(file, fileName)
+                if(response.status == 204){
+                    setImage({key: response.key, url: response.location})
+                }
+            }else{
+                alert('이미지 파일(jpeg, png, jpg)만 업로드 가능합니다.')
+                e.target.files=null
+            }
+        }
+    }
     useEffect(() => {
         if (!userState.isLogin) {
             navigate(-1)
@@ -150,10 +187,11 @@ export default function CreateCustomPage() {
                     onClick={() => createCocktailHandler()}>Confirm</button>
             </div>
             <div className="content">
-                <img
-                    className="content__image"
-                    src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"
-                />
+                <div className="content__image-input">
+                    {image ? <img src={image.url}/> : <img src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"/>}
+                    <label htmlFor='file'>파일 찾기</label>
+                    <input type="file" onChange={handleSelectFile} id='file' style={{"display":"none"}}/>
+                </div>
                 <div className="content__description-box">
                     <p className="content__abv"> {isNaN(expectedABV) ? "재료를 입력하여 예상 도수를 알아보세요." : `Expected ${expectedABV}% ABV`} </p>
                     <div className='content__description'>

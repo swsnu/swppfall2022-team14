@@ -169,8 +169,8 @@ def cocktail_list(request):
 
 
 @api_view(['POST'])
-# @authentication_classes([authentication.TokenAuthentication])
-# @permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def cocktail_post(request):
     if request.method == 'POST':
         try:
@@ -225,8 +225,8 @@ def cocktail_post(request):
 
 
 @api_view(['PUT'])
-# @authentication_classes([authentication.TokenAuthentication])
-# @permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def cocktail_edit(request, pk):
     try:
         cocktail = Cocktail.objects.get(id=pk)
