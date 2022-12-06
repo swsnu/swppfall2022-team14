@@ -86,5 +86,5 @@
       "!src/test-utils/*"
     ]
   },
-  "proxy": "https://qualla.kro.kr/"
+  "proxy": "http://localhost:8000"
 }

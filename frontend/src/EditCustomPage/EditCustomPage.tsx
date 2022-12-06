@@ -8,17 +8,20 @@ import './EditCustomPage.scss';
 import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
+import { addVector, hexToRgb, rgbToHex } from "../common/utils/utils";
 
 export default function EditCustomPage() {
     const { id } = useParams();
 
     const [name, setName] = useState<string>("");
+    const [nameEng, setNameEng] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
     const [recipe, setRecipe] = useState<string>("");
     const [tagList, setTagList] = useState<string[]>([]);
     const [tagItem, setTagItem] = useState<string>("");
-    const [ABV, setABV] = useState<number>(0);  // Temporary
-    const [price, setPrice] = useState<number>(0);  // Temporary
+    const [expectedABV, setExpectedABV] = useState<number>(123);  // Temporary
+    const [expectedPrice, setExpectedPrice] = useState<number>(0);  // Temporary
+    const [expectedColor, setExpectedColor] = useState<string>('');
 
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
@@ -41,17 +44,83 @@ export default function EditCustomPage() {
         }
     }, []);
 
+    // INITIALIZE
     useEffect(() => {
         if (cocktail) {
             setName(cocktail.name);
             setIntroduction(cocktail.introduction);
             setRecipe(cocktail.recipe);
             setTagList(cocktail.tags);
-            setABV(cocktail.ABV);
-            setPrice(cocktail.price_per_glass);
+            setUnitList(cocktail.ingredients.map(ingredient => ingredient.recipe_unit))
+            setNameEng(cocktail.name_eng);
             setIngredientList(cocktail.ingredients);
+            console.log(cocktail.ingredients)
         }
     }, [cocktail]);
+    const calculateABV = () => {
+        let abv = 0
+        let amount = 0
+        for (let i = 0; i < ingredientList.length; i++) {
+            const ing_abv = ingredientList[i].ABV
+
+            let ing_amount = Number(ingredientList[i].amount)
+            if (!['ml', 'oz', 'gram'].includes(unitList[i]) || ingredientList[i].name == '얼음') {
+                continue // ml, oz, gram이 아니거나 얼음인 경우 계산 X
+            }
+
+            else if (unitList[i] == 'oz')
+                ing_amount *= 30
+
+
+            abv += (ing_abv * ing_amount)
+            amount += ing_amount
+        }
+        abv /= amount
+        setExpectedABV(Math.round(abv * 10) / 10)
+    }
+    const calculatePrice = () => {
+        let price = 0
+        for (let i = 0; i < ingredientList.length; i++) {
+            let ing_amount = Number(ingredientList[i].amount)
+            let ing_price = Number(ingredientList[i].price)
+            if (!['ml', 'oz',].includes(unitList[i]) && (ingredientList[i].unit.includes('개') || ingredientList[i].unit.includes('조각')))
+                ing_price /= 100 // TODO : 단위 constraint
+            if (unitList[i] == 'oz')
+                ing_amount *= 30
+
+            price = price + (ing_price * ing_amount)
+        }
+
+        setExpectedPrice(Math.round(price))
+    }
+    const calculateColor = () => {
+        let color = [0, 0, 0]
+        let amount = 0
+
+        for (let i = 0; i < ingredientList.length; i++) {
+            let ing_amount = Number(ingredientList[i].amount)
+            const ing_color: string = ingredientList[i].color
+            if (['투명', '고체'].includes(ing_color))
+                continue
+            const ing_color_rgb = hexToRgb(ing_color)
+            if (!ing_color_rgb)
+                return
+
+            if (unitList[i] == 'oz')
+                ing_amount *= 30
+
+            ing_color_rgb[0] *= ing_amount
+            ing_color_rgb[1] *= ing_amount
+            ing_color_rgb[2] *= ing_amount
+            color = addVector(ing_color_rgb, color)
+            amount += ing_amount
+        }
+        color[0] = Math.round(color[0] / amount)
+        color[1] = Math.round(color[1] / amount)
+        color[2] = Math.round(color[2] / amount)
+        setExpectedColor(rgbToHex(color[0], color[1], color[2]))
+    }
+
 
     const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
@@ -82,8 +151,6 @@ export default function EditCustomPage() {
     };
 
     const onChangeIngredientUnit = (selectedIdx: number, unit: string) => {
-        console.log(selectedIdx)
-        console.log(unit)
         const units = unitList
         units[selectedIdx] = unit
         setUnitList(units)
@@ -107,21 +174,29 @@ export default function EditCustomPage() {
         setTagList(tagList.filter(tagItem => tagItem !== deletedTagItem))
     }
 
+    useEffect(() => {
+        calculateABV()
+        calculatePrice()
+        calculateColor()
+    }, [unitList, ingredientList])
+
     const editCocktailHandler = async () => {
         if (userState.user?.id !== null && userState.token !== null) {
             const ingredients = ingredientList.map((ingr, ind) => {
-                return { ...ingr, amount: ingr.amount + " " + unitList[ind] }
+                return { ...ingr, amount: ingr.amount, unit: unitList[ind] }
             })
             const data: PostForm = {
                 cocktail: {
                     name: name,
+                    name_eng: nameEng,
                     image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
                     introduction: introduction,
                     recipe: recipe,
-                    ABV: ABV,
-                    price_per_glass: price,
+                    ABV: expectedABV,
+                    color: expectedColor,
+                    price_per_glass: expectedPrice,
                     tags: tagList,
-                    author_id: 1,
+                    author_id: Number(userState.user?.id),
                     ingredients: ingredients,
                 },
                 token: userState.token
@@ -147,6 +222,10 @@ export default function EditCustomPage() {
                             Name:
                             <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)} />
                         </label>
+                        <label>
+                            영어 이름(선택):
+                            <input className='title__name-input' value={nameEng} onChange={(e) => setNameEng(e.target.value)} />
+                        </label>
                     </div>
                     <button className="title__confirm-button"
                         onClick={() => editCocktailHandler()}>Confirm</button>
@@ -157,7 +236,7 @@ export default function EditCustomPage() {
                         src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"
                     />
                     <div className="content__description-box">
-                        <p className="content__abv">Expected {ABV}% ABV</p>
+                        <p className="content__abv"> {isNaN(expectedABV) ? "재료를 입력하여 예상 도수를 알아보세요." : `Expected ${expectedABV}% ABV`} </p>
                         <div className='content__description'>
                             <label>
                                 Description:<br />
@@ -188,12 +267,12 @@ export default function EditCustomPage() {
                                             className="content__ingredient-input"
                                             value={ingredient.amount ?? ""}
                                             type="number"
-                                            onChange={(event) => onChangeAmount(idx, event.target.value)}
+                                            onChange={(event) => { onChangeAmount(idx, event.target.value); calculateABV(); calculatePrice(); calculateColor(); }}
                                             min="0"
                                         />
                                         <select
                                             data-testid="ingredientUnitSelect"
-                                            onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
+                                            onChange={(e) => { onChangeIngredientUnit(idx, e.target.value); calculateABV(); calculatePrice(); calculateColor(); }}>
                                             {ingredient.unit.map((u) => {
                                                 return <option
                                                     key={"key" + u}
@@ -250,7 +329,8 @@ export default function EditCustomPage() {
                                 />
                             </div>
                         </div>
-                        <p className="content__price">Expected ${price}</p>
+                        <p className="content__price">예상 가격: {expectedPrice}원</p>
+                        예상 색깔: <div className="content__color" style={{ "backgroundColor": `#${expectedColor}` }}></div>
                     </div>
                 </div>
             </div>

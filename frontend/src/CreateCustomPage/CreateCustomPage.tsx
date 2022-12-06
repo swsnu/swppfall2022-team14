@@ -103,8 +103,6 @@ export default function CreateCustomPage() {
         console.log(expectedColor)
     }
 
-
-
     useEffect(() => {
         calculateABV()
         calculatePrice()
