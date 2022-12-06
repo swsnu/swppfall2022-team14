@@ -15,6 +15,7 @@ import NavBar from "../NavBar/NavBar";
 import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
 import Ingr from "./Ingr/Ingr";
 import { selectUser } from '../store/slices/user/user';
+import { Grid, Container, Divider, Typography, Stack } from "@mui/material";
 
 
 const ListPage = () => {
@@ -29,9 +30,6 @@ const ListPage = () => {
     const location = useLocation()
 
     const pageStatus = type === 'ingredient' ? ingrState.listStatus : cocktailState.listStatus
-
-
-
 
     useEffect(() => {
 
@@ -57,42 +55,44 @@ const ListPage = () => {
     useEffect(() => {
         setList(cocktailState.cocktailList)
     }, [cocktailState.cocktailList])
+
     useEffect(() => {
         setIngrList(ingrState.ingredientList)
     }, [ingrState.ingredientList])
-    //param
 
     if (pageStatus === "loading") return <div></div> // Loading Window
     else if (pageStatus === "failed") return <div></div> // Failed Window
-    else return <div className="list">
-        <div className="list__navbar">
+    else return (
+        <Stack direction="row" justifyContent="space-between" divider={<Divider orientation="vertical" flexItem />}>
             <NavBar />
-        </div>
-        <div className="list__content">
-            <div className="list__content-up">
-                <div className="list__content-search-wrap">
-
-                </div>
-            </div>
-            {type === 'ingredient' ?
-                <div className="list__content-down">
+            <Container sx={{ py: 3 }} >
+                <Typography variant="h4" sx={{ mb: 3 }}>
+                    search filters
+                </Typography>
+                {type === 'ingredient' ?
                     <div className="list__content-item-wrap">
                         {/*TODO use Real data*/}
                         {ingrList.map((ingredient) => <Ingr key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} />)}
-                    </div>
-                </div>
-                :
-                <div className="list__content-down">
-                    <div className="list__content-item-wrap">
-                        {/*TODO use Real data*/}
-                        {list.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
-                            name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />)}
-                    </div>
-                </div>
-            }
-        </div >
-    </div >
-
+                    </div> :
+                    <Grid container spacing={3}>
+                        {list.map((cocktail) => 
+                            <Grid key={cocktail.id} item xs={12} sm={6} md={3}>
+                                <Item 
+                                    key={cocktail.id} 
+                                    image={cocktail.image}
+                                    name={cocktail.name} 
+                                    rate={cocktail.rate} 
+                                    type={cocktail.type} 
+                                    id={cocktail.id} 
+                                    tags={cocktail.tags}
+                                />
+                            </Grid>
+                        )}
+                    </Grid>
+                }
+            </Container>
+        </Stack >
+    )
 }
 
 export default ListPage
