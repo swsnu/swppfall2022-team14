@@ -37,10 +37,8 @@ export const registerUser = createAsyncThunk(
     async (user: Pick<UserType, "username" | "password">) => {
         await axios.post('/api/v1/auth/signup/', user)
             .then(function (response) {
-                alert("가입 성공");
                 return response.data;
             })
-            .catch(function () { alert("가입 실패") });
     }
 )
 
@@ -53,9 +51,6 @@ export const loginUser = createAsyncThunk(
                 dispatch(userActions.setToken(response.data.token))
                 return response.data
             })
-            .catch(function () {
-                alert("로그인 실패")
-            });
     }
 );
 
@@ -76,6 +71,7 @@ export const logoutUser = createAsyncThunk(
         })
             .then(function (response) {
                 dispatch(userActions.logoutUser());
+                alert("로그아웃이 성공적으로 수행되었습니다.")
                 return response.data
             })
             .catch(function () {
