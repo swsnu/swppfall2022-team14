@@ -8,7 +8,7 @@ import './EditCustomPage.scss';
 import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
-import { addVector, hexToRgb, rgbToHex } from "../common/utils/utils";
+import { calculateABV, calculateColor, calculatePrice } from "../common/utils/utils";
 
 export default function EditCustomPage() {
     const { id } = useParams();
@@ -57,69 +57,6 @@ export default function EditCustomPage() {
             console.log(cocktail.ingredients)
         }
     }, [cocktail]);
-    const calculateABV = () => {
-        let abv = 0
-        let amount = 0
-        for (let i = 0; i < ingredientList.length; i++) {
-            const ing_abv = ingredientList[i].ABV
-
-            let ing_amount = Number(ingredientList[i].amount)
-            if (!['ml', 'oz', 'gram'].includes(unitList[i]) || ingredientList[i].name == '얼음') {
-                continue // ml, oz, gram이 아니거나 얼음인 경우 계산 X
-            }
-
-            else if (unitList[i] == 'oz')
-                ing_amount *= 30
-
-
-            abv += (ing_abv * ing_amount)
-            amount += ing_amount
-        }
-        abv /= amount
-        setExpectedABV(Math.round(abv * 10) / 10)
-    }
-    const calculatePrice = () => {
-        let price = 0
-        for (let i = 0; i < ingredientList.length; i++) {
-            let ing_amount = Number(ingredientList[i].amount)
-            let ing_price = Number(ingredientList[i].price)
-            if (!['ml', 'oz',].includes(unitList[i]) && (ingredientList[i].unit.includes('개') || ingredientList[i].unit.includes('조각')))
-                ing_price /= 100 // TODO : 단위 constraint
-            if (unitList[i] == 'oz')
-                ing_amount *= 30
-
-            price = price + (ing_price * ing_amount)
-        }
-
-        setExpectedPrice(Math.round(price))
-    }
-    const calculateColor = () => {
-        let color = [0, 0, 0]
-        let amount = 0
-
-        for (let i = 0; i < ingredientList.length; i++) {
-            let ing_amount = Number(ingredientList[i].amount)
-            const ing_color: string = ingredientList[i].color
-            if (['투명', '고체'].includes(ing_color))
-                continue
-            const ing_color_rgb = hexToRgb(ing_color)
-            if (!ing_color_rgb)
-                return
-
-            if (unitList[i] == 'oz')
-                ing_amount *= 30
-
-            ing_color_rgb[0] *= ing_amount
-            ing_color_rgb[1] *= ing_amount
-            ing_color_rgb[2] *= ing_amount
-            color = addVector(ing_color_rgb, color)
-            amount += ing_amount
-        }
-        color[0] = Math.round(color[0] / amount)
-        color[1] = Math.round(color[1] / amount)
-        color[2] = Math.round(color[2] / amount)
-        setExpectedColor(rgbToHex(color[0], color[1], color[2]))
-    }
 
 
     const navigate = useNavigate();
@@ -130,7 +67,7 @@ export default function EditCustomPage() {
 
     useEffect(() => {
         if (newIngredient && newUnit) {
-            setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
+            setIngredientList([...ingredientList, { ...newIngredient, amount: "", recipe_unit: "" }]);
             setNewIngredient(null);
             setUnitList([...unitList, newUnit])
             setNewUnit(null)
@@ -175,9 +112,10 @@ export default function EditCustomPage() {
     }
 
     useEffect(() => {
-        calculateABV()
-        calculatePrice()
-        calculateColor()
+        setExpectedABV(calculateABV(ingredientList, unitList))
+        setExpectedPrice(calculatePrice(ingredientList, unitList))
+        setExpectedColor(calculateColor(ingredientList, unitList))
+        console.log(expectedABV, expectedPrice, expectedColor)
     }, [unitList, ingredientList])
 
     const editCocktailHandler = async () => {
@@ -245,7 +183,7 @@ export default function EditCustomPage() {
                         </div>
                         <div className="content__ingredient-box">
                             Ingredient:
-                            {[...ingredientList, { name: "", amount: undefined, unit: [""] }].map((ingredient, idx) => {
+                            {[...ingredientList, { name: "", amount: undefined, unit: [""], recipe_unit: "" }].map((ingredient, idx) => {
                                 return (
                                     <div className="content__ingredient" key={`${ingredient.name}_${idx}`}>
                                         <input
@@ -267,12 +205,22 @@ export default function EditCustomPage() {
                                             className="content__ingredient-input"
                                             value={ingredient.amount ?? ""}
                                             type="number"
-                                            onChange={(event) => { onChangeAmount(idx, event.target.value); calculateABV(); calculatePrice(); calculateColor(); }}
+                                            onChange={(event) => {
+                                                onChangeAmount(idx, event.target.value);
+                                                setExpectedABV(calculateABV(ingredientList, unitList));
+                                                setExpectedPrice(calculatePrice(ingredientList, unitList));
+                                                setExpectedColor(calculateColor(ingredientList, unitList));
+                                            }}
                                             min="0"
                                         />
                                         <select
                                             data-testid="ingredientUnitSelect"
-                                            onChange={(e) => { onChangeIngredientUnit(idx, e.target.value); calculateABV(); calculatePrice(); calculateColor(); }}>
+                                            onChange={(e) => {
+                                                onChangeIngredientUnit(idx, e.target.value);
+                                                setExpectedABV(calculateABV(ingredientList, unitList));
+                                                setExpectedPrice(calculatePrice(ingredientList, unitList));
+                                                setExpectedColor(calculateColor(ingredientList, unitList));
+                                            }} defaultValue={ingredient.recipe_unit}>
                                             {ingredient.unit.map((u) => {
                                                 return <option
                                                     key={"key" + u}

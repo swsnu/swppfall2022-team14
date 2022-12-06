@@ -51,6 +51,7 @@ export interface CocktailPostType extends Omit<CocktailDetailType, "id" | "type"
 
 export interface IngredientPrepareType extends IngredientType {
     amount: string;
+    recipe_unit: string;
 }
 
 export interface CocktailInfo {

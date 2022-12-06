@@ -66,8 +66,14 @@ const stubCocktailInitialState: CocktailInfo = {
         updated_at: new Date(),
         rate: 3,
         ingredients: [
-            { ...stubIngredientInitialState.ingredientList[0], amount: "1 oz" },
-            { ...stubIngredientInitialState.ingredientList[1], amount: "5 oz" },
+            {
+                ...stubIngredientInitialState.ingredientList[0], amount: "1 oz",
+                recipe_unit: ""
+            },
+            {
+                ...stubIngredientInitialState.ingredientList[1], amount: "5 oz",
+                recipe_unit: ""
+            },
         ],
         is_bookmarked: false,
         score: 1
