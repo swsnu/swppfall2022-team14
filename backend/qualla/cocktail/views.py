@@ -147,7 +147,8 @@ def cocktail_list(request):
             return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
 
         cocktails = Cocktail.objects.filter(filter_q)
-        data = CocktailListSerializer(cocktails, many=True, context={'user': request.user}).data
+        data = CocktailListSerializer(cocktails, many=True, context={
+                                      'user': request.user}).data
         return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
 
         # if type == 'standard':
@@ -166,9 +167,10 @@ def cocktail_list(request):
         # else:
         #     return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
 
+
 @api_view(['POST'])
-#@authentication_classes([authentication.TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def cocktail_post(request):
     if request.method == 'POST':
         try:
@@ -207,22 +209,24 @@ def cocktail_post(request):
             ingredient_list = data['ingredients']
         except (KeyError, JSONDecodeError) as e:
             ingredient_list = []
-        for i in ingredient_list:
+        for ingredient in ingredient_list:
             try:
-                ingredient = Ingredient.objects.get(id=i["id"])
+                _ingredient = Ingredient.objects.get(id=ingredient["id"])
 
             except Ingredient.DoesNotExist:
                 return HttpResponseNotFound("ingredient does not exist")
+
             IngredientPrepare.objects.create(
-                cocktail=cocktail, ingredient=ingredient, amount=i["amount"])
+                cocktail=cocktail, ingredient=_ingredient, amount=ingredient["amount"], unit=ingredient["unit"])
 
         return JsonResponse(CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=201)
     # else:
     #     return HttpResponseNotAllowed(['GET', 'POST'])
 
+
 @api_view(['PUT'])
-#@authentication_classes([authentication.TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def cocktail_edit(request, pk):
     try:
         cocktail = Cocktail.objects.get(id=pk)
@@ -254,14 +258,15 @@ def cocktail_edit(request, pk):
     except (KeyError, JSONDecodeError) as e:
         ingredient_list = []
     IngredientPrepare.objects.filter(cocktail=cocktail).delete()
-    for i in ingredient_list:
+    for ingredient in ingredient_list:
         try:
-            ingredient = Ingredient.objects.get(id=i["id"])
+            _ingredient = Ingredient.objects.get(id=ingredient["id"])
         except Ingredient.DoesNotExist:
             return HttpResponseNotFound("ingredient does not exist")
         IngredientPrepare.objects.create(
-            cocktail=cocktail, ingredient=ingredient, amount=i["amount"])
+            cocktail=cocktail, ingredient=_ingredient, amount=ingredient["amount"], unit=ingredient["unit"])
     return JsonResponse(data=CocktailDetailSerializer(cocktail, context={'user': request.user}).data, status=200)
+
 
 @api_view(['GET'])
 def retrieve_cocktail(request, pk):
@@ -270,9 +275,10 @@ def retrieve_cocktail(request, pk):
     except Cocktail.DoesNotExist:
         return HttpResponseNotFound(f"No Cocktails matches id={pk}")
     return JsonResponse(CocktailDetailSerializer(cocktail, context={'user': request.user}).data, safe=False)
-        
+
     # else:
     #     return HttpResponseNotAllowed(['GET', 'PUT'])
+
 
 @api_view(['PUT'])
 def cocktail_rate_edit(request, pk):
@@ -280,19 +286,22 @@ def cocktail_rate_edit(request, pk):
         cocktail = Cocktail.objects.get(id=pk)
     except Cocktail.DoesNotExist:
         return HttpResponseNotFound(f"No Cocktails matches id={pk}")
-    
-    serializer = CocktailDetailSerializer(cocktail, data=request.data, partial=True, context={'user': request.user})
+
+    serializer = CocktailDetailSerializer(
+        cocktail, data=request.data, partial=True, context={'user': request.user})
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return JsonResponse(serializer.data, status=200)
+
 
 @api_view(['GET'])
 def retrieve_my_cocktail(request):
     user = request.user
     if not user.is_authenticated:
         return HttpResponse(status=401)
-    
+
     # TODO: author_id=request.user.id
     cocktails = Cocktail.objects.filter(author_id=user.id, type='CS')
-    data = CocktailListSerializer(cocktails, many=True, context={'user': request.user}).data
+    data = CocktailListSerializer(cocktails, many=True, context={
+                                  'user': request.user}).data
     return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)

@@ -26,6 +26,7 @@ const stubIngredientInitialState: IngredientInfo = {
             ABV: 40,
             price: 200,
             unit: ['oz', 'ml']
+            , color: ""
         },
         {
             id: 2,
@@ -34,7 +35,7 @@ const stubIngredientInitialState: IngredientInfo = {
             introduction: 'INGREDIENT_INTRO_2',
             ABV: 20,
             price: 100,
-            unit: ['oz']
+            unit: ['oz'], color: ""
         },
     ],
     myIngredientList: [],
@@ -50,6 +51,8 @@ const stubCocktailInitialState: CocktailInfo = {
     cocktailItem: {
         id: 2,
         name: "COCKTAIL_NAME_2",
+        name_eng: "COCKTAIL_NAME_ENG_2",
+        color: "color",
         image: "COCKTAIL_IMAGE_2",
         introduction: "COCKTAIL_INTRO_2",
         recipe: "COCKTAIL_RECIPE_2",
@@ -63,8 +66,14 @@ const stubCocktailInitialState: CocktailInfo = {
         updated_at: new Date(),
         rate: 3,
         ingredients: [
-            { ...stubIngredientInitialState.ingredientList[0], amount: "1 oz" },
-            { ...stubIngredientInitialState.ingredientList[1], amount: "5 oz" },
+            {
+                ...stubIngredientInitialState.ingredientList[0], amount: "1 oz",
+                recipe_unit: ""
+            },
+            {
+                ...stubIngredientInitialState.ingredientList[1], amount: "5 oz",
+                recipe_unit: ""
+            },
         ],
         is_bookmarked: false,
         score: 1

@@ -13,15 +13,27 @@ import './CreateCustomPage.scss';
 import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
+import S3 from 'react-aws-s3-typescript'
+import {v4 as uuid} from 'uuid'
+export interface Image {
+    key:string;
+    url:string;
+}
+import { calculateABV, calculateColor, calculatePrice } from "../common/utils/utils";
+
 
 export default function CreateCustomPage() {
     const [name, setName] = useState<string>("");
+    const [nameEng, setNameEng] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
     const [recipe, setRecipe] = useState<string>("");
     const [tagList, setTagList] = useState<string[]>([]);
     const [tagItem, setTagItem] = useState<string>("");
-    const [ABV] = useState<number>(20);  // Temporary
-    const [price] = useState<number>(80000);  // Temporary
+    const [image, setImage] = useState<Image|null>(null);
+    
+    const [expectedABV, setExpectedABV] = useState<number>(0);  // Temporary
+    const [expectedPrice, setExpectedPrice] = useState<number>(0);  // Temporary
+    const [expectedColor, setExpectedColor] = useState<string>('');
 
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
@@ -33,6 +45,16 @@ export default function CreateCustomPage() {
     const onClickIngredientDelete = (selectedIdx: number) => {
         setIngredientList(ingredientList.filter((_value, idx) => idx !== selectedIdx));
     };
+
+
+
+    useEffect(() => {
+        setExpectedABV(calculateABV(ingredientList, unitList));
+        setExpectedColor(calculateColor(ingredientList, unitList));
+        setExpectedPrice(calculatePrice(ingredientList, unitList));
+    }, [unitList, ingredientList])
+
+
 
     const dispatch = useDispatch<AppDispatch>();
     const userState = useSelector(selectUser)
@@ -79,16 +101,18 @@ export default function CreateCustomPage() {
     const createCocktailHandler = async () => {
         if (userState.user?.id !== null && userState.token !== null) {
             const ingredients = ingredientList.map((ingr, ind) => {
-                return { ...ingr, amount: ingr.amount + " " + unitList[ind] }
+                return { ...ingr, amount: ingr.amount, unit: unitList[ind] }
             })
             const data: PostForm = {
                 cocktail: {
                     name: name,
-                    image: "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
+                    name_eng: nameEng,
+                    image: (image)? image.url:"https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
                     introduction: introduction,
                     recipe: recipe,
-                    ABV: ABV,
-                    price_per_glass: price,
+                    ABV: expectedABV,
+                    color: expectedColor,
+                    price_per_glass: expectedPrice,
                     tags: tagList,
                     author_id: Number(userState.user?.id),
                     ingredients: ingredients,
@@ -100,7 +124,36 @@ export default function CreateCustomPage() {
             navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
         }
     }
+    
+    const S3_config = {
+        bucketName: process.env.REACT_APP_BUCKET_NAME!,
+        region: "ap-northeast-2",
+        accessKeyId: process.env.REACT_APP_ACCESS!,
+        secretAccessKey: process.env.REACT_APP_SECRET!,
+    }
 
+    const handleSelectFile = async (e:React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.files){
+            const file = e.target.files[0]
+            if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
+                const S3Client = new S3(S3_config)
+                // delete previous image
+                if(image !== null){
+                    await S3Client.deleteFile(image.key)
+                }
+                
+                // upload file and setImage(S3 Link)
+                const fileName = 'cocktail' + '/' + uuid()
+                const response = await S3Client.uploadFile(file, fileName)
+                if(response.status == 204){
+                    setImage({key: response.key, url: response.location})
+                }
+            }else{
+                alert('이미지 파일(jpeg, png, jpg)만 업로드 가능합니다.')
+                e.target.files=null
+            }
+        }
+    }
     useEffect(() => {
         if (!userState.isLogin) {
             navigate(-1)
@@ -110,7 +163,7 @@ export default function CreateCustomPage() {
 
     useEffect(() => {
         if (newIngredient && newUnit) {
-            setIngredientList([...ingredientList, { ...newIngredient, amount: "" }]);
+            setIngredientList([...ingredientList, { ...newIngredient, amount: "", recipe_unit: "" }]);
             setNewIngredient(null);
             setUnitList([...unitList, newUnit])
             setNewUnit(null)
@@ -125,17 +178,22 @@ export default function CreateCustomPage() {
                         Name:
                         <input className='title__name-input' value={name} onChange={(e) => setName(e.target.value)} />
                     </label>
+                    <label>
+                        영어 이름(선택):
+                        <input className='title__name-input' value={nameEng} onChange={(e) => setNameEng(e.target.value)} />
+                    </label>
                 </div>
                 <button className="title__confirm-button"
                     onClick={() => createCocktailHandler()}>Confirm</button>
             </div>
             <div className="content">
-                <img
-                    className="content__image"
-                    src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"
-                />
+                <div className="content__image-input">
+                    {image ? <img src={image.url}/> : <img src="https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg"/>}
+                    <label htmlFor='file'>파일 찾기</label>
+                    <input type="file" onChange={handleSelectFile} id='file' style={{"display":"none"}}/>
+                </div>
                 <div className="content__description-box">
-                    <p className="content__abv">Expected 20% ABV</p>
+                    <p className="content__abv"> {isNaN(expectedABV) ? "재료를 입력하여 예상 도수를 알아보세요." : `Expected ${expectedABV}% ABV`} </p>
                     <div className='content__description'>
                         <label>
                             Description:<br />
@@ -166,12 +224,22 @@ export default function CreateCustomPage() {
                                         className="content__ingredient-input"
                                         value={ingredient.amount ?? ""}
                                         type="number"
-                                        onChange={(event) => onChangeAmount(idx, event.target.value)}
+                                        onChange={(event) => {
+                                            onChangeAmount(idx, event.target.value);
+                                            setExpectedABV(calculateABV(ingredientList, unitList));
+                                            setExpectedColor(calculateColor(ingredientList, unitList));
+                                            setExpectedPrice(calculatePrice(ingredientList, unitList));
+                                        }}
                                         min="0"
                                     />
                                     <select
                                         data-testid="ingredientUnitSelect"
-                                        onChange={(e) => onChangeIngredientUnit(idx, e.target.value)}>
+                                        onChange={(e) => {
+                                            onChangeIngredientUnit(idx, e.target.value);
+                                            setExpectedABV(calculateABV(ingredientList, unitList));
+                                            setExpectedColor(calculateColor(ingredientList, unitList));
+                                            setExpectedPrice(calculatePrice(ingredientList, unitList));
+                                        }}>
                                         {ingredient.unit.map((u) => {
                                             return <option
                                                 key={"key" + u}
@@ -227,9 +295,10 @@ export default function CreateCustomPage() {
                             />
                         </div>
                     </div>
-                    <p className="content__price">Expected ${price}</p>
+                    <p className="content__price">예상 가격: {expectedPrice}원</p>
+                    예상 색깔: <div className="content__color" style={{ "backgroundColor": `#${expectedColor}` }}></div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

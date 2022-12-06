@@ -18,7 +18,16 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3 # workflow에서 액세스할 수 있도록 저장소를 체크아웃
-
+      - name: "Echo in file"
+        env:
+          BUCKET_NAME: ${{ secrets.IMAGE_BUCKET_NAME }}
+          ACCESS: ${{ secrets.IMAGE_S3_ACCESS }}
+          SECRET: ${{ secrets.IMAGE_S3_SECRET }}
+        run: |
+          echo "REACT_APP_BUCKET_NAME=$BUCKET_NAME" >> ".env"
+          echo "REACT_APP_ACCESS=$ACCESS" >> ".env"
+          echo "REACT_APP_SECRET=$SECRET" >> ".env"
+          
       - name: Install dependencies
         run: yarn install
 

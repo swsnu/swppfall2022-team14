@@ -26,7 +26,7 @@
 .content {
     margin-top: 50px;
     display: flex;
-    
+
     &__image-input {
         width: 30%;
         height: 300px;
@@ -57,25 +57,15 @@
         text-align: left;
     }
 
-    &__ingredient {
-        
-    }
+    &__ingredient {}
 
-    &__ingredient-name {
-        
-    }
+    &__ingredient-name {}
 
-    &__ingredient-input {
-        
-    }
+    &__ingredient-input {}
 
-    &__ingredient-delete-button {
-        
-    }
+    &__ingredient-delete-button {}
 
-    &__ingredient-add-button {
-        
-    }
+    &__ingredient-add-button {}
 
     &__recipe {
         margin-top: 50px;
@@ -104,9 +94,7 @@
         display: inline-flex;
     }
 
-    &__tag-delete-button {
-
-    }
+    &__tag-delete-button {}
 
     &__tag-input {
         min-width: 150px;
@@ -119,5 +107,12 @@
     &__price {
         width: 10%;
         text-align: right;
+    }
+
+    &__color {
+        width: 30px;
+        height: 30px;
+
+        border-radius: 15px;
     }
 }

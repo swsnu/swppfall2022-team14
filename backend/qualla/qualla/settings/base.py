@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'bookmark.apps.BookmarkConfig',
     'rate.apps.RateConfig',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,6 +54,7 @@ RESTFRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,7 +63,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    "http://qualla.site.s3-website-ap-northeast-1.amazonaws.com",
+    "http://qualla.site.s3-website-ap-n",
+    "https://qualla.site",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'qualla.urls'
 
 TEMPLATES = [

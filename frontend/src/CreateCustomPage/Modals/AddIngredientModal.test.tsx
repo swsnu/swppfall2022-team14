@@ -31,7 +31,7 @@ const stubIngredientInitialState: IngredientInfo = {
             introduction: 'INGREDIENT_INTRO_1',
             ABV: 40,
             price: 200,
-            unit: ['oz', 'ml']
+            unit: ['oz', 'ml'], color: ""
         },
         {
             id: 2,
@@ -40,7 +40,7 @@ const stubIngredientInitialState: IngredientInfo = {
             introduction: 'INGREDIENT_INTRO_2',
             ABV: 20,
             price: 100,
-            unit: ['oz']
+            unit: ['oz'], color: ""
         },
     ],
     myIngredientList: [],
