@@ -144,9 +144,7 @@ export default function CreateCustomPage() {
                 
                 // upload file and setImage(S3 Link)
                 const fileName = 'cocktail' + '/' + uuid()
-                console.log(fileName)
                 const response = await S3Client.uploadFile(file, fileName)
-                console.log(response)
                 if(response.status == 204){
                     setImage({key: response.key, url: response.location})
                 }
@@ -156,7 +154,6 @@ export default function CreateCustomPage() {
             }
         }
     }
-    console.log(image)
     useEffect(() => {
         if (!userState.isLogin) {
             navigate(-1)
