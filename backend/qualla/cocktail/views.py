@@ -167,8 +167,8 @@ def cocktail_list(request):
         #     return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
 
 @api_view(['POST'])
-#@authentication_classes([authentication.TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def cocktail_post(request):
     if request.method == 'POST':
         try:
@@ -221,8 +221,8 @@ def cocktail_post(request):
     #     return HttpResponseNotAllowed(['GET', 'POST'])
 
 @api_view(['PUT'])
-#@authentication_classes([authentication.TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def cocktail_edit(request, pk):
     try:
         cocktail = Cocktail.objects.get(id=pk)
