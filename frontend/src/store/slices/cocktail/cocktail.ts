@@ -20,6 +20,8 @@ export interface CocktailItemType {
 export interface CocktailDetailType {
     id: number,
     name: string,
+    name_eng: string,
+    color: string,
     image: string,
     introduction: string,
     recipe: string,
@@ -37,8 +39,19 @@ export interface CocktailDetailType {
     score: number
 }
 
+export interface IngredientPostType extends Omit<IngredientType, 'unit'> {
+    unit: string;
+    amount: string;
+}
+
+export interface CocktailPostType extends Omit<CocktailDetailType, "id" | "type" | "author_name" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score" | "ingredients"> {
+    ingredients: IngredientPostType[];
+
+}
+
 export interface IngredientPrepareType extends IngredientType {
     amount: string;
+    recipe_unit: string;
 }
 
 export interface CocktailInfo {
@@ -49,7 +62,7 @@ export interface CocktailInfo {
 }
 
 export interface PostForm {
-    cocktail: Omit<CocktailDetailType, "id" | "type" | "author_name" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score">;
+    cocktail: CocktailPostType
     token: string;
 }
 
@@ -155,7 +168,7 @@ export const getCocktail = createAsyncThunk(
 
 export const postCocktail = createAsyncThunk(
     "cocktail/postCocktail",
-    async (cocktail: Omit<CocktailDetailType, "id" | "type" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score">, { dispatch }) => {
+    async (cocktail: CocktailPostType, { dispatch }) => {
         const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/', cocktail);
         dispatch(cocktailActions.addCocktail(response.data));
         return response.data;

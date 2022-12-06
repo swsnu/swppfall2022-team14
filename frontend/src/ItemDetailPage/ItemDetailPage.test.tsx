@@ -56,10 +56,14 @@ const fakeCocktailItemCS: CocktailDetailType = {
         price: 1,
         introduction: "iintro",
         unit: ['oz', 'ml'],
-        amount: "10"
+        amount: "10",
+        color: "",
+        recipe_unit: ""
     }],
     is_bookmarked: false,
-    score: 1
+    score: 1,
+    name_eng: "",
+    color: ""
 };
 
 const fakeCocktailItemST: CocktailDetailType = {
@@ -85,10 +89,14 @@ const fakeCocktailItemST: CocktailDetailType = {
         price: 1,
         introduction: "iintro",
         unit: ['oz', 'ml'],
-        amount: "10"
+        amount: "10",
+        color: "",
+        recipe_unit: ""
     }],
     is_bookmarked: false,
-    score: 1
+    score: 1,
+    name_eng: "",
+    color: ""
 };
 
 const commentNotParent: CommentType = {
@@ -148,10 +156,14 @@ const notBookmarkedCocktailItem: CocktailDetailType = {
         price: 1,
         introduction: "iintro",
         unit: ['oz', 'ml'],
-        amount: "10"
+        amount: "10",
+        color: "",
+        recipe_unit: ""
     }],
     is_bookmarked: true,
-    score: 1
+    score: 1,
+    name_eng: "",
+    color: ""
 };
 
 const notBookmarkedCocktail: CocktailInfo = {

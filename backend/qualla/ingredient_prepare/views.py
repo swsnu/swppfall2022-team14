@@ -18,8 +18,9 @@ def ingredient_list(request, cocktail_id):
 
         ingredient_prepare = cocktail.ingredient_prepare.all()
         # id, name, image, ABV, price, amount
-        return_data = [{"id": element.ingredient.id, "name": element.ingredient.name, "image": element.ingredient.image,
-                       "ABV": element.ingredient.ABV, "price": element.ingredient.price, "amount": element.amount, "unit":element.ingredient.unit_list()}
+
+        return_data = [{"id": element.ingredient.id, "name": element.ingredient.name, "name_eng": element.ingredient.name_eng, "image": element.ingredient.image, "color": element.ingredient.color, "price": element.ingredient.price,
+                       "ABV": element.ingredient.ABV, "unit": element.ingredient.unit_list(), "amount": element.amount, "recipe_unit": element.unit}
                        for element in ingredient_prepare]
 
         return JsonResponse(return_data, safe=False)
@@ -34,8 +35,10 @@ def ingredient_list(request, cocktail_id):
             # When edit/post custom cocktail
             # Request with ingredient_id
             data['cocktail'] = cocktail_id
+
             serializer = IngredientPrepareSerializer(
                 data=data, context={"request": request})
+
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
