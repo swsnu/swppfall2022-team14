@@ -53,6 +53,8 @@ def signin(request):
 
 
 @api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def signout(request):
     if request.method == 'POST':
         user = request.user
