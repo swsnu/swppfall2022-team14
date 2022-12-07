@@ -16,8 +16,9 @@ import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
 import S3 from 'react-aws-s3-typescript'
 import {v4 as uuid} from 'uuid'
-import { Box, Button, Checkbox, ImageListItem, ImageListItemBar, Divider, IconButton, Stack, TextField, Typography } from "@mui/material";
+import { Button, ImageListItem, ImageListItemBar, Divider, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 export interface Image {
     key:string;
@@ -64,13 +65,12 @@ export default function CreateCustomPage() {
     const userState = useSelector(selectUser)
 
     const onChangeAmount = (selectedIdx: number, changedAmount: string) => {
-        if (changedAmount[0] === "0" || changedAmount[0] === "-") return
         setIngredientList(
             ingredientList.map((ingredient, idx) => {
                 if (idx !== selectedIdx) {
                     return ingredient;
                 } else {
-                    return { ...ingredient, amount: changedAmount } as IngredientPrepareType;
+                    return { ...ingredient, amount: changedAmount.replace(/\D/g,'').replace(/^0+/, '') } as IngredientPrepareType;
                 }
             })
         );
@@ -232,15 +232,16 @@ export default function CreateCustomPage() {
                         업로드
                     </Button>
                 </Stack>
-                <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ width: 1 }}>
-                    <ImageListItem sx={{ width: 0.3, height: 'fit-content' }}>
+                <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent="space-between" sx={{ width: 1 }}>
+                    <ImageListItem sx={{ width: 0.3 }}>
                         <img
                             src={
                                 image ?
                                 image.url :
                                 "https://cdn.pixabay.com/photo/2015/07/16/06/48/bahama-mama-847225_1280.jpg"
                             }
-                            style={{ borderRadius: 20 }}
+                            style={{ borderRadius: 20, height: 'auto' }}
+                            loading="lazy"
                         />
                         <ImageListItemBar
                             sx={{
@@ -271,8 +272,21 @@ export default function CreateCustomPage() {
                                 {isNaN(expectedABV) ? "재료를 입력하여 예상 도수를 알아보세요." : `예상 도수 ${expectedABV}%`}
                             </Typography>
                             <Typography variant="body1">
-                                예상 가격: {expectedPrice.toLocaleString()}원
+                                예상 가격 {expectedPrice.toLocaleString()}원
                             </Typography>
+                            <Stack direction="row" spacing={0.75} alignItems="center" justifyContent="flex-start">
+                                <Typography variant="body1">
+                                    예상 색깔
+                                </Typography>
+                                <Box
+                                    sx={{
+                                        width: 10,
+                                        height: 10,
+                                        borderRadius: 5,
+                                        bgcolor: `#${expectedColor}`
+                                    }}
+                                />
+                            </Stack>
                             <TextField
                                 label="설명"
                                 variant="standard"
@@ -295,7 +309,112 @@ export default function CreateCustomPage() {
                                 }}
                             />
                         </Stack>
-                        <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, px: 2 }}>
+                        <Stack alignItems="flex-start" justifyContent="flex-start" spacing={1} sx={{ width: 1, px: 2 }}>
+                            {[...ingredientList, { name: "", amount: undefined, unit: [""] }].map((ingredient, idx) => {
+                                return (
+                                    <Stack key={ingredient.name} direction="row" spacing={1} alignItems="flex-end" justifyContent="space-between" sx={{ width: 1 }}>
+                                        <Stack key={ingredient.name} direction="row" spacing={1} alignItems="flex-end" justifyContent="flex-start" sx={{ width: 0.9 }}>
+                                            <TextField
+                                                label="재료"
+                                                variant="standard"
+                                                value={ingredient.name}
+                                                onClick={() => (idx === ingredientList.length) && setOpen(true)}
+                                                size="small"
+                                                InputProps={{
+                                                    readOnly: true,
+                                                }}
+                                                sx={{
+                                                    width: 0.5,
+                                                    '& label.Mui-focused': {
+                                                        color: 'secondary.light',
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'secondary.light',
+                                                    },
+                                                    '& .MuiOutlinedInput-root': {
+                                                        '&.Mui-focused fieldset': {
+                                                            borderColor: 'secondary.light',
+                                                        },
+                                                    },
+                                                }}
+                                            />
+                                            <AddIngredientModal
+                                                isOpen={isOpen}
+                                                close={() => setOpen(false)}
+                                                addedIngredientList={ingredientList.map((ingredient) => { return ingredient.name })}
+                                                setNewIngrdient={setNewIngredient}
+                                                setDefaultUnit={setNewUnit}
+                                            />
+                                            <TextField
+                                                label="양"
+                                                variant="standard"
+                                                value={ingredient.amount}
+                                                onChange={(event) => {
+                                                    onChangeAmount(idx, event.target.value);
+                                                    setExpectedABV(calculateABV(ingredientList, unitList));
+                                                    setExpectedColor(calculateColor(ingredientList, unitList));
+                                                    setExpectedPrice(calculatePrice(ingredientList, unitList));
+                                                }}
+                                                size="small"
+                                                sx={{
+                                                    width: 0.35,
+                                                    '& label.Mui-focused': {
+                                                        color: 'secondary.light',
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'secondary.light',
+                                                    },
+                                                    '& .MuiOutlinedInput-root': {
+                                                        '&.Mui-focused fieldset': {
+                                                            borderColor: 'secondary.light',
+                                                        },
+                                                    },
+                                                }}
+                                            />
+                                            <TextField
+                                                label="단위"
+                                                variant="standard"
+                                                select
+                                                value={ingredient.amount}
+                                                onChange={(e) => {
+                                                    onChangeIngredientUnit(idx, e.target.value);
+                                                    setExpectedABV(calculateABV(ingredientList, unitList));
+                                                    setExpectedColor(calculateColor(ingredientList, unitList));
+                                                    setExpectedPrice(calculatePrice(ingredientList, unitList));
+                                                }}
+                                                size="small"
+                                                sx={{
+                                                    width: 0.15,
+                                                    '& label.Mui-focused': {
+                                                        color: 'secondary.light',
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'secondary.light',
+                                                    },
+                                                    '& .MuiOutlinedInput-root': {
+                                                        '&.Mui-focused fieldset': {
+                                                            borderColor: 'secondary.light',
+                                                        },
+                                                    },
+                                                }}
+                                            >
+                                                {ingredient.unit.map((u) => {
+                                                    return (
+                                                        <MenuItem key={u} value={u}>
+                                                            {u}
+                                                        </MenuItem>
+                                                    )
+                                                })}
+                                            </TextField>
+                                        </Stack>
+                                        {idx !== ingredientList.length &&
+                                            <IconButton size="small" onClick={() => onClickIngredientDelete(idx)}>
+                                                <RemoveIcon fontSize="small" />
+                                            </IconButton>
+                                        }
+                                    </Stack>
+                                )
+                            })}
                             <TextField
                                 label="만드는 방법"
                                 variant="standard"
@@ -320,101 +439,42 @@ export default function CreateCustomPage() {
                         </Stack>
                     </Stack>
                 </Stack>
-                <div className="content">
-                    <div className="content__description-box">
-                        <div className="content__ingredient-box">
-                            Ingredient:
-                            {[...ingredientList, { name: "", amount: undefined, unit: [""] }].map((ingredient, idx) => {
-                                return (
-                                    <div className="content__ingredient" key={`${ingredient.name}_${idx}`}>
-                                        <input
-                                            data-testid="ingredientInput"
-                                            className="content__ingredient-name"
-                                            onClick={() => (idx === ingredientList.length) && setOpen(true)}
-                                            value={ingredient.name}
-                                            readOnly
-                                        />
-                                        <AddIngredientModal
-                                            isOpen={isOpen}
-                                            close={() => setOpen(false)}
-                                            addedIngredientList={ingredientList.map((ingredient) => { return ingredient.name })}
-                                            setNewIngrdient={setNewIngredient}
-                                            setDefaultUnit={setNewUnit}
-                                        />
-                                        <input
-                                            data-testid="ingredientAmountInput"
-                                            className="content__ingredient-input"
-                                            value={ingredient.amount ?? ""}
-                                            type="number"
-                                            onChange={(event) => {
-                                                onChangeAmount(idx, event.target.value);
-                                                setExpectedABV(calculateABV(ingredientList, unitList));
-                                                setExpectedColor(calculateColor(ingredientList, unitList));
-                                                setExpectedPrice(calculatePrice(ingredientList, unitList));
-                                            }}
-                                            min="0"
-                                        />
-                                        <select
-                                            data-testid="ingredientUnitSelect"
-                                            onChange={(e) => {
-                                                onChangeIngredientUnit(idx, e.target.value);
-                                                setExpectedABV(calculateABV(ingredientList, unitList));
-                                                setExpectedColor(calculateColor(ingredientList, unitList));
-                                                setExpectedPrice(calculatePrice(ingredientList, unitList));
-                                            }}>
-                                            {ingredient.unit.map((u) => {
-                                                return <option
-                                                    key={"key" + u}
-                                                    value={u}
-                                                >
-                                                    {u}
-                                                </option>
-                                            })}
-                                        </select>
-                                        {idx !== ingredientList.length &&
-                                            <button
-                                                data-testid="ingredientDeleteButton"
-                                                className="content__ingredient-delete-button"
-                                                onClick={() => onClickIngredientDelete(idx)}
-                                            >
-                                                Delete
-                                            </button>
-                                        }
-                                    </div>
-                                )
-                            })}
-                        </div>
-                        <div className='content__tag-box'>
-                            Tag: <br />
-                            <div className='content__tag-inner-box'>
-                                {tagList.map((tagItem, idx) => {
-                                    return (
-                                        <div className="content__tag" key={`${tagItem}_${idx}`}>
-                                            <span>{tagItem}</span>
-                                            <button
-                                                data-testid="tagDeleteButton"
-                                                onClick={() => onDeleteTagItem(tagItem)}
-                                            >
-                                                X
-                                            </button>
-                                        </div>
-                                    )
-                                })}
-                                <input
-                                    data-testid="tagInput"
-                                    className='content__tag-input'
-                                    type="text"
-                                    placeholder='Press enter to add tags'
-                                    onChange={e => setTagItem(e.target.value)}
-                                    value={tagItem}
-                                    onKeyPress={onKeyPress}
-                                />
-                            </div>
-                        </div>
-                        <p className="content__price">예상 가격: {expectedPrice}원</p>
-                        예상 색깔: <div className="content__color" style={{ "backgroundColor": `#${expectedColor}` }}></div>
-                    </div>
-                </div>
+                <Stack direction="row" alignItems="flex-end" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
+                    {tagList.map((tagItem, idx) => {
+                        return (
+                            <Button 
+                                key={`${tagItem}_${idx}`} 
+                                sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                onClick={() => onDeleteTagItem(tagItem)}
+                            >
+                                <Typography color='text.primary'>
+                                    #{tagItem}
+                                </Typography>
+                            </Button>
+                        )
+                    })}
+                </Stack>
+                <TextField
+                    label="태그"
+                    variant="standard"
+                    value={tagItem}
+                    size="small"
+                    onChange={e => setTagItem(e.target.value)}
+                    onKeyPress={onKeyPress}
+                    sx={{
+                        '& label.Mui-focused': {
+                            color: 'secondary.light',
+                        },
+                        '& .MuiInput-underline:after': {
+                            borderBottomColor: 'secondary.light',
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: 'secondary.light',
+                            },
+                        },
+                    }}
+                />
             </Stack >
         </Stack>
     )
