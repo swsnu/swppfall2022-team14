@@ -105,19 +105,24 @@ const NavFilter = (prop: Iprops) => {
             typeThree: [typeThree],
         })
     }
+    const onKeyPress = (e: { key: string; }) => {
+        if (e.key == 'Enter') {
+            onClickSearch();
+        }
+    };
 
     if (prop.type === 'IG') {
         return (
-            <Stack 
-                spacing={2} 
-                sx={{ 
-                    textAlign: 'left', 
-                    p: 2, 
+            <Stack
+                spacing={2}
+                sx={{
+                    textAlign: 'left',
+                    p: 2,
                     bgcolor: 'primary.dark',
                     borderRadius: 4,
-            }}>
-                <TextField 
-                    label="추가 검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                }}>
+                <TextField onKeyPress={onKeyPress}
+                    label="추가 검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)}
                     sx={{
                         '& label.Mui-focused': {
                             color: 'secondary.light',
@@ -130,11 +135,11 @@ const NavFilter = (prop: Iprops) => {
                                 borderColor: 'secondary.light',
                             },
                         },
-                    }}    
+                    }}
                 />
-                <Button variant="contained" onClick={onClickSearch} 
+                <Button variant="contained" onClick={onClickSearch}
                     sx={{
-                        bgcolor: 'primary.dark', 
+                        bgcolor: 'primary.dark',
                         borderRadius: 5,
                         boxShadow: 3,
                         '&:hover': {
@@ -150,16 +155,16 @@ const NavFilter = (prop: Iprops) => {
     }
     else {
         return (
-            <Stack 
-                spacing={2} 
-                sx={{ 
-                    textAlign: 'left', 
-                    p: 2, 
+            <Stack
+                spacing={2}
+                sx={{
+                    textAlign: 'left',
+                    p: 2,
                     bgcolor: 'primary.dark',
                     borderRadius: 4,
-            }}>
-                <TextField 
-                    label="추가 검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                }}>
+                <TextField onKeyPress={onKeyPress}
+                    label="추가 검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)}
                     sx={{
                         '& label.Mui-focused': {
                             color: 'secondary.light',
@@ -172,7 +177,7 @@ const NavFilter = (prop: Iprops) => {
                                 borderColor: 'secondary.light',
                             },
                         },
-                    }}    
+                    }}
                 />
                 <Stack spacing={1}>
                     <Typography variant="body1">
@@ -181,8 +186,8 @@ const NavFilter = (prop: Iprops) => {
                     <FormGroup row sx={{ gap: 1 }}>
                         {themeList.map((type) => {
                             return (
-                                <Button 
-                                    key={type.label} 
+                                <Button
+                                    key={type.label}
                                     size="small"
                                     sx={{ bgcolor: 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                                     onClick={() => onThemeClick(type)}
@@ -196,8 +201,8 @@ const NavFilter = (prop: Iprops) => {
                     </FormGroup>
                 </Stack>
                 {[
-                    { title: "Type 1", list: typeOneList  , typeParamList: typeParam.typeOne  , name: "typeOne"   },
-                    { title: "Type 2", list: typeTwoList  , typeParamList: typeParam.typeTwo  , name: "typeTwo"   },
+                    { title: "Type 1", list: typeOneList, typeParamList: typeParam.typeOne, name: "typeOne" },
+                    { title: "Type 2", list: typeTwoList, typeParamList: typeParam.typeTwo, name: "typeTwo" },
                     { title: "Type 3", list: typeThreeList, typeParamList: typeParam.typeThree, name: "typeThree" },
                 ].map((filter) => {
                     return (
@@ -208,8 +213,8 @@ const NavFilter = (prop: Iprops) => {
                             <FormGroup row sx={{ gap: 1 }}>
                                 {filter.list.map((type) => {
                                     return (
-                                        <Button 
-                                            key={type.label} 
+                                        <Button
+                                            key={type.label}
                                             size="small"
                                             sx={{ bgcolor: filter.typeParamList.includes(type.name) ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                                             onClick={() => onTypeClick(filter.name, type.name)}
@@ -229,7 +234,7 @@ const NavFilter = (prop: Iprops) => {
                         재료 기반 검색
                     </Typography>
                     <FormGroup row sx={{ gap: 1 }}>
-                        <Button 
+                        <Button
                             size="small"
                             sx={{ bgcolor: availableOnly ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                             onClick={() => setAvailableOnly(!availableOnly)}
@@ -240,9 +245,9 @@ const NavFilter = (prop: Iprops) => {
                         </Button>
                     </FormGroup>
                 </Stack>
-                <Button variant="contained" onClick={onClickSearch} 
+                <Button variant="contained" onClick={onClickSearch}
                     sx={{
-                        bgcolor: 'primary.dark', 
+                        bgcolor: 'primary.dark',
                         borderRadius: 5,
                         boxShadow: 3,
                         '&:hover': {
