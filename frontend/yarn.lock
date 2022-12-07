@@ -2041,13 +2041,6 @@
   resolved "https://registry.npmjs.org/@types/aria-query/-/aria-query-4.2.2.tgz"
   integrity sha512-HnYpAE1Y6kRyKM/XkEuiRQhTHvkzMBurTHnpFLYLBGPIylZNPs9jJcuOOYWxPLJCSEtmZT0Y8rHDokKN7rRTig==
 
-"@types/aws-sdk@^2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@types/aws-sdk/-/aws-sdk-2.7.0.tgz#83588b3d14ebdca1d4ce5e023387577568ce82f3"
-  integrity sha512-bF6brnwPN9+kheqdKCpinMgCkj+sJIUEj+0v0LPug9OQwL5/1jy+kiJwl+Nkw4Kh+7oaL1phhC4gMz6Oq60jMg==
-  dependencies:
-    aws-sdk "*"
-
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.14":
   version "7.1.19"
   resolved "https://registry.npmjs.org/@types/babel__core/-/babel__core-7.1.19.tgz"
@@ -3102,10 +3095,10 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.npmjs.org/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
-aws-sdk@*, aws-sdk@^2.993.0:
-  version "2.1268.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1268.0.tgz#a7bb57493f554322057f949fe41c64ee4b9e98a5"
-  integrity sha512-N2A42YrSMTDFCY5lU3QOJz+CZbGKIrAQS3We9+HjEeDP+FPE+M2H9Zzy8Mk18uC6v8bP3lbTTCpTTvtje6i+Pw==
+aws-sdk@^2.1268.0:
+  version "2.1269.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1269.0.tgz#8f3e6379e39b41fa9ba459d13b37ec47aae482b9"
+  integrity sha512-M8pOxsIjVms3d4o89dcpNTceXTpLU4DahRXH3uddCL9ctfuOmdRKkRvKJIRVMWPQlHWdi8gW1TC+3uCrhDPN8Q==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -8710,14 +8703,13 @@ react-app-polyfill@^3.0.0:
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
 
-react-aws-s3-typescript@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/react-aws-s3-typescript/-/react-aws-s3-typescript-1.1.4.tgz#66fd9def06a1c0308161bf9e360b347f861d5dfe"
-  integrity sha512-VJjG5nOLmRrVzDAGayhA28fj53U5KW5Tmk6M3XEdCIPgbS1S5CUCcG1QdB9jzSqFVwyGJpWqISbAGjxrX4GGSQ==
+react-aws-s3-typescript@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/react-aws-s3-typescript/-/react-aws-s3-typescript-1.1.5.tgz#ee4e7a206a3cf131c2ecff8c5491c71ff5cd74c6"
+  integrity sha512-CqVFMUPRaNXwton+98A1ZrqtMcJ4+9u/zQE3Y5aW5BLMFv/LXH0yrn9l73AVgOsujs0+Xwekss/M8sGeF14G3Q==
   dependencies:
-    "@types/aws-sdk" "^2.7.0"
     "@types/crypto-js" "^4.0.2"
-    aws-sdk "^2.993.0"
+    aws-sdk "^2.1268.0"
     buffer "^6.0.3"
     crypto-js "^4.1.1"
     short-uuid "^4.2.0"
