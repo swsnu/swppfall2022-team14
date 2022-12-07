@@ -202,10 +202,10 @@ const Comment = (props: AccessCommentType) => {
                                     <Button 
                                         size="small"
                                         sx={{ 
-                                            bgcolor: content ? 'primary.light' : 'background.default', borderRadius: 3, py: 1, textAlign: 'center',
+                                            bgcolor: replyContent ? 'primary.light' : 'background.default', borderRadius: 3, py: 1, textAlign: 'center',
                                         }}
                                         onClick={() => {replyCommentHandler(); setOpenAddReply(false);}}
-                                        disabled={!content}
+                                        disabled={!replyContent}
                                     >
                                         <Typography variant="caption" color='text.primary'>
                                             댓글
