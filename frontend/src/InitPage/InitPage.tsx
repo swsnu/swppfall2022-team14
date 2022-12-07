@@ -149,24 +149,26 @@ const InitPage = () => {
         <Stack spacing={2} sx={{ width: 1, pl: 2, pr: 3, py: 2 }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <LocalBarIcon sx={{ ml: 13, fontSize: 50 }} />
-                {loginState && isOpenProfile ? (
-                    <Stack direction="row" spacing={1} justifyContent="flex-end">
-                        <IconButton onClick={onClickMyPage}>
-                            <PersonOutlineIcon />
+                <Stack direction="row" spacing={1} justifyContent="flex-end">
+                    {loginState && isOpenProfile ? (
+                        <Stack direction="row" spacing={1} justifyContent="flex-end">
+                            <IconButton onClick={onClickMyPage}>
+                                <PersonOutlineIcon />
+                            </IconButton>
+                            <IconButton onClick={onClickLogout}>
+                                <LogoutIcon />
+                            </IconButton>
+                        </Stack> 
+                    ) : null}
+                    {loginState ? 
+                        <IconButton size="large" onClick={onClickProfile}>
+                            <AccountCircleIcon fontSize="large" />
+                        </IconButton> : 
+                        <IconButton onClick={onClickLogin}>
+                            <LoginIcon />
                         </IconButton>
-                        <IconButton onClick={onClickLogout}>
-                            <LogoutIcon />
-                        </IconButton>
-                    </Stack> 
-                ) : null}
-                {loginState ? 
-                    <IconButton size="large" onClick={onClickProfile}>
-                        <AccountCircleIcon fontSize="large" />
-                    </IconButton> : 
-                    <IconButton onClick={onClickLogin}>
-                        <LoginIcon />
-                    </IconButton>
-                }
+                    }
+                </Stack>
             </Stack>
             <Stack direction="row" justifyContent="space-between" sx={{ pl: 3 }}>
                 <ToggleButtonGroup
