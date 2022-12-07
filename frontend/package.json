@@ -89,5 +89,7 @@
       "!src/test-utils/*"
     ]
   },
+
   "proxy": "https://qualla.kro.kr/"
+
 }
