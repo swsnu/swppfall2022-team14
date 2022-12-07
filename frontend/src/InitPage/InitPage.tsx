@@ -60,6 +60,7 @@ const InitPage = () => {
     }
     const onClicklogout = async () => {
         await dispatch(logoutUser(userState.token));
+        location.reload();
     }
     const onClickSearch = () => {
         // TODO : give params with filter information

@@ -76,7 +76,7 @@ export const logoutUser = createAsyncThunk(
             })
             .catch(function () {
                 alert(
-                    "로그아웃 오류"
+                    "로그아웃 되었습니다."
                 )
             });
     }
