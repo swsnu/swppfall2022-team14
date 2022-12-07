@@ -79,7 +79,7 @@ export default function ItemDetailPage() {
     }
 
     const onChangeRate = async (changedScore: number | null) => {
-        if(userState.isLogin) {
+        if (userState.isLogin) {
             if (changedScore) {
                 setScore(changedScore);
                 const data = { cocktail_id: Number(id), score: changedScore };
@@ -134,7 +134,7 @@ export default function ItemDetailPage() {
                             />
                             <Button variant="contained" onClick={handleRateOpen}
                                 sx={{
-                                    bgcolor: 'primary.dark', 
+                                    bgcolor: 'primary.dark',
                                     borderRadius: 3,
                                     boxShadow: 3,
                                     '&:hover': {
@@ -146,7 +146,7 @@ export default function ItemDetailPage() {
                                 별점주기
                             </Button>
                             <Modal open={rateOpen} onClose={handleRateClose}>
-                                <Box 
+                                <Box
                                     sx={{
                                         position: 'absolute',
                                         top: '50%',
@@ -159,7 +159,7 @@ export default function ItemDetailPage() {
                                         p: 4,
                                     }}
                                 >
-                                    <Stack alignItems="center" justifyContent="space-between" spacing={2} sx={{ width: 1, height: 1}}>
+                                    <Stack alignItems="center" justifyContent="space-between" spacing={2} sx={{ width: 1, height: 1 }}>
                                         <Typography variant="h4">
                                             {score}
                                         </Typography>
@@ -199,21 +199,21 @@ export default function ItemDetailPage() {
                                 </Typography>
                             </Stack>
                             <Typography variant="subtitle1">
-                                Recipe: 
+                                Recipe:
                             </Typography>
                             <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, px: 2 }}>
                                 <Stack direction="row" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
-                                    {cocktail.ingredients?.map((ingre) => { 
+                                    {cocktail.ingredients?.map((ingre) => {
                                         return (
-                                            <Button 
-                                                key={ingre.id} 
+                                            <Button
+                                                key={ingre.id}
                                                 sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                                                 onClick={() => onIngredientClick(ingre.id)}
                                             >
                                                 <Typography color='text.primary'>
                                                     {ingre.name}
                                                     &nbsp;
-                                                    {ingre.amount  && ingre.amount}
+                                                    {ingre.amount && ingre.amount} {ingre.recipe_unit}
                                                 </Typography>
                                             </Button>
                                         )
@@ -227,7 +227,7 @@ export default function ItemDetailPage() {
                     </Stack>
                     <Divider flexItem />
                     <Stack direction="row" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
-                        {cocktail.tags.map((tag, idx) => { 
+                        {cocktail.tags.map((tag, idx) => {
                             return (
                                 <Typography key={`${tag}_${idx}`} variant="body2" align='left'>
                                     #{tag}
@@ -240,18 +240,18 @@ export default function ItemDetailPage() {
                         <Typography variant="h6" align='left'>
                             {userState.user?.username}
                         </Typography>
-                        <TextField 
-                            variant="standard" 
-                            placeholder="댓글 추가..." 
+                        <TextField
+                            variant="standard"
+                            placeholder="댓글 추가..."
                             onClick={() => setOpenAddComment(true)}
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             multiline
-                            fullWidth 
+                            fullWidth
                         />
                         {openAddComment &&
                             <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ width: 1 }}>
-                                <Button 
+                                <Button
                                     size="small"
                                     sx={{ bgcolor: 'background.default', borderRadius: 3, py: 1, textAlign: 'center' }}
                                     onClick={() => setOpenAddComment(false)}
@@ -260,12 +260,12 @@ export default function ItemDetailPage() {
                                         취소
                                     </Typography>
                                 </Button>
-                                <Button 
+                                <Button
                                     size="small"
-                                    sx={{ 
+                                    sx={{
                                         bgcolor: content ? 'primary.light' : 'background.default', borderRadius: 3, py: 1, textAlign: 'center',
                                     }}
-                                    onClick={() => {createCommentHandler(); setOpenAddComment(false);}}
+                                    onClick={() => { createCommentHandler(); setOpenAddComment(false); }}
                                     disabled={!content}
                                 >
                                     <Typography variant="caption" color='text.primary'>
