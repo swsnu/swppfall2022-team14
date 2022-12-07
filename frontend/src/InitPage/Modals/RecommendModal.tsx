@@ -47,7 +47,7 @@ const RecommendModal = (props: prop) => {
                     <div key={ingredient.id} className={styles.container__item}>
                         <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} ABV={ingredient.ABV} id={ingredient.id} />
                         {/* TODO: Component로 빼기 */}
-                        {ingredientState.availableCocktails.find(info => info?.ingredient_id === ingredient.id) ? <div>이 재료만 있으면 만들 수 있는 칵테일들:
+                        {ingredientState.availableCocktails.find(info => info?.ingredient_id === ingredient.id) ? <div style={{ "color": "black" }}>이 재료만 있으면 만들 수 있는 칵테일들:
                             <div className={styles["container__cocktail-names"]}>
                                 {ingredientState.availableCocktails.find(info => info.ingredient_id === ingredient.id)?.cocktails.map(cocktail => <div className={styles["container__cocktail-name"]} key={cocktail.id} onClick={() => onClickCocktailName(cocktail.id, cocktail.type)}>{cocktail.name}</div>)}
                             </div>
