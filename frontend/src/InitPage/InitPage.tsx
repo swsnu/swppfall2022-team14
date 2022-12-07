@@ -137,7 +137,7 @@ const InitPage = () => {
     }, [isStandard])
     useEffect(() => {
         if (userState.isLogin && userState.user?.id !== null) {
-            dispatch(fetchMyIngredientList())
+            dispatch(fetchMyIngredientList(userState.token))
         }
 
     }, [])

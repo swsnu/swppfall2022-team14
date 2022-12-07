@@ -5,6 +5,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IngredientType, PostIngredientProps, postMyIngredients, selectIngredient } from '../../store/slices/ingredient/ingredient';
 import { AppDispatch } from '../../store';
+import {selectUser} from "../../store/slices/user/user";
 interface prop {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -16,6 +17,7 @@ const AddIngredientModal = (props: prop) => {
 
     const { isOpen, setIsOpen, user_id } = props;
     const ingredientState = useSelector(selectIngredient)
+    const userState = useSelector(selectUser)
     const dispatch = useDispatch<AppDispatch>()
     const [newIngredients, setNewIngredients] = useState<number[]>([]);
 
@@ -56,7 +58,7 @@ const AddIngredientModal = (props: prop) => {
                 })}
             </div>
             <button className='modal__close-button' onClick={onClickClose}>X</button>
-            <button className='modal__add-button' onClick={() => onClickEdit({ id: user_id, ingredients: newIngredients })}>Add</button>
+            <button className='modal__add-button' onClick={() => onClickEdit({ id: user_id, ingredients: newIngredients, token: userState.token })}>Add</button>
         </Modal >
     );
 };

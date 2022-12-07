@@ -37,8 +37,12 @@ export const fetchCommentListByCocktailId = createAsyncThunk(
 )
 
 export const fetchMyCommentList = createAsyncThunk(
-    "comment/fetchMyCommentList", async () => {
-        const response = await axios.get('/api/v1/comment/me/')
+    "comment/fetchMyCommentList", async (token: string) => {
+        const response = await axios.get('/api/v1/comment/me/',{
+            headers: {
+                Authorization: `Token ${token}`,
+            },
+        })
         return response.data
     }
 )
@@ -51,15 +55,23 @@ export const getComment = createAsyncThunk(
 )
 
 export const postComment = createAsyncThunk(
-    "comment/postComment", async (comment: { cocktail: number, parent_comment: number | null, content: string }, { dispatch }) => {
+    "comment/postComment", async (comment: { cocktail: number, parent_comment: number | null, content: string, token: string } ,{ dispatch }) => {
         if (comment.parent_comment) {
-            const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/?parent_comment=${comment.parent_comment}`, {
+            const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/post/?parent_comment=${comment.parent_comment}`, {
                 "content": comment.content,
+            },{
+                headers: {
+                    Authorization: `Token ${comment.token}`,
+                },
             })
             dispatch(commentActions.addComment(response.data))
         } else {
-            const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/`, {
+            const response = await axios.post(`/api/v1/comment/cocktails/${comment.cocktail}/post/`, {
                 "content": comment.content,
+            },{
+                headers: {
+                    Authorization: `Token ${comment.token}`,
+                },
             })
             dispatch(commentActions.addComment(response.data))
         }
@@ -67,21 +79,29 @@ export const postComment = createAsyncThunk(
 )
 
 export const editComment = createAsyncThunk(
-    "comment/editComment", async (comment: Pick<CommentType, "content" | "id">, { dispatch }) => {
-        const response = await axios.put<CommentType>(`/api/v1/comment/${comment.id}/`, {
+    "comment/editComment", async (comment: Pick<CommentType, "content" | "id" | "author_name">, { dispatch }) => {
+        const response = await axios.put<CommentType>(`/api/v1/comment/${comment.id}/edit/`, {
             "content": comment.content,
+        },{
+            headers: {
+                Authorization: `Token ${comment.author_name}`,
+            },
         })
         dispatch(commentActions.editComment(response.data))
     }
 )
 
 export const deleteComment = createAsyncThunk(
-    "comment/deleteComment", async (id: number, { dispatch }) => {
-        const response = await axios.delete(`/api/v1/comment/${id}/`)
+    "comment/deleteComment", async (data: {id: number, token: string | null}, { dispatch }) => {
+        const response = await axios.delete(`/api/v1/comment/${data.id}/delete/`,{
+            headers: {
+                Authorization: `Token ${data.token}`,
+            },
+        })
         if (response.data) {
             dispatch(commentActions.setIsDeletedComment(response.data))
         } else {
-            dispatch(commentActions.deleteComment({ targetId: id }))
+            dispatch(commentActions.deleteComment({ targetId: data.id }))
         }
     }
 )

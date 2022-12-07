@@ -8,8 +8,8 @@ from ingredient.models import Ingredient
 from tag.models import Tag, CocktailTag
 from .models import Cocktail
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer
 from rest_framework import permissions, authentication
+from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer
 
 
 # FILTER FUNCTIONS HERE
@@ -295,6 +295,8 @@ def cocktail_rate_edit(request, pk):
 
 
 @api_view(['GET'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def retrieve_my_cocktail(request):
     user = request.user
     if not user.is_authenticated:

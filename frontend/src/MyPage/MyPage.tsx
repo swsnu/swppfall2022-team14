@@ -31,7 +31,7 @@ const MyPage = () => {
             navigate(-1)
             console.log("먼저 로그인 해주세요")
         }
-        else dispatch(fetchMyIngredientList())
+        else dispatch(fetchMyIngredientList(userState.token))
 
         if (userState.isLogin && userState.token) {
             dispatch(fetchMyCocktailList(userState.token))

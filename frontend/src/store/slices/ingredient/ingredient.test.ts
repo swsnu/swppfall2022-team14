@@ -66,12 +66,12 @@ describe("ingredient reducer", () => {
 
     it("should handle fetchMyIngredientList", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: { Ingredients: [fakeIngredient] } });
-        await store.dispatch(fetchMyIngredientList());
+        await store.dispatch(fetchMyIngredientList("token"));
         expect(store.getState().ingredient.myIngredientList).toEqual([fakeIngredient])
     });
     it("should handle Error fetchMyIngredientList", async () => {
         axios.get = jest.fn().mockRejectedValue({ data: { Ingredients: [fakeIngredient] } });
-        await store.dispatch(fetchMyIngredientList());
+        await store.dispatch(fetchMyIngredientList("token"));
         expect(store.getState().ingredient.listStatus).toEqual("failed")
     });
 
@@ -89,19 +89,19 @@ describe("ingredient reducer", () => {
 
     it("should handle getRecommendIngredientList", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: fakeIngredient });
-        const response = await store.dispatch(getRecommendIngredientList());
+        const response = await store.dispatch(getRecommendIngredientList("token"));
         expect(response.payload).toEqual(fakeIngredient)
     });
 
     it("should handle postMyIngredients", async () => {
         axios.post = jest.fn().mockResolvedValue({ data: fakeIngredient });
-        const response = await store.dispatch(postMyIngredients({ id: 1, ingredients: [1] }));
+        const response = await store.dispatch(postMyIngredients({ id: 1, ingredients: [1], token: "token" }));
         expect(response.payload).toEqual(fakeIngredient)
     });
 
     it("should handle deleteMyIngredients", async () => {
         axios.delete = jest.fn().mockResolvedValue({ data: fakeIngredient });
-        const response = await store.dispatch(deleteMyIngredients({ user_id: 1, ingredient_id: 1 }));
+        const response = await store.dispatch(deleteMyIngredients({ user_id: 1, ingredient_id: 1, token: "token" }));
         expect(response.payload).toEqual(fakeIngredient)
     });
 
