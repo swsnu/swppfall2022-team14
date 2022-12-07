@@ -10,6 +10,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {selectUser} from "../../store/slices/user/user";
 
 interface AccessCommentType extends CommentType {
     accessible: boolean;
@@ -17,8 +18,13 @@ interface AccessCommentType extends CommentType {
 
 const Reply = (props: AccessCommentType) => {
     const dispatch = useDispatch<AppDispatch>();
+    const userState = useSelector(selectUser)
     const deleteCommentHandler = () => {
-        dispatch(deleteComment(props.id));
+        const data = {
+            id: props.id,
+            token: userState.token
+        }
+        dispatch(deleteComment(data));
     }
     
     const commentState = useSelector(selectComment)
@@ -35,7 +41,9 @@ const Reply = (props: AccessCommentType) => {
     }
 
     const editCommentHandler = () => {
-        dispatch(editComment({id: props.id, content: content}))
+        if(userState.token !== null){
+            dispatch(editComment({id: props.id, content: content, author_name: userState.token}))
+        }
     }
     
     if (commentState.commentItem?.id == props.id && commentState.state == "EDIT") {

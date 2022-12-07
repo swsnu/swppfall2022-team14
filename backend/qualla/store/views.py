@@ -9,11 +9,15 @@ from django.db import IntegrityError
 from json import JSONDecodeError
 from ingredient.serializers import IngredientDetailSerializer
 from .serializers import StoreSerializer
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework import permissions, authentication
 
 # Create your views here.
 
 
 @api_view(['GET', 'POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def user_store(request):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)

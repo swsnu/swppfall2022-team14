@@ -11,6 +11,7 @@ import axios from 'axios';
 
 ReactModal.setAppElement('#root');
 axios.defaults.baseURL = 'https://qualla.kro.kr/';
+//axios.defaults.baseURL = 'http://localhost:8000/';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

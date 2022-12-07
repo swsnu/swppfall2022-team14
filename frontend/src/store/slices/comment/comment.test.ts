@@ -73,7 +73,7 @@ describe("comment reducer", () => {
     });
     it("should handle fetchMyCommentList", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: {comments: [fakeCommentChild]} });
-        await store.dispatch(fetchMyCommentList());
+        await store.dispatch(fetchMyCommentList("token"));
         expect(store.getState().comment.commentList).toEqual([fakeCommentChild])
     });
 
@@ -86,7 +86,7 @@ describe("comment reducer", () => {
 
     it("should handle postComment Not Root", async () => {
         axios.post = jest.fn().mockResolvedValueOnce({ data: fakeCommentRoot });
-        await store.dispatch(postComment({cocktail: 1, parent_comment: null, content: "content"}));
+        await store.dispatch(postComment({cocktail: 1, parent_comment: null, content: "content", token:"token"}));
         const newComment = {
             id: 2,
             cocktail: {
@@ -110,13 +110,13 @@ describe("comment reducer", () => {
     });
     it("should handle postComment Root", async () => {
         axios.post = jest.fn().mockResolvedValueOnce({ data: fakeCommentChild });
-        await store.dispatch(postComment({cocktail: 1, parent_comment: 1, content: "content"}));
+        await store.dispatch(postComment({cocktail: 1, parent_comment: 1, content: "content",token:"token"}));
         //expect(store.getState().comment.commentList).toEqual([fakeCommentChild])
     });
 
     it("should handle editComment", async () => {
         axios.post = jest.fn().mockResolvedValueOnce({ data: fakeCommentRoot });
-        await store.dispatch(postComment({cocktail: 1, parent_comment: null, content: "content"}));
+        await store.dispatch(postComment({cocktail: 1, parent_comment: null, content: "content",token:"token"}));
 
         const fakeCommentRootEdit = {
             id: 1,
@@ -137,18 +137,18 @@ describe("comment reducer", () => {
             is_deleted: false
         }
         axios.put = jest.fn().mockResolvedValue({data : fakeCommentRootEdit});
-        await store.dispatch(editComment({content: "edit", id: 1}));
+        await store.dispatch(editComment({content: "edit", id: 1, author_name:"token"}));
 
         //expect(store.getState().comment.commentList).toEqual([fakeCommentRootEdit])
     });
     it("should handle deleteComment deleted", async () => {
         axios.delete = jest.fn().mockResolvedValueOnce({ data: fakeCommentChild });
-        await store.dispatch(deleteComment(2));
+        await store.dispatch(deleteComment({id: 2, token:"token"}));
         //expect(store.getState().comment.commentList).toEqual([fakeCommentChild])
     });
     it("should handle deleteComment", async () => {
         axios.delete = jest.fn().mockResolvedValueOnce({ data: false });
-        await store.dispatch(deleteComment(2));
+        await store.dispatch(deleteComment({id: 2, token:"token"}));
         //expect(store.getState().comment.commentList).toEqual([fakeCommentChild])
     });
 
@@ -213,7 +213,7 @@ describe("comment reducer", () => {
                 },
             };
         });
-        await store.dispatch(postComment({cocktail: 1, parent_comment: null, content: "content"}));
+        await store.dispatch(postComment({cocktail: 1, parent_comment: null, content: "content",token:"token"}));
     });
     it("should handle editComment when failed", async () => {
         (axios.get as jest.Mock).mockImplementationOnce(() => {
@@ -225,7 +225,7 @@ describe("comment reducer", () => {
                 },
             };
         });
-        await store.dispatch(editComment({content: "edit", id: 1}));
+        await store.dispatch(editComment({content: "edit", id: 1,author_name:"token"}));
     });
     it("should handle deleteComment when failed", async () => {
         (axios.get as jest.Mock).mockImplementationOnce(() => {
@@ -237,7 +237,7 @@ describe("comment reducer", () => {
                 },
             };
         });
-        await store.dispatch(deleteComment(2));
+        await store.dispatch(deleteComment({id: 2, token:"token"}));
     });
 
 

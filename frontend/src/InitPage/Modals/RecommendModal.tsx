@@ -22,7 +22,7 @@ const RecommendModal = (props: prop) => {
 
     useEffect(() => {
         if (userState.isLogin && userState.user?.id !== null) {
-            dispatch(getRecommendIngredientList())
+            dispatch(getRecommendIngredientList(userState.token))
         }
 
     }, [isOpen])

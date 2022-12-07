@@ -60,16 +60,24 @@ export const fetchIngredientList = createAsyncThunk(
 
 
 export const fetchMyIngredientList = createAsyncThunk(
-    "cocktail/fetchMyIngredientList", async () => {
-        const response = await axios.get(`/api/v1/store/`);
+    "cocktail/fetchMyIngredientList", async (token: string | null) => {
+        const response = await axios.get(`/api/v1/store/`,{
+            headers: {
+                Authorization: `Token ${token}`,
+            },
+        });
         console.log(response.data)
         return response.data
     },
 )
 
 export const getRecommendIngredientList = createAsyncThunk(
-    "cocktail/getRecommendIngredientList", async () => {
-        const response = await axios.get(`/api/v1/ingredients/recommend/`);
+    "cocktail/getRecommendIngredientList", async (token : string | null) => {
+        const response = await axios.get(`/api/v1/ingredients/recommend/`,{
+            headers: {
+                Authorization: `Token ${token}`,
+            },
+        });
         console.log(response.data)
         return response.data
     },
@@ -80,10 +88,15 @@ export const getRecommendIngredientList = createAsyncThunk(
 export interface PostIngredientProps {
     id: number;
     ingredients: number[] // ingredient ids
+    token: string | null
 }
 export const postMyIngredients = createAsyncThunk(
     "cocktail/postMyIngredientList", async (param: PostIngredientProps) => {
-        const response = await axios.post(`/api/v1/store/`, param);
+        const response = await axios.post(`/api/v1/store/`, param,{
+            headers: {
+                Authorization: `Token ${param.token}`,
+            },
+        });
 
         // dispatch(fetchMyIngredientList())
         console.log(response.data)
@@ -94,12 +107,17 @@ export const postMyIngredients = createAsyncThunk(
 export interface DeleteIngredientProps {
     user_id: number;
     ingredient_id: number; // ingredient ids
+    token: string | null
 }
 
 export const deleteMyIngredients = createAsyncThunk(
     "cocktail/deleteMyIngredientList", async (param: DeleteIngredientProps, { dispatch }) => {
-        const response = await axios.delete(`/api/v1/store/${param.ingredient_id}/`);
-        dispatch(fetchMyIngredientList())
+        const response = await axios.delete(`/api/v1/store/${param.ingredient_id}/`,{
+            headers: {
+                Authorization: `Token ${param.token}`,
+            },
+        });
+        dispatch(fetchMyIngredientList(param.token))
         return response.data
     },
 )

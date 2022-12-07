@@ -55,11 +55,12 @@ export default function ItemDetailPage() {
     }, [cocktail]);
 
     const createCommentHandler = () => {
-        if (userState.isLogin) {
+        if (userState.isLogin && userState.token !== null) {
             const data = {
                 content: content,
                 parent_comment: null,
-                cocktail: Number(id)
+                cocktail: Number(id),
+                token: userState.token
             }
             dispatch(postComment(data));
             setContent("")

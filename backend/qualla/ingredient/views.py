@@ -5,7 +5,8 @@ from rest_framework.decorators import api_view
 from .serializers import IngredientListSerializer, IngredientDetailSerializer, IngredientRecommendSerializer
 from cocktail.models import Cocktail
 from django.db.models import Q
-
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework import permissions, authentication
 
 @api_view(['GET'])
 def ingredient_list(request):
@@ -37,6 +38,8 @@ num_recommend = 5
 
 
 @api_view(['GET'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def recommend_ingredient(request):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)

@@ -1,12 +1,14 @@
+from json import JSONDecodeError
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse, HttpResponse
 from .models import Comment
 from cocktail.models import Cocktail
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import CommentSerializer, CommentPostSerializer
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework import permissions, authentication
 
-
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def comment_list(request, cocktail_id):
     if request.method == 'GET':
         try:
@@ -17,7 +19,19 @@ def comment_list(request, cocktail_id):
         comments = cocktail.comments.all()
         data = CommentSerializer(comments, many=True).data
         return JsonResponse({"comments": data, "count": comments.count()}, safe=False)
-    elif request.method == 'POST':
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def comment_post(request, cocktail_id):
+    if request.method == 'POST':
+        try:
+            if request.user.is_authenticated:
+                data = request.data.copy()
+            else:
+                return HttpResponseBadRequest("Not Logined User")
+        except (KeyError, JSONDecodeError) as e:
+            return HttpResponseBadRequest("Unvalid Token")
 
         parent_comment = request.query_params.get("parent_comment", None)
 
@@ -32,11 +46,9 @@ def comment_list(request, cocktail_id):
         serializer.is_valid(raise_exception=True)
         comment = serializer.save()
         return Response(CommentSerializer(comment).data, status=201)
-    # else:
-    #     return HttpResponseNotAllowed(['GET', 'POST'])
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET'])
 def retrieve_comment(request, pk):
     if request.method == 'GET':
         try:
@@ -47,7 +59,19 @@ def retrieve_comment(request, pk):
         data = CommentSerializer(comment).data
         return JsonResponse(data, safe=False)
 
-    elif request.method == 'PUT':
+@api_view(['PUT'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def edit_comment(request,pk):
+    if request.method == 'PUT':
+        try:
+            if request.user.is_authenticated:
+                data = request.data.copy()
+            else:
+                return HttpResponseBadRequest("Not Logined User")
+        except (KeyError, JSONDecodeError) as e:
+            return HttpResponseBadRequest("Unvalid Token")
+
         try:
             comment = Comment.objects.get(id=pk)
         except Comment.DoesNotExist:
@@ -59,7 +83,19 @@ def retrieve_comment(request, pk):
         serializer.save()
         return JsonResponse(serializer.data, status=200)
 
-    elif request.method == 'DELETE':
+@api_view(['DELETE'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def delete_comment(request, pk):
+    if request.method == 'DELETE':
+        try:
+            if request.user.is_authenticated:
+                data = request.data.copy()
+            else:
+                return HttpResponseBadRequest("Not Logined User")
+        except (KeyError, JSONDecodeError) as e:
+            return HttpResponseBadRequest("Unvalid Token")
+
         try:
             comment = Comment.objects.get(id=pk)
         except Comment.DoesNotExist:
@@ -81,6 +117,8 @@ def retrieve_comment(request, pk):
 
 
 @api_view(['GET'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def retrieve_my_comment(request):
     if request.method == 'GET':
         user = request.user

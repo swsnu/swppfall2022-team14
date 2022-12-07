@@ -24,7 +24,11 @@ const Comment = (props: AccessCommentType) => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
 
     const deleteCommentHandler = () => {
-        dispatch(deleteComment(props.id));
+        const data = {
+            id: props.id,
+            token: userState.token
+        }
+        dispatch(deleteComment(data));
     }
     
     const commentState = useSelector(selectComment)
@@ -43,7 +47,9 @@ const Comment = (props: AccessCommentType) => {
     }
 
     const editCommentHandler = () => {
-        dispatch(editComment({id: props.id, content: content}))
+        if(userState.token !== null){
+            dispatch(editComment({id: props.id, content: content, author_name: userState.token}))
+        }
     }
 
     const replyStateHandler = () => {
@@ -51,8 +57,8 @@ const Comment = (props: AccessCommentType) => {
     }
 
     const replyCommentHandler = () => {
-        if(userState.isLogin){
-            dispatch(postComment({cocktail: props.cocktail.id, parent_comment:props.id, content:replyContent}))
+        if(userState.isLogin && userState.token !== null){
+            dispatch(postComment({cocktail: props.cocktail.id, parent_comment:props.id, content:replyContent, token: userState.token}))
             setReplyContent("")
         }
         else{

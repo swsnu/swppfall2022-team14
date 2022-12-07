@@ -5,6 +5,7 @@ import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
 import ShortComment from "./Components/ShortComment";
 import { fetchMyCommentList, selectComment } from "../store/slices/comment/comment";
+import {selectUser} from "../store/slices/user/user";
 
 
 
@@ -13,9 +14,12 @@ const MyComment = () => {
 
     const dispatch = useDispatch<AppDispatch>()
     const commentState = useSelector(selectComment)
+    const userState = useSelector(selectUser)
 
     useEffect(() => {
-        dispatch(fetchMyCommentList())
+        if(userState.token !== null){
+            dispatch(fetchMyCommentList(userState.token))
+        }
     }, [])
 
     return <>
