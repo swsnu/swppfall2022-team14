@@ -35,6 +35,13 @@ export const editRate = createAsyncThunk(
     }
 );
 
+export const deleteRate = createAsyncThunk(
+    "rate/deleteRate", async (rate: Pick<RateType, "cocktail_id">, { dispatch }) => {
+        await axios.delete(`/api/v1/rates/${rate.cocktail_id}/`);
+        dispatch(rateActions.deleteRate());
+    }
+)
+
 export const RateSlice = createSlice({
     name: "rate",
     initialState,
@@ -42,6 +49,9 @@ export const RateSlice = createSlice({
         updateRate: (state, action: PayloadAction<RateType>) => {
             state.rate = action.payload;
         },
+        deleteRate: (state) => {
+            state.rate = null;
+        }
     },
 });
 

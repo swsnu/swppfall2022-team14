@@ -24,8 +24,7 @@ def comment_list(request, cocktail_id):
         data = request.data.copy()
 
         data["cocktail"] = cocktail_id
-        # TODO : user로 대체
-        data["author_id"] = 1
+        data["author_id"] = request.user.id
         data['parent_comment'] = parent_comment
 
         serializer = CommentPostSerializer(

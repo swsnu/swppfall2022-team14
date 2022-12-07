@@ -9,7 +9,9 @@ import LoginModal from "../InitPage/Modals/LoginModal";
 import AddIngredientModal from "../common/Modals/AddIngredientModal";
 import { styled } from '@mui/material/styles';
 import { Box, ListItemIcon, ListItemButton, ListItemText, Stack, IconButton } from '@mui/material';
-import AbcIcon from '@mui/icons-material/Abc';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import KitchenIcon from '@mui/icons-material/Kitchen';
 import CottageIcon from '@mui/icons-material/Cottage';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import LiquorIcon from '@mui/icons-material/Liquor';
@@ -103,7 +105,7 @@ const NavBar = () => {
     }
 
     return (
-        <Stack justifyContent="flex-start" sx={{ width: 1/4, px: 1}}>
+        <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1}}>
             <Box component="span" sx={{ height: 80, p: 2 }}>
                 <LocalBarIcon sx={{ fontSize: 50 }} />
             </Box>
@@ -132,9 +134,9 @@ const NavBar = () => {
                 })}
             </Stack>
             {[
-                { title: "Standard"  , type: 'ST', onClick: handleST, icon: <AbcIcon /> },
-                { title: "Custom"    , type: 'CS', onClick: handleCS, icon: <AbcIcon /> },
-                { title: "Ingredient", type: 'IG', onClick: handleIG, icon: <AbcIcon /> },
+                { title: "Standard"  , type: 'ST', onClick: handleST, icon: <AutoAwesomeIcon /> },
+                { title: "Custom"    , type: 'CS', onClick: handleCS, icon: <PeopleAltIcon /> },
+                { title: "Ingredient", type: 'IG', onClick: handleIG, icon: <KitchenIcon /> },
             ].map((menu) => {
                 return (
                     <Stack key={menu.title} spacing={0.5}>

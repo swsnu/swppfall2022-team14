@@ -22,15 +22,15 @@ const darkTheme = createTheme({
     },
     secondary: {
       main : '#313131',
-      light: '#ffffff'
+      light: '#ffffff',
     },
     text: {
       primary: '#ffffff',
     },
     background: {
       paper: '#202020',
-      default: '#202020'
-    }
+      default: '#202020',
+    },
   },
 });
 

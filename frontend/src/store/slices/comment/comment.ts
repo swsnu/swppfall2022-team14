@@ -9,6 +9,7 @@ export interface CommentType {
     id: number,
     cocktail: CocktailItemType,
     author_id: number,
+    author_name: string,
     content: string,
     created_at: Date,
     updated_at: Date,
@@ -119,6 +120,10 @@ export const CommentSlice = createSlice({
                 }
             })
             state.commentItem = null
+            state.state = null
+        },
+        nullCommentState: (state, action: PayloadAction<CommentType>) => {
+            state.commentItem = action.payload
             state.state = null
         },
         editCommentState: (state, action: PayloadAction<CommentType>) => {

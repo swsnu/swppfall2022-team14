@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import './NavFilter.scss'
-import { Button, Stack, FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, TextField, Typography } from '@mui/material';
+import { Box, Button, Stack, FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, TextField, Typography } from '@mui/material';
+import { BusinessTwoTone } from '@mui/icons-material';
 
 interface ParamList {
     name: string;
@@ -116,7 +117,7 @@ const NavFilter = (prop: Iprops) => {
                     borderRadius: 4,
             }}>
                 <TextField 
-                    label="검색" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                    label="추가 검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
                     sx={{
                         '& label.Mui-focused': {
                             color: 'secondary.light',
@@ -137,7 +138,7 @@ const NavFilter = (prop: Iprops) => {
                         borderRadius: 5,
                         boxShadow: 3,
                         '&:hover': {
-                            backgroundColor: 'secondary.main',
+                            backgroundColor: 'action.hover',
                             boxShadow: 2,
                         },
                     }}
@@ -158,7 +159,7 @@ const NavFilter = (prop: Iprops) => {
                     borderRadius: 4,
             }}>
                 <TextField 
-                    label="검색" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                    label="추가 검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
                     sx={{
                         '& label.Mui-focused': {
                             color: 'secondary.light',
@@ -173,90 +174,79 @@ const NavFilter = (prop: Iprops) => {
                         },
                     }}    
                 />
-                <FormControl component="fieldset" variant="standard">
-                    <FormLabel component="legend">Theme</FormLabel>
-                    <FormGroup row>
+                <Stack spacing={1}>
+                    <Typography variant="body1">
+                        Theme
+                    </Typography>
+                    <FormGroup row sx={{ gap: 1 }}>
                         {themeList.map((type) => {
                             return (
-                                <FormControlLabel
-                                    key={type.label}
-                                    label={
-                                        <Typography sx={{ fontSize: 14, ml: -0.5 }}>
-                                            {type.label}
-                                        </Typography>
-                                    }
-                                    sx={{ mb: -1 }}
-                                    control={
-                                        <Checkbox
-                                            sx={{ '& .MuiSvgIcon-root': { fontSize: 14 } }}
-                                            onChange={() => onThemeClick(type)}
-                                        />
-                                    }
-                                />
+                                <Button 
+                                    key={type.label} 
+                                    size="small"
+                                    sx={{ bgcolor: 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                    onClick={() => onThemeClick(type)}
+                                >
+                                    <Typography variant="caption" color='text.primary'>
+                                        {type.label}
+                                    </Typography>
+                                </Button>
                             )
                         })}
                     </FormGroup>
-                </FormControl>
+                </Stack>
                 {[
                     { title: "Type 1", list: typeOneList  , typeParamList: typeParam.typeOne  , name: "typeOne"   },
                     { title: "Type 2", list: typeTwoList  , typeParamList: typeParam.typeTwo  , name: "typeTwo"   },
                     { title: "Type 3", list: typeThreeList, typeParamList: typeParam.typeThree, name: "typeThree" },
                 ].map((filter) => {
                     return (
-                        <FormControl key={filter.title} component="fieldset" variant="standard">
-                            <FormLabel component="legend">{filter.title}</FormLabel>
-                            <FormGroup row>
+                        <Stack key={filter.title} spacing={1}>
+                            <Typography variant="body1">
+                                {filter.title}
+                            </Typography>
+                            <FormGroup row sx={{ gap: 1 }}>
                                 {filter.list.map((type) => {
                                     return (
-                                        <FormControlLabel
-                                            key={type.label}
-                                            label={
-                                                <Typography sx={{ fontSize: 14, ml: -0.5 }}>
-                                                    {type.label}
-                                                </Typography>
-                                            }
-                                            sx={{ mb: -1 }}
-                                            control={
-                                                <Checkbox
-                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 14 } }}
-                                                    checked={filter.typeParamList.includes(type.name)}
-                                                    onChange={() => onTypeClick(filter.name, type.name)}
-                                                />
-                                            }
-                                        />
+                                        <Button 
+                                            key={type.label} 
+                                            size="small"
+                                            sx={{ bgcolor: filter.typeParamList.includes(type.name) ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                            onClick={() => onTypeClick(filter.name, type.name)}
+                                        >
+                                            <Typography variant="caption" color='text.primary'>
+                                                {type.label}
+                                            </Typography>
+                                        </Button>
                                     )
                                 })}
                             </FormGroup>
-                        </FormControl>
+                        </Stack>
                     )
                 })}
-                <FormControl component="fieldset" variant="standard">
-                    <FormLabel component="legend">재료 기반 검색</FormLabel>
-                    <FormGroup row>
-                        <FormControlLabel
-                            label={
-                                <Typography sx={{ fontSize: 14, ml: -0.5 }}>
-                                    만들 수 있는 칵테일만
-                                </Typography>
-                            }
-                            sx={{ mb: -1 }}
-                            control={
-                                <Checkbox
-                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 14 } }}
-                                    defaultChecked={availableOnly}
-                                    onChange={() => setAvailableOnly(!availableOnly)}
-                                />
-                            }
-                        />
+                <Stack spacing={1}>
+                    <Typography variant="body1">
+                        재료 기반 검색
+                    </Typography>
+                    <FormGroup row sx={{ gap: 1 }}>
+                        <Button 
+                            size="small"
+                            sx={{ bgcolor: availableOnly ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                            onClick={() => setAvailableOnly(!availableOnly)}
+                        >
+                            <Typography variant="caption" color='text.primary'>
+                                만들 수 있는 칵테일만
+                            </Typography>
+                        </Button>
                     </FormGroup>
-                </FormControl>
+                </Stack>
                 <Button variant="contained" onClick={onClickSearch} 
                     sx={{
                         bgcolor: 'primary.dark', 
                         borderRadius: 5,
                         boxShadow: 3,
                         '&:hover': {
-                            backgroundColor: 'secondary.main',
+                            backgroundColor: 'action.hover',
                             boxShadow: 2,
                         },
                     }}

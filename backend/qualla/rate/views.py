@@ -16,7 +16,9 @@ def rate_list(request, cocktail_id):
 
         rates = cocktail.rate_set.all()
         data = RateSerializer(rates, many=True).data
-        score = sum(rate['score'] for rate in data) / len(data)
+        score = 0
+        if data:
+            score = sum(rate['score'] for rate in data) / len(data)
         return JsonResponse({"score": score}, safe=False)
     elif request.method == 'POST':
         user = request.user

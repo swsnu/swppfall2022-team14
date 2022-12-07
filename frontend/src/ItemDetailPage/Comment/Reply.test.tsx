@@ -38,6 +38,7 @@ const commentAuthor: CommentType = {
         is_bookmarked: false,
     },
     author_id: 1,
+    author_name: "username",
     content: "content1",
     created_at: new Date(Date.now()),
     updated_at: new Date(Date.now()),
@@ -57,6 +58,7 @@ const commentOther: CommentType = {
         is_bookmarked: false,
     },
     author_id: 2,
+    author_name: "username",
     content: "content2",
     created_at: new Date(Date.now()),
     updated_at: new Date(Date.now()),
@@ -126,7 +128,7 @@ describe("<Reply />", () => {
             <Provider store={commentEditMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} />} />
+                        <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} author_name={"username"} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} accessible />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -159,7 +161,7 @@ describe("<Reply />", () => {
             <Provider store={commentMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
-                        <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} />} />
+                        <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} author_name={"username"} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} accessible />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>

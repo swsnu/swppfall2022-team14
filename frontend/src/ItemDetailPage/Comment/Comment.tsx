@@ -7,8 +7,17 @@ import Reply from './Reply';
 import { commentActions } from "../../store/slices/comment/comment"
 import {selectUser} from "../../store/slices/user/user";
 import LoginModal from "../../InitPage/Modals/LoginModal";
+import { Button, IconButton, Stack, TextField, Typography } from "@mui/material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-const Comment = (props: CommentType) => {
+interface AccessCommentType extends CommentType {
+    accessible: boolean;
+}
+
+const Comment = (props: AccessCommentType) => {
     const dispatch = useDispatch<AppDispatch>();
     const userState = useSelector(selectUser)
 
@@ -17,14 +26,20 @@ const Comment = (props: CommentType) => {
     const deleteCommentHandler = () => {
         dispatch(deleteComment(props.id));
     }
-    const accessible = (props.author_id == 1)
+    
     const commentState = useSelector(selectComment)
-    const [content, setContent] = useState<string>(props.content)
+    const [content, setContent] = useState<string>("")
     const [replyContent, setReplyContent] = useState<string>("")
+    const [openSetting, setOpenSetting] = useState(false)
+    const [openAddReply, setOpenAddReply] = useState(false);
     
-    
+    const nullStateHandler = () => {
+        dispatch(commentActions.nullCommentState(props))
+    }
+
     const editStateHandler = () => {
         dispatch(commentActions.editCommentState(props))
+        setContent(props.content)
     }
 
     const editCommentHandler = () => {
@@ -45,92 +60,164 @@ const Comment = (props: CommentType) => {
         }
     }
 
-    if(commentState.commentItem?.id == props.id && commentState.state == "EDIT"){
+    if (commentState.commentItem?.id == props.id && commentState.state == "EDIT") {
         return (
-            <div className="comments__create">
-                <textarea id="comment_text" className="comments__input" value={content} onChange={(e) => setContent(e.target.value)}/>
-                <div className="comments__add-box">
-                    <button className="comments__add" onClick={() => editCommentHandler()}>
-                        Edit
-                    </button>
-                </div>
-                <div className="reply_list">
+            <Stack spacing={1} alignItems='flex-start' sx={{ width: 1 }}>
+                <Typography variant="button" align='left' sx={{ mb: -0.5 }}>
+                    {props.author_name}
+                </Typography>
+                <TextField 
+                    variant="standard" 
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    multiline
+                    fullWidth 
+                />
+                <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ width: 1 }}>
+                    <Button 
+                        size="small"
+                        sx={{ bgcolor: 'background.default', borderRadius: 3, py: 1, textAlign: 'center' }}
+                        onClick={nullStateHandler}
+                    >
+                        <Typography variant="caption" color='text.primary'>
+                            취소
+                        </Typography>
+                    </Button>
+                    <Button 
+                        size="small"
+                        sx={{ 
+                            bgcolor: content ? 'primary.light' : 'background.default', borderRadius: 3, py: 1, textAlign: 'center',
+                        }}
+                        onClick={editCommentHandler}
+                        disabled={!content}
+                    >
+                        <Typography variant="caption" color='text.primary'>
+                            수정
+                        </Typography>
+                    </Button>
+                </Stack>
+                <Stack spacing={1} alignItems='flex-start' sx={{ width: 1 }}>
                     {commentState.commentList.map((comment) => {
-                        if(comment.parent_comment==props.id){
+                        if (comment.parent_comment == props.id) {
                             return (
                                 <Reply
                                     key={`${comment.id}_comment`}
                                     id={comment.id}
                                     author_id={comment.author_id}
+                                    author_name={comment.author_name}
                                     content={comment.content}
                                     created_at={comment.created_at}
                                     updated_at={comment.updated_at}
                                     parent_comment={null}
                                     is_deleted={comment.is_deleted}
                                     cocktail={comment.cocktail}
+                                    accessible={Number(userState.user?.id) == comment.author_id}
                                 />
                             )
                         }
-                        /*
-                        else{
-                            return null
-                        }
-                        */
                     })}
-                </div>
-            </div>
+                </Stack>
+            </Stack>
         )
-    }else{
+    } else {
         return (
-            <div>
-                <div className='comment'>
-                    <div className='comment__content'>{props.content}</div>
-                    <div className='comment__author'>written by {props.author_id}</div>
-                    <div className='comment__button-box'>
-                        <button className='comment__reply-button'onClick={() => replyStateHandler()} disabled={props.is_deleted}>Reply</button>
-                        {accessible && <button className='comment__edit-button' onClick={() => editStateHandler()}>Edit</button>}
-                        {accessible && <button className='comment__delete-button' onClick={() => deleteCommentHandler()}>Delete</button>}
-                    </div>
-                </div>
-                <div className="reply_list">
+            <Stack spacing={0.2} alignItems='flex-start' sx={{ width: 1 }}>
+                <Stack direction="row" alignItems='center' justifyContent="space-between" sx={{ width: 1, mb: -0.5 }}>
+                    <Typography variant="button" align='left'>
+                        {props.author_name}
+                    </Typography>
+                    {openSetting ?
+                        <Stack direction="row" spacing={0.5} justifyContent="flex-end">
+                            <IconButton size='small' onClick={replyStateHandler} disabled={props.is_deleted}>
+                                <SubdirectoryArrowRightIcon fontSize='small' />
+                            </IconButton>
+                            {props.accessible && 
+                                <IconButton size='small' onClick={editStateHandler}>
+                                    <EditIcon fontSize='small' />
+                                </IconButton>
+                            }
+                            {props.accessible && 
+                                <IconButton size='small' onClick={deleteCommentHandler}>
+                                    <DeleteIcon fontSize='small' />
+                                </IconButton>
+                            }
+                        </Stack> :
+                        <IconButton size='small' onClick={() => setOpenSetting(true)}>
+                            <MoreVertIcon fontSize='small' />
+                        </IconButton>
+                    }
+                </Stack>
+                <Typography variant='body2' sx={{ whiteSpace: 'pre' }} align='left'>
+                    {props.content}
+                </Typography>
+                <Stack spacing={3} alignItems='flex-start' sx={{ width: 1, pt: 3, pl: 2 }}>
                     {commentState.commentList.map((comment) => {
-                        if(comment.parent_comment==props.id){
+                        if (comment.parent_comment == props.id) {
                             return (
                                 <Reply
                                     key={`${comment.id}_comment`}
                                     id={comment.id}
                                     author_id={comment.author_id}
+                                    author_name={comment.author_name}
                                     content={comment.content}
                                     created_at={comment.created_at}
                                     updated_at={comment.updated_at}
                                     parent_comment={null}
                                     is_deleted={comment.is_deleted}
                                     cocktail={comment.cocktail}
+                                    accessible={Number(userState.user?.id) == comment.author_id}
                                 />
                             )
                         }
-                        /*
-                        else{
-                            return null
-                        }
-                        */
                     })}
-                </div>
+                </Stack>
                 {
                     (commentState.commentItem?.id == props.id && commentState.state == "REPLY") &&
-                    <div>
-                        <div className="comments__create">
-                        <textarea id="comment_text" className="comments__input" value={replyContent} onChange={(e) => setReplyContent(e.target.value)}/>
-                        <div className="comments__add-box">
-                        <button className="comments__add" onClick= {() => replyCommentHandler()}>
-                            Add
-                        </button>
-                        </div>
-                    </div>
-                    </div>
+                    <Stack direction="row" spacing={1} alignItems='flex-start' sx={{ width: 1, pt: 3, pl: 2 }}>
+                        <SubdirectoryArrowRightIcon fontSize='small' />
+                        <Stack spacing={1} sx={{ width: 1 }}>
+                            <Typography variant="button" align='left'>
+                                {userState.user?.username}
+                            </Typography>
+                            <TextField 
+                                variant="standard" 
+                                placeholder="댓글 추가..." 
+                                onClick={() => setOpenAddReply(true)}
+                                value={replyContent}
+                                onChange={(e) => setReplyContent(e.target.value)}
+                                multiline
+                                fullWidth 
+                            />
+                            {openAddReply &&
+                                <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ width: 1 }}>
+                                    <Button 
+                                        size="small"
+                                        sx={{ bgcolor: 'background.default', borderRadius: 3, py: 1, textAlign: 'center' }}
+                                        onClick={() => {setOpenAddReply(false); nullStateHandler();}}
+                                    >
+                                        <Typography variant="caption" color='text.primary'>
+                                            취소
+                                        </Typography>
+                                    </Button>
+                                    <Button 
+                                        size="small"
+                                        sx={{ 
+                                            bgcolor: content ? 'primary.light' : 'background.default', borderRadius: 3, py: 1, textAlign: 'center',
+                                        }}
+                                        onClick={() => {replyCommentHandler(); setOpenAddReply(false);}}
+                                        disabled={!content}
+                                    >
+                                        <Typography variant="caption" color='text.primary'>
+                                            댓글
+                                        </Typography>
+                                    </Button>
+                                </Stack>
+                            }
+                        </Stack>
+                    </Stack>
                 }
                 <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
-            </div>
+            </Stack>
         )
     }
 
