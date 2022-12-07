@@ -5,9 +5,9 @@ import styles from './LoginModal.module.scss'
 import { toast } from 'react-toastify';
 import { AppDispatch } from '../../store';
 import { loginUser, logoutUser, registerUser, selectUser } from '../../store/slices/user/user';
-import {TextField} from "@mui/material";
+import { TextField } from "@mui/material";
 import React from 'react';
-import {Visibility, VisibilityOff} from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export interface prop {
     isOpen: boolean;
@@ -33,21 +33,22 @@ const LoginModal = (props: prop) => {
 
     //Modal.setAppElement('#root');
 
-    const checkID = (asValue:string) => {
+    const checkID = (asValue: string) => {
         const regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
         return regExp.test(asValue);
     }
 
-    const checkPW = (asValue:string) => {
+    const checkPW = (asValue: string) => {
         const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
         return regExp.test(asValue);
     }
 
-    const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key !== 'Enter') {
-            // TODO : IMPLEMENT THIS
+    const onKeyPress = (e: { key: string; }) => {
+        if (e.key == 'Enter') {
+            onClickLogin();
         }
     };
+
 
     const onClickLogin = async () => {
         if (loginId === '') {
@@ -77,11 +78,11 @@ const LoginModal = (props: prop) => {
             username: loginId,
             password: loginPassword
         }
-        if(!checkID(data.username)){
+        if (!checkID(data.username)) {
             alert("아이디 형식 오류")
             return
         }
-        if(!checkPW(data.password)){
+        if (!checkPW(data.password)) {
             alert("비밀번호 형식 오류")
             return
         }
@@ -109,9 +110,9 @@ const LoginModal = (props: prop) => {
     return (
         <Modal className={styles['login-modal']} isOpen={isOpen} onRequestClose={() => onClickClose()} ariaHideApp={false}>
             <div className={styles.container}>
-                <TextField id="id-input" label="아이디" variant="outlined" value={loginId} onChange={(e) => setLoginId(e.target.value)} />
+                <TextField id="id-input" label="아이디" variant="outlined" onKeyPress={onKeyPress} value={loginId} onChange={(e) => setLoginId(e.target.value)} />
                 <div className={styles['regex']}>아이디는 2-10자의 영문과 숫자와 일부 특수문자(._-)만 입력 가능</div>
-                <TextField id="pw-input" label="비밀번호" variant="outlined" type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)}/>
+                <TextField onKeyPress={onKeyPress} id="pw-input" label="비밀번호" variant="outlined" type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
                 <div className={styles['regex']}>영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용</div>
                 <div className={styles['button-box']}>
                     <div className={styles.button}>

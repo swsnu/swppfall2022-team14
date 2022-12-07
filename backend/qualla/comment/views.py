@@ -121,8 +121,11 @@ def delete_comment(request, pk):
 @permission_classes([permissions.IsAuthenticated])
 def retrieve_my_comment(request):
     if request.method == 'GET':
+        user = request.user
+        if not user.is_authenticated:
+            return HttpResponse(status=401)
         # TODO: author_id=request.user.id
-        comments = Comment.objects.filter(author_id=1)
+        comments = Comment.objects.filter(author_id=user.id)
         print(comments.__str__())
         data = CommentSerializer(comments, many=True).data
         return JsonResponse({"comments": data, "count": comments.count()}, safe=False)
