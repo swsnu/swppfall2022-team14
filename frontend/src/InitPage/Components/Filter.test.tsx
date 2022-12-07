@@ -58,7 +58,7 @@ const renderFilter = () => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<Filter setUrlParams={jest.fn()} />} />
+                <Route path="/" element={<Filter setUrlParams={jest.fn()} onClickSearch={jest.fn()} input="" setInput={jest.fn()} />} />
             </Routes>
         </MemoryRouter>,
         {

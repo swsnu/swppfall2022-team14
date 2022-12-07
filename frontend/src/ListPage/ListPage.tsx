@@ -41,13 +41,15 @@ const ListPage = () => {
             available_only: location.state.filter_param.available_only
         }
 
-        dispatch(fetchIngredientList())
+
         if (userState.isLogin)
             dispatch(fetchMyIngredientList())
         if (type === 'standard')
             dispatch(fetchStandardCocktailList(param))
         else if (type === 'custom')
             dispatch(fetchCustomCocktailList(param))
+        else if (type === 'ingredient')
+            dispatch(fetchIngredientList())
 
     }, [location])
 
@@ -75,15 +77,15 @@ const ListPage = () => {
                         {ingrList.map((ingredient) => <Ingr key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} />)}
                     </div> :
                     <Grid container spacing={3}>
-                        {list.map((cocktail) => 
+                        {list.map((cocktail) =>
                             <Grid key={cocktail.id} item xs={12} sm={6} md={3}>
-                                <Item 
-                                    key={cocktail.id} 
+                                <Item
+                                    key={cocktail.id}
                                     image={cocktail.image}
-                                    name={cocktail.name} 
-                                    rate={cocktail.rate} 
-                                    type={cocktail.type} 
-                                    id={cocktail.id} 
+                                    name={cocktail.name}
+                                    rate={cocktail.rate}
+                                    type={cocktail.type}
+                                    id={cocktail.id}
                                     tags={cocktail.tags}
                                 />
                             </Grid>

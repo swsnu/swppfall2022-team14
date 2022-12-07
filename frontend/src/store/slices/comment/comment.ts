@@ -39,6 +39,7 @@ export const fetchCommentListByCocktailId = createAsyncThunk(
 export const fetchMyCommentList = createAsyncThunk(
     "comment/fetchMyCommentList", async () => {
         const response = await axios.get('/api/v1/comment/me/')
+        console.log(response.data)
         return response.data
     }
 )
