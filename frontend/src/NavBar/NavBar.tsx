@@ -105,72 +105,70 @@ const NavBar = () => {
     }
 
     return (
-        <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1}}>
-            <Box component="span" sx={{ height: 80, p: 2 }}>
-                <LocalBarIcon sx={{ fontSize: 50 }} />
-            </Box>
-            <Stack 
-                direction="row" justifyContent="center" alignItems="center" spacing={1} 
-                sx={{ 
-                    height: 50, 
-                    bgcolor: 'primary.dark',
-                    borderRadius: 4,
-                    mb: 2,
-                }}>
+        <Stack direction="row">
+            <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1}}>
+                <Box component="span" sx={{ height: 80, p: 2 }}>
+                    <LocalBarIcon sx={{ fontSize: 50 }} />
+                </Box>
+                <Stack 
+                    direction="row" justifyContent="center" alignItems="center" spacing={1} 
+                    sx={{ 
+                        height: 50, 
+                        bgcolor: 'primary.dark',
+                        borderRadius: 4,
+                        mb: 2,
+                    }}>
+                    {[
+                        { onClick: handleHome,   icon: <CottageIcon />       },
+                        { onClick: handleMyIngr, icon: <LiquorIcon />        },
+                        { onClick: handleUpload, icon: <FileUploadIcon />    },
+                        { onClick: handleMyPage, icon: <PersonOutlineIcon /> },
+                    ].map((btn, idx) => {
+                        return (
+                            <IconButton
+                                key={idx}
+                                onClick={btn.onClick}
+                                >
+                                {btn.icon}
+                            </IconButton>
+                        )
+                    })}
+                </Stack>
                 {[
-                    { onClick: handleHome,   icon: <CottageIcon />       },
-                    { onClick: handleMyIngr, icon: <LiquorIcon />        },
-                    { onClick: handleUpload, icon: <FileUploadIcon />    },
-                    { onClick: handleMyPage, icon: <PersonOutlineIcon /> },
-                ].map((btn, idx) => {
+                    { title: "Standard"  , type: 'ST', onClick: handleST, icon: <AutoAwesomeIcon /> },
+                    { title: "Custom"    , type: 'CS', onClick: handleCS, icon: <PeopleAltIcon /> },
+                    { title: "Ingredient", type: 'IG', onClick: handleIG, icon: <KitchenIcon /> },
+                ].map((menu) => {
                     return (
-                        <IconButton
-                            key={idx}
-                            onClick={btn.onClick}
+                        <Stack key={menu.title} spacing={0.5}>
+                            <StyledItem
+                                onClick={menu.onClick}
                             >
-                            {btn.icon}
-                        </IconButton>
+                                <StyledItemIcon>{menu.icon}</StyledItemIcon>
+                                <ListItemText disableTypography primary={menu.title} />
+                            </StyledItem>
+                            {
+                                curFilter === menu.type && pop ? <NavFilter type={menu.type} /> : null
+                            }
+                        </Stack>
                     )
                 })}
+                <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
+                {<AddIngredientModal isOpen={isAddIngredientModalOpen} setIsOpen={setIsAddIngredientModalOpen} user_id={Number(userState.user?.id)} />}
             </Stack>
-            {[
-                { title: "Standard"  , type: 'ST', onClick: handleST, icon: <AutoAwesomeIcon /> },
-                { title: "Custom"    , type: 'CS', onClick: handleCS, icon: <PeopleAltIcon /> },
-                { title: "Ingredient", type: 'IG', onClick: handleIG, icon: <KitchenIcon /> },
-            ].map((menu) => {
-                return (
-                    <Stack key={menu.title} spacing={0.5}>
-                        <StyledItem
-                            onClick={menu.onClick}
-                        >
-                            <StyledItemIcon>{menu.icon}</StyledItemIcon>
-                            <ListItemText disableTypography primary={menu.title} />
-                        </StyledItem>
-                        {
-                            curFilter === menu.type && pop ? <NavFilter type={menu.type} /> : null
-                        }
-                    </Stack>
-                )
-            })}
-            {
-                openMyIngr ?
-                    <div className="nav__side">
-                        <div className="nav__side-util">
-                            <button onClick={handleAddIngr}>ADD</button>
-                        </div>
-                        {ingredientState.myIngredientList.map(ingredient =>
-                            <div key={ingredient.id} className="nav__side-ingr">
-                                <div className="nav__side-ingr-name">{ingredient.name}</div>
-                                <div className="nav__side-ingr-abv">{ingredient.ABV}</div>
-                            </div>
-                        )}
-
+            {openMyIngr &&
+                <Stack justifyContent="flex-start" sx={{ width: 200, minWidth: 200, maxWidth: 270, px: 1}}>
+                    <div className="nav__side-util">
+                        <button onClick={handleAddIngr}>ADD</button>
                     </div>
-                    :
-                    null
+                    {ingredientState.myIngredientList.map(ingredient =>
+                        <div key={ingredient.id} className="nav__side-ingr">
+                            <div className="nav__side-ingr-name">{ingredient.name}</div>
+                            <div className="nav__side-ingr-abv">{ingredient.ABV}</div>
+                        </div>
+                    )}
+                </Stack>
             }
-            <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
-            {<AddIngredientModal isOpen={isAddIngredientModalOpen} setIsOpen={setIsAddIngredientModalOpen} user_id={Number(userState.user?.id)} />}
         </Stack>
     )
 }

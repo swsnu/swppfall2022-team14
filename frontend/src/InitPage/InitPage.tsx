@@ -12,6 +12,32 @@ import { getUser, logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
 import { fetchMyIngredientList } from "../store/slices/ingredient/ingredient";
 import RecommendModal from "./Modals/RecommendModal";
+import { styled } from '@mui/material/styles';
+import { Grid, IconButton, ListItemButton, ListItemIcon, ListItemText, ToggleButtonGroup, ToggleButton, TextField, Stack } from "@mui/material";
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import SearchIcon from '@mui/icons-material/Search';
+import LiquorIcon from '@mui/icons-material/Liquor';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+
+
+const StyledItem = styled(ListItemButton)({
+    position: 'relative',
+    justifyContent: "flex-start",
+    gap: 10,
+});
+
+const StyledItemIcon = styled(ListItemIcon)({
+    width: 22,
+    height: 22,
+    color: 'inherit',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 10,
+});
 
 export interface Filterparam {
     type_one: string[],
@@ -19,7 +45,6 @@ export interface Filterparam {
     type_three: string[],
     available_only: boolean
 }
-
 
 const InitPage = () => {
 
@@ -37,10 +62,8 @@ const InitPage = () => {
 
     const navigate = useNavigate()
 
+    const [toggle, setToggle] = useState<'standard' | 'custom' | 'ingredient'>('standard')
     const [isStandard, setIsStandard] = useState(true)
-    const onClickToggle = (isStandard: boolean) => {
-        setIsStandard(isStandard)
-    }
     const [isOpenFilter, setIsOpenFilter] = useState(false)
     const onClickFilter = () => {
         setIsOpenFilter(!isOpenFilter)
@@ -58,7 +81,7 @@ const InitPage = () => {
     const onClickMyLiqour = () => {
         setIsInitMyLiqourOpen(true)
     }
-    const onClicklogout = async () => {
+    const onClickLogout = async () => {
         await dispatch(logoutUser(userState.token));
         location.reload();
     }
@@ -68,6 +91,21 @@ const InitPage = () => {
             { state: request_param }
         )
         else navigate(`/custom`, { state: request_param })
+    }
+
+    const onClickToggle = (
+        event: React.MouseEvent<HTMLElement>,
+        toggle: 'standard' | 'custom' | 'ingredient',
+    ) => {
+        setToggle(toggle)
+
+        if (toggle === 'standard') {
+            setIsStandard(true)
+        } else if (toggle === 'custom') {
+            setIsStandard(false)
+        } else {
+            onClickRecommendButton()
+        }
     }
 
     const onClickMyPage = () => {
@@ -106,41 +144,107 @@ const InitPage = () => {
 
 
 
-    return <div className={styles.margin}>
-        <div className={styles.header}>
-            {loginState ? <button onClick={onClickProfile}>내 프로필</button> : <div className={`${styles.button} ${styles.header__login}`} onClick={onClickLogin}>로그인</div>}
-            {loginState && isOpenProfile ? <div>
-                <button onClick={onClickMyPage}>My Page</button>
-                <button onClick={onClicklogout}>Logout</button>
-                <button onClick={onClickUserInfo}>Get Info</button>
-            </div> : null}
-        </div>
-        <div className={styles.nav}>
-            <div className={`${styles['flex-box']} ${styles.nav__left}`}>
-                <button className={styles.button} onClick={() => onClickToggle(true)} disabled={isStandard}>스탠다드</button>
-                <button className={styles.button} onClick={() => onClickToggle(false)} disabled={!isStandard}>커스텀</button>
-                <button className={styles.button} onClick={onClickRecommendButton}>재료추천받기</button>
-            </div>
-            <div className={`${styles['flex-box']} ${styles.nav__right}`}>
-                <input className={styles.nav__input} placeholder="칵테일 이름 검색" value={input} onChange={(e) => setInput(e.target.value)} />
-                <button className={styles.button} onClick={onClickFilter}>FILTER</button>
-                <button className={styles.button} onClick={onClickSearch}>SEARCH</button>
-            </div>
-
-            {isOpenFilter ? <Filter setUrlParams={setFilterParam} /> : null}
-        </div>
-        <div className={styles.main}>
-            <div className={styles.main__inner}>
-                {cocktailState.cocktailList.map((cocktail) => <Item key={cocktail.id} image={cocktail.image}
-                    name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />)}
-            </div>
-        </div>
-        <button className={styles['my-liquor']} onClick={onClickMyLiqour}>My Liquor</button>
-        <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
-        <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
-        <RecommendModal isOpen={isRecommendOpen} setIsOpen={setIsRecommendOpen} />
-
-    </div >
+    return (
+        <Stack spacing={2} sx={{ width: 1, pl: 2, pr: 3, py: 2 }}>
+            <Stack direction="row" justifyContent="flex-end" alignItems="center">
+                {loginState && isOpenProfile ? (
+                    <Stack direction="row" spacing={1} justifyContent="flex-end">
+                        <IconButton onClick={onClickMyPage}>
+                            <PersonOutlineIcon />
+                        </IconButton>
+                        <IconButton onClick={onClickLogout}>
+                            <LogoutIcon />
+                        </IconButton>
+                    </Stack> 
+                ) : null}
+                {loginState ? 
+                    <IconButton size="large" onClick={onClickProfile}>
+                        <AccountCircleIcon fontSize="large" />
+                    </IconButton> : 
+                    <IconButton onClick={onClickLogin}>
+                        <LoginIcon />
+                    </IconButton>
+                }
+            </Stack>
+            <Stack direction="row" justifyContent="space-between" sx={{ pl: 3 }}>
+                <ToggleButtonGroup
+                    value={toggle}
+                    exclusive
+                    onChange={onClickToggle}
+                >
+                    <ToggleButton value="standard">
+                        스탠다드
+                    </ToggleButton>
+                    <ToggleButton value="custom">
+                        커스텀
+                    </ToggleButton>
+                    <ToggleButton value="ingredient">
+                        재료 추천
+                    </ToggleButton>
+                </ToggleButtonGroup>
+                <Stack direction="row" spacing={1} alignItems='stretch'>
+                    <Stack direction="row" alignItems='center' sx={{ pl: 2, pr: 1, bgcolor: 'primary.main', borderRadius: 4 }}>
+                        <TextField 
+                            placeholder="검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                            sx={{
+                                '& label.Mui-focused': {
+                                    color: 'secondary.light',
+                                },
+                                '& .MuiInput-underline:after': {
+                                    borderBottomColor: 'secondary.light',
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: 'secondary.light',
+                                    },
+                                },
+                            }}    
+                        />
+                        <IconButton onClick={onClickSearch}>
+                            <SearchIcon />
+                        </IconButton>
+                    </Stack>
+                    <StyledItem
+                        onClick={onClickFilter}
+                        sx={{ px: 2, bgcolor: 'primary.main', borderRadius: 4 }}
+                    >
+                        <ListItemText disableTypography primary="필터 검색" />
+                        <StyledItemIcon><FilterAltIcon /></StyledItemIcon>
+                    </StyledItem>
+                </Stack>
+            </Stack>
+            {isOpenFilter ? <Filter setUrlParams={setFilterParam} onClickSearch={onClickSearch} input={input} setInput={setInput} /> : null}
+            <Grid container spacing={3} columns={5} sx={{ width: 1, pr: 2 }}>
+                {cocktailState.cocktailList.map((cocktail) => 
+                    <Grid key={cocktail.id} item xs={1}>
+                        <Item 
+                            key={cocktail.id} 
+                            image={cocktail.image}
+                            name={cocktail.name} 
+                            rate={cocktail.rate} 
+                            type={cocktail.type} 
+                            id={cocktail.id} 
+                            tags={cocktail.tags} 
+                        />
+                    </Grid>
+                )}
+            </Grid>
+            <IconButton
+                onClick={onClickMyLiqour}
+                size='large'
+                sx={{
+                    bgcolor: 'primary.light',
+                    position: 'fixed',
+                    right: 50,
+                    bottom: 50,
+                }}>
+                <LiquorIcon fontSize='large' />
+            </IconButton>
+            <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
+            <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
+            <RecommendModal isOpen={isRecommendOpen} setIsOpen={setIsRecommendOpen} />
+        </Stack >
+    )
 }
 
 
