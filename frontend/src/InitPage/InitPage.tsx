@@ -21,6 +21,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import LiquorIcon from '@mui/icons-material/Liquor';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import LocalBarIcon from '@mui/icons-material/LocalBar';
 
 
 const StyledItem = styled(ListItemButton)({
@@ -146,7 +147,8 @@ const InitPage = () => {
 
     return (
         <Stack spacing={2} sx={{ width: 1, pl: 2, pr: 3, py: 2 }}>
-            <Stack direction="row" justifyContent="flex-end" alignItems="center">
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <LocalBarIcon sx={{ ml: 13, fontSize: 50 }} />
                 {loginState && isOpenProfile ? (
                     <Stack direction="row" spacing={1} justifyContent="flex-end">
                         <IconButton onClick={onClickMyPage}>
