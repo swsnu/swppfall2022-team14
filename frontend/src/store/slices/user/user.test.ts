@@ -112,7 +112,7 @@ describe("user reducer", () => {
 
     it("should handle getUser", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: user });
-        const res = await store.dispatch(getUser());
+        const res = await store.dispatch(getUser("token"));
         expect(res.payload).toEqual(user)
     });
 });
