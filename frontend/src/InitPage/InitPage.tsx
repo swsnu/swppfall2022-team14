@@ -114,7 +114,7 @@ const InitPage = () => {
     }
 
     const onClickUserInfo = async () => {
-        const res = dispatch(getUser())
+        const res = dispatch(getUser(userState.token))
         console.log(res)
     }
 
