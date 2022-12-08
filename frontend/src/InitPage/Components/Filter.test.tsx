@@ -7,7 +7,6 @@ import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
 import Filter from "./Filter";
 import { UserInfo } from "../../store/slices/user/user";
 import React from 'react'
-import userEvent from "@testing-library/user-event";
 import { RateInfo } from "../../store/slices/rate/rate";
 
 const stubCocktailInitialState: CocktailInfo = {
@@ -45,10 +44,12 @@ const stubUserInitialState: UserInfo = {
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
 }
+
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
 }
+
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
@@ -81,19 +82,24 @@ describe("<Filter />", () => {
     });
     it("should be unique when unique type clicked", () => {
         renderFilter();
-        const typeButton = screen.getByLabelText("15도 이하");
+        const typeButton = screen.getByText("15도 이하");
         fireEvent.click(typeButton);
         fireEvent.click(typeButton);
     });
     it("should be non-unique when non-unique type clicked", () => {
         renderFilter();
-        const typeButton1 = screen.getByLabelText("클래식");
+        const typeButton1 = screen.getByText("클래식");
         fireEvent.click(typeButton1);
         fireEvent.click(typeButton1);
-        const typeButton2 = screen.getByLabelText("롱드링크");
+        const typeButton2 = screen.getByText("롱드링크");
         fireEvent.click(typeButton2);
         fireEvent.click(typeButton2);
     });
+    it("should handle search word text field", () => {
+        renderFilter();
+        const searchWordTextField = screen.getByLabelText("추가 검색어");
+        fireEvent.change(searchWordTextField, { target: { value: "word" } });
+    })
     it("should handle theme click", () => {
         renderFilter();
         const themebutton1 = screen.getByText("Theme1")
