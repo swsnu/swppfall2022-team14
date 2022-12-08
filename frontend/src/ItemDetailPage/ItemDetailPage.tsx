@@ -132,6 +132,7 @@ export default function ItemDetailPage() {
                                 icon={<BookmarkBorderIcon sx={{ color: 'text.icon' }} />}
                                 checkedIcon={<BookmarkIcon sx={{ color: 'text.icon' }} />}
                                 onClick={toggleBookmarkHandler}
+                                checked={cocktail.is_bookmarked}
                             />
                             <Button variant="contained" onClick={handleRateOpen}
                                 sx={{
