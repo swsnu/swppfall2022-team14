@@ -74,7 +74,8 @@ const loggedOutState: UserInfo = {
     isLogin: false
 }
 const rateState: RateInfo = {
-    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
+    myRate: null
 }
 
 const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedInState, rate: rateState });

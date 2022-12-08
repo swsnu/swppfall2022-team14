@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { selectCocktail, getCocktail, toggleBookmark, updateRate } from "../store/slices/cocktail/cocktail";
+import { selectCocktail, getCocktail, toggleBookmark } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
@@ -11,7 +11,7 @@ import NavBar from "../NavBar/NavBar";
 import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
 import { selectUser } from "../store/slices/user/user";
-import { postRate, editRate, deleteRate } from "../store/slices/rate/rate";
+import {postRate, editRate, deleteRate, getMyRate, selectRate, updateRate} from "../store/slices/rate/rate";
 import { Box, Button, Checkbox, ImageListItem, Divider, IconButton, Modal, Rating, Stack, TextField, Typography } from "@mui/material";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -26,16 +26,24 @@ export default function ItemDetailPage() {
     const cocktailState = useSelector(selectCocktail);
     const commentState = useSelector(selectComment);
     const userState = useSelector(selectUser)
+    const rateState = useSelector(selectRate)
     const navigate = useNavigate()
     const onIngredientClick = (id: number) => {
         navigate(`/ingredient/${id}`)
     }
     const [content, setContent] = useState<string>("")
     const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false)
-    const [score, setScore] = useState<number>(0)
+    const [score, setScore] = useState<number | null>(0)
 
     const [rateOpen, setRateOpen] = useState(false);
-    const handleRateOpen = () => setRateOpen(true);
+    const handleRateOpen = () => {
+        if(userState.isLogin){
+            setRateOpen(true)
+        }
+        else {
+            setIsLoginOpen(true)
+        }
+    };
     const handleRateClose = () => setRateOpen(false);
 
     const [openAddComment, setOpenAddComment] = useState(false);
@@ -44,13 +52,23 @@ export default function ItemDetailPage() {
     const isCustom = cocktail?.type === "CS";
 
     useEffect(() => {
+        if(userState.isLogin){
+            const data = {
+                cocktail_id: Number(id),
+                token: userState.token
+            }
+            dispatch(getMyRate(data))
+            setScore(rateState.myRate)
+        }
         dispatch(getCocktail(Number(id)));
+        dispatch(updateRate(Number(id)));
         dispatch(fetchCommentListByCocktailId(Number(id)));
     }, []);
 
     useEffect(() => {
         if (cocktail) {
-            setScore(cocktail.score);
+            setScore(rateState.myRate);
+            dispatch(updateRate(Number(id)));
         }
     }, [cocktail]);
 
@@ -64,9 +82,6 @@ export default function ItemDetailPage() {
             }
             dispatch(postComment(data));
             setContent("")
-        }
-        else {
-            setIsLoginOpen(true)
         }
     }
 
@@ -82,22 +97,25 @@ export default function ItemDetailPage() {
     const onChangeRate = async (changedScore: number | null) => {
         if (userState.isLogin) {
             if (changedScore) {
-                setScore(changedScore);
-                const data = { cocktail_id: Number(id), score: changedScore };
-                if (score) {  // PUT score
+                const data = { cocktail_id: Number(id), score: changedScore, token: userState.token };
+                if (rateState.myRate !== null) {  // PUT score
                     await dispatch(editRate(data));
                 } else {      // POST score
                     await dispatch(postRate(data));
                 }
-            } else {
-                setScore(0);
-                const data = { cocktail_id: Number(id) };
-                await dispatch(deleteRate(data));
             }
             dispatch(updateRate(Number(id)));
+            setRateOpen(false)
         } else {
             setIsLoginOpen(true);
         }
+    }
+
+    const handleDeleteRate = async () => {
+        const data = { cocktail_id: Number(id), token: userState.token };
+        await dispatch(deleteRate(data));
+        await dispatch(updateRate(Number(id)))
+        setRateOpen(false)
     }
 
     if (cocktailState.itemStatus == "loading") {
@@ -162,18 +180,15 @@ export default function ItemDetailPage() {
                                     }}
                                 >
                                     <Stack alignItems="center" justifyContent="space-between" spacing={2} sx={{ width: 1, height: 1 }}>
-                                        <Typography variant="h4">
-                                            {score}
-                                        </Typography>
                                         <Rating
-                                            value={score}
+                                            value={rateState.myRate}
                                             precision={0.5}
                                             onChange={(event, newValue) => {
                                                 onChangeRate(newValue)
                                             }}
                                         />
                                         <Typography variant="body1">
-                                            좌우로 드래그하세요
+                                            해당 점수를 클릭하세요
                                         </Typography>
                                     </Stack>
                                 </Box>
@@ -189,7 +204,32 @@ export default function ItemDetailPage() {
                         </ImageListItem>
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1 }}>
                             <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, p: 2, bgcolor: 'primary.main', borderRadius: 3 }}>
-                                <Rating value={cocktail.rate} precision={0.1} readOnly />
+                                <div className={"rate_box"}>
+                                    <Rating value={Number(rateState.rate)} precision={0.1} readOnly /> 전체 평점
+                                </div>
+                                {
+                                    rateState.myRate ?
+                                        <div className={"rate_box"}>
+                                            <Rating value={rateState.myRate} precision={0.1} readOnly /> 나의 평점
+                                            <Button variant="contained" onClick={handleDeleteRate}
+                                                    sx={{
+                                                        bgcolor: 'primary.dark',
+                                                        borderRadius: 3,
+                                                        boxShadow: 3,
+                                                        '&:hover': {
+                                                            backgroundColor: 'secondary.main',
+                                                            boxShadow: 2,
+                                                        },
+                                                    }}
+                                            >
+                                                별점삭제하기
+                                            </Button>
+                                        </div>
+                                        :
+                                        <div className={"rate_box"}>
+                                            내 평점을 남겨주세요!
+                                        </div>
+                                }
                                 <Typography variant="body1">
                                     {cocktail.ABV.toFixed(1)}%
                                 </Typography>

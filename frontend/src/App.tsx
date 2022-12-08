@@ -5,7 +5,6 @@ import IngredientDetailPage from './ItemDetailPage/IngredientDetailPage';
 import CreateCustomPage from './CreateCustomPage/CreateCustomPage';
 import EditCustomPage from './EditCustomPage/EditCustomPage';
 import MyPage from './MyPage/MyPage';
-import Test from './Test'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import React from 'react';
 import ListPage from "./ListPage/ListPage";
@@ -50,7 +49,6 @@ function App() {
             <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
             <Route path="/:type/:id" element={<ItemDetailPage />} />
             <Route path="/mypage" element={<MyPage />} />
-            <Route path="/test" element={<Test />} />
           </Routes>
         </BrowserRouter >
       </div >
