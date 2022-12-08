@@ -80,6 +80,8 @@ def get_user(request, user_id):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def retrieve_my_info(request):
     if request.method == 'GET':
         user = request.user
