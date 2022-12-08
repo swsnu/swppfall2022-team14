@@ -14,7 +14,6 @@ import React from 'react'
 import { RateInfo } from "../store/slices/rate/rate";
 
 
-
 // eslint-disable-next-line react/display-name
 jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid="spyCocktail">
@@ -56,14 +55,10 @@ jest.mock("./Modals/RecommendModal", () => (prop: RecommendModalProp) => (
     </div>
 ));
 
-
 // eslint-disable-next-line react/display-name
 jest.mock("./Modals/InitMyLiquorModal", () => (prop: InitMyLiquorModalProp) => (
     <div data-testid="spyInitMyLiquorModal" />
 ));
-
-
-
 
 const cocktailList: CocktailItemType[] = [
     {
@@ -140,7 +135,6 @@ const loggedInUserState: UserInfo = {
     isLogin: true
 }
 
-
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
@@ -157,7 +151,6 @@ jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
     useDispatch: () => mockDispatch,
 }));
-
 
 const renderInitPage = (isStandard = true, user: UserInfo) => {
     renderWithProviders(
@@ -213,114 +206,110 @@ describe("<InitPage />", () => {
     });
     it("should render filter when filter button clicked", async () => {
         renderInitPage(true, stubUserInitialState);
-        const filterButton = screen.getByText("FILTER");
+        const filterButton = screen.getByTestId("filter");
         fireEvent.click(filterButton);
         await screen.findByText("Type 1");
     });
     it("should render search bar when search bar inputed", async () => {
         renderInitPage(true, stubUserInitialState);
-        const searchBar = screen.getByPlaceholderText("칵테일 이름 검색");
+        const searchBar = screen.getByPlaceholderText("검색어");
         fireEvent.change(searchBar, { target: { value: "COCKTAIL" } });
         expect(searchBar).toHaveDisplayValue("COCKTAIL");
     });
     it("should navigate to /standard with params when search button clicked (standard)", async () => {
         renderInitPage(true, stubUserInitialState);
-        const filterButton = screen.getByText("FILTER");
+        const filterButton = screen.getByTestId("filter");
         fireEvent.click(filterButton);
         await screen.findByText("Type 1");
         const typeButton = screen.getByText("클래식")
         fireEvent.click(typeButton);
-        const searchButton = screen.getByText("SEARCH")
+        const searchButton = screen.getByTestId("search");
         fireEvent.click(searchButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/standard", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "" } }));
     });
-
-
     it("should navigate to /custom with params when search button clicked (custom)", async () => {
         renderInitPage(false, stubUserInitialState);
         const customButton = screen.getByText("커스텀");
         fireEvent.click(customButton);
         await screen.findByText("COCKTAIL_NAME_3");
-        const filterButton = screen.getByText("FILTER");
+        const filterButton = screen.getByTestId("filter");
         fireEvent.click(filterButton);
         await screen.findByText("Type 1");
         const typeButton = screen.getByText("클래식")
         fireEvent.click(typeButton);
-        const searchButton = screen.getByText("SEARCH")
+        const searchButton = screen.getByTestId("search");
         fireEvent.click(searchButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/custom", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "" } }));
     });
     it("should render login modal when login button clicked", async () => {
         renderInitPage(true, stubUserInitialState);
-        const loginModalButton = screen.getByText("로그인");
+        const loginModalButton = screen.getByTestId("login");;
         fireEvent.click(loginModalButton);
         await screen.findByTestId("spyLoginModal");
     });
     it("should render profile when profile button clicked", async () => {
         renderInitPage(true, stubUserInitialState);
-        const loginModalButton = screen.getByText("로그인");
+        const loginModalButton = screen.getByTestId("login");
         fireEvent.click(loginModalButton);
         await screen.findByTestId("spyLoginModal");
         const loginButton = screen.getByText("Login");
         fireEvent.click(loginButton);
         renderInitPage(true, loggedInUserState)
-        await screen.findByText("내 프로필");
-        const profileButton = screen.getByText("내 프로필");
+        await screen.getByTestId("my profile");
+        const profileButton = screen.getByTestId("my profile");
         fireEvent.click(profileButton);
-        await screen.findByText("My Page");
+        await screen.getByTestId("my page");
     });
     it("should naviate to /mypage when my page button clicked", async () => {
         renderInitPage(true, stubUserInitialState);
-        const loginModalButton = screen.getByText("로그인");
+        const loginModalButton = screen.getByTestId("login");
         fireEvent.click(loginModalButton);
         await screen.findByTestId("spyLoginModal");
         const loginButton = screen.getByText("Login");
         fireEvent.click(loginButton);
         renderInitPage(true, loggedInUserState)
-        await screen.findByText("내 프로필");
-        const profileButton = screen.getByText("내 프로필");
+        await screen.getByTestId("my profile");
+        const profileButton = screen.getByTestId("my profile");
         fireEvent.click(profileButton);
-        await screen.findByText("Get Info");
-        const getInfoButton = screen.getByText("Get Info")
-        fireEvent.click(getInfoButton)
-        await screen.findByText("My Page");
-        const myPageButton = screen.getByText("My Page");
+        await screen.getByTestId("my page");
+        const myPageButton = screen.getByTestId("my page");
         fireEvent.click(myPageButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/mypage"));
-
-
     });
     it("should logout when logout button clicked", async () => {
+        Object.defineProperty(window, 'location', {
+            configurable: true,
+            value: { reload: jest.fn() },
+        });
         renderInitPage(true, stubUserInitialState);
-        const loginModalButton = screen.getByText("로그인");
+        const loginModalButton = screen.getByTestId("login");
         fireEvent.click(loginModalButton);
         await screen.findByTestId("spyLoginModal");
         const loginButton = screen.getByText("Login");
         fireEvent.click(loginButton);
         renderInitPage(true, loggedInUserState)
-        await screen.findByText("내 프로필");
-        const profileButton = screen.getByText("내 프로필");
+        await screen.getByTestId("my profile");
+        const profileButton = screen.getByTestId("my profile");
         fireEvent.click(profileButton);
-        await screen.findByText("My Page");
-        const logoutButton = screen.getByText("Logout");
+        const logoutButton = screen.getByTestId("logout");
         fireEvent.click(logoutButton);
-        await screen.findByText("로그인");
+        await screen.getByTestId("login");
     });
     it("should render my liquor modal when my liquor button clicked", async () => {
         renderInitPage(true, stubUserInitialState);
-        const myLiquorModalButton = screen.getByText("My Liquor");
+        const myLiquorModalButton = screen.getByTestId("my liquor");
         fireEvent.click(myLiquorModalButton);
         await screen.findByTestId("spyInitMyLiquorModal");
     });
     it("should handle ingredient recommendtation", async () => {
         renderInitPage(true, loggedInUserState);
-        const recommendButton = screen.getByText("재료추천받기");
+        const recommendButton = screen.getByText("재료 추천");
         fireEvent.click(recommendButton);
         await screen.findByTestId("spyRecommendModal");
     });
     it("should handle ingredient recommendtation when not logged in", async () => {
         renderInitPage(true, stubUserInitialState);
-        const recommendButton = screen.getByText("재료추천받기");
+        const recommendButton = screen.getByText("재료 추천");
         fireEvent.click(recommendButton);
         await screen.findByTestId("spyLoginModal");
     });
