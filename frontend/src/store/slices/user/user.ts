@@ -76,7 +76,7 @@ export const logoutUser = createAsyncThunk(
             })
             .catch(function () {
                 alert(
-                    "로그아웃 되었습니다."
+                    "이미 로그아웃 되었습니다."
                 )
             });
     }
@@ -84,8 +84,12 @@ export const logoutUser = createAsyncThunk(
 
 export const getUser = createAsyncThunk(
     "user/getUser",
-    async () => {
-        const response = await axios.get('/api/v1/user/me/');
+    async (token: string | null) => {
+        const response = await axios.get('/api/v1/user/me/',{
+            headers: {
+                Authorization: `Token ${token}`,
+            },
+        });
         console.log(response.data)
         return response.data
     }

@@ -236,7 +236,8 @@ const emptyUserInitailState: UserInfo = {
     isLogin: false
 };
 const rateState: RateInfo = {
-    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 }
+    rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
+    myRate: null
 }
 const loadingMockStore = getMockStore({ cocktail: loadingCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: rateState });
 const failedMockStore = getMockStore({ cocktail: failedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: rateState });
