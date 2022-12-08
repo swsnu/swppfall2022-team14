@@ -21,6 +21,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import LiquorIcon from '@mui/icons-material/Liquor';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import LocalBarIcon from '@mui/icons-material/LocalBar';
 
 
 const StyledItem = styled(ListItemButton)({
@@ -146,25 +147,28 @@ const InitPage = () => {
 
     return (
         <Stack spacing={2} sx={{ width: 1, pl: 2, pr: 3, py: 2 }}>
-            <Stack direction="row" justifyContent="flex-end" alignItems="center">
-                {loginState && isOpenProfile ? (
-                    <Stack direction="row" spacing={1} justifyContent="flex-end">
-                        <IconButton onClick={onClickMyPage}>
-                            <PersonOutlineIcon />
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <LocalBarIcon sx={{ ml: 13, fontSize: 50 }} />
+                <Stack direction="row" spacing={1} justifyContent="flex-end">
+                    {loginState && isOpenProfile ? (
+                        <Stack direction="row" spacing={1} justifyContent="flex-end">
+                            <IconButton onClick={onClickMyPage}>
+                                <PersonOutlineIcon />
+                            </IconButton>
+                            <IconButton onClick={onClickLogout}>
+                                <LogoutIcon />
+                            </IconButton>
+                        </Stack> 
+                    ) : null}
+                    {loginState ? 
+                        <IconButton size="large" onClick={onClickProfile}>
+                            <AccountCircleIcon fontSize="large" />
+                        </IconButton> : 
+                        <IconButton onClick={onClickLogin}>
+                            <LoginIcon />
                         </IconButton>
-                        <IconButton onClick={onClickLogout}>
-                            <LogoutIcon />
-                        </IconButton>
-                    </Stack> 
-                ) : null}
-                {loginState ? 
-                    <IconButton size="large" onClick={onClickProfile}>
-                        <AccountCircleIcon fontSize="large" />
-                    </IconButton> : 
-                    <IconButton onClick={onClickLogin}>
-                        <LoginIcon />
-                    </IconButton>
-                }
+                    }
+                </Stack>
             </Stack>
             <Stack direction="row" justifyContent="space-between" sx={{ pl: 3 }}>
                 <ToggleButtonGroup

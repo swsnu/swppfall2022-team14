@@ -72,10 +72,18 @@ const ListPage = () => {
                     search filters
                 </Typography>
                 {type === 'ingredient' ?
-                    <div className="list__content-item-wrap">
-                        {/*TODO use Real data*/}
-                        {ingrList.map((ingredient) => <Ingr key={ingredient.id} image={ingredient.image} name={ingredient.name} id={ingredient.id} />)}
-                    </div> :
+                    <Grid container spacing={3}>
+                        {ingrList.map((ingredient) => 
+                            <Grid key={ingredient.id} item xs={12} sm={6} md={3}>
+                                <Ingr 
+                                    key={ingredient.id} 
+                                    image={ingredient.image} 
+                                    name={ingredient.name} 
+                                    id={ingredient.id}
+                                />
+                            </Grid> 
+                        )}
+                    </Grid> :
                     <Grid container spacing={3}>
                         {list.map((cocktail) =>
                             <Grid key={cocktail.id} item xs={12} sm={6} md={3}>

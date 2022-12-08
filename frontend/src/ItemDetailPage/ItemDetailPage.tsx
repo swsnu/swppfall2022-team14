@@ -214,7 +214,9 @@ export default function ItemDetailPage() {
                                                 <Typography color='text.primary'>
                                                     {ingre.name}
                                                     &nbsp;
-                                                    {ingre.amount && ingre.amount} {ingre.recipe_unit}
+                                                    {ingre.amount && ingre.amount} 
+                                                    &nbsp;
+                                                    {ingre.amount && ingre.recipe_unit}
                                                 </Typography>
                                             </Button>
                                         )
