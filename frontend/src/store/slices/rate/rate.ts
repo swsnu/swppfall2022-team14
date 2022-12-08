@@ -22,7 +22,7 @@ export interface PostRateType {
 }
 
 export interface RateInfo {
-    rate: RateType | null,
+    rate: RateType | null | number,
     myRate: number | null
 }
 
@@ -76,6 +76,13 @@ export const deleteRate = createAsyncThunk(
     }
 )
 
+export const updateRate = createAsyncThunk(
+    "cocktail/updateRate", async (cocktail_id: number) => {
+        const rate_response = await axios.get(`/api/v1/rates/${cocktail_id}/`);
+        return rate_response.data.score
+    }
+);
+
 export const RateSlice = createSlice({
     name: "rate",
     initialState,
@@ -96,6 +103,16 @@ export const RateSlice = createSlice({
             state.myRate = null;
         }
     },
+    extraReducers: (builder) => {
+        builder.addCase(updateRate.fulfilled, (state, action) => {
+            if(action.payload === null){
+                state.rate = 0;
+            }
+            else{
+                state.rate = Number(action.payload);
+            }
+        });
+    }
 });
 
 export const rateActions = RateSlice.actions;

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { selectCocktail, getCocktail, toggleBookmark, updateRate } from "../store/slices/cocktail/cocktail";
+import { selectCocktail, getCocktail, toggleBookmark } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
@@ -11,7 +11,7 @@ import NavBar from "../NavBar/NavBar";
 import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
 import { selectUser } from "../store/slices/user/user";
-import {postRate, editRate, deleteRate, getMyRate, selectRate} from "../store/slices/rate/rate";
+import {postRate, editRate, deleteRate, getMyRate, selectRate, updateRate} from "../store/slices/rate/rate";
 import { Box, Button, Checkbox, ImageListItem, Divider, IconButton, Modal, Rating, Stack, TextField, Typography } from "@mui/material";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -61,12 +61,14 @@ export default function ItemDetailPage() {
             setScore(rateState.myRate)
         }
         dispatch(getCocktail(Number(id)));
+        dispatch(updateRate(Number(id)));
         dispatch(fetchCommentListByCocktailId(Number(id)));
     }, []);
 
     useEffect(() => {
         if (cocktail) {
             setScore(rateState.myRate);
+            dispatch(updateRate(Number(id)));
         }
     }, [cocktail]);
 
@@ -178,18 +180,15 @@ export default function ItemDetailPage() {
                                     }}
                                 >
                                     <Stack alignItems="center" justifyContent="space-between" spacing={2} sx={{ width: 1, height: 1 }}>
-                                        <Typography variant="h4">
-                                            {score}
-                                        </Typography>
                                         <Rating
-                                            value={score}
+                                            value={rateState.myRate}
                                             precision={0.5}
                                             onChange={(event, newValue) => {
                                                 onChangeRate(newValue)
                                             }}
                                         />
                                         <Typography variant="body1">
-                                            좌우로 드래그하세요
+                                            해당 점수를 클릭하세요
                                         </Typography>
                                     </Stack>
                                 </Box>
@@ -206,7 +205,7 @@ export default function ItemDetailPage() {
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1 }}>
                             <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, p: 2, bgcolor: 'primary.main', borderRadius: 3 }}>
                                 <div className={"rate_box"}>
-                                    <Rating value={cocktail.rate} precision={0.1} readOnly /> 전체 평점
+                                    <Rating value={Number(rateState.rate)} precision={0.1} readOnly /> 전체 평점
                                 </div>
                                 {
                                     rateState.myRate ?
