@@ -65,6 +65,8 @@ def user_store(request):
 
 
 @api_view(['DELETE'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def modify_user_store(request, ingredient_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
