@@ -227,12 +227,7 @@ export const toggleBookmark = createAsyncThunk(
     }
 )
 
-export const updateRate = createAsyncThunk(
-    "cocktail/updateRate", async (cocktail_id: number) => {
-        const rate_response = await axios.get(`/api/v1/rates/${cocktail_id}/`);
-        return rate_response.data.score
-    }
-);
+
 
 export const cocktailSlice = createSlice({
     name: "cocktail",
@@ -326,17 +321,6 @@ export const cocktailSlice = createSlice({
         });
 
         //Rate
-        builder.addCase(updateRate.fulfilled, (state, action) => {
-            console.log(action.payload)
-            if(state.cocktailItem !== null){
-                if(action.payload === null){
-                    state.cocktailItem.rate = 0;
-                }
-                else{
-                    state.cocktailItem.rate = Number(action.payload);
-                }
-            }
-        });
     },
 })
 export const cocktailActions = cocktailSlice.actions;

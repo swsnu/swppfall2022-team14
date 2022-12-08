@@ -22,7 +22,7 @@ export interface PostRateType {
 }
 
 export interface RateInfo {
-    rate: RateType | null,
+    rate: RateType | null | number,
     myRate: number | null
 }
 

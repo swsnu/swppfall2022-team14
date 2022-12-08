@@ -70,6 +70,7 @@ export default function ItemDetailPage() {
     useEffect(() => {
         if (cocktail) {
             setScore(rateState.myRate);
+            dispatch(updateRate(Number(id)));
         }
     }, [cocktail]);
 
@@ -218,7 +219,7 @@ export default function ItemDetailPage() {
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1 }}>
                             <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, p: 2, bgcolor: 'primary.main', borderRadius: 3 }}>
                                 <div className={"rate_box"}>
-                                    <Rating value={cocktail.rate} precision={0.1} readOnly /> 전체 평점
+                                    <Rating value={Number(rateState.rate)} precision={0.1} readOnly /> 전체 평점
                                 </div>
                                 {
                                     rateState.myRate ?
