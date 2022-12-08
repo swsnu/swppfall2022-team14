@@ -203,6 +203,18 @@ export const editCocktail = createAsyncThunk(
     }
 )
 
+export const deleteCocktail = createAsyncThunk(
+    "cocktail/deleteCocktail",
+    async (data: { cocktail_id: number, token: string }) => {
+        await axios.put(`/api/v1/cocktails/${data.cocktail_id}/delete/`, null, {
+            headers: {
+                Authorization: `Token ${data.token}`,
+            },
+        });
+        return { cocktail_id: data.cocktail_id }
+    }
+)
+
 export const toggleBookmark = createAsyncThunk(
     "cocktail/toggleBookmark",
     async (data: { cocktail_id: number, token: string }) => {

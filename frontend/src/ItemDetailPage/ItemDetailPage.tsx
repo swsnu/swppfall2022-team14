@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import { selectCocktail, getCocktail, toggleBookmark, updateRate } from "../store/slices/cocktail/cocktail";
+import { selectCocktail, getCocktail, toggleBookmark, updateRate, deleteCocktail } from "../store/slices/cocktail/cocktail";
 import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
@@ -16,6 +16,8 @@ import { Box, Button, Checkbox, ImageListItem, Divider, IconButton, Modal, Ratin
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
@@ -67,6 +69,13 @@ export default function ItemDetailPage() {
         }
         else {
             setIsLoginOpen(true)
+        }
+    }
+
+    const deleteCocktailHandler = () => {
+        if (userState.isLogin && userState.token) {
+            dispatch(deleteCocktail({ cocktail_id: Number(id), token: userState.token }));
+            navigate("/custom")
         }
     }
 
@@ -123,7 +132,12 @@ export default function ItemDetailPage() {
                             {isCustom && `created by ${cocktail.author_name}`}
                         </Typography>
                         <Stack direction="row" justifyContent="flex-end">
-                            {Number(userState.user?.id) === cocktail.author_id &&
+                            {(Number(userState.user?.id) === cocktail.author_id && isCustom) &&
+                                <IconButton onClick={() => deleteCocktailHandler()}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            }
+                            {(Number(userState.user?.id) === cocktail.author_id && isCustom) &&
                                 <IconButton onClick={() => navigate(`/custom/${id}/edit`)}>
                                     <EditIcon />
                                 </IconButton>

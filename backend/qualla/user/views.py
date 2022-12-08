@@ -15,7 +15,7 @@ def signup(request):
     if request.method == 'POST':
 
         try:
-            req_data = json.loads(request.body.decode())
+            req_data = request.data.copy()
             username = req_data['username']
             password = req_data['password']
 
@@ -24,7 +24,8 @@ def signup(request):
             Token.objects.create(user=user)
 
             return HttpResponse(status=201)
-        except:
+        except Exception as e:
+            print(e)
             return HttpResponse(status=400)
 
 
