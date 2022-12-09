@@ -65,9 +65,7 @@ describe("user reducer", () => {
         setLocalStorage("token", "Token")
         setLocalStorage("token", "Token")
         window.localStorage.setItem("token", "Token")
-        console.log(localStorage.getItem("token"))
         store = configureStore({ reducer: { user: reducer } });
-        console.log(store.getState().user.token)
     });
 
     it("should handle initial state", () => {
@@ -106,6 +104,12 @@ describe("user reducer", () => {
 
     it("should handle logoutUser", async () => {
         axios.post = jest.fn().mockResolvedValue({ data: { user_data: user, token: 'Token' } });
+        await store.dispatch(logoutUser("Token"));
+        expect(store.getState().user).toEqual({ user: null, token: null, isLogin: false })
+    });
+
+    it("should handle logoutUser Error", async () => {
+        axios.post = jest.fn().mockRejectedValueOnce({ data: { user_data: user, token: 'Token' } });
         await store.dispatch(logoutUser("Token"));
         expect(store.getState().user).toEqual({ user: null, token: null, isLogin: false })
     });

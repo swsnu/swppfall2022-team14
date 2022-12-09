@@ -86,7 +86,8 @@
       "!src/index.tsx",
       "!src/react-app-env.d.ts",
       "!src/reportWebVitals.ts",
-      "!src/test-utils/*"
+      "!src/test-utils/*",
+      "!src/common/utils/*"
     ]
   },
 

@@ -38,7 +38,6 @@ export const getMyRate = createAsyncThunk(
                 Authorization: `Token ${rate.token}`,
             },
         });
-        console.log(response.data)
         dispatch(rateActions.updateMyRate(response.data))
     }
 );

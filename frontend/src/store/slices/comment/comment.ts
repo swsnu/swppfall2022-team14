@@ -142,10 +142,10 @@ export const CommentSlice = createSlice({
             state.commentItem = null
             state.state = null
         },
-        nullCommentState: (state, action: PayloadAction<CommentType>) => {
-            state.commentItem = action.payload
-            state.state = null
-        },
+        // nullCommentState: (state, action: PayloadAction<CommentType>) => {
+        //     state.commentItem = action.payload
+        //     state.state = null
+        // },
         editCommentState: (state, action: PayloadAction<CommentType>) => {
             state.commentItem = action.payload
             state.state = "EDIT"

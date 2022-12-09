@@ -93,10 +93,16 @@ describe("ingredient reducer", () => {
         expect(response.payload).toEqual(fakeIngredient)
     });
 
+    it("should handle getRecommendIngredientList Error", async () => {
+        axios.get = jest.fn().mockRejectedValueOnce({ data: fakeIngredient });
+        const response = await store.dispatch(getRecommendIngredientList("token"));
+        expect(store.getState().ingredient.listStatus).toEqual("failed")
+    });
+
     it("should handle postMyIngredients", async () => {
-        axios.post = jest.fn().mockResolvedValue({ data: fakeIngredient });
+        axios.post = jest.fn().mockResolvedValue({ data: {Ingredients: [fakeIngredient]} });
         const response = await store.dispatch(postMyIngredients({ id: 1, ingredients: [1], token: "token" }));
-        expect(response.payload).toEqual(fakeIngredient)
+        expect(response.payload.Ingredients).toEqual([fakeIngredient])
     });
 
     it("should handle deleteMyIngredients", async () => {
