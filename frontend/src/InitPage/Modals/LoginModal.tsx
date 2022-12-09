@@ -194,6 +194,7 @@ const LoginModal = (props: prop) => {
                         variant='body2'
                         onClick={onClickMode}
                         sx={{
+                            cursor: 'pointer',
                             '&:hover': {
                                 color: 'text.secondary',
                             },

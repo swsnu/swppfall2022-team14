@@ -45,16 +45,16 @@ const stubIngredientInitialState2: IngredientInfo = {
 
 const stubUserInitialState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password: null,
-        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "TEST_ID",
+        username: "TEST_USERNAME",
+        password: "TEST_PASSWORD",
+        nickname: "TEST_NICKNAME",
+        intro: "TEST_INTRO",
+        profile_img: "TEST_PROFILE_IMG",
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
-}
+    token: "TEST_TOKEN",
+    isLogin: true
+};
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
@@ -83,7 +83,7 @@ jest.mock("react-router", () => ({
     useNavigate: () => mockNavigate,
 }));
 
-const renderRecommendModal = (ingredient: IngredientInfo) => {
+const renderRecommendModal = (ingredient: IngredientInfo, isLogin = true) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
@@ -96,7 +96,7 @@ const renderRecommendModal = (ingredient: IngredientInfo) => {
                 cocktail: stubCocktailInitialState,
                 comment: stubCommentInitialState,
                 ingredient: ingredient,
-                user: stubUserInitialState,
+                user: { ...stubUserInitialState, isLogin: isLogin },
                 rate: rateState
             },
         }
@@ -126,5 +126,7 @@ describe("<RecommendModal />", () => {
     it("should handle recommendation ingredients render branches", () => {
         renderRecommendModal(stubIngredientInitialState2);
     })
-
+    it("should fail load when not login", () => {
+        renderRecommendModal(stubIngredientInitialState, false);
+    })
 });
