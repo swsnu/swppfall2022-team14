@@ -1,3 +1,4 @@
+import React from "react"
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { CocktailInfo, CocktailItemType } from "../store/slices/cocktail/cocktail";
@@ -20,6 +21,7 @@ jest.mock("react-router", () => ({
     useNavigate: () => mockNavigate,
 }));
 
+// eslint-disable-next-line react/display-name
 jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid={`spyCocktail_${prop.id}`}>
     </div>
@@ -83,9 +85,16 @@ const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
 }
+const loadingCocktaiState: CocktailInfo = {
+    cocktailList: [custom_cocktail1_item],
+    cocktailItem: null,
+    itemStatus: "loading",
+    listStatus: "loading",
+}
 
 const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: loggedInState, rate: rateState });
 const mockLoggedOutStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: loggedOutState, rate: rateState });
+const mockLoadingStore = getMockStore({ cocktail: loadingCocktaiState, ingredient: ingredientState, comment: commentState, user: loggedOutState, rate: rateState });
 
 
 describe("<MyCustomCocktail />", () => {
@@ -121,5 +130,14 @@ describe("<MyCustomCocktail />", () => {
             </Provider>
         );
         screen.getByTestId("spyCocktail_2");
+    });
+    it("should not render items if loading state", async () => {
+        render(
+            <Provider store={mockLoadingStore}>
+                <MyCustomCocktail />
+            </Provider>
+        );
+        const item = screen.queryByTestId("spyCocktail_2");
+        expect(item).toBeNull()
     });
 })

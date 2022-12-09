@@ -70,11 +70,6 @@ const commentOther: CommentType = {
     parent_comment: null, // if null comment is root comment
     is_deleted: false
 }
-const initComment: CommentInfo = {
-    commentList: [commentAuthor, commentOther],
-    commentItem: commentAuthor,
-    state: null
-}
 const editComment: CommentInfo = {
     commentList: [commentAuthor, commentOther],
     commentItem: commentAuthor,

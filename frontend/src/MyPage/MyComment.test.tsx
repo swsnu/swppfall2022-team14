@@ -1,3 +1,4 @@
+import React from "react"
 import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { CocktailInfo, CocktailItemType } from "../store/slices/cocktail/cocktail";
@@ -14,6 +15,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
+// eslint-disable-next-line react/display-name
 jest.mock("./Components/ShortComment", () => (prop: CommentType) => (
     <div data-testid={`spyComment_${prop.id}`}>
     </div>
@@ -67,24 +69,26 @@ const ingredientState: IngredientInfo = {
 
 const stubUserInitialState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password: null,
-        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "TEST_ID",
+        username: "TEST_USERNAME",
+        password: "TEST_PASSWORD",
+        nickname: "TEST_NICKNAME",
+        intro: "TEST_INTRO",
+        profile_img: "TEST_PROFILE_IMG",
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
-}
+    token: "TEST_TOKEN",
+    isLogin: true
+};
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
 }
 const mockStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: stubUserInitialState, rate: rateState });
+const notLoggedInmockStore = getMockStore({ cocktail: cocktaiState, ingredient: ingredientState, comment: commentState, user: {...stubUserInitialState, token:null, isLogin:false}, rate: rateState });
+
 
 describe("<MyComment />", () => {
-    it("should render items without errors", () => {
+    it("should render comments without errors", () => {
         render(
             <Provider store={mockStore}>
                 <MyComment />
@@ -93,5 +97,15 @@ describe("<MyComment />", () => {
         const items = screen.getAllByTestId("spyComment_1");
         expect(items).toHaveLength(1);
         expect(mockDispatch).toBeCalledTimes(1)
+    });
+    it("should not render comments without log in", () => {
+        render(
+            <Provider store={notLoggedInmockStore}>
+                <MyComment />
+            </Provider>
+        );
+        const items = screen.getAllByTestId("spyComment_1");
+        expect(items).toHaveLength(1);
+        expect(mockDispatch).toBeCalledTimes(0)
     });
 });

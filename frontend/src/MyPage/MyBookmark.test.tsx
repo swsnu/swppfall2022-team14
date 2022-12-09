@@ -1,6 +1,6 @@
+import React from "react"
 import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { MemoryRouter, Route, Routes } from "react-router";
 import { CocktailInfo, CocktailItemType } from "../store/slices/cocktail/cocktail";
 import { CommentInfo } from "../store/slices/comment/comment";
 import { IngredientInfo } from "../store/slices/ingredient/ingredient";
@@ -15,6 +15,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
+// eslint-disable-next-line react/display-name
 jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid={`spyItem_${prop.id}`}>
     </div>
@@ -36,6 +37,13 @@ const cocktaiState: CocktailInfo = {
     cocktailItem: null,
     itemStatus: "success",
     listStatus: "success",
+}
+
+const loadingCocktaiState: CocktailInfo = {
+    cocktailList: [standard_cocktail1_item],
+    cocktailItem: null,
+    itemStatus: "loading",
+    listStatus: "loading",
 }
 
 const emptyCommentState: CommentInfo = {
@@ -80,6 +88,8 @@ const rateState: RateInfo = {
 
 const mockLoggedInStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedInState, rate: rateState });
 const mockLoggedOutStore = getMockStore({ cocktail: cocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedOutState, rate: rateState });
+const mockLoadingStore = getMockStore({ cocktail: loadingCocktaiState, ingredient: emptyingredientState, comment: emptyCommentState, user: loggedOutState, rate: rateState });
+
 
 describe("<MyBookMark />", () => {
     it("should render items with logged in without errors", () => {
@@ -102,6 +112,15 @@ describe("<MyBookMark />", () => {
         const items = screen.getAllByTestId("spyItem_1");
         expect(items).toHaveLength(1);
         expect(mockDispatch).toBeCalledTimes(0);
+    });
+    it("should not render items if loading state", () => {
+        render(
+            <Provider store={mockLoadingStore}>
+                <MyBookmark />
+            </Provider>
+        );
+        const items = screen.queryByTestId("spyItem_1");
+        expect(items).toBeNull();
     });
 
 });
