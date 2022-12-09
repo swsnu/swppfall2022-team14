@@ -8,6 +8,7 @@ from .serializers import CommentSerializer, CommentPostSerializer
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework import permissions, authentication
 
+
 @api_view(['GET'])
 def comment_list(request, cocktail_id):
     if request.method == 'GET':
@@ -19,6 +20,7 @@ def comment_list(request, cocktail_id):
         comments = cocktail.comments.all()
         data = CommentSerializer(comments, many=True).data
         return JsonResponse({"comments": data, "count": comments.count()}, safe=False)
+
 
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
@@ -51,18 +53,19 @@ def comment_post(request, cocktail_id):
 @api_view(['GET'])
 def retrieve_comment(request, pk):
     if request.method == 'GET':
+
         try:
             comment = Comment.objects.get(id=pk)
         except Comment.DoesNotExist:
             return HttpResponseNotFound(f"No Comment matches id={pk}")
-
         data = CommentSerializer(comment).data
         return JsonResponse(data, safe=False)
+
 
 @api_view(['PUT'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
-def edit_comment(request,pk):
+def edit_comment(request, pk):
     if request.method == 'PUT':
         try:
             if request.user.is_authenticated:
@@ -82,6 +85,7 @@ def edit_comment(request,pk):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return JsonResponse(serializer.data, status=200)
+
 
 @api_view(['DELETE'])
 @authentication_classes([authentication.TokenAuthentication])
@@ -126,6 +130,5 @@ def retrieve_my_comment(request):
             return HttpResponse(status=401)
         # TODO: author_id=request.user.id
         comments = Comment.objects.filter(author_id=user.id)
-        print(comments.__str__())
         data = CommentSerializer(comments, many=True).data
         return JsonResponse({"comments": data, "count": comments.count()}, safe=False)
