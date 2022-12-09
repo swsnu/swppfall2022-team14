@@ -19,10 +19,8 @@ from rest_framework import permissions, authentication
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def user_store(request):
-    if not request.user.is_authenticated:
-        return HttpResponse(status=401)
-    user = request.user
 
+    user = request.user
     if request.method == 'GET':
 
         store_ingredients = user.store.all()
@@ -68,13 +66,13 @@ def user_store(request):
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def modify_user_store(request, ingredient_id):
-    if not request.user.is_authenticated:
-        return HttpResponse(status=401)
+
     user = request.user
 
     if request.method == 'DELETE':
         # need constraint check
         try:
+
             user_store = Store.objects.get(
                 user=user, ingredient_id=ingredient_id)
         except Store.DoesNotExist:

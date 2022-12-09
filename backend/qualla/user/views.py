@@ -65,8 +65,6 @@ def signout(request):
             logout(request)
 
             return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=401)
 
 
 @api_view(['GET'])
@@ -89,8 +87,7 @@ def retrieve_my_info(request):
         if user.is_authenticated:
             data = UserInfoSerializer(user).data
             return JsonResponse(data, safe=False)
-        else:
-            return HttpResponse(status=401)
+
     elif request.method == 'PUT':
         user = request.user
         if user.is_authenticated:
@@ -110,15 +107,12 @@ def retrieve_my_info(request):
 
             data = UserInfoSerializer(user).data
             return JsonResponse(data, safe=False)
-        else:
-            return HttpResponse(status=401)
     elif request.method == 'DELETE':
         user = request.user
+
         if user.is_authenticated:
             user.delete()
             return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=401)
 
 
 @ensure_csrf_cookie

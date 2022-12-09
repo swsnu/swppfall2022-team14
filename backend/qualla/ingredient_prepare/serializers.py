@@ -13,7 +13,8 @@ class IngredientPrepareSerializer(serializers.ModelSerializer):
             "id",
             "cocktail",
             "ingredient",
-            "amount"
+            "amount",
+            "unit"
         )
 
 

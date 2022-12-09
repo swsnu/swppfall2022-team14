@@ -2,6 +2,7 @@ from http import client
 from pydoc import cli
 from urllib import response
 from django.test import TestCase, Client
+from django.test.client import RequestFactory
 from .models import User
 from .serializers import UserInfoSerializer
 from ingredient_prepare.models import IngredientPrepare
@@ -10,8 +11,10 @@ from tag.models import CocktailTag, Tag
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework.test import force_authenticate
 from django.contrib.auth import authenticate, login, logout
 import json
+from rest_framework.test import APIClient
 
 
 # Create your tests here.
@@ -19,94 +22,96 @@ import json
 class UserTestCase(TestCase):
 
     def setUp(self):
-        login_user = User.objects.create_user(username="login", password="login")
-        user = authenticate(username="login", password="login")
-        token = Token.objects.create(user=login_user)
+        login_user = User.objects.create_user(
+            username="login", password="login")
+        self.token = Token.objects.create(user=login_user)
+
+        self.client = APIClient()
+        self.client.login(username='login', password='login')
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+
+        self.client_not_login = Client()
 
     def test_signup(self):
-        client = Client()
-        #sign up
-        response = client.post('/api/v1/auth/signup/', json.dumps({'username': 't1', 'password': 't1'}),
-                               content_type='application/json')
+
+        # sign up
+        response = self.client.post('/api/v1/auth/signup/', json.dumps({'username': 't1', 'password': 't1'}),
+                                    content_type='application/json')
         self.assertEqual(response.status_code, 201)
-        #exist case
-        response = client.post('/api/v1/auth/signup/', json.dumps({'username': 'login', 'password': 'login'}),
-                               content_type='application/json')
+
+        # if username exists
+
+        response = self.client.post('/api/v1/auth/signup/', json.dumps({'username': 'login', 'password': 'login'}),
+                                    content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
     def test_signin(self):
-        client = Client()
-        #sign in
-        response = client.post('/api/v1/auth/login/', json.dumps({'username': 'login', 'password': 'login'}),
-                               content_type='application/json')
+
+        # sign in
+        response = self.client.post('/api/v1/auth/login/', json.dumps({'username': 'login', 'password': 'login'}),
+                                    content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        #not exist user
-        response = client.post('/api/v1/auth/login/', json.dumps({'username': 'test', 'password': 'test'}),
-                               content_type='application/json')
+        # if user does not exists
+        response = self.client.post('/api/v1/auth/login/', json.dumps({'username': 'test', 'password': 'test'}),
+                                    content_type='application/json')
         self.assertEqual(response.status_code, 401)
 
     def test_signout(self):
-        client = Client()
-        #valid login
-        response = client.post('/api/v1/auth/login/', json.dumps({'username': 'login', 'password': 'login'}),
-                               content_type='application/json')
+
+        # sign out
+        response = self.client.post('/api/v1/auth/logout/',
+                                    {})
         self.assertEqual(response.status_code, 200)
-        #sign out
-        response = client.post('/api/v1/auth/logout/')
-        self.assertEqual(response.status_code, 200)
-        #not exist user
-        response = client.post('/api/v1/auth/logout/', json.dumps({'username': 'test', 'password': 'test'}),
-                               content_type='application/json')
+
+        # when logged out
+        response = self.client_not_login.post('/api/v1/auth/logout/', {})
         self.assertEqual(response.status_code, 401)
 
     def test_retrieve_my_info_get(self):
-        client = Client()
-        #valid login
-        response = client.post('/api/v1/auth/login/', json.dumps({'username': 'login', 'password': 'login'}),
-                               content_type='application/json')
+
+        # get info
+        response = self.client.get('/api/v1/auth/me/')
         self.assertEqual(response.status_code, 200)
-        #get_info
-        response = client.get('/api/v1/auth/me/')
-        self.assertEqual(response.status_code, 200)
-        #not exist user
-        response = client.post('/api/v1/auth/logout/')
-        response = client.get('/api/v1/auth/me/')
+
+        # when logged out
+        self.client.logout()
+        response = self.client.get('/api/v1/auth/me/')
         self.assertEqual(response.status_code, 401)
 
     def test_retrieve_my_info_put(self):
-        client = Client()
-        #valid login
-        response = client.post('/api/v1/auth/login/', json.dumps({'username': 'login', 'password': 'login'}),
-                               content_type='application/json')
+
+        # put_info
+        response = self.client.put('/api/v1/auth/me/', json.dumps({'nickname': 'n_', 'password': 'login_', 'intro': 'intro', 'profile_img': 'img'}),
+                                   content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        #put_info
-        response = client.put('/api/v1/auth/me/', json.dumps({'nickname': 'n_', 'password': 'login_', 'intro': 'intro', 'profile_img': 'img'}),
-                               content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        #not exist user
-        response = client.post('/api/v1/auth/logout/')
-        response = client.put('/api/v1/auth/me/',json.dumps({'nickname': 'n_', 'password': 'login_', 'intro': 'intro', 'profile_img': 'img'}),
-                               content_type='application/json')
+
+        # when logged out
+        self.client.logout()
+        response = self.client.put('/api/v1/auth/me/', json.dumps({'nickname': 'n_', 'password': 'login_', 'intro': 'intro', 'profile_img': 'img'}),
+                                   content_type='application/json')
         self.assertEqual(response.status_code, 401)
 
     def test_retrieve_my_info_delete(self):
-        client = Client()
-        #valid login
-        response = client.post('/api/v1/auth/login/', json.dumps({'username': 'login', 'password': 'login'}),
-                               content_type='application/json')
+
+        # delete_info
+        response = self.client.delete('/api/v1/auth/me/')
         self.assertEqual(response.status_code, 200)
-        #delete_info
-        response = client.delete('/api/v1/auth/me/')
-        self.assertEqual(response.status_code, 200)
-        #not exist user
-        response = client.post('/api/v1/auth/logout/')
-        response = client.delete('/api/v1/auth/me/')
+
+        # when logged out
+        self.client.logout()
+        response = self.client.delete('/api/v1/auth/me/')
         self.assertEqual(response.status_code, 401)
 
-    def test_csrf(self):
-        client = Client()
-        #valid login
-        response = client.post('/api/v1/auth/login/', json.dumps({'username': 'login', 'password': 'login'}),
-                               content_type='application/json')
-        response = client.get('/api/v1/auth/token/')
-        csrftoken = response.cookies['csrftoken'].value
+    def test_get_user(self):
+        user = User.objects.get(username="login")
+        response = self.client.get(f"/api/v1/auth/{user.id}/")
+        self.assertEqual(response.status_code, 200)
+
+        # user does not exist
+        response = self.client.get(f"/api/v1/auth/3/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_token(self):
+        response = self.client.get(f"/api/v1/auth/token/")
+        self.assertEqual(response.status_code, 204)
+

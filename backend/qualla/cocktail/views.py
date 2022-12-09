@@ -52,7 +52,6 @@ def process_get_list_params(request, filter_q):
 
     if len(filter_type_ABV) != 0:
         try:
-
             abv_range = get_ABV_range(filter_type_ABV[0])
         except (ValueError):
             raise ValueError
@@ -86,31 +85,6 @@ def get_only_available_cocktails(request, filter_q):
         filter_q.add(Q(id__in=[-1]), Q.AND)
     else:
         filter_q.add(Q(id__in=available_cocktails_id), Q.AND)
-
-
-"""def get_cocktail_list_by_ingredient(request, filter_q):
-    # return list of Cocktail ID that is available
-
-    request_ingredient = request.query_params.getlist(
-        "ingredients[]", None)  # ingredient id list
-    cocktail_all = Cocktail.objects.all()
-    available_cocktails_id = []
-    # ingredient 조건 없음
-    if (not request_ingredient):
-        return
-
-    for cocktail in cocktail_all:
-        ingredient_prepare = [
-            str(ingredient_prepare.ingredient.id) for ingredient_prepare in cocktail.ingredient_prepare.all()]
-        # 만약 해당 칵테일 재료가 query의 subset이면
-
-        if set(ingredient_prepare).issubset(set(request_ingredient)):
-            available_cocktails_id.append(cocktail.id)
-    # 매칭된 칵테일 없음 없음
-    if (not available_cocktails_id):
-        filter_q.add(Q(id__in=[-1]), Q.AND)
-    else:
-        filter_q.add(Q(id__in=available_cocktails_id), Q.AND)"""
 
 
 @api_view(['GET'])
@@ -151,22 +125,6 @@ def cocktail_list(request):
                                       'user': request.user}).data
         return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
 
-        # if type == 'standard':
-        #     filter_q.add(Q(type='ST'), Q.AND)
-        #     # standard_cocktails = Cocktail.objects.filter(type='ST')
-        #     standard_cocktails = Cocktail.objects.filter(filter_q)
-        #     data = CocktailListSerializer(standard_cocktails, many=True).data
-
-        #     return JsonResponse({"cocktails": data, "count": standard_cocktails.count()}, safe=False)
-        # elif type == 'custom':
-        #     filter_q.add(Q(type='CS'), Q.AND)
-        #     # custom_cocktails = Cocktail.objects.filter(type='CS')
-        #     custom_cocktails = Cocktail.objects.filter(filter_q)
-        #     data = CocktailListSerializer(custom_cocktails, many=True).data
-        #    return JsonResponse({"cocktails": data, "count": custom_cocktails.count()}, safe=False)
-        # else:
-        #     return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
-
 
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
@@ -176,8 +134,7 @@ def cocktail_post(request):
         try:
             if request.user.is_authenticated:
                 data = request.data.copy()
-            else:
-                return HttpResponseBadRequest("Not Logined User")
+
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest("Unvalid Token")
 
@@ -282,6 +239,7 @@ def retrieve_cocktail(request, pk):
 
 @api_view(['PUT'])
 def cocktail_rate_edit(request, pk):
+
     try:
         cocktail = Cocktail.objects.get(id=pk)
     except Cocktail.DoesNotExist:
@@ -299,8 +257,6 @@ def cocktail_rate_edit(request, pk):
 @permission_classes([permissions.IsAuthenticated])
 def retrieve_my_cocktail(request):
     user = request.user
-    if not user.is_authenticated:
-        return HttpResponse(status=401)
 
     # TODO: author_id=request.user.id
     cocktails = Cocktail.objects.filter(author_id=user.id, type='CS')
