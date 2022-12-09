@@ -62,6 +62,7 @@ const AddIngredientModal = (props: IProps) => {
                         .map((ingredient) => (
                             <Grid key={ingredient.id} item xs={12} sm={6} md={2}>
                                 <Card 
+                                    data-testid="ingredient"
                                     sx={{ textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }} 
                                     onClick={() => onClickIngredient(ingredient)}
                                 >

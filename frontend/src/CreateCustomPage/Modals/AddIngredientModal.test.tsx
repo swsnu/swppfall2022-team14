@@ -97,11 +97,11 @@ const renderAddIngredientModal = () => {
 describe("<AddIngredientModal />", () => {
     it("should render LoginModal", async () => {
         renderAddIngredientModal();
-        await screen.findByText("Close");
+        await screen.findByText("INGREDIENT_NAME_1");
     });
     it("should close modal when ingredient clicked", async () => {
         renderAddIngredientModal();
-        const ingredientButton = screen.getAllByTestId("ingredientButton")[0];
+        const ingredientButton = screen.getAllByTestId("ingredient")[0];
         fireEvent.click(ingredientButton);
     });
 });

@@ -247,7 +247,6 @@ export default function CreateCustomPage() {
                             }}
                             actionIcon={
                                 <IconButton 
-                                    data-testid="file"
                                     size="small" 
                                     sx={{ 
                                         bgcolor: "primary.main", m: 1, px: 0.8, boxShadow: 3,
@@ -257,7 +256,7 @@ export default function CreateCustomPage() {
                                         },
                                     }}
                                 >
-                                    <label htmlFor='file' style={{ "marginBottom": -2 }}>
+                                    <label data-testid="file" htmlFor='file' style={{ "marginBottom": -2 }}>
                                         <FileUploadIcon fontSize="small" />
                                     </label>
                                 </IconButton>

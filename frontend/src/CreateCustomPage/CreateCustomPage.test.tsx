@@ -9,6 +9,7 @@ import CreateCustomPage from "./CreateCustomPage";
 import { IProps as AddIngredientModalProp } from "./Modals/AddIngredientModal";
 import { UserInfo } from "../store/slices/user/user";
 import { RateInfo } from '../store/slices/rate/rate';
+import user from '@testing-library/user-event';
 
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
@@ -111,6 +112,8 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
+jest.spyOn(window, 'alert').mockImplementation(() => {});
+
 const renderCreateCustomPage = (isLogin: boolean = true, isUserNull: boolean = false) => {
     renderWithProviders(
         <MemoryRouter>
@@ -192,7 +195,7 @@ describe("<CreateCustomPage />", () => {
         fireEvent.click(ingredientInput);
         const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
         fireEvent.click(addIngredientButton);
-        const ingredientUnitSelect = screen.getAllByLabelText("단위")[0];
+        const ingredientUnitSelect = screen.getAllByText("단위")[0];
         fireEvent.click(ingredientUnitSelect);
     });
     it("should delete tag when tag delete button clicked", async () => {
@@ -234,7 +237,18 @@ describe("<CreateCustomPage />", () => {
     });
     it("should load image when file upload button clicked", async () => {
         renderCreateCustomPage();
-        const FileUploadButton = screen.getByTestId("file");
-        fireEvent.click(FileUploadButton);
-    })
+        const FileUploadInput = screen.getByTestId("file");
+        const file = new File(["test"], "test.jpg", {
+            type: 'image/jpeg'
+        });
+        user.upload(FileUploadInput, file);
+    });
+    it("should fail loading image when file wrong", async () => {
+        renderCreateCustomPage();
+        const FileUploadInput = screen.getByTestId("file");
+        const file = new File(["test"], "test.txt", {
+            type: 'text/plain'
+        });
+        user.upload(FileUploadInput, file);
+    });
 });
