@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import styles from "./Filter.module.scss"
 import React from 'react';
 import { Filterparam } from "../InitPage";
 import { Divider, Button, Stack, FormGroup, TextField, Typography } from '@mui/material';
@@ -55,9 +54,7 @@ const Filter = (prop: Iprops) => {
         available_only: availableOnly
     }
     const onTypeClick = (param_type: string, type_name: string) => {
-        console.log(typeParam)
         if(param_type === "typeOne"){
-            console.log("?")
             const param = typeParam.typeOne
             if (!param.includes(type_name)){
                 setTypeParam({...typeParam, typeOne:param.concat(type_name)})
@@ -70,7 +67,7 @@ const Filter = (prop: Iprops) => {
                 setTypeParam({...typeParam, typeTwo:param.concat(type_name)})
             else
                 setTypeParam({...typeParam, typeTwo:param.filter(value => value != type_name)})
-        }else if (param_type === "typeThree"){
+        }else{
             const param = typeParam.typeThree
             if (param.includes(type_name))
                 setTypeParam({...typeParam, typeThree:[]})
@@ -101,8 +98,6 @@ const Filter = (prop: Iprops) => {
 
     useEffect(() => prop.setUrlParams(url_params), [typeParam, availableOnly])
 
-    console.log(typeParam)
-
     return (
         <Stack spacing={2} alignItems='flex-start' sx={{ pl: 3 }}>
             <Stack direction="row" spacing={1}>
@@ -117,7 +112,6 @@ const Filter = (prop: Iprops) => {
                                 key={type.label} 
                                 size="small"
                                 sx={{ bgcolor: 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
-                                onChange={() => prop.setUrlParams(url_params)} 
                                 onClick={() => onThemeClick(type)}
                             >
                                 <Typography variant="caption" color='text.primary'>
@@ -146,7 +140,6 @@ const Filter = (prop: Iprops) => {
                                         key={type.label} 
                                         size="small"
                                         sx={{ bgcolor: filter.typeParamList.includes(type.name) ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
-                                        onChange={() => prop.setUrlParams(url_params)} 
                                         onClick={() => onTypeClick(filter.name, type.name)}
                                     >
                                         <Typography variant="caption" color='text.primary'>

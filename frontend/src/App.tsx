@@ -10,7 +10,6 @@ import React from 'react';
 import ListPage from "./ListPage/ListPage";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import {ToastContainer} from "react-toastify";
 
 const darkTheme = createTheme({
   palette: {
@@ -26,6 +25,7 @@ const darkTheme = createTheme({
     },
     text: {
       primary: '#ffffff',
+      secondary: '#aaaaaa',
     },
     background: {
       paper: '#202020',

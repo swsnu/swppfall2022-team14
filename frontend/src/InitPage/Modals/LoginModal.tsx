@@ -1,13 +1,25 @@
 import { useState, SetStateAction, Dispatch, KeyboardEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Modal from 'react-modal';
 import styles from './LoginModal.module.scss'
 import { toast } from 'react-toastify';
 import { AppDispatch } from '../../store';
 import { loginUser, logoutUser, registerUser, selectUser } from '../../store/slices/user/user';
-import { TextField } from "@mui/material";
 import React from 'react';
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import Modal from '@mui/material/Modal';
+import { Button, Stack, TextField, Typography } from "@mui/material";
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '40%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 3,
+    overflow: 'scroll',
+};
 
 export interface prop {
     isOpen: boolean;
@@ -17,21 +29,20 @@ export interface prop {
 const LoginModal = (props: prop) => {
     const { isOpen, setIsOpen } = props;
 
-    const [name, setName] = useState('');
     const [loginId, setLoginId] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [isLoginMode, setIsLoginMode] = useState(true)
+    const [errorText, setErrorText] = useState('');
+
     const onClickMode = () => {
-        setName('');
         setLoginId('');
         setLoginPassword('');
+        setErrorText('');
         setIsLoginMode(!isLoginMode);
     }
 
     const dispatch = useDispatch<AppDispatch>();
     const userState = useSelector(selectUser);
-
-    //Modal.setAppElement('#root');
 
     const checkID = (asValue: string) => {
         const regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
@@ -51,23 +62,13 @@ const LoginModal = (props: prop) => {
 
 
     const onClickLogin = async () => {
-        if (loginId === '') {
-            toast.success('asdf')
-            //toast.error('아이디를 입력해주세요.');
-        } else if (loginPassword === '') {
-            toast.error('비밀번호를 입력해주세요.');
-        } else {
+        if (loginId !== '' && loginPassword !== '')  {
             const data = { username: loginId, password: loginPassword };
             const result = await dispatch(loginUser(data));
             if (result.type === `${loginUser.typePrefix}/fulfilled`) {
-                console.log("front - success")
-                console.log(result)
-                alert("로그인 성공")
                 setIsOpen(false)
             } else {
-                console.log("front - failed")
-                console.log(result)
-                alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+                setErrorText("아이디 또는 비밀번호가 일치하지 않습니다.");
             }
         }
     };
@@ -79,49 +80,130 @@ const LoginModal = (props: prop) => {
             password: loginPassword
         }
         if (!checkID(data.username)) {
-            alert("아이디 형식 오류")
+            setErrorText("아이디 형식 오류")
             return
         }
         if (!checkPW(data.password)) {
-            alert("비밀번호 형식 오류")
+            setErrorText("비밀번호 형식 오류")
             return
         }
 
         const result = await dispatch(registerUser(data))
         if (result.type === `${registerUser.typePrefix}/fulfilled`) {
-            console.log("front - success")
-            console.log(result)
-            alert("계정 생성 성공")
+            onClickMode()
         } else {
-            console.log("front - failed")
-            console.log(result)
-            alert("계정 생성 실패");
+            setErrorText("계정 생성 실패");
         }
     };
     const onClickClose = () => {
-        setName('');
         setLoginId('');
         setLoginPassword('');
         setIsOpen(false)
     }
 
-
-
     return (
-        <Modal className={styles['login-modal']} isOpen={isOpen} onRequestClose={() => onClickClose()} ariaHideApp={false}>
-            <div className={styles.container}>
-                <TextField id="id-input" label="아이디" variant="outlined" onKeyPress={onKeyPress} value={loginId} onChange={(e) => setLoginId(e.target.value)} />
-                <div className={styles['regex']}>아이디는 2-10자의 영문과 숫자와 일부 특수문자(._-)만 입력 가능</div>
-                <TextField onKeyPress={onKeyPress} id="pw-input" label="비밀번호" variant="outlined" type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
-                <div className={styles['regex']}>영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용</div>
-                <div className={styles['button-box']}>
-                    <div className={styles.button}>
-                        {isLoginMode ? <button className={styles.login} onClick={onClickLogin}>Login</button> : null}
-                        {!isLoginMode ? <button className={styles.login} onClick={onClickRegister}>Register</button> : null}
-                    </div>
-                    <div className={styles['type']} onClick={onClickMode}>{isLoginMode ? "회원가입하러 가기" : "로그인하러 가기"}</div>
-                </div>
-            </div>
+        <Modal 
+            open={isOpen} 
+            onClose={onClickClose} 
+        >
+            <Stack spacing={2} sx={style}>
+                <TextField 
+                    label="아이디" 
+                    variant="standard" 
+                    helperText="2-10자의 영문과 숫자, 일부 특수문자(., _, -)만 입력 가능합니다."
+                    value={loginId} 
+                    onChange={(e) => {setLoginId(e.target.value); setErrorText('');}}
+                    onKeyPress={onKeyPress}
+                    sx={{
+                        '& label.Mui-focused': {
+                            color: 'secondary.light',
+                        },
+                        '& .MuiInput-underline:after': {
+                            borderBottomColor: 'secondary.light',
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: 'secondary.light',
+                            },
+                        },
+                    }}
+                />
+                <TextField 
+                    label="비밀번호" 
+                    variant="standard" 
+                    helperText={<> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
+                    type="password" 
+                    value={loginPassword} 
+                    onChange={(e) => {setLoginPassword(e.target.value); setErrorText('');}}
+                    onKeyPress={onKeyPress}
+                    sx={{
+                        '& label.Mui-focused': {
+                            color: 'secondary.light',
+                        },
+                        '& .MuiInput-underline:after': {
+                            borderBottomColor: 'secondary.light',
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: 'secondary.light',
+                            },
+                        },
+                    }}
+                />
+                {isLoginMode ? 
+                    <Button variant="text" onClick={onClickLogin}
+                        sx={{
+                            bgcolor: 'primary.dark',
+                            borderRadius: 3,
+                            boxShadow: 3,
+                            '&:hover': {
+                                backgroundColor: 'secondary.main',
+                                boxShadow: 2,
+                            },
+                        }}
+                    >
+                        <Typography color='text.primary'>
+                            로그인
+                        </Typography>
+                    </Button> : 
+                    <Button variant="text" onClick={onClickRegister}
+                        sx={{
+                            bgcolor: 'primary.dark',
+                            borderRadius: 3,
+                            boxShadow: 3,
+                            '&:hover': {
+                                backgroundColor: 'secondary.main',
+                                boxShadow: 2,
+                            },
+                        }}
+                    >
+                        <Typography color='text.primary'>
+                            회원가입
+                        </Typography>
+                    </Button>
+                }
+                <Stack direction="row" alignItems='flex-end' justifyContent='space-between'>
+                    <Typography 
+                        color='error.main' 
+                        variant='body2'
+                    >
+                        {errorText}
+                    </Typography>
+                    <Typography 
+                        color='text.primary' 
+                        variant='body2'
+                        onClick={onClickMode}
+                        sx={{
+                            cursor: 'pointer',
+                            '&:hover': {
+                                color: 'text.secondary',
+                            },
+                        }}
+                    >
+                        {isLoginMode ? "회원가입하러 가기" : "로그인하러 가기"}
+                    </Typography>
+                </Stack>
+            </Stack>
         </Modal >
     );
 };

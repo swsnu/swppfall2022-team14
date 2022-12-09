@@ -3,12 +3,11 @@ import { useNavigate } from "react-router"
 import Filter from "./Components/Filter"
 import Item from "../common/Components/Item"
 import React from 'react';
-import styles from "./InitPage.module.scss"
 import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiquorModal"
 import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
-import { getUser, logoutUser, selectUser } from '../store/slices/user/user';
+import { logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
 import { fetchMyIngredientList } from "../store/slices/ingredient/ingredient";
 import RecommendModal from "./Modals/RecommendModal";
@@ -113,11 +112,6 @@ const InitPage = () => {
         navigate(`/mypage`)
     }
 
-    const onClickUserInfo = async () => {
-        const res = dispatch(getUser(userState.token))
-        console.log(res)
-    }
-
     const [isRecommendOpen, setIsRecommendOpen] = useState(false);
     const onClickRecommendButton = () => {
         if (userState.isLogin) {
@@ -149,22 +143,22 @@ const InitPage = () => {
         <Stack spacing={2} sx={{ width: 1, pl: 2, pr: 3, py: 2 }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <LocalBarIcon sx={{ ml: 13, fontSize: 50 }} />
-                <Stack direction="row" spacing={1} justifyContent="flex-end">
+                <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end">
                     {loginState && isOpenProfile ? (
-                        <Stack direction="row" spacing={1} justifyContent="flex-end">
-                            <IconButton onClick={onClickMyPage}>
+                        <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
+                            <IconButton data-testid="my page" onClick={onClickMyPage}>
                                 <PersonOutlineIcon />
                             </IconButton>
-                            <IconButton onClick={onClickLogout}>
+                            <IconButton data-testid="logout" onClick={onClickLogout}>
                                 <LogoutIcon />
                             </IconButton>
                         </Stack> 
                     ) : null}
                     {loginState ? 
-                        <IconButton size="large" onClick={onClickProfile}>
+                        <IconButton data-testid="my profile" size="large" onClick={onClickProfile}>
                             <AccountCircleIcon fontSize="large" />
                         </IconButton> : 
-                        <IconButton onClick={onClickLogin}>
+                        <IconButton data-testid="login" onClick={onClickLogin}>
                             <LoginIcon />
                         </IconButton>
                     }
@@ -204,16 +198,19 @@ const InitPage = () => {
                                 },
                             }}    
                         />
-                        <IconButton onClick={onClickSearch}>
+                        <IconButton data-testid="search" onClick={onClickSearch}>
                             <SearchIcon />
                         </IconButton>
                     </Stack>
                     <StyledItem
+                        data-testid="filter"
                         onClick={onClickFilter}
                         sx={{ px: 2, bgcolor: 'primary.main', borderRadius: 4 }}
                     >
                         <ListItemText disableTypography primary="필터 검색" />
-                        <StyledItemIcon><FilterAltIcon /></StyledItemIcon>
+                        <StyledItemIcon>
+                            <FilterAltIcon />
+                        </StyledItemIcon>
                     </StyledItem>
                 </Stack>
             </Stack>
@@ -234,6 +231,7 @@ const InitPage = () => {
                 )}
             </Grid>
             <IconButton
+                data-testid="my liquor"
                 onClick={onClickMyLiqour}
                 size='large'
                 sx={{

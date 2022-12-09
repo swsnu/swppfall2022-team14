@@ -43,8 +43,6 @@ export default function CreateCustomPage() {
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
     const [newIngredient, setNewIngredient] = useState<IngredientType | null>(null);
-    const [unitList, setUnitList] = useState<string[]>([]);
-    const [newUnit, setNewUnit] = useState<string | null>(null);
 
     const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
@@ -54,10 +52,10 @@ export default function CreateCustomPage() {
 
 
     useEffect(() => {
-        setExpectedABV(calculateABV(ingredientList, unitList));
-        setExpectedColor(calculateColor(ingredientList, unitList));
-        setExpectedPrice(calculatePrice(ingredientList, unitList));
-    }, [unitList, ingredientList])
+        setExpectedABV(calculateABV(ingredientList));
+        setExpectedColor(calculateColor(ingredientList));
+        setExpectedPrice(calculatePrice(ingredientList));
+    }, [ingredientList])
 
 
 
@@ -76,12 +74,16 @@ export default function CreateCustomPage() {
         );
     };
 
-    const onChangeIngredientUnit = (selectedIdx: number, unit: string) => {
-        console.log(selectedIdx)
-        console.log(unit)
-        const units = unitList
-        units[selectedIdx] = unit
-        setUnitList(units)
+    const onChangeIngredientUnit = (selectedIdx: number, changedUnit: string) => {
+        setIngredientList(
+            ingredientList.map((ingredient, idx) => {
+                if (idx !== selectedIdx) {
+                    return ingredient;
+                } else {
+                    return { ...ingredient, recipe_unit: changedUnit } as IngredientPrepareType;
+                }
+            })
+        );
     }
 
     const onKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -105,7 +107,7 @@ export default function CreateCustomPage() {
     const createCocktailHandler = async () => {
         if (userState.user?.id !== null && userState.token !== null) {
             const ingredients = ingredientList.map((ingr, ind) => {
-                return { ...ingr, amount: ingr.amount, unit: unitList[ind] }
+                return { ...ingr, amount: ingr.amount, unit: ingr.recipe_unit }
             })
             const data: PostForm = {
                 cocktail: {
@@ -166,13 +168,11 @@ export default function CreateCustomPage() {
     }, [])
 
     useEffect(() => {
-        if (newIngredient && newUnit) {
-            setIngredientList([...ingredientList, { ...newIngredient, amount: "", recipe_unit: "" }]);
+        if (newIngredient) {
+            setIngredientList([...ingredientList, { ...newIngredient, amount: "", recipe_unit: newIngredient.unit[0] }]);
             setNewIngredient(null);
-            setUnitList([...unitList, newUnit])
-            setNewUnit(null)
         }
-    }, [newIngredient, newUnit])
+    }, [newIngredient])
 
     return (
         <Stack direction="row" justifyContent="space-between" sx={{ pr: 2 }} divider={<Divider orientation="vertical" flexItem />}>
@@ -310,7 +310,7 @@ export default function CreateCustomPage() {
                             />
                         </Stack>
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={1} sx={{ width: 1, px: 2 }}>
-                            {[...ingredientList, { name: "", amount: undefined, unit: [""] }].map((ingredient, idx) => {
+                            {[...ingredientList, { name: "", amount: undefined, unit: [""], recipe_unit: "" }].map((ingredient, idx) => {
                                 return (
                                     <Stack key={ingredient.name} direction="row" spacing={1} alignItems="flex-end" justifyContent="space-between" sx={{ width: 1 }}>
                                         <Stack key={ingredient.name} direction="row" spacing={1} alignItems="flex-end" justifyContent="flex-start" sx={{ width: 0.9 }}>
@@ -343,7 +343,6 @@ export default function CreateCustomPage() {
                                                 close={() => setOpen(false)}
                                                 addedIngredientList={ingredientList.map((ingredient) => { return ingredient.name })}
                                                 setNewIngrdient={setNewIngredient}
-                                                setDefaultUnit={setNewUnit}
                                             />
                                             <TextField
                                                 label="양"
@@ -351,9 +350,9 @@ export default function CreateCustomPage() {
                                                 value={ingredient.amount}
                                                 onChange={(event) => {
                                                     onChangeAmount(idx, event.target.value);
-                                                    setExpectedABV(calculateABV(ingredientList, unitList));
-                                                    setExpectedColor(calculateColor(ingredientList, unitList));
-                                                    setExpectedPrice(calculatePrice(ingredientList, unitList));
+                                                    setExpectedABV(calculateABV(ingredientList));
+                                                    setExpectedColor(calculateColor(ingredientList));
+                                                    setExpectedPrice(calculatePrice(ingredientList));
                                                 }}
                                                 size="small"
                                                 sx={{
@@ -375,12 +374,12 @@ export default function CreateCustomPage() {
                                                 label="단위"
                                                 variant="standard"
                                                 select
-                                                value={ingredient.amount}
+                                                value={ingredient.recipe_unit}
                                                 onChange={(e) => {
                                                     onChangeIngredientUnit(idx, e.target.value);
-                                                    setExpectedABV(calculateABV(ingredientList, unitList));
-                                                    setExpectedColor(calculateColor(ingredientList, unitList));
-                                                    setExpectedPrice(calculatePrice(ingredientList, unitList));
+                                                    setExpectedABV(calculateABV(ingredientList));
+                                                    setExpectedColor(calculateColor(ingredientList));
+                                                    setExpectedPrice(calculatePrice(ingredientList));
                                                 }}
                                                 size="small"
                                                 sx={{

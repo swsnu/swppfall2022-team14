@@ -16,19 +16,18 @@ function addVector(a: number[], b: number[]) {
     return a.map((e, i) => e + b[i]);
 }
 
-export function calculateABV(ingredientList: IngredientPrepareType[], unitList: string[]) {
+export function calculateABV(ingredientList: IngredientPrepareType[]) {
     let abv = 0
     let amount = 0
-    console.log(ingredientList, unitList)
     for (let i = 0; i < ingredientList.length; i++) {
         const ing_abv = ingredientList[i].ABV
 
         let ing_amount = Number(ingredientList[i].amount)
-        if (!['ml', 'oz', 'gram'].includes(unitList[i]) || ingredientList[i].name == '얼음') {
+        if (!['ml', 'oz', 'gram'].includes(ingredientList[i].recipe_unit) || ingredientList[i].name == '얼음') {
             continue // ml, oz, gram이 아니거나 얼음인 경우 계산 X
         }
 
-        else if (unitList[i] == 'oz')
+        else if (ingredientList[i].recipe_unit == 'oz')
             ing_amount *= 30
 
 
@@ -40,14 +39,14 @@ export function calculateABV(ingredientList: IngredientPrepareType[], unitList: 
     console.log("abv", abv)
     return Math.round(abv * 10) / 10
 }
-export function calculatePrice(ingredientList: IngredientPrepareType[], unitList: string[]) {
+export function calculatePrice(ingredientList: IngredientPrepareType[]) {
     let price = 0
     for (let i = 0; i < ingredientList.length; i++) {
         let ing_amount = Number(ingredientList[i].amount)
         let ing_price = Number(ingredientList[i].price)
-        if (!['ml', 'oz',].includes(unitList[i]) && (ingredientList[i].unit.includes('개') || ingredientList[i].unit.includes('조각')))
+        if (!['ml', 'oz',].includes(ingredientList[i].recipe_unit) && (ingredientList[i].unit.includes('개') || ingredientList[i].unit.includes('조각')))
             ing_price /= 100 // TODO : 단위 constraint
-        if (unitList[i] == 'oz')
+        if (ingredientList[i].recipe_unit == 'oz')
             ing_amount *= 30
 
         price = price + (ing_price * ing_amount)
@@ -55,7 +54,7 @@ export function calculatePrice(ingredientList: IngredientPrepareType[], unitList
     return Math.round(price)
 
 }
-export function calculateColor(ingredientList: IngredientPrepareType[], unitList: string[]): string {
+export function calculateColor(ingredientList: IngredientPrepareType[]): string {
     let color = [0, 0, 0]
     let amount = 0
 
@@ -68,7 +67,7 @@ export function calculateColor(ingredientList: IngredientPrepareType[], unitList
         if (!ing_color_rgb)
             return ""
 
-        if (unitList[i] == 'oz')
+        if (ingredientList[i].recipe_unit == 'oz')
             ing_amount *= 30
 
         ing_color_rgb[0] *= ing_amount
