@@ -138,79 +138,74 @@ const renderCreateCustomPage = (isLogin: boolean = true, isUserNull: boolean = f
 describe("<CreateCustomPage />", () => {
     it("should render CreateCustomPage", async () => {
         renderCreateCustomPage();
-        await screen.findByText("Confirm");
+        await screen.findByText("업로드");
     });
     it("should navigate to /custom/:id when confirm button clicked", async () => {
         renderCreateCustomPage();
-        const nameInput = screen.getByLabelText("Name:");
+        const nameInput = screen.getByLabelText("칵테일 이름");
         fireEvent.change(nameInput, { target: { value: "NAME" } });
-        const descriptionInput = screen.getByLabelText("Description:");
+        const engNameInput = screen.getByLabelText("영어 이름 (선택)");
+        fireEvent.change(engNameInput, { target: { value: "NAME" } });
+        const descriptionInput = screen.getByLabelText("설명");
         fireEvent.change(descriptionInput, { target: { value: "DESCRIPTION" } });
-        const ingredientInput = screen.getByTestId("ingredientInput");
+        const ingredientInput = screen.getByLabelText("재료");
         fireEvent.click(ingredientInput);
         const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
         fireEvent.click(addIngredientButton);
-        const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
+        const ingredientAmountInput = screen.getAllByLabelText("양")[0];
         fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
-        const recipeInput = screen.getByLabelText("Recipe:");
+        const recipeInput = screen.getByLabelText("만드는 방법");
         fireEvent.change(recipeInput, { target: { value: "RECIPE" } });
-        const tagInput = screen.getByTestId("tagInput");
+        const tagInput = screen.getByLabelText("태그");
         fireEvent.change(tagInput, { target: { value: "TAG" } })
         fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
-        const confirmButton = screen.getByText("Confirm");
+        const confirmButton = screen.getByText("업로드");
         fireEvent.click(confirmButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/custom/1"));
     });
     it("should delete ingredient when ingredient delete button clicked", async () => {
         renderCreateCustomPage();
-        const ingredientInput = screen.getByTestId("ingredientInput");
+        const ingredientInput = screen.getByLabelText("재료");
         fireEvent.click(ingredientInput);
         const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
         fireEvent.click(addIngredientButton);
-        const ingredientDeleteButton = screen.getByTestId("ingredientDeleteButton");
+        const ingredientDeleteButton = screen.getByTestId("delete");
         fireEvent.click(ingredientDeleteButton);
     });
     it("should operate onChangeAmount correctly", async () => {
         renderCreateCustomPage();
-        const ingredientInput = screen.getByTestId("ingredientInput");
+        const ingredientInput = screen.getByLabelText("재료");
         fireEvent.click(ingredientInput);
         const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
         fireEvent.click(addIngredientButton);
-        const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
+        const ingredientAmountInput = screen.getAllByLabelText("양")[0];
         fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
         const addIngredientButton2 = screen.getAllByTestId("addIngredientButton")[1];
         fireEvent.click(addIngredientButton2);
-        const ingredientAmountInput2 = screen.getAllByTestId("ingredientAmountInput")[1];
+        const ingredientAmountInput2 = screen.getAllByLabelText("양")[1];
         fireEvent.change(ingredientAmountInput2, { target: { value: "5" } });
         fireEvent.change(ingredientAmountInput2, { target: { value: "0" } });
     });
     it("should operate onChangeIngredientUnit correctly", async () => {
         renderCreateCustomPage();
-        const ingredientInput = screen.getByTestId("ingredientInput");
+        const ingredientInput = screen.getByLabelText("재료");
         fireEvent.click(ingredientInput);
         const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
         fireEvent.click(addIngredientButton);
-        const ingredientUnitSelect = screen.getAllByTestId("ingredientUnitSelect")[0];
-        fireEvent.change(ingredientUnitSelect, { target: { value: "ml" } });
+        const ingredientUnitSelect = screen.getAllByLabelText("단위")[0];
+        fireEvent.click(ingredientUnitSelect);
     });
     it("should delete tag when tag delete button clicked", async () => {
         renderCreateCustomPage();
-        const tagInput = screen.getByTestId("tagInput");
+        const tagInput = screen.getByLabelText("태그");
         fireEvent.change(tagInput, { target: { value: "TAG" } })
         fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
-        const tagDeleteButton = screen.getByTestId("tagDeleteButton");
+        const tagDeleteButton = screen.getByText("#TAG");
         fireEvent.click(tagDeleteButton);
-    });
-    it("should close AddIngredientModal when close button clicked", async () => {
-        renderCreateCustomPage();
-        const ingredientInput = screen.getByTestId("ingredientInput");
-        fireEvent.click(ingredientInput);
-        const closeAddIngredientModalButton = screen.getByTestId("closeAddIngredientModalButton");
-        fireEvent.click(closeAddIngredientModalButton);
     });
     it("should call onKeyPress when enter pressed", async () => {
         renderCreateCustomPage();
-        const tagInput = screen.getByTestId("tagInput");
+        const tagInput = screen.getByLabelText("태그");
         fireEvent.change(tagInput, { target: { value: "TAG" } })
         fireEvent.keyPress(tagInput, { key: "A", charCode: 65 });
     });
@@ -219,22 +214,27 @@ describe("<CreateCustomPage />", () => {
     });
     it("should not create cocktail when user is null", async () => {
         renderCreateCustomPage(true, true);
-        const nameInput = screen.getByLabelText("Name:");
+        const nameInput = screen.getByLabelText("칵테일 이름");
         fireEvent.change(nameInput, { target: { value: "NAME" } });
-        const descriptionInput = screen.getByLabelText("Description:");
+        const descriptionInput = screen.getByLabelText("설명");
         fireEvent.change(descriptionInput, { target: { value: "DESCRIPTION" } });
-        const ingredientInput = screen.getByTestId("ingredientInput");
+        const ingredientInput = screen.getByLabelText("재료");
         fireEvent.click(ingredientInput);
         const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
         fireEvent.click(addIngredientButton);
-        const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
+        const ingredientAmountInput = screen.getAllByLabelText("양")[0];
         fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
-        const recipeInput = screen.getByLabelText("Recipe:");
+        const recipeInput = screen.getByLabelText("만드는 방법");
         fireEvent.change(recipeInput, { target: { value: "RECIPE" } });
-        const tagInput = screen.getByTestId("tagInput");
+        const tagInput = screen.getByLabelText("태그");
         fireEvent.change(tagInput, { target: { value: "TAG" } })
         fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
-        const confirmButton = screen.getByText("Confirm");
+        const confirmButton = screen.getByText("업로드");
         fireEvent.click(confirmButton);
     });
+    it("should load image when file upload button clicked", async () => {
+        renderCreateCustomPage();
+        const FileUploadButton = screen.getByTestId("file");
+        fireEvent.click(FileUploadButton);
+    })
 });

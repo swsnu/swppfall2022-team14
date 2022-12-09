@@ -36,7 +36,6 @@ export function calculateABV(ingredientList: IngredientPrepareType[]) {
     }
 
     abv /= amount
-    console.log("abv", abv)
     return Math.round(abv * 10) / 10
 }
 export function calculatePrice(ingredientList: IngredientPrepareType[]) {

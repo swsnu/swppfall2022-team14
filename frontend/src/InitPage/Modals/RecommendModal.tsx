@@ -1,13 +1,34 @@
 import { SetStateAction, Dispatch, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Modal from 'react-modal';
-import styles from './RecommendModal.module.scss'
 import { AppDispatch } from '../../store';
 import React from 'react';
 import { getRecommendIngredientList, selectIngredient } from '../../store/slices/ingredient/ingredient';
 import { selectUser } from '../../store/slices/user/user';
-import IngredientItem from '../../common/Components/IngredientItem';
 import { useNavigate } from 'react-router';
+import Modal from '@mui/material/Modal';
+import { Box, Button, Card, FormGroup, Grid, Stack, Typography } from "@mui/material";
+import { styled } from '@mui/material/styles';
+
+const StyledProductImg = styled('img')({
+    top: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'fill',
+    position: 'absolute',
+});
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '80%',
+    height: '80%',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 3,
+    overflow: 'scroll',
+};
 
 export interface prop {
     isOpen: boolean;
@@ -40,24 +61,60 @@ const RecommendModal = (props: prop) => {
 
 
     return (
-        <Modal className={styles['recommend-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-            <button onClick={onClickClose} > X</button >
-            <div className={styles.container}>
-                {ingredientState.recommendIngredientList.map((ingredient) =>
-                    <div key={ingredient.id} className={styles.container__item}>
-                        <IngredientItem key={ingredient.id} image={ingredient.image} name={ingredient.name} ABV={ingredient.ABV} id={ingredient.id} />
-                        {/* TODO: Component로 빼기 */}
-                        {ingredientState.availableCocktails.find(info => info?.ingredient_id === ingredient.id) ? <div style={{ "color": "black" }}>이 재료만 있으면 만들 수 있는 칵테일들:
-                            <div className={styles["container__cocktail-names"]}>
-                                {ingredientState.availableCocktails.find(info => info.ingredient_id === ingredient.id)?.cocktails.map(cocktail => <div className={styles["container__cocktail-name"]} key={cocktail.id} onClick={() => onClickCocktailName(cocktail.id, cocktail.type)}>{cocktail.name}</div>)}
-                            </div>
-                        </div>
-                            : "통상적으로 많이 들어가는 재료"
-                        }
-                    </div>
-
-                )}
-            </div>
+        <Modal 
+            open={isOpen} 
+            onClose={() => setIsOpen(false)}
+        >
+            <Stack spacing={2} sx={style}>
+                <Grid container spacing={3}>
+                    {ingredientState.recommendIngredientList.map((ingredient) => (
+                        <Grid key={ingredient.id} item xs={12} sm={6} md={3}>
+                            <Card 
+                                onClick={() => navigate(`/ingredient/${ingredient.id}`)}
+                                sx={{ height: 1, textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }}
+                            >
+                                <Box sx={{ pt: '100%', position: 'relative' }}>
+                                    <StyledProductImg src={ingredient.image} />
+                                </Box>
+                                <Stack direction="row" spacing={2} sx={{ p: 2 }} justifyContent="space-between">
+                                    <Typography noWrap>
+                                        {ingredient.name}
+                                    </Typography>
+                                    <Typography noWrap>
+                                        {ingredient.ABV}%
+                                    </Typography>
+                                </Stack>
+                                {ingredientState.availableCocktails.find(info => info?.ingredient_id === ingredient.id) ? 
+                                    <Stack spacing={1} sx={{ p: 2 }}>
+                                        <Typography fontSize={12} noWrap>
+                                            이것만 있으면!
+                                        </Typography>
+                                        <FormGroup row sx={{ gap: 1 }}>
+                                            {ingredientState.availableCocktails
+                                                .find(info => info.ingredient_id === ingredient.id)?.cocktails
+                                                .map(cocktail => (
+                                                <Button
+                                                    key={cocktail.id}
+                                                    size="small"
+                                                    sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                                    onClick={() => onClickCocktailName(cocktail.id, cocktail.type)}
+                                                >
+                                                    <Typography variant="caption" color='text.primary'>
+                                                        {cocktail.name}
+                                                    </Typography>
+                                                </Button>
+                                            ))}
+                                        </FormGroup>
+                                    </Stack> : 
+                                    <Typography sx={{ p: 2 }} fontSize={12} noWrap>
+                                        일반적으로 많이 들어가는 재료
+                                    </Typography>
+                                }
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Stack>
         </Modal >
     );
 };
