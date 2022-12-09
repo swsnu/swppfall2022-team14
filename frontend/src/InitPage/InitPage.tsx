@@ -7,7 +7,7 @@ import LoginModal from "./Modals/LoginModal"
 import InitMyLiqourModal from "./Modals/InitMyLiquorModal"
 import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
-import { getUser, logoutUser, selectUser } from '../store/slices/user/user';
+import { logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
 import { fetchMyIngredientList } from "../store/slices/ingredient/ingredient";
 import RecommendModal from "./Modals/RecommendModal";
