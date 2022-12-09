@@ -92,6 +92,7 @@ export default function ItemDetailPage() {
             dispatch(deleteCocktail({ cocktail_id: Number(id), token: userState.token }));
             navigate("/custom")
         }
+
     }
 
     const toggleBookmarkHandler = () => {

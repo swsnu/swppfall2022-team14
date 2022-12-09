@@ -112,14 +112,13 @@ const InitPage = () => {
         navigate(`/mypage`)
     }
 
-<<<<<<< HEAD
-=======
+
     const onClickUserInfo = async () => {
         const res = dispatch(getUser(userState.token))
         console.log(res)
     }
 
->>>>>>> f376832 (feature : rate continue...)
+
     const [isRecommendOpen, setIsRecommendOpen] = useState(false);
     const onClickRecommendButton = () => {
         if (userState.isLogin) {
