@@ -307,3 +307,20 @@ def retrieve_my_cocktail(request):
     data = CocktailListSerializer(cocktails, many=True, context={
                                   'user': request.user}).data
     return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
+
+@api_view(['DELETE'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def delete_cocktail(request, pk):
+    user = request.user
+    if not user.is_authenticated:
+        return HttpResponse(status=401)
+    try:
+        cocktail = Cocktail.objects.get(id=pk)
+    except Cocktail.DoesNotExist:
+        return HttpResponseNotFound(f"No Cocktails matches id={pk}")
+    if cocktail.author_id != user.id:
+        return HttpResponse(status=401)
+    # TODO: author_id=request.user.id
+    cocktail.delete()
+    return HttpResponse(status=204)
