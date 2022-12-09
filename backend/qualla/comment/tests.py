@@ -9,6 +9,7 @@ import json
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
+from datetime import datetime
 
 
 class CommentTestCase(TestCase):
@@ -28,7 +29,7 @@ class CommentTestCase(TestCase):
 
         comment = Comment(id=1, author_id=1,
 
-                          cocktail=cocktail, content='content', created_at="2020-11-11", updated_at="2020-11-11", is_deleted=False, parent_comment=None)
+                          cocktail=cocktail, content='content', is_deleted=False, parent_comment=None)
         comment.save()
         comment_child = Comment(id=3, author_id=1,
                                 cocktail=cocktail, content='content', parent_comment=comment)
