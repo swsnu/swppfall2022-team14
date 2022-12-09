@@ -30,8 +30,6 @@ def comment_post(request, cocktail_id):
         try:
             if request.user.is_authenticated:
                 data = request.data.copy()
-            else:
-                return HttpResponseBadRequest("Not Logined User")
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest("Unvalid Token")
 
@@ -70,8 +68,6 @@ def edit_comment(request, pk):
         try:
             if request.user.is_authenticated:
                 data = request.data.copy()
-            else:
-                return HttpResponseBadRequest("Not Logined User")
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest("Unvalid Token")
 
@@ -95,8 +91,6 @@ def delete_comment(request, pk):
         try:
             if request.user.is_authenticated:
                 data = request.data.copy()
-            else:
-                return HttpResponseBadRequest("Not Logined User")
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest("Unvalid Token")
 
@@ -126,8 +120,6 @@ def delete_comment(request, pk):
 def retrieve_my_comment(request):
     if request.method == 'GET':
         user = request.user
-        if not user.is_authenticated:
-            return HttpResponse(status=401)
         # TODO: author_id=request.user.id
         comments = Comment.objects.filter(author_id=user.id)
         data = CommentSerializer(comments, many=True).data

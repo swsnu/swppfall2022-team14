@@ -54,3 +54,19 @@ class CommentTestCase(TestCase):
         response = self.client.get(
             '/api/v1/comment/me/')
         self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_comment(self):
+        response = self.client.get(
+            '/api/v1/comment/1/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_edit_comment(self):
+        response = self.client.put(
+            '/api/v1/comment/1/edit/', json.dumps({"id": 2, "content": "content"}), content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_comment(self):
+        response = self.client.delete(
+            '/api/v1/comment/1/delete/')
+        self.assertEqual(response.status_code, 200)

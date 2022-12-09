@@ -134,8 +134,7 @@ def cocktail_post(request):
         try:
             if request.user.is_authenticated:
                 data = request.data.copy()
-            else:
-                return HttpResponseBadRequest("Not Logined User")
+
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest("Unvalid Token")
 
@@ -258,8 +257,6 @@ def cocktail_rate_edit(request, pk):
 @permission_classes([permissions.IsAuthenticated])
 def retrieve_my_cocktail(request):
     user = request.user
-    if not user.is_authenticated:
-        return HttpResponse(status=401)
 
     # TODO: author_id=request.user.id
     cocktails = Cocktail.objects.filter(author_id=user.id, type='CS')

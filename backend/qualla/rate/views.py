@@ -73,8 +73,7 @@ def rate_list_user(request, cocktail_id):
             cocktail.rate = score
             cocktail.save()
             return JsonResponse(serializer.data, status=201)
-        else:
-            return HttpResponse(status=401)
+
     elif request.method == 'PUT':
         user = request.user
         if user.is_authenticated:
@@ -100,8 +99,6 @@ def rate_list_user(request, cocktail_id):
             cocktail.rate = score
             cocktail.save()
             return JsonResponse(serializer.data, status=200)
-        else:
-            return HttpResponse(status=401)
     elif request.method == 'DELETE':
         user = request.user
         if user.is_authenticated:
@@ -125,5 +122,3 @@ def rate_list_user(request, cocktail_id):
             cocktail.rate = score
             cocktail.save()
             return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=401)

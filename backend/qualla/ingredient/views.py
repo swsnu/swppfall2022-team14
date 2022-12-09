@@ -8,6 +8,7 @@ from django.db.models import Q
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework import permissions, authentication
 
+
 @api_view(['GET'])
 def ingredient_list(request):
     if request.method == 'GET':
@@ -41,8 +42,7 @@ num_recommend = 5
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def recommend_ingredient(request):
-    if not request.user.is_authenticated:
-        return HttpResponse(status=401)
+
     user = request.user
     my_ingredients = [
         store_ingredient.ingredient.id for store_ingredient in user.store.all()]
