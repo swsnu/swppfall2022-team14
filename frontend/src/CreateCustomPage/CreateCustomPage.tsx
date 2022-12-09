@@ -126,7 +126,6 @@ export default function CreateCustomPage() {
                 token: userState.token
             }
             const response = await dispatch(authPostCocktail(data))
-            console.log(response)
             navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
         }
     }
@@ -163,7 +162,6 @@ export default function CreateCustomPage() {
     useEffect(() => {
         if (!userState.isLogin) {
             navigate(-1)
-            console.log("먼저 로그인 해주세요")
         }
     }, [])
 
@@ -249,6 +247,7 @@ export default function CreateCustomPage() {
                             }}
                             actionIcon={
                                 <IconButton 
+                                    data-testid="file"
                                     size="small" 
                                     sx={{ 
                                         bgcolor: "primary.main", m: 1, px: 0.8, boxShadow: 3,
@@ -407,7 +406,7 @@ export default function CreateCustomPage() {
                                             </TextField>
                                         </Stack>
                                         {idx !== ingredientList.length &&
-                                            <IconButton size="small" onClick={() => onClickIngredientDelete(idx)}>
+                                            <IconButton data-testid="delete" size="small" onClick={() => onClickIngredientDelete(idx)}>
                                                 <RemoveIcon fontSize="small" />
                                             </IconButton>
                                         }

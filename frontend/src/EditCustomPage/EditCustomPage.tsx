@@ -5,12 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
 import { CocktailDetailType, IngredientPrepareType, editCocktail, getCocktail, selectCocktail, PostForm } from "../store/slices/cocktail/cocktail";
 import './EditCustomPage.scss';
+import NavBar from "../NavBar/NavBar";
 import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
 import { calculateABV, calculateColor, calculatePrice } from "../common/utils/utils";
 import S3 from 'react-aws-s3-typescript'
 import {v4 as uuid} from 'uuid'
+import { Button, ImageListItem, ImageListItemBar, Divider, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import RemoveIcon from '@mui/icons-material/Remove';
+
 export interface Image {
     key:string;
     url:string;
@@ -194,6 +199,8 @@ export default function EditCustomPage() {
     }
     else {
         return (
+            <Stack direction="row" justifyContent="space-between" sx={{ pr: 2 }} divider={<Divider orientation="vertical" flexItem />}>
+                <NavBar />
             <div className="item-detail">
                 <div className="title">
                     <div className="title__name">
@@ -323,6 +330,7 @@ export default function EditCustomPage() {
                     </div>
                 </div>
             </div>
+            </Stack>
         )
     }
 }

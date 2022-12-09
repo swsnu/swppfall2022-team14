@@ -6,9 +6,17 @@ import {useDispatch, useSelector} from "react-redux";
 import { AppDispatch } from "../../store";
 import { deleteMyIngredients } from "../../store/slices/ingredient/ingredient";
 import {selectUser} from "../../store/slices/user/user";
+import { Box, Card, IconButton, Stack, Typography } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import RemoveIcon from '@mui/icons-material/Remove';
 
-// TODO : MODIFY THIS WITH IngredientItemType
-
+const StyledProductImg = styled('img')({
+    top: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'fill',
+    position: 'absolute',
+});
 
 const IngredientItem = (prop: Pick<CocktailDetailType, "image" | "name" | "ABV" | "id"> & { my_item: boolean, user_id: number }) => {
 
@@ -18,7 +26,6 @@ const IngredientItem = (prop: Pick<CocktailDetailType, "image" | "name" | "ABV" 
 
     const onClickItem = () => {
         navigate(`/ingredient/${prop.id}`)
-
     }
 
     const onClickDelete = (e: any) => {
@@ -26,21 +33,43 @@ const IngredientItem = (prop: Pick<CocktailDetailType, "image" | "name" | "ABV" 
         dispatch(deleteMyIngredients({ user_id: prop.user_id, ingredient_id: prop.id, token: userState.token }))
     }
 
-    return <div className={styles.item} onClick={onClickItem}>
-        {prop.my_item ? <button className={styles.item__delete} onClick={onClickDelete}>X</button> : null}
-        <img className={styles.item__image} src={prop.image} />
-        <div className={styles.item__name}>{prop.name}</div>
-        <div className={styles.item__ABV}>{prop.ABV} 도</div>
-    </div >
-
+    return (
+        <Card 
+            onClick={onClickItem}
+            sx={{ textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }}
+        >
+            <Stack direction="row" alignItems="flex-start" justifyContent="flex-end" sx={{ height: 20 }}>
+                {prop.my_item && 
+                    <IconButton 
+                        size="small"
+                        sx={{
+                            mr: 1,
+                            mt: 0.5
+                        }}
+                        onClick={onClickDelete}
+                    >
+                        <RemoveIcon sx={{ fontSize: 16 }} />
+                    </IconButton>
+                }
+            </Stack>
+            <Box sx={{ pt: '100%', position: 'relative' }}>
+                <StyledProductImg src={prop.image} />
+            </Box>
+            <Stack direction="row" spacing={2} sx={{ p: 3 }} justifyContent="space-between">
+                <Typography noWrap>
+                    {prop.name}
+                </Typography>
+                <Typography noWrap>
+                    {prop.ABV}%
+                </Typography>
+            </Stack>
+        </Card>
+    )
 }
 
 IngredientItem.defaultProps = {
     my_item: false,
     user_id: 4
 }
-
-
-
 
 export default IngredientItem
