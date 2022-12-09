@@ -73,28 +73,21 @@ const stubIngredientInitialState: IngredientInfo = {
 
 const stubUserInitialState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password: null,
-        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "TEST_ID",
+        username: "TEST_USERNAME",
+        password: "TEST_PASSWORD",
+        nickname: "TEST_NICKNAME",
+        intro: "TEST_INTRO",
+        profile_img: "TEST_PROFILE_IMG",
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    token: "TEST_TOKEN",
     isLogin: true
-}
+};
 const stubUserInitialStateNotLogin: UserInfo = {
-    user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password: null,
-        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
-    },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
+    user: null,
+    token: null,
     isLogin: false
-}
+};
 
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
@@ -141,14 +134,10 @@ describe("<NavBar />", () => {
         renderNavBar(stubUserInitialState);
         // render(<NavFilter type={"ST"} />)
         const standardButton = screen.getByText("Standard");
-        console.log(standardButton)
-        fireEvent.click(standardButton);
-        fireEvent.click(standardButton);
         fireEvent.click(standardButton);
         const typeButton = screen.getByText("클래식")
         fireEvent.click(typeButton);
-        const searchButton = screen.getByText("검색하기")
-        console.log(searchButton)
+        const searchButton = screen.getByText("검색")
         fireEvent.click(searchButton);
         expect(mockNavigate).toHaveBeenCalledWith("/standard",
             { "state": { "filter_param": { "available_only": false, "type_one": ["CL"], "type_three": [], "type_two": [] }, "name_param": "" } });
@@ -158,11 +147,9 @@ describe("<NavBar />", () => {
         // render(<NavFilter type={"CS"} />)
         const customButton = screen.getByText("Custom");
         fireEvent.click(customButton);
-        fireEvent.click(customButton);
-        fireEvent.click(customButton);
         const typeButton = screen.getByText("클래식")
         fireEvent.click(typeButton);
-        const searchButton = screen.getByText("검색하기")
+        const searchButton = screen.getByText("검색")
         fireEvent.click(searchButton);
         expect(mockNavigate).toHaveBeenCalledWith("/custom",
             { "state": { "filter_param": { "available_only": false, "type_one": ["CL"], "type_three": [], "type_two": [] }, "name_param": "" } });
@@ -172,60 +159,57 @@ describe("<NavBar />", () => {
         // render(<NavFilter type={"IG"} />)
         const ingredientButton = screen.getByText("Ingredient");
         fireEvent.click(ingredientButton);
-        fireEvent.click(ingredientButton);
-        fireEvent.click(ingredientButton);
-        const searchButton = screen.getByText("검색하기")
+        const searchButton = screen.getByText("검색")
         fireEvent.click(searchButton);
         expect(mockNavigate).toHaveBeenCalledWith("/ingredient");
     });
+    it("should close NavFilter when another Filter is clicked", () => {
+        renderNavBar(stubUserInitialState);
+        // render(<NavFilter type={"IG"} />)
+        const standardButton = screen.getByText("Standard");        
+        const customButton = screen.getByText("Custom");
+        const ingredientButton = screen.getByText("Ingredient");
+        fireEvent.click(standardButton);
+        fireEvent.click(standardButton);
+        fireEvent.click(customButton);
+        fireEvent.click(customButton);
+        fireEvent.click(ingredientButton);
+        fireEvent.click(ingredientButton);
+        const searchButton = screen.queryByText("검색");
+        expect(searchButton).toBeNull();
+    });
     it("should naviate to /custom/create when upload button clicked", async () => {
         renderNavBar(stubUserInitialState);
-        const uploadButton = screen.getByText("Upload");
+        const uploadButton = screen.getByTestId("Upload_button");
         fireEvent.click(uploadButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/custom/create"));
     });
     it("should render ingredients when my liquor button clicked", async () => {
         renderNavBar(stubUserInitialState);
-        const myLiquorButton = screen.getByText("My Liquor");
+        const myLiquorButton = screen.getByTestId("MyIngr_button");
         fireEvent.click(myLiquorButton);
         const addButton = await screen.findByText("ADD");
         fireEvent.click(addButton)
     });
     it("should naviate to / when home button clicked", async () => {
         renderNavBar(stubUserInitialState);
-        const homeButton = screen.getByText("Home");
+        const homeButton = screen.getByTestId("Home_button");
         fireEvent.click(homeButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/"));
     });
     it("should naviate to /mypage when my page button clicked", async () => {
         renderNavBar(stubUserInitialState);
-        const myPageButton = screen.getByText("My Page");
+        const myPageButton = screen.getByTestId("MyPage_button");
         fireEvent.click(myPageButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/mypage"));
     });
-    it("should navigate to /standard with params when search button clickend (standard)", () => {
-        renderNavBar(stubUserInitialStateNotLogin);
-        // render(<NavFilter type={"ST"} />)
-        const standardButton = screen.getByText("Standard");
-        console.log(standardButton)
-        fireEvent.click(standardButton);
-        fireEvent.click(standardButton);
-        fireEvent.click(standardButton);
-        const typeButton = screen.getByText("클래식")
-        fireEvent.click(typeButton);
-        const searchButton = screen.getByText("검색하기")
-        console.log(searchButton)
-        fireEvent.click(searchButton);
-        expect(mockNavigate).toHaveBeenCalledWith("/standard",
-            { "state": { "filter_param": { "available_only": false, "type_one": ["CL"], "type_three": [], "type_two": [] }, "name_param": "" } });
-    });
     it("should prevent from not logged in user actions", () => {
         renderNavBar(stubUserInitialStateNotLogin);
-        const uploadButton = screen.getByText("Upload");
+        const uploadButton = screen.getByTestId("Upload_button");
         fireEvent.click(uploadButton);
-        const myLiquorButton = screen.getByText("My Liquor");
+        const myLiquorButton = screen.getByTestId("MyIngr_button");
         fireEvent.click(myLiquorButton);
-        const myPageButton = screen.getByText("My Page");
+        const myPageButton = screen.getByTestId("MyPage_button");
         fireEvent.click(myPageButton);
         expect(mockNavigate).not.toHaveBeenCalled()
     });
