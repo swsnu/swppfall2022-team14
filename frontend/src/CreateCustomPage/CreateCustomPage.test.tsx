@@ -81,7 +81,6 @@ jest.mock("./Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) =>
                         data-testid="addIngredientButton"
                         onClick={() => {
                             prop.setNewIngrdient(ingredient);
-                            prop.setDefaultUnit(ingredient.unit[0])
                             prop.close();
                         }}
                     >
