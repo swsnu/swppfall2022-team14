@@ -113,6 +113,7 @@ def retrieve_my_info(request):
             return HttpResponse(status=401)
     elif request.method == 'DELETE':
         user = request.user
+
         if user.is_authenticated:
             user.delete()
             return HttpResponse(status=200)

@@ -75,6 +75,7 @@ def modify_user_store(request, ingredient_id):
     if request.method == 'DELETE':
         # need constraint check
         try:
+
             user_store = Store.objects.get(
                 user=user, ingredient_id=ingredient_id)
         except Store.DoesNotExist:
