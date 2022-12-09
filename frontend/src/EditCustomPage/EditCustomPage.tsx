@@ -32,8 +32,6 @@ export default function EditCustomPage() {
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
     const [newIngredient, setNewIngredient] = useState<IngredientType | null>(null);
-    const [unitList, setUnitList] = useState<string[]>([]);
-    const [newUnit, setNewUnit] = useState<string | null>(null);
 
     const cocktailState = useSelector(selectCocktail);
     const cocktail = cocktailState.cocktailItem;
@@ -58,7 +56,6 @@ export default function EditCustomPage() {
             setIntroduction(cocktail.introduction);
             setRecipe(cocktail.recipe);
             setTagList(cocktail.tags);
-            setUnitList(cocktail.ingredients.map(ingredient => ingredient.recipe_unit))
             setNameEng(cocktail.name_eng);
             setIngredientList(cocktail.ingredients);
             const url = cocktail.image.split('/')
@@ -73,17 +70,14 @@ export default function EditCustomPage() {
     const navigate = useNavigate();
     const onClickIngredientDelete = (selectedIdx: number) => {
         setIngredientList(ingredientList.filter((_value, idx) => idx !== selectedIdx));
-        setUnitList(unitList.filter((_value, idx) => idx !== selectedIdx))
     };
 
     useEffect(() => {
-        if (newIngredient && newUnit) {
-            setIngredientList([...ingredientList, { ...newIngredient, amount: "", recipe_unit: "" }]);
+        if (newIngredient) {
+            setIngredientList([...ingredientList, { ...newIngredient, amount: "", recipe_unit: newIngredient.unit[0] }]);
             setNewIngredient(null);
-            setUnitList([...unitList, newUnit])
-            setNewUnit(null)
         }
-    }, [newIngredient, newUnit])
+    }, [newIngredient])
 
     const onChangeAmount = (selectedIdx: number, changedAmount: string) => {
         if (changedAmount[0] === "0" || changedAmount[0] === "-") return
@@ -98,10 +92,16 @@ export default function EditCustomPage() {
         );
     };
 
-    const onChangeIngredientUnit = (selectedIdx: number, unit: string) => {
-        const units = unitList
-        units[selectedIdx] = unit
-        setUnitList(units)
+    const onChangeIngredientUnit = (selectedIdx: number, changedUnit: string) => {
+        setIngredientList(
+            ingredientList.map((ingredient, idx) => {
+                if (idx !== selectedIdx) {
+                    return ingredient;
+                } else {
+                    return { ...ingredient, recipe_unit: changedUnit } as IngredientPrepareType;
+                }
+            })
+        );
     }
 
     const onKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -123,16 +123,16 @@ export default function EditCustomPage() {
     }
 
     useEffect(() => {
-        setExpectedABV(calculateABV(ingredientList, unitList))
-        setExpectedPrice(calculatePrice(ingredientList, unitList))
-        setExpectedColor(calculateColor(ingredientList, unitList))
+        setExpectedABV(calculateABV(ingredientList))
+        setExpectedPrice(calculatePrice(ingredientList))
+        setExpectedColor(calculateColor(ingredientList))
         console.log(expectedABV, expectedPrice, expectedColor)
-    }, [unitList, ingredientList])
+    }, [ingredientList])
 
     const editCocktailHandler = async () => {
         if (userState.user?.id !== null && userState.token !== null) {
             const ingredients = ingredientList.map((ingr, ind) => {
-                return { ...ingr, amount: ingr.amount, unit: unitList[ind] }
+                return { ...ingr, amount: ingr.amount, unit: ingr.recipe_unit }
             })
             const data: PostForm = {
                 cocktail: {
@@ -240,7 +240,6 @@ export default function EditCustomPage() {
                                             close={() => setOpen(false)}
                                             addedIngredientList={ingredientList.map((ingredient) => { return ingredient.name })}
                                             setNewIngrdient={setNewIngredient}
-                                            setDefaultUnit={setNewUnit}
                                         />
                                         <input
                                             data-testid="ingredientAmountInput"
@@ -249,9 +248,9 @@ export default function EditCustomPage() {
                                             type="number"
                                             onChange={(event) => {
                                                 onChangeAmount(idx, event.target.value);
-                                                setExpectedABV(calculateABV(ingredientList, unitList));
-                                                setExpectedPrice(calculatePrice(ingredientList, unitList));
-                                                setExpectedColor(calculateColor(ingredientList, unitList));
+                                                setExpectedABV(calculateABV(ingredientList));
+                                                setExpectedPrice(calculatePrice(ingredientList));
+                                                setExpectedColor(calculateColor(ingredientList));
                                             }}
                                             min="0"
                                         />
@@ -259,9 +258,9 @@ export default function EditCustomPage() {
                                             data-testid="ingredientUnitSelect"
                                             onChange={(e) => {
                                                 onChangeIngredientUnit(idx, e.target.value);
-                                                setExpectedABV(calculateABV(ingredientList, unitList));
-                                                setExpectedPrice(calculatePrice(ingredientList, unitList));
-                                                setExpectedColor(calculateColor(ingredientList, unitList));
+                                                setExpectedABV(calculateABV(ingredientList));
+                                                setExpectedPrice(calculatePrice(ingredientList));
+                                                setExpectedColor(calculateColor(ingredientList));
                                             }} defaultValue={ingredient.recipe_unit}>
                                             {ingredient.unit.map((u) => {
                                                 return <option

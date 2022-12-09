@@ -79,7 +79,7 @@ const renderAddIngredientModal = () => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<AddIngredientModal isOpen={true} close={jest.fn()} addedIngredientList={[]} setNewIngrdient={jest.fn()} setDefaultUnit={jest.fn()} />} />
+                <Route path="/" element={<AddIngredientModal isOpen={true} close={jest.fn()} addedIngredientList={[]} setNewIngrdient={jest.fn()} />} />
             </Routes>
         </MemoryRouter>,
         {
