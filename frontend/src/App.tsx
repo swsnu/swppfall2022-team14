@@ -25,6 +25,7 @@ const darkTheme = createTheme({
     },
     text: {
       primary: '#ffffff',
+      secondary: '#aaaaaa',
     },
     background: {
       paper: '#202020',
