@@ -8,7 +8,6 @@ import { ThunkMiddleware } from "redux-thunk";
 import reducer, {CommentInfo, deleteComment, commentActions, CommentType} from "./comment";
 import {fetchCommentListByCocktailId, fetchMyCommentList} from "./comment";
 import {getComment, postComment, editComment} from "./comment"
-import {CocktailItemType, getCocktail} from "../cocktail/cocktail";
 import {AccessCommentType} from "../../../ItemDetailPage/Comment/Comment";
 
 const mockDispatch = jest.fn();

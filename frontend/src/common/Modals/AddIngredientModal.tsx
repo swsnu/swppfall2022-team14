@@ -42,7 +42,7 @@ const AddIngredientModal = (props: prop) => {
     }
 
     return (
-        <Modal className={styles['add-ingredient-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+        <Modal ariaHideApp={false} className={styles['add-ingredient-modal']} isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
             <div className="modal__ingredient-list">
                 {ingredientState.ingredientList.filter(ingredient => is_not_my_ingredient_filter(ingredient)).map((ingredient, idx) => {
                     return (

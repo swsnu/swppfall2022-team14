@@ -48,10 +48,6 @@ const RecommendModal = (props: prop) => {
 
     }, [isOpen])
 
-    const onClickClose = () => {
-        setIsOpen(false)
-    }
-
 
     const navigate = useNavigate()
     const onClickCocktailName = (id: number, type: string) => {

@@ -62,7 +62,6 @@ const NavFilter = (prop: Iprops) => {
     }
 
     const onTypeClick = (param_type: string, type_name: string) => {
-        console.log(typeParam)
         if (param_type === "typeOne") {
             const param = typeParam.typeOne
             if (!param.includes(type_name)) {

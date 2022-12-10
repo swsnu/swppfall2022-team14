@@ -12,7 +12,18 @@ import { AppDispatch } from "../store"
 import { fetchMyIngredientList } from "../store/slices/ingredient/ingredient";
 import RecommendModal from "./Modals/RecommendModal";
 import { styled } from '@mui/material/styles';
-import { Grid, IconButton, ListItemButton, ListItemIcon, ListItemText, ToggleButtonGroup, ToggleButton, TextField, Stack } from "@mui/material";
+import {
+    Grid,
+    IconButton,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    ToggleButtonGroup,
+    ToggleButton,
+    TextField,
+    Stack,
+    Typography
+} from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -21,6 +32,7 @@ import LiquorIcon from '@mui/icons-material/Liquor';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
+import {useSearchParams} from "react-router-dom";
 
 
 const StyledItem = styled(ListItemButton)({
@@ -48,13 +60,12 @@ export interface Filterparam {
 
 const InitPage = () => {
 
+    const [searchParams, setSearchParams] = useSearchParams();
     const cocktailState = useSelector(selectCocktail)
     const userState = useSelector(selectUser)
     const dispatch = useDispatch<AppDispatch>()
 
     const loginState = userState.isLogin;
-    //const [loginState, setLoginState] = useState(false)
-    // const [urlParams, setUrlParams] = useState<string>("")
     const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [], available_only: false })
     const [input, setInput] = useState('')
 
@@ -63,7 +74,7 @@ const InitPage = () => {
     const navigate = useNavigate()
 
     const [toggle, setToggle] = useState<'standard' | 'custom' | 'ingredient'>('standard')
-    const [isStandard, setIsStandard] = useState(true)
+    const [isStandard, setIsStandard] = useState(searchParams.get('type') === 'custom')
     const [isOpenFilter, setIsOpenFilter] = useState(false)
     const onClickFilter = () => {
         setIsOpenFilter(!isOpenFilter)
@@ -72,14 +83,20 @@ const InitPage = () => {
     const onClickProfile = () => {
         setisOpenProfile(!isOpenProfile)
     }
-    // TODO : HANDLE LOGIN
+
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const onClickLogin = () => {
         setIsLoginOpen(true)
     }
     const [isInitMyLiqourOpen, setIsInitMyLiqourOpen] = useState(false);
     const onClickMyLiqour = () => {
-        setIsInitMyLiqourOpen(true)
+        if(userState.isLogin && userState.user?.id !== null){
+            setIsInitMyLiqourOpen(true)
+        }
+        else{
+            setIsLoginOpen(true)
+        }
+
     }
     const onClickLogout = async () => {
         await dispatch(logoutUser(userState.token));
@@ -87,10 +104,12 @@ const InitPage = () => {
     }
     const onClickSearch = () => {
         // TODO : give params with filter information
-        if (isStandard) navigate(`/standard`,
-            { state: request_param }
-        )
-        else navigate(`/custom`, { state: request_param })
+        if (searchParams.get('type') === 'custom'){
+            navigate(`/custom`, { state: request_param })
+        }
+        else{
+            navigate(`/standard`, { state: request_param })
+        }
     }
 
     const onClickToggle = (
@@ -101,8 +120,10 @@ const InitPage = () => {
 
         if (toggle === 'standard') {
             setIsStandard(true)
+            setSearchParams({type: ''})
         } else if (toggle === 'custom') {
             setIsStandard(false)
+            setSearchParams({type: "custom"})
         } else {
             onClickRecommendButton()
         }
@@ -111,9 +132,6 @@ const InitPage = () => {
     const onClickMyPage = () => {
         navigate(`/mypage`)
     }
-
-
-
 
     const [isRecommendOpen, setIsRecommendOpen] = useState(false);
     const onClickRecommendButton = () => {
@@ -127,18 +145,15 @@ const InitPage = () => {
 
 
     useEffect(() => {
-        if (isStandard) {
-            dispatch(fetchStandardCocktailList(null))
-        } else {
+        const type = searchParams.get('type')
+        if (type == 'custom') {
+            setToggle('custom')
             dispatch(fetchCustomCocktailList(null))
+        } else {
+            setToggle('standard')
+            dispatch(fetchStandardCocktailList(null))
         }
-    }, [isStandard])
-    useEffect(() => {
-        if (userState.isLogin && userState.user?.id !== null) {
-            dispatch(fetchMyIngredientList(userState.token))
-        }
-
-    }, [])
+    }, [searchParams])
 
 
 
@@ -146,6 +161,9 @@ const InitPage = () => {
         <Stack spacing={2} sx={{ width: 1, pl: 2, pr: 3, py: 2 }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <LocalBarIcon sx={{ ml: 13, fontSize: 50 }} />
+                <Typography variant="h3">
+                    {"Top 15 Cocktails"}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </Typography>
                 <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end">
                     {loginState && isOpenProfile ? (
                         <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
@@ -246,8 +264,15 @@ const InitPage = () => {
                 <LiquorIcon fontSize='large' />
             </IconButton>
             <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
-            <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
-            <RecommendModal isOpen={isRecommendOpen} setIsOpen={setIsRecommendOpen} />
+            {isInitMyLiqourOpen ?
+                (userState.isLogin && userState.user?.id !== null) ?
+                    <InitMyLiqourModal isOpen={isInitMyLiqourOpen} setIsOpen={setIsInitMyLiqourOpen} />
+                    :
+                    null
+                :
+                null
+            }
+            {isRecommendOpen ? <RecommendModal isOpen={isRecommendOpen} setIsOpen={setIsRecommendOpen} /> : null}
         </Stack >
     )
 }

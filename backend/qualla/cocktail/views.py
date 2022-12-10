@@ -280,3 +280,20 @@ def delete_cocktail(request, pk):
     # TODO: author_id=request.user.id
     cocktail.delete()
     return HttpResponse(status=204)
+
+@api_view(['GET'])
+def get_init_cocktail(request):
+
+    filter_q = Q()
+    type = request.GET.get('type')
+    if type == 'standard':
+        filter_q.add(Q(type='ST'), Q.AND)
+    elif type == 'custom':
+        filter_q.add(Q(type='CS'), Q.AND)
+    else:
+        return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
+
+    cocktails = Cocktail.objects.filter(filter_q).order_by('-rate','name')[:15]
+    data = CocktailListSerializer(cocktails, many=True, context={
+                                      'user': request.user}).data
+    return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
