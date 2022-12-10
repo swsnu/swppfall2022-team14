@@ -36,19 +36,19 @@ describe("<ShortComment />", () => {
     });
 
     it("should render comment without errors", () => {
-        render(<ShortComment id={1} cocktail={standard_cocktail1_item} content="COMMENT1"/>); 
+        render(<ShortComment id={1} cocktail={standard_cocktail1_item} content="COMMENT1" updated_at={new Date()}/>); 
         screen.getByText("COMMENT1")
     });
 
     it("should handle comment on standard click", async () => {
-        const { container } = render(<ShortComment id={1} cocktail={standard_cocktail1_item} content="COMMENT1"/>); 
+        const { container } = render(<ShortComment id={1} cocktail={standard_cocktail1_item} content="COMMENT1" updated_at={new Date()}/>); 
         const element = container.getElementsByClassName("box")[0]
         fireEvent.click(element)
         await waitFor(() => {expect(mockNavigate).toBeCalledWith("/standard/1")})
     });
 
     it("should handle comment on standard click", async () => {
-        const { container } = render(<ShortComment id={1} cocktail={custom_cocktail1_item} content="COMMENT1"/>); 
+        const { container } = render(<ShortComment id={1} cocktail={custom_cocktail1_item} content="COMMENT1" updated_at={new Date()}/>); 
         const element = container.getElementsByClassName("box")[0]
         fireEvent.click(element)
         await waitFor(() => {expect(mockNavigate).toBeCalledWith("/custom/2")})

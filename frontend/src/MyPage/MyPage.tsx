@@ -24,14 +24,28 @@ interface ButtonInfo {
 
 const MyPage = () => {
 
+    const [isOpen, setIsOpen] = useState(false)
+
     const buttonList: ButtonInfo[] = [
         { name: '나의 술장', value: 'My Ingredient', component: <MyIngredient /> },
         { name: '나만의 칵테일', value: 'My Custom Cocktail', component: <MyCustomCocktail /> },
         { name: '즐겨찾기', value: 'My Favorites', component: <MyBookmark /> },
         { name: '나의 댓글', value: 'My Comments', component: <MyComment /> },
-        { name: '나의 정보', value: 'Info', component: <MyInfo /> }
+        { name: '나의 정보', value: 'Info', component: <MyInfo open={isOpen} onClose={() => setIsOpen(false)} /> }
     ]
     const [toggle, setToggle] = useState<string>(buttonList[0].value)
+
+    useEffect(() => {
+        if (toggle === buttonList[4].value) {
+            setIsOpen(true)
+        }
+    }, [toggle])
+
+    useEffect(() => {
+        if (isOpen === false) {
+            setToggle(buttonList[0].value)
+        }
+    }, [isOpen])
     
     const userState = useSelector(selectUser)
     const navigate = useNavigate()

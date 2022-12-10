@@ -116,7 +116,7 @@ const Reply = (props: AccessCommentType) => {
                         )
                     }
                 </Stack>
-                <Typography variant='body2' sx={{ whiteSpace: 'pre' }} align='left'>
+                <Typography variant='body2' sx={{ whiteSpace: 'pre-wrap' }} align='left'>
                     {props.content}
                 </Typography>
             </Stack>

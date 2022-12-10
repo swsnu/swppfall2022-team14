@@ -9,7 +9,7 @@ describe("<Ingr />", () => {
     });
 
     it("should render without errors", () => {
-        render( <MyInfo/> );
+        render( <MyInfo open={true} onClose={jest.fn()} /> );
         screen.getByText("Name");
         screen.getByText("Email");
         screen.getByText("Info");

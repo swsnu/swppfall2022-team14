@@ -153,7 +153,7 @@ const Comment = (props: AccessCommentType) => {
                         </IconButton>
                     }
                 </Stack>
-                <Typography variant='body2' sx={{ whiteSpace: 'pre' }} align='left'>
+                <Typography variant='body2' sx={{ whiteSpace: 'pre-wrap' }} align='left'>
                     {props.content}
                 </Typography>
                 <Stack spacing={3} alignItems='flex-start' sx={{ width: 1, pt: 3, pl: 2 }}>

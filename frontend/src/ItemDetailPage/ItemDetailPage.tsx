@@ -122,13 +122,6 @@ export default function ItemDetailPage() {
         }
     }
 
-    const handleDeleteRate = async () => {
-        const data = { cocktail_id: Number(id), token: userState.token };
-        await dispatch(deleteRate(data));
-        await dispatch(updateRate(Number(id)))
-        setRateOpen(false)
-    }
-
     if (cocktailState.itemStatus == "loading") {
         return <div>Loading ..</div>
     }

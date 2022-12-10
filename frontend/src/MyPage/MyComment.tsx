@@ -2,13 +2,10 @@ import { useEffect } from "react"
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
-import styles from "./MyPage.module.scss"
 import ShortComment from "./Components/ShortComment";
 import { fetchMyCommentList, selectComment } from "../store/slices/comment/comment";
-import {selectUser} from "../store/slices/user/user";
-
-
-
+import { selectUser } from "../store/slices/user/user";
+import { Stack } from "@mui/material";
 
 const MyComment = () => {
 
@@ -22,18 +19,19 @@ const MyComment = () => {
         }
     }, [])
 
-    return <>
-        <div className={styles['right__header--comment']}>
-            <div className={styles.right__sort}>sort</div>
-        </div>
-        댓글 목록
-        <div className={styles['right__main--comment']}>
-            {commentState.commentList.map(commment => {
-                return <ShortComment key={commment.id} id={commment.id}
-                    cocktail={commment.cocktail} content={commment.content} />;
-            })}
-        </div>
-    </>
+    return (
+        <Stack spacing={5} sx={{ width: 0.7 }}>
+            {[...commentState.commentList].reverse().map((comment) => (
+                <ShortComment 
+                    key={comment.id} 
+                    id={comment.id}
+                    cocktail={comment.cocktail} 
+                    content={comment.content} 
+                    updated_at={comment.updated_at}
+                />
+            ))}
+        </Stack>
+    )
 }
 
 

@@ -20,7 +20,7 @@ const MyIngredient = () => {
 
 
     return (
-        <Stack spacing={1} sx={{ width: 1, pr: 3, py: 2 }}>
+        <Stack sx={{ width: 1, py: 2 }}>
             <Stack direction="row" justifyContent="flex-end">
                 <IconButton 
                     size="large"
@@ -29,7 +29,7 @@ const MyIngredient = () => {
                     <AddIcon />
                 </IconButton>
             </Stack>
-            <Grid container columns={4} spacing={3} sx={{ pr: 3 }}>
+            <Grid container columns={4} spacing={3} sx={{ mt: 0.5, px: 1 }}>
                 {ingredientState.myIngredientList.map(ingredient => (
                     <Grid key={ingredient.id} item xs={1}>
                         <IngredientItem 

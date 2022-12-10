@@ -1,9 +1,7 @@
-import { useState, SetStateAction, Dispatch, KeyboardEvent } from 'react';
+import { useState, SetStateAction, Dispatch } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from './LoginModal.module.scss'
-import { toast } from 'react-toastify';
 import { AppDispatch } from '../../store';
-import { loginUser, logoutUser, registerUser, selectUser } from '../../store/slices/user/user';
+import { loginUser, registerUser, selectUser } from '../../store/slices/user/user';
 import React from 'react';
 import Modal from '@mui/material/Modal';
 import { Button, Stack, TextField, Typography } from "@mui/material";
@@ -79,11 +77,11 @@ const LoginModal = (props: prop) => {
             password: loginPassword
         }
         if (!checkID(data.username)) {
-            setErrorText("아이디 형식 오류")
+            setErrorText("아이디의 형식을 다시 확인해주세요")
             return
         }
         if (!checkPW(data.password)) {
-            setErrorText("비밀번호 형식 오류")
+            setErrorText("비밀번호의 형식을 다시 확인해주세요")
             return
         }
 
@@ -91,7 +89,7 @@ const LoginModal = (props: prop) => {
         if (result.type === `${registerUser.typePrefix}/fulfilled`) {
             onClickMode()
         } else {
-            setErrorText("계정 생성 실패");
+            setErrorText("중복된 아이디입니다.");
         }
     };
     const onClickClose = () => {
@@ -109,7 +107,7 @@ const LoginModal = (props: prop) => {
                 <TextField 
                     label="아이디" 
                     variant="standard" 
-                    helperText="2-10자의 영문과 숫자, 일부 특수문자(., _, -)만 입력 가능합니다."
+                    helperText={!isLoginMode && "2-10자의 영문과 숫자, 일부 특수문자(., _, -)만 입력 가능합니다."}
                     value={loginId} 
                     onChange={(e) => {setLoginId(e.target.value); setErrorText('');}}
                     onKeyPress={onKeyPress}
@@ -130,7 +128,7 @@ const LoginModal = (props: prop) => {
                 <TextField 
                     label="비밀번호" 
                     variant="standard" 
-                    helperText={<> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
+                    helperText={!isLoginMode && <> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
                     type="password" 
                     value={loginPassword} 
                     onChange={(e) => {setLoginPassword(e.target.value); setErrorText('');}}
