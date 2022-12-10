@@ -52,7 +52,7 @@ const MyPage = () => {
 
     return <div className={styles.main}>
         <div className="list__navbar">
-            <NavBar />
+            {/*<NavBar />*/}
         </div>
         <div className={styles.left}>
             {buttonList.map((button) => <button key={button.name} name={button.name} onClick={onButtonClick} disabled={buttonClickState === button.name}>{button.name}</button>)}

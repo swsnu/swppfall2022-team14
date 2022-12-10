@@ -194,8 +194,8 @@ export default function EditCustomPage() {
     }
     else {
         return (
-            <Stack direction="row" justifyContent="space-between" sx={{ pr: 2 }} divider={<Divider orientation="vertical" flexItem />}>
-                <NavBar />
+            <>
+                {/*<NavBar />*/}
                 <Stack alignItems="flex-start" spacing={2} sx={{ width: 1, p: 3 }}>
                     <TextField 
                         label="칵테일 이름" 
@@ -494,7 +494,7 @@ export default function EditCustomPage() {
                         }}
                     />
                 </Stack >
-            </Stack>
+            </>
         )
     }
 }

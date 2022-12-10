@@ -65,8 +65,8 @@ const ListPage = () => {
     if (pageStatus === "loading") return <div></div> // Loading Window
     else if (pageStatus === "failed") return <div></div> // Failed Window
     else return (
-        <Stack direction="row" justifyContent="space-between" divider={<Divider orientation="vertical" flexItem />}>
-            <NavBar />
+        <>
+            {/*<NavBar />*/}
             <Container sx={{ py: 3 }} >
                 <Typography variant="h4" sx={{ mb: 3 }}>
                     search filters
@@ -101,7 +101,7 @@ const ListPage = () => {
                     </Grid>
                 }
             </Container>
-        </Stack >
+        </>
     )
 }
 
