@@ -144,9 +144,14 @@ export default function ItemDetailPage() {
             <>
                 {/*<NavBar />*/}
                 <Stack alignItems="flex-start" spacing={2} sx={{ width: 1, p: 3 }}>
-                    <Typography variant="h2">
-                        {cocktail.name}
-                    </Typography>
+                    <Stack alignItems="flex-start" spacing={0.5} sx={{ width: 1 }}>
+                        <Typography variant="h2">
+                            {cocktail.name}
+                        </Typography>
+                        <Typography variant="h6" sx={{ pl: 1 }}>
+                            {cocktail.name_eng}
+                        </Typography>
+                    </Stack>
                     <Stack direction="row" justifyContent="space-between" sx={{ width: 1 }}>
                         <Typography sx={{ color: 'primary.light' }} variant="body2">
                             {isCustom && `created by ${cocktail.author_name}`}
