@@ -22,7 +22,7 @@ jest.mock("./Comment/Comment", () => (prop: CommentType) => (
 
 // eslint-disable-next-line react/display-name
 jest.mock("@mui/material/Rating/Rating", () => (props:RatingProps) => (
-    <input onChange={(e) => props.onChange(e, Number(e.target.value))} data-testid={'rating_button'}/>
+    <input data-testid={'rating_button'}/>
 ));
 
 // eslint-disable-next-line react/display-name
@@ -435,7 +435,7 @@ describe("<ItemDetailPage />", () => {
         screen.getByText('해당 점수를 클릭하세요')
         const rating_button = screen.getAllByTestId('rating_button')[1]
         fireEvent.change(rating_button, { target: { value: 1 }})
-        await waitFor(() => expect(mockDispatch).toBeCalledTimes(6))
+        await waitFor(() => expect(mockDispatch).toBeCalledTimes(5))
     });
     it("should not set rate when not logged in", async () => {
         render(
