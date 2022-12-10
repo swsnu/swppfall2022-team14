@@ -237,7 +237,7 @@ export default function ItemDetailPage() {
                                 <Typography variant="body1">
                                     {cocktail.price_per_glass.toLocaleString()}원
                                 </Typography>
-                                <Typography variant="body2" align='left' sx={{ whiteSpace: 'pre' }}>
+                                <Typography variant="body2" align='left' sx={{ whiteSpace: 'pre-wrap' }}>
                                     {cocktail.introduction}
                                 </Typography>
                             </Stack>
@@ -265,7 +265,7 @@ export default function ItemDetailPage() {
                                         )
                                     })}
                                 </Stack>
-                                <Typography variant="body2" align='left' sx={{ whiteSpace: 'pre' }}>
+                                <Typography variant="body2" align='left' sx={{ whiteSpace: 'pre-wrap' }}>
                                     {cocktail.recipe}
                                 </Typography>
                             </Stack>
