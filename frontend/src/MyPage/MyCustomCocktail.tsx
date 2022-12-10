@@ -33,6 +33,7 @@ const MyCustomCocktail = () => {
                             type={cocktail.type} 
                             id={cocktail.id} 
                             tags={cocktail.tags} 
+                            is_bookmarked={cocktail.is_bookmarked}
                         />
                     </Grid>
                 ))}

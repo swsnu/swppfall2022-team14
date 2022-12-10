@@ -20,9 +20,11 @@ const ShortComment = (prop: CommentType) => {
     )
 
     const month = prop.updated_at.toString().slice(5, 7)
-    const day = prop.updated_at.toString().slice(8, 10)
-    const hour = prop.updated_at.toString().slice(11, 13)
+    const day = Number(prop.updated_at.toString().slice(8, 10))
+    const hour = Number(prop.updated_at.toString().slice(11, 13))
     const min = prop.updated_at.toString().slice(14, 16)
+
+    const updated_at = new Date(prop.updated_at)
 
     return (
         <Stack spacing={1} sx={{ width: 1 }}>
@@ -37,9 +39,8 @@ const ShortComment = (prop: CommentType) => {
                 }}
             >
                 <Typography fontSize={16}>
-                    {month}월 {day}일
+                    {updated_at.getFullYear()}년 {updated_at.getMonth() + 1}월 {updated_at.getDate()}일
                 </Typography>
-                {prop.updated_at.toString()}
             </Stack>
             <Stack direction="row" justifyContent="space-between" sx={{ px: 2 }}>
                 <Stack spacing={3} alignItems="flex-start" justifyContent="space-between">
@@ -60,7 +61,9 @@ const ShortComment = (prop: CommentType) => {
                             </Typography>
                         </Stack>
                         <Typography fontSize={12}>
-                            {hour}:{min}
+                            {updated_at.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}
+                            :
+                            {updated_at.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}
                         </Typography>
                     </Stack>
                 </Stack>

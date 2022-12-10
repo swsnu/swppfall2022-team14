@@ -13,7 +13,7 @@ import MyPage from "../MyPage/MyPage";
 const MainPage = () => {
 
     return(
-        <Stack direction="row" justifyContent="space-between" divider={<Divider orientation="vertical" flexItem />}>
+        <Stack direction="row" justifyContent="flex-start" divider={<Divider orientation="vertical" flexItem />}>
             <NavBar />
             <Routes>
                 <Route path="/:type" element={<ListPage />} />

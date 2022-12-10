@@ -24,7 +24,7 @@ describe("<Item />", () => {
         render(    
             <MemoryRouter initialEntries={['/standard']}>
                 <Routes>
-                    <Route path="/:type" element={<Item id={1} name="ITEM1" image="IMAGE1" rate={0} tags={["TAG1"]} type="ST"/>}/>
+                    <Route path="/:type" element={<Item id={1} name="ITEM1" image="IMAGE1" rate={0} tags={["TAG1"]} is_bookmarked={true} type="ST"/>}/>
                 </Routes>
             </MemoryRouter>
         );
