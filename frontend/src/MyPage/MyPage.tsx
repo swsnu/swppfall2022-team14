@@ -65,8 +65,8 @@ const MyPage = () => {
     }, [])
 
     return (
-        <Stack direction="row" justifyContent="space-between" divider={<Divider orientation="vertical" flexItem />}>
-            <NavBar />
+        <>
+            {/*<NavBar />*/}
             <Stack alignItems="flex-start" spacing={2} sx={{ width: 1, p: 3 }}>
                 <Stack direction="row" justifyContent="flex-end" sx={{ width: 1, pr: 3 }}>
                     <ToggleButtonGroup
@@ -83,7 +83,7 @@ const MyPage = () => {
                 </Stack>
                 {buttonList.find(button => button.value === toggle)?.component}
             </Stack>
-        </Stack >
+        </>
     )
 }
 
