@@ -30,7 +30,7 @@ export default function IngredientDetailPage() {
         return (
             <div className="main">
                 <div className="left">
-                    <NavBar />
+                    {/*<NavBar />*/}
                 </div>
                 <div className="right">
                     <div className="item-detail">

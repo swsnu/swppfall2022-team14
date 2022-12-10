@@ -138,8 +138,8 @@ export default function ItemDetailPage() {
     }
     else {
         return (
-            <Stack direction="row" justifyContent="space-between" divider={<Divider orientation="vertical" flexItem />}>
-                <NavBar />
+            <>
+                {/*<NavBar />*/}
                 <Stack alignItems="flex-start" spacing={2} sx={{ width: 1, p: 3 }}>
                     <Typography variant="h2">
                         {cocktail.name}
@@ -359,7 +359,7 @@ export default function ItemDetailPage() {
                     </Stack>
                 </Stack>
                 <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
-            </Stack>
+            </>
         )
     }
 }
