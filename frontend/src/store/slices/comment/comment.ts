@@ -133,7 +133,6 @@ export const CommentSlice = createSlice({
             state.state = null
         },
         setIsDeletedComment: (state, action: PayloadAction<CommentType>) => {
-            console.log(action.payload)
             state.commentList.forEach((c, i) => {
                 if (c.id === action.payload.id) {
                     state.commentList[i] = action.payload

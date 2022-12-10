@@ -108,8 +108,6 @@ const renderRecommendModal = (ingredient: IngredientInfo, isLogin = true) => {
 describe("<RecommendModal />", () => {
     it("should render RecommendModal", async () => {
         renderRecommendModal(stubIngredientInitialState);
-        const closeButton = screen.getByText("X");
-        fireEvent.click(closeButton);
     });
     it("should handle available cocktail click", () => {
         renderRecommendModal(stubIngredientInitialState);
@@ -125,8 +123,5 @@ describe("<RecommendModal />", () => {
     })
     it("should handle recommendation ingredients render branches", () => {
         renderRecommendModal(stubIngredientInitialState2);
-    })
-    it("should fail load when not login", () => {
-        renderRecommendModal(stubIngredientInitialState, false);
     })
 });

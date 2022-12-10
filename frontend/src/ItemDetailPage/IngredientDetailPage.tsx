@@ -16,7 +16,6 @@ export default function IngredientDetailPage() {
 
     useEffect(() => {
         dispatch(getIngredient(Number(id)));
-        console.log(ingredientState.ingredientItem)
     }, [id]);
 
 
