@@ -9,6 +9,7 @@ import { IProps as AddIngredientModalProp } from "../CreateCustomPage/Modals/Add
 import { UserInfo } from "../store/slices/user/user";
 import React from 'react';
 import { RateInfo } from "../store/slices/rate/rate";
+import user from '@testing-library/user-event';
 
 const stubCommentInitialState: CommentInfo = {
     commentList: [],
@@ -19,23 +20,14 @@ const stubCommentInitialState: CommentInfo = {
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [
         {
-            id: 1,
-            name: 'INGREDIENT_NAME_1',
-            image: 'INGREDIENT_IMAGE_1',
-            introduction: 'INGREDIENT_INTRO_1',
-            ABV: 40,
-            price: 200,
-            unit: ['oz', 'ml']
-            , color: ""
-        },
-        {
             id: 2,
             name: 'INGREDIENT_NAME_2',
             image: 'INGREDIENT_IMAGE_2',
             introduction: 'INGREDIENT_INTRO_2',
             ABV: 20,
             price: 100,
-            unit: ['oz'], color: ""
+            unit: ['oz'], 
+            color: ""
         },
     ],
     myIngredientList: [],
@@ -67,11 +59,15 @@ const stubCocktailInitialState: CocktailInfo = {
         rate: 3,
         ingredients: [
             {
-                ...stubIngredientInitialState.ingredientList[0], amount: "1 oz",
-                recipe_unit: ""
-            },
-            {
-                ...stubIngredientInitialState.ingredientList[1], amount: "5 oz",
+                id: 1,
+                name: 'INGREDIENT_NAME_1',
+                image: 'INGREDIENT_IMAGE_1',
+                introduction: 'INGREDIENT_INTRO_1',
+                ABV: 40,
+                price: 200,
+                unit: ['oz', 'ml'], 
+                color: "", 
+                amount: "1 oz",
                 recipe_unit: ""
             },
         ],
@@ -99,6 +95,7 @@ const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
 }
+
 // eslint-disable-next-line react/display-name
 jest.mock("../CreateCustomPage/Modals/AddIngredientModal", () => (prop: AddIngredientModalProp) => {
     return (
@@ -144,6 +141,8 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
+jest.spyOn(window, 'alert').mockImplementation(() => {});
+
 const renderEditCustomPage = (status = "success", isLogin: boolean = true, isUserNull: boolean = false, isCocktailNull: boolean = false) => {
     renderWithProviders(
         <MemoryRouter>
@@ -178,48 +177,50 @@ describe("<EditCustomPage />", () => {
     });
     it("should navigate to /custom/:id when confirm button clicked", async () => {
         renderEditCustomPage();
-        const nameInput = screen.getByLabelText("Name:");
+        const nameInput = screen.getByLabelText("칵테일 이름");
         fireEvent.change(nameInput, { target: { value: "NAME" } });
-        const descriptionInput = screen.getByLabelText("Description:");
+        const engNameInput = screen.getByLabelText("영어 이름 (선택)");
+        fireEvent.change(engNameInput, { target: { value: "NAME" } });
+        const descriptionInput = screen.getByLabelText("설명");
         fireEvent.change(descriptionInput, { target: { value: "DESCRIPTION" } });
-        const ingredientInput = screen.getAllByTestId("ingredientInput")[0];
+        const ingredientInput = screen.getAllByLabelText("재료")[1];
         fireEvent.click(ingredientInput);
         const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
         fireEvent.click(addIngredientButton);
-        const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
-        fireEvent.change(ingredientAmountInput, { target: { value: "10 oz" } });
-        const recipeInput = screen.getByLabelText("Recipe:");
+        const ingredientAmountInput = screen.getAllByLabelText("양")[1];
+        fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
+        const recipeInput = screen.getByLabelText("만드는 방법");
         fireEvent.change(recipeInput, { target: { value: "RECIPE" } });
-        const tagInput = screen.getByTestId("tagInput");
+        const tagInput = screen.getByLabelText("태그");
         fireEvent.change(tagInput, { target: { value: "TAG" } })
         fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
-        const confirmButton = screen.getByText("Confirm");
+        const confirmButton = screen.getByText("수정");
         fireEvent.click(confirmButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/custom/1"));
     });
     it("should operate onChangeAmount correctly", async () => {
         renderEditCustomPage();
-        const ingredientAmountInput = screen.getAllByTestId("ingredientAmountInput")[0];
+        const ingredientAmountInput = screen.getAllByLabelText("재료")[0];
         fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
         const addIngredientButton2 = screen.getAllByTestId("addIngredientButton")[1];
         fireEvent.click(addIngredientButton2);
-        const ingredientAmountInput2 = screen.getAllByTestId("ingredientAmountInput")[1];
+        const ingredientAmountInput2 = screen.getAllByLabelText("양")[1];
         fireEvent.change(ingredientAmountInput2, { target: { value: "5" } });
         fireEvent.change(ingredientAmountInput2, { target: { value: "0" } });
     });
     it("should operate onChangeIngredientUnit correctly", async () => {
         renderEditCustomPage();
-        const ingredientUnitSelect = screen.getAllByTestId("ingredientUnitSelect")[0];
+        const ingredientUnitSelect = screen.getAllByLabelText("양")[0];
         fireEvent.change(ingredientUnitSelect, { target: { value: "ml" } });
     });
     it("should delete ingredient when ingredient delete button clicked", async () => {
         renderEditCustomPage();
-        const ingredientDeleteButton = screen.getAllByTestId("ingredientDeleteButton")[0];
+        const ingredientDeleteButton = screen.getAllByTestId("delete")[0];
         fireEvent.click(ingredientDeleteButton);
     });
     it("should delete tag when tag delete button clicked", async () => {
         renderEditCustomPage();
-        const tagDeleteButton = screen.getAllByTestId("tagDeleteButton")[0];
+        const tagDeleteButton = screen.getByText("#TAG_1");
         fireEvent.click(tagDeleteButton);
     });
     it("should show loading when loading", async () => {
@@ -229,13 +230,6 @@ describe("<EditCustomPage />", () => {
     it("should not render when failed", async () => {
         renderEditCustomPage("failed");
         await screen.findByText("Non existing cocktail");
-    });
-    it("should close AddIngredientModal when close button clicked", async () => {
-        renderEditCustomPage();
-        const ingredientInput = screen.getAllByTestId("ingredientInput")[2];
-        fireEvent.click(ingredientInput);
-        const closeAddIngredientModalButton = screen.getAllByTestId("closeAddIngredientModalButton")[2];
-        fireEvent.click(closeAddIngredientModalButton);
     });
     it("should render empty string when cocktail item is null", async () => {
         renderWithProviders(
@@ -257,7 +251,7 @@ describe("<EditCustomPage />", () => {
     });
     it("should call onKeyPress when enter pressed", async () => {
         renderEditCustomPage();
-        const tagInput = screen.getByTestId("tagInput");
+        const tagInput = screen.getByLabelText("태그");
         fireEvent.change(tagInput, { target: { value: "TAG" } })
         fireEvent.keyPress(tagInput, { key: "A", charCode: 65 });
     });
@@ -266,10 +260,26 @@ describe("<EditCustomPage />", () => {
     });
     it("should not edit cocktail when user is null", async () => {
         renderEditCustomPage("success", true, true);
-        const confirmButton = screen.getByText("Confirm");
+        const confirmButton = screen.getByText("수정");
         fireEvent.click(confirmButton);
     });
     it("should not load when cocktail is null", async () => {
         renderEditCustomPage("success", true, false, true);
+    });
+    it("should load image when file upload button clicked", async () => {
+        renderEditCustomPage();
+        const FileUploadInput = screen.getByTestId("file");
+        const file = new File(["test"], "test.jpg", {
+            type: 'image/jpeg'
+        });
+        user.upload(FileUploadInput, file);
+    });
+    it("should fail loading image when file wrong", async () => {
+        renderEditCustomPage();
+        const FileUploadInput = screen.getByTestId("file");
+        const file = new File(["test"], "test.txt", {
+            type: 'text/plain'
+        });
+        user.upload(FileUploadInput, file);
     });
 });
