@@ -7,8 +7,7 @@ import { AppDispatch } from "../store"
 import styles from "./MyPage.module.scss"
 import Item from "../common/Components/Item";
 import { selectUser } from "../store/slices/user/user";
-
-
+import { Grid, IconButton, Stack } from "@mui/material";
 
 const MyCustomCocktail = () => {
     const cocktailState = useSelector(selectCocktail)
@@ -26,18 +25,22 @@ const MyCustomCocktail = () => {
         }
     }, [])
 
-    return <>
-        <div className={styles.right__header}>
-            <button onClick={onClickAdd}>Add</button>
-            <div className={styles.right__sort}>sort</div>
-        </div>
-        <div className={styles.right__main}>
-            {cocktailState.listStatus !== 'success' ? "" : cocktailState.cocktailList.map(cocktail => {
-                return <Item key={cocktail.id} image={cocktail.image}
-                    name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />;
-            })}
-        </div>
-    </>
+    return (
+        <Grid container columns={4} spacing={3} sx={{ pr: 6 }}>
+            {(cocktailState.listStatus !== 'success' ? [] : cocktailState.cocktailList).map((cocktail) => (
+                <Grid key={cocktail.id} item xs={1}>
+                    <Item 
+                        image={cocktail.image}
+                        name={cocktail.name} 
+                        rate={cocktail.rate} 
+                        type={cocktail.type} 
+                        id={cocktail.id} 
+                        tags={cocktail.tags} 
+                    />
+                </Grid>
+            ))}
+        </Grid>
+    )
 }
 
 
