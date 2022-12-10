@@ -134,21 +134,21 @@ const Comment = (props: AccessCommentType) => {
                     </Typography>
                     {openSetting ?
                         <Stack direction="row" spacing={0.5} justifyContent="flex-end">
-                            <IconButton size='small' onClick={replyStateHandler} disabled={props.is_deleted}>
+                            <IconButton size='small' onClick={replyStateHandler} disabled={props.is_deleted}data-testid={"reply_comment_button"}>
                                 <SubdirectoryArrowRightIcon fontSize='small' />
                             </IconButton>
                             {props.accessible && 
-                                <IconButton size='small' onClick={editStateHandler}>
+                                <IconButton size='small' onClick={editStateHandler} data-testid={"edit_comment_button"}>
                                     <EditIcon fontSize='small' />
                                 </IconButton>
                             }
                             {props.accessible && 
-                                <IconButton size='small' onClick={deleteCommentHandler}>
+                                <IconButton size='small' onClick={deleteCommentHandler} data-testid={"delete_comment_button"}>
                                     <DeleteIcon fontSize='small' />
                                 </IconButton>
                             }
                         </Stack> :
-                        <IconButton size='small' onClick={() => setOpenSetting(true)}>
+                        <IconButton size='small' onClick={() => setOpenSetting(true)} data-testid={"more_button"}>
                             <MoreVertIcon fontSize='small' />
                         </IconButton>
                     }

@@ -116,8 +116,6 @@ export default function ItemDetailPage() {
             }
             dispatch(updateRate(Number(id)));
             setRateOpen(false)
-        } else {
-            setIsLoginOpen(true);
         }
     }
 
@@ -152,16 +150,19 @@ export default function ItemDetailPage() {
                         </Typography>
                         <Stack direction="row" justifyContent="flex-end">
                             {(Number(userState.user?.id) === cocktail.author_id && isCustom) &&
-                                <IconButton onClick={() => deleteCocktailHandler()}>
+                                <IconButton onClick={() => deleteCocktailHandler()}
+                                data-testid={"delete_button"}>
                                     <DeleteIcon />
                                 </IconButton>
                             }
                             {(Number(userState.user?.id) === cocktail.author_id && isCustom) &&
-                                <IconButton onClick={() => navigate(`/custom/${id}/edit`)}>
+                                <IconButton onClick={() => navigate(`/custom/${id}/edit`)}
+                                data-testid={"edit_button"}>
                                     <EditIcon />
                                 </IconButton>
                             }
                             <Checkbox
+                                data-testid={'bookmark_button'}
                                 icon={<BookmarkBorderIcon sx={{ color: 'text.icon' }} />}
                                 checkedIcon={<BookmarkIcon sx={{ color: 'text.icon' }} />}
                                 onClick={toggleBookmarkHandler}
@@ -263,6 +264,7 @@ export default function ItemDetailPage() {
                                     {cocktail.ingredients?.map((ingre) => {
                                         return (
                                             <Button
+                                                data-testid={`ingre_button_${ingre.id}`}
                                                 key={ingre.id}
                                                 sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                                                 onClick={() => onIngredientClick(ingre.id)}

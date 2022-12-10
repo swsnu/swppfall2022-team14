@@ -9,7 +9,12 @@ import { CocktailInfo, CocktailItemType } from "../../store/slices/cocktail/cock
 import { Provider } from "react-redux";
 import { UserInfo } from "../../store/slices/user/user";
 import { RateInfo } from "../../store/slices/rate/rate";
+import { TextFieldProps } from "@mui/material";
 
+// eslint-disable-next-line react/display-name
+jest.mock("@mui/material/TextField/TextField", () => (props:TextFieldProps) => (
+    <input onClick={props.onClick} onChange={props.onChange} data-testid={'edit_comment_input'} value={props.value as string}/>
+));
 const emptyCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
@@ -65,11 +70,6 @@ const commentOther: CommentType = {
     parent_comment: null, // if null comment is root comment
     is_deleted: false
 }
-const initComment: CommentInfo = {
-    commentList: [commentAuthor, commentOther],
-    commentItem: commentAuthor,
-    state: null
-}
 const editComment: CommentInfo = {
     commentList: [commentAuthor, commentOther],
     commentItem: commentAuthor,
@@ -77,23 +77,28 @@ const editComment: CommentInfo = {
 }
 const stubUserInitialState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password: null,
-        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "TEST_ID",
+        username: "TEST_USERNAME",
+        password: "TEST_PASSWORD",
+        nickname: "TEST_NICKNAME",
+        intro: "TEST_INTRO",
+        profile_img: "TEST_PROFILE_IMG",
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
-}
+    token: "TEST_TOKEN",
+    isLogin: true
+};
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
 }
-
-const commentMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: initComment, user: stubUserInitialState, rate: rateState })
-const commentEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: stubUserInitialState, rate: rateState })
+const replyComment: CommentInfo = {
+    commentList: [commentAuthor],
+    commentItem: commentAuthor,
+    state: "REPLY"
+};
+const commentEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: stubUserInitialState, rate: rateState });
+const commentNotLoginEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: { ...stubUserInitialState, isLogin: false, token: null }, rate: rateState });
+const commentReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: stubUserInitialState, rate: rateState });
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -111,7 +116,7 @@ describe("<Reply />", () => {
         jest.clearAllMocks();
     });
 
-    it("should render without errors EDIT & handle Edit Comment", () => {
+    it("should handle edit Comment", () => {
         const create = new Date()
         const update = new Date()
         const cocktail: CocktailItemType = {
@@ -125,7 +130,7 @@ describe("<Reply />", () => {
             is_bookmarked: false,
         }
 
-        const { container } = render(
+        render(
             <Provider store={commentEditMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
@@ -134,17 +139,14 @@ describe("<Reply />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        const element = container.getElementsByClassName("reply__edit");
-        expect(element).toHaveLength(1);
 
-        const textBox = screen.getByRole("textbox")
-        const editButton = screen.getByText("Edit")
-
-        fireEvent.change(textBox, { target: { value: "edit_comment" } });
+        const textField = screen.getByTestId("edit_comment_input")
+        fireEvent.change(textField, { target: { value: "EDIT_CONTENT" } })
+        const editButton = screen.getByText("수정");
         fireEvent.click(editButton)
         expect(mockDispatch).toBeCalledTimes(1)
     });
-    it("should render without errors Not EDIT & Auth", () => {
+    it("should handle cancel to edit Comment", () => {
         const create = new Date()
         const update = new Date()
         const cocktail: CocktailItemType = {
@@ -158,8 +160,8 @@ describe("<Reply />", () => {
             is_bookmarked: false,
         }
 
-        const { container } = render(
-            <Provider store={commentMockStore}>
+        render(
+            <Provider store={commentEditMockStore}>
                 <MemoryRouter initialEntries={['/custom/1']}>
                     <Routes>
                         <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} author_name={"username"} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} accessible />} />
@@ -167,16 +169,74 @@ describe("<Reply />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        const element = container.getElementsByClassName("reply");
-        expect(element).toHaveLength(1);
-        screen.getByText("content")
 
-        const editButton = screen.getByText("Edit");
-        const deleteButton = screen.getByText("Delete");
-
+        const editButton = screen.getByText("취소");
         fireEvent.click(editButton)
         expect(mockDispatch).toBeCalledTimes(1)
+    });
+    it("should not create reply when not login", () => {
+        const create = new Date()
+        const update = new Date()
+        const cocktail: CocktailItemType = {
+            id: 1,
+            name: "name",
+            image: "img",
+            type: "CS",
+            tags: ["CS1", "CS2"],
+            author_id: 1,
+            rate: 1,
+            is_bookmarked: false,
+        }
+
+        render(
+            <Provider store={commentNotLoginEditMockStore}>
+                <MemoryRouter initialEntries={['/custom/1']}>
+                    <Routes>
+                        <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} author_name={"username"} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} accessible />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const textField = screen.getByTestId("edit_comment_input")
+        fireEvent.change(textField, { target: { value: "EDIT_CONTENT" } })
+        const editButton = screen.getByText("수정");
+        fireEvent.click(editButton)
+        expect(mockDispatch).toBeCalledTimes(0)
+    });
+
+    it("should render not edit state reply without errors", () => {
+        const create = new Date()
+        const update = new Date()
+        const cocktail: CocktailItemType = {
+            id: 1,
+            name: "name",
+            image: "img",
+            type: "CS",
+            tags: ["CS1", "CS2"],
+            author_id: 1,
+            rate: 1,
+            is_bookmarked: false,
+        }
+
+        render(
+            <Provider store={commentReplyMockStore}>
+                <MemoryRouter initialEntries={['/custom/1']}>
+                    <Routes>
+                        <Route path="/:type/:id" element={<Reply key={"1_comment"} id={1} author_id={1} author_name={"username"} content={"content"} created_at={create} updated_at={update} parent_comment={null} is_deleted={false} cocktail={cocktail} accessible />}/>
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const moreButton = screen.getByTestId("more_button")
+        fireEvent.click(moreButton)
+    
+        const editButton = screen.getByTestId("edit_comment_button")
+        fireEvent.click(editButton)
+        expect(mockDispatch).toBeCalledTimes(1)        
+        
+        const deleteButton = screen.getByTestId("delete_comment_button")
         fireEvent.click(deleteButton)
-        expect(mockDispatch).toBeCalledTimes(2)
+        expect(mockDispatch).toBeCalledTimes(2)        
     });
 })

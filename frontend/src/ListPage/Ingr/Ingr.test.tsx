@@ -1,6 +1,13 @@
+import React from 'react';
+import { CardProps } from "@mui/material";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import Ingr from "./Ingr";
+
+// eslint-disable-next-line react/display-name
+jest.mock("@mui/material/Card/Card", () => (props:CardProps) => (
+    <div data-testid={"ingr_item"} onClick={props.onClick}/>
+));
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -14,30 +21,15 @@ describe("<Ingr />", () => {
     });
 
     it("should render without errors", () => {
-        const { container } = render(    
+        render(    
             <MemoryRouter initialEntries={['/ingr']}>
                 <Routes>
                     <Route path="/:type" element={<Ingr id={1} name="INGREDIENT1" image="IMAGE1"/>}/>
                 </Routes>
             </MemoryRouter>
         );
-        const element = container.getElementsByClassName("list-item");
-        expect(element).toHaveLength(1);
-    });
-
-    it("should handle click ingredient detail", () => {
-        const { container } = render(    
-            <MemoryRouter initialEntries={['/ingr']}>
-                <Routes>
-                    <Route path="/:type" element={<Ingr id={1} name="INGREDIENT1" image="IMAGE1"/>}/>
-                    <Route path="/:type/:id" element={<Ingr id={1} name="INGREDIENT1" image="IMAGE1"/>}/>
-                </Routes>
-            </MemoryRouter>
-        );
- 
-        const element = container.getElementsByClassName("list-item");
-        fireEvent.click(element[0]);
+        const card = screen.getByTestId("ingr_item")
+        fireEvent.click(card)
         expect(mockNavigate).toHaveBeenCalledWith("/ingr/1");
-
     });
 })

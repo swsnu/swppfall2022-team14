@@ -119,14 +119,15 @@ const NavBar = () => {
                         mb: 2,
                     }}>
                     {[
-                        { onClick: handleHome,   icon: <CottageIcon />       },
-                        { onClick: handleMyIngr, icon: <LiquorIcon />        },
-                        { onClick: handleUpload, icon: <FileUploadIcon />    },
-                        { onClick: handleMyPage, icon: <PersonOutlineIcon /> },
+                        { onClick: handleHome,   icon: <CottageIcon />       , type: "Home"},
+                        { onClick: handleMyIngr, icon: <LiquorIcon />        , type: "MyIngr"},
+                        { onClick: handleUpload, icon: <FileUploadIcon />    , type: "Upload"},
+                        { onClick: handleMyPage, icon: <PersonOutlineIcon /> , type: "MyPage"},
                     ].map((btn, idx) => {
                         return (
                             <IconButton
                                 key={idx}
+                                data-testid={`${btn.type}_button`}
                                 onClick={btn.onClick}
                                 >
                                 {btn.icon}
