@@ -25,7 +25,7 @@ describe("<Item />", () => {
         const { container } = render(        
             <Item image="IMAGE1" name="ST_COCKTAIL" rate={0} id={1} type="ST" tags={[]}/>
         );
-        const element = container.getElementsByClassName("item")[0]
+        const element = screen.getByTestId("item")
         fireEvent.click(element)
         await waitFor(() => {expect(mockNavigate).toBeCalledWith("/standard/1")});
     });
@@ -34,7 +34,7 @@ describe("<Item />", () => {
         const { container } = render(        
             <Item image="IMAGE1" name="CS_COCKTAIL" rate={0} id={2} type="CS" tags={[]}/>
         );
-        const element = container.getElementsByClassName("item")[0]
+        const element = screen.getByTestId("item")
         fireEvent.click(element)
         await waitFor(() => {expect(mockNavigate).toBeCalledWith("/custom/2")});
     });

@@ -36,12 +36,13 @@ const IngredientItem = (prop: Pick<CocktailDetailType, "image" | "name" | "ABV" 
     return (
         <Card 
             onClick={onClickItem}
-            sx={{ textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }}
+            sx={{ textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }} data-testid="item"
         >
             <Stack direction="row" alignItems="flex-start" justifyContent="flex-end" sx={{ height: 20 }}>
                 {prop.my_item && 
                     <IconButton 
                         size="small"
+                        data-testid="delete"
                         sx={{
                             mr: 1,
                             mt: 0.5

@@ -75,6 +75,7 @@ export const logoutUser = createAsyncThunk(
                 return response.data
             })
             .catch(function () {
+                dispatch(userActions.logoutUser());
                 alert(
                     "이미 로그아웃 되었습니다."
                 )

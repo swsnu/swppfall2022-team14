@@ -14,7 +14,7 @@ import reducer, {
     cocktailActions,
     editCocktail,
     FilterParamType,
-    PostForm, fetchMyBookmarkCocktailList, authPostCocktail, toggleBookmark
+    PostForm, fetchMyBookmarkCocktailList, authPostCocktail, toggleBookmark, deleteCocktail
 } from "./cocktail";
 import { fetchCustomCocktailList, fetchStandardCocktailList, fetchMyCocktailList } from "./cocktail";
 import { getCocktail, postCocktail } from "./cocktail"
@@ -66,6 +66,31 @@ describe("cocktail reducer", () => {
         price: 1,
         introduction: "iintro",
         amount: 1,
+    }
+    const fakeDetailCSNeg = {
+        id: -2,
+        name: "name",
+        image: "img",
+        type: "CS",
+        tags: ["CS1", "CS2"],
+        author_id: -2,
+        rate: 1,
+        introduction: "intro",
+        recipe: "recipe",
+        ABV: 1,
+        price_per_glass: 1,
+        created_at: "2020-10-10",
+        updated_at: "2020-10-10",
+        ingredients: [{
+            id: 1,
+            name: "iname",
+            image: "iimg",
+            ABV: 1,
+            price: 1,
+            introduction: "iintro",
+            amount: 1,
+        }],
+        is_bookmarked: false,
     }
     const fakeDetailCS = {
         id: 1,
@@ -195,10 +220,16 @@ describe("cocktail reducer", () => {
     });
 
     it("should handle getCocktail", async () => {
-        axios.get = jest.fn().mockResolvedValueOnce({ data: [fakeIngredients] }).mockResolvedValueOnce({ data: fakeDetailCS });
+        axios.get = jest.fn().mockResolvedValueOnce({ data: [fakeIngredients] }).mockResolvedValueOnce({ data: fakeDetailCS }).mockResolvedValueOnce({data : {username: "user"}});
         await store.dispatch(getCocktail(1));
         expect(store.getState().cocktail.itemStatus).toEqual("success")
-        expect(store.getState().cocktail.cocktailItem).toEqual(fakeDetailCS)
+        expect(store.getState().cocktail.cocktailItem).toEqual({...fakeDetailCS, author_name: "user"})
+    });
+    it("should handle getCocktail -1 Auth", async () => {
+        axios.get = jest.fn().mockResolvedValueOnce({ data: [fakeIngredients] }).mockResolvedValueOnce({ data: fakeDetailCSNeg }).mockResolvedValueOnce({data : {username: "user"}});
+        await store.dispatch(getCocktail(1));
+        expect(store.getState().cocktail.itemStatus).toEqual("success")
+        expect(store.getState().cocktail.cocktailItem).toEqual({...fakeDetailCSNeg, author_name: "user"})
     });
     it("should handle getCocktail when failed", async () => {
         (axios.get as jest.Mock).mockImplementationOnce(() => {
@@ -259,6 +290,8 @@ describe("cocktail reducer", () => {
     });
 
     it("should handle toggleBookmark", async () => {
+        axios.get = jest.fn().mockResolvedValueOnce({ data: [fakeIngredients] }).mockResolvedValueOnce({ data: fakeDetailCS }).mockResolvedValueOnce({data : {username: "user"}});
+        await store.dispatch(getCocktail(1));
         const token = 'Token'
         axios.put = jest.fn().mockResolvedValue({ data: { cocktail_id: 1 } });
         await store.dispatch(toggleBookmark({ cocktail_id: 1, token: token }));
@@ -267,6 +300,12 @@ describe("cocktail reducer", () => {
         const token = 'Token'
         axios.put = jest.fn().mockResolvedValue({ data: { cocktail_id: 111 } });
         await store.dispatch(toggleBookmark({ cocktail_id: 111, token: token }));
+    });
+
+    it("should handle deleteCocktail", async () => {
+        const token = 'Token'
+        axios.delete = jest.fn().mockResolvedValue({ data: { cocktail_id: 111 } });
+        await store.dispatch(deleteCocktail({cocktail_id: 1, token: token}));
     });
 
 
