@@ -13,7 +13,7 @@ import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRig
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-interface AccessCommentType extends CommentType {
+export interface AccessCommentType extends CommentType {
     accessible: boolean;
 }
 

@@ -5,10 +5,17 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ThunkMiddleware } from "redux-thunk";
-import reducer, {CommentInfo, deleteComment, commentActions} from "./comment";
+import reducer, {CommentInfo, deleteComment, commentActions, CommentType} from "./comment";
 import {fetchCommentListByCocktailId, fetchMyCommentList} from "./comment";
 import {getComment, postComment, editComment} from "./comment"
-import {getCocktail} from "../cocktail/cocktail";
+import {CocktailItemType, getCocktail} from "../cocktail/cocktail";
+import {AccessCommentType} from "../../../ItemDetailPage/Comment/Comment";
+
+const mockDispatch = jest.fn();
+jest.mock("react-redux", () => ({
+    ...jest.requireActual("react-redux"),
+    useDispatch: () => mockDispatch,
+}));
 
 describe("comment reducer", () => {
     let store: EnhancedStore<
@@ -238,6 +245,31 @@ describe("comment reducer", () => {
             };
         });
         await store.dispatch(deleteComment({id: 2, token:"token"}));
+    });
+
+    it("should handle nullComment", () => {
+        const comment: AccessCommentType = {
+            id: 1,
+            cocktail: {
+                id: 2,
+                name: "string",
+                image: "string",
+                type: "CS",
+                tags: [],
+                author_id: 1,
+                rate: 3,
+                is_bookmarked: false
+            },
+            author_id: 1,
+            author_name: "name",
+            content: "con",
+            created_at: new Date("2020-10-10"),
+            updated_at: new Date("2020-10-10"),
+            parent_comment: null,
+            is_deleted: false,
+            accessible: true
+        };
+        store.dispatch(commentActions.nullCommentState(comment));
     });
 
 

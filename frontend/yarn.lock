@@ -8703,7 +8703,7 @@ react-app-polyfill@^3.0.0:
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
 
-react-aws-s3-typescript@^1.1.5:
+react-aws-s3-typescript@^1.1.4:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/react-aws-s3-typescript/-/react-aws-s3-typescript-1.1.5.tgz#ee4e7a206a3cf131c2ecff8c5491c71ff5cd74c6"
   integrity sha512-CqVFMUPRaNXwton+98A1ZrqtMcJ4+9u/zQE3Y5aW5BLMFv/LXH0yrn9l73AVgOsujs0+Xwekss/M8sGeF14G3Q==
