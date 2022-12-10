@@ -119,6 +119,7 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
 
 class CocktailPostSerializer(serializers.ModelSerializer):
     image = serializers.CharField(max_length=500, default="default_img.png")
+    # name_eng = serializers.CharField(max_length=50, default=None)
     # ABV = serializers.FloatField(default=random.uniform(10.0, 50.0))
     # price_per_glass = serializers.FloatField(
     #     default=random.randint(10, 100)*1000)

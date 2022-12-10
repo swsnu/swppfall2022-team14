@@ -44,7 +44,8 @@ export interface IngredientPostType extends Omit<IngredientType, 'unit'> {
     amount: string;
 }
 
-export interface CocktailPostType extends Omit<CocktailDetailType, "id" | "type" | "author_name" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score" | "ingredients"> {
+export interface CocktailPostType extends Omit<CocktailDetailType, "id" | "type" | "author_name" | "name_eng" |"created_at" | "updated_at" | "rate" | "is_bookmarked" | "score" | "ingredients"> {
+    name_eng: string | null
     ingredients: IngredientPostType[];
 
 }
@@ -177,29 +178,35 @@ export const postCocktail = createAsyncThunk(
 
 export const authPostCocktail = createAsyncThunk(
     "cocktail/postCocktail",
-    async (cocktail: PostForm, { dispatch }) => {
-
-        const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/post/', cocktail.cocktail, {
-            headers: {
-                Authorization: `Token ${cocktail.token}`,
-            },
-        });
-        dispatch(cocktailActions.addCocktail(response.data));
-        return response.data
+    async (cocktail: PostForm, { dispatch, rejectWithValue }) => {
+        try{
+            const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/post/', cocktail.cocktail, {
+                headers: {
+                    Authorization: `Token ${cocktail.token}`,
+                },
+            });
+            dispatch(cocktailActions.addCocktail(response.data));
+            return response.data
+        }catch(error: any){
+            return rejectWithValue(error.response.data["code"])
+        }
     }
 )
 
 export const editCocktail = createAsyncThunk(
     "cocktail/editCocktail",
-    async (cocktail: { data: PostForm, id: number }, { dispatch }) => {
-        const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/edit/`, cocktail.data.cocktail, {
-            headers: {
-                Authorization: `Token ${cocktail.data.token}`
-            }
-        });
-        console.log(response.data);
-        dispatch(cocktailActions.editCocktail(response.data));
-        return response.data
+    async (cocktail: { data: PostForm, id: number }, { dispatch, rejectWithValue }) => {
+        try{
+            const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/edit/`, cocktail.data.cocktail, {
+                headers: {
+                    Authorization: `Token ${cocktail.data.token}`
+                }
+            });
+            dispatch(cocktailActions.editCocktail(response.data));
+            return response.data
+        }catch(error: any){
+            return rejectWithValue(error.response.data["code"])
+        }
     }
 )
 
