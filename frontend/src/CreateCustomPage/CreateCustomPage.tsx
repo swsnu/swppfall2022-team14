@@ -114,8 +114,11 @@ export default function CreateCustomPage() {
         }else if(recipe === ""){
             window.alert("칵테일의 만드는 방법을 입력해주세요.")
             return
-        }else if(expectedColor === "NaNNaNNaN"){
-            window.alert("칵테일의 색을 예측할 수 있게 재료를 더 추가해주세요.")
+        }else if(ingredientList.length === 0){
+            window.alert("칵테일의 재료를 추가해주세요.")
+            return
+        }else if(ingredientList.find(ingre => ingre.amount === '')){
+            window.alert("칵테일 재료의 양을 기재해주세요.")
             return
         }
         if (userState.user?.id !== null && userState.token !== null) {

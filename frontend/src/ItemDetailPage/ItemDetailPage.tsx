@@ -123,14 +123,33 @@ export default function ItemDetailPage() {
     }
 
     if (cocktailState.itemStatus == "loading") {
-        return <div>Loading ..</div>
+        return (
+            <>
+                {/*<NavBar />*/}
+                <Stack spacing={2} sx={{ width: 1, p: 3 }} />
+            </>
+        )
     }
     else if (cocktailState.itemStatus == "failed" || !cocktail) {
-        return <div>Non existing cocktail</div>
+        return (
+            <>
+                {/*<NavBar />*/}
+                <Stack spacing={2} sx={{ width: 1, p: 3 }}>
+                    Non existing cocktail
+                </Stack>
+            </>
+        )
     }
     // Type mismatch
     else if (!((isCustom && type === "custom") || (!isCustom && type === "standard"))) {
-        return <div>Type mismatch</div>
+        return (
+            <>
+                {/*<NavBar />*/}
+                <Stack spacing={2} sx={{ width: 1, p: 3 }}>
+                    Type mismatch
+                </Stack>
+            </>
+        )
     }
     else {
         return (
@@ -230,6 +249,14 @@ export default function ItemDetailPage() {
                                 <Typography variant="body1">
                                     {cocktail.price_per_glass.toLocaleString()}원
                                 </Typography>
+                                <Box
+                                    sx={{
+                                        width: 10,
+                                        height: 10,
+                                        borderRadius: 5,
+                                        bgcolor: `#${cocktail.color}`
+                                    }}
+                                />
                                 <Typography variant="body2" align='left' sx={{ whiteSpace: 'pre-wrap' }}>
                                     {cocktail.introduction}
                                 </Typography>
