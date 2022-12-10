@@ -113,6 +113,9 @@ export default function ItemDetailPage() {
                 } else {      // POST score
                     await dispatch(postRate(data));
                 }
+            } else {
+                const data = { cocktail_id: Number(id), token: userState.token };
+                await dispatch(deleteRate(data));
             }
             dispatch(updateRate(Number(id)));
             setRateOpen(false)
@@ -204,7 +207,7 @@ export default function ItemDetailPage() {
                                             }}
                                         />
                                         <Typography variant="body1">
-                                            해당 점수를 클릭하세요
+                                            별점을 남겨주세요!
                                         </Typography>
                                     </Stack>
                                 </Box>
@@ -215,44 +218,21 @@ export default function ItemDetailPage() {
                         <ImageListItem sx={{ width: 0.3, height: 'fit-content' }}>
                             <img
                                 src={cocktail.image}
-                                style={{ borderRadius: 20 }}
+                                style={{ borderRadius: 20, height: 'auto' }}
                             />
                         </ImageListItem>
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1 }}>
                             <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, p: 2, bgcolor: 'primary.main', borderRadius: 3 }}>
                                 <div className={"rate_box"}>
-                                    <Rating value={Number(rateState.rate)} precision={0.1} readOnly /> 전체 평점
+                                    <Rating value={Number(rateState.rate)} precision={0.1} readOnly />
                                 </div>
-                                {
-                                    rateState.myRate ?
-                                        <div className={"rate_box"}>
-                                            <Rating value={rateState.myRate} precision={0.1} readOnly /> 나의 평점
-                                            <Button variant="contained" onClick={handleDeleteRate}
-                                                    sx={{
-                                                        bgcolor: 'primary.dark',
-                                                        borderRadius: 3,
-                                                        boxShadow: 3,
-                                                        '&:hover': {
-                                                            backgroundColor: 'secondary.main',
-                                                            boxShadow: 2,
-                                                        },
-                                                    }}
-                                            >
-                                                별점삭제하기
-                                            </Button>
-                                        </div>
-                                        :
-                                        <div className={"rate_box"}>
-                                            내 평점을 남겨주세요!
-                                        </div>
-                                }
                                 <Typography variant="body1">
                                     {cocktail.ABV.toFixed(1)}%
                                 </Typography>
                                 <Typography variant="body1">
                                     {cocktail.price_per_glass.toLocaleString()}원
                                 </Typography>
-                                <Typography variant="body2" align='left'>
+                                <Typography variant="body2" align='left' sx={{ whiteSpace: 'pre' }}>
                                     {cocktail.introduction}
                                 </Typography>
                             </Stack>
@@ -280,7 +260,7 @@ export default function ItemDetailPage() {
                                         )
                                     })}
                                 </Stack>
-                                <Typography variant="body2" align='left'>
+                                <Typography variant="body2" align='left' sx={{ whiteSpace: 'pre' }}>
                                     {cocktail.recipe}
                                 </Typography>
                             </Stack>
