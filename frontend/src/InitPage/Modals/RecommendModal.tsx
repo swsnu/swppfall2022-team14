@@ -2,12 +2,13 @@ import { SetStateAction, Dispatch, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store';
 import React from 'react';
-import { getRecommendIngredientList, selectIngredient } from '../../store/slices/ingredient/ingredient';
+import { getRecommendIngredientList, selectIngredient, postMyIngredients } from '../../store/slices/ingredient/ingredient';
 import { selectUser } from '../../store/slices/user/user';
 import { useNavigate } from 'react-router';
 import Modal from '@mui/material/Modal';
-import { Box, Button, Card, FormGroup, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Card, FormGroup, Grid, IconButton, Stack, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
+import AddIcon from '@mui/icons-material/Add';
 
 const StyledProductImg = styled('img')({
     top: 0,
@@ -55,6 +56,11 @@ const RecommendModal = (props: prop) => {
         else if (type === 'CS') navigate(`/custom/${id}`)
     }
 
+    const onClickAdd = (ingredient_id: number) => {
+        dispatch(postMyIngredients({ id: Number(userState.user?.id), ingredients: [ingredient_id], token: userState.token }))
+        dispatch(getRecommendIngredientList(userState.token))
+    }
+
 
     return (
         <Modal 
@@ -66,10 +72,25 @@ const RecommendModal = (props: prop) => {
                     {ingredientState.recommendIngredientList.map((ingredient) => (
                         <Grid key={ingredient.id} item xs={12} sm={6} md={3}>
                             <Card 
-                                onClick={() => navigate(`/ingredient/${ingredient.id}`)}
                                 sx={{ height: 1, textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }}
                             >
-                                <Box sx={{ pt: '100%', position: 'relative' }}>
+                                <Stack direction="row" alignItems="flex-start" justifyContent="flex-end">
+                                    <IconButton 
+                                        size="small"
+                                        data-testid="add"
+                                        sx={{
+                                            mr: 1,
+                                            mt: 1
+                                        }}
+                                        onClick={() => onClickAdd(ingredient.id)}
+                                    >
+                                        <AddIcon sx={{ fontSize: 20 }} />
+                                    </IconButton>
+                                </Stack>
+                                <Box 
+                                    sx={{ pt: '100%', position: 'relative' }}
+                                    onClick={() => navigate(`/ingredient/${ingredient.id}`)}
+                                >
                                     <StyledProductImg src={ingredient.image} />
                                 </Box>
                                 <Stack direction="row" spacing={2} sx={{ p: 2 }} justifyContent="space-between">
