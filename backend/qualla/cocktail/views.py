@@ -3,6 +3,8 @@ from json import JSONDecodeError
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse, HttpResponse
 from django.db import IntegrityError
 from django.db.models import Q
+from exception.errno import ErrorCode
+from exception.exception_response import ExceptionResponse
 from ingredient_prepare.models import IngredientPrepare
 from ingredient.models import Ingredient
 from tag.models import Tag, CocktailTag
@@ -141,11 +143,30 @@ def cocktail_post(request):
         # TODO: change fields that is derived automatically
         #data['author_id'] = 1
         data['type'] = 'CS'
+        print(data)
 
         serializer = CocktailPostSerializer(
             data=data, context={"request": request})
-
-        serializer.is_valid(raise_exception=True)
+        print(serializer.initial_data["name_eng"])
+        
+        if not serializer.is_valid():
+            err = serializer.errors
+            # return first error
+            first_err = next(iter(err))
+            if first_err == 'name':
+                if err['name'][0].code == 'blank':
+                    return ExceptionResponse(status=400, detail="name_blank", code=ErrorCode.COCKTAIL_NAME_BLANK).to_response()
+                elif err['name'][0].code == 'unique':
+                    return ExceptionResponse(status=400, detail="name_not_unique", code=ErrorCode.COCKTAIL_NAME_ALREADY_EXIST).to_response()
+            elif first_err == 'name_eng':
+                return ExceptionResponse(status=400, detail="english_name_not_unique", code=ErrorCode.COCKTAIL_ENG_NAME_ALREADY_EXIST).to_response()
+            elif first_err == 'color':
+                return ExceptionResponse(status=400, detail="color_blank", code=ErrorCode.COCKTAIL_COLOR_BLANK).to_response()
+            elif first_err == 'introduction':
+                return ExceptionResponse(status=400, detail="intro_blank", code=ErrorCode.COCKTAIL_INTRO_BLANK).to_response()
+            elif first_err == 'recipe':
+                return ExceptionResponse(status=400, detail="recipe_blank", code=ErrorCode.COCKTAIL_RECIPE_BLANK).to_response()
+        print(serializer.errors)
         cocktail = serializer.save()
         try:
             tags = data['tags']
@@ -192,7 +213,24 @@ def cocktail_edit(request, pk):
     serializer = CocktailDetailSerializer(
         cocktail, data=request.data, partial=True, context={'user': request.user})
     data = request.data.copy()
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+        err = serializer.errors
+        # return first error
+        first_err = next(iter(err))
+        if first_err == 'name':
+            if err['name'][0].code == 'blank':
+                return ExceptionResponse(status=400, detail="name_blank", code=ErrorCode.COCKTAIL_NAME_BLANK).to_response()
+            elif err['name'][0].code == 'unique':
+                return ExceptionResponse(status=400, detail="name_not_unique", code=ErrorCode.COCKTAIL_NAME_ALREADY_EXIST).to_response()
+        elif first_err == 'name_eng':
+            return ExceptionResponse(status=400, detail="english_name_not_unique", code=ErrorCode.COCKTAIL_ENG_NAME_ALREADY_EXIST).to_response()
+        elif first_err == 'color':
+            return ExceptionResponse(status=400, detail="color_blank", code=ErrorCode.COCKTAIL_COLOR_BLANK).to_response()
+        elif first_err == 'introduction':
+            return ExceptionResponse(status=400, detail="intro_blank", code=ErrorCode.COCKTAIL_INTRO_BLANK).to_response()
+        elif first_err == 'recipe':
+            return ExceptionResponse(status=400, detail="recipe_blank", code=ErrorCode.COCKTAIL_RECIPE_BLANK).to_response()
+
     serializer.save()
 
     CocktailTag.objects.filter(cocktail=pk).delete()

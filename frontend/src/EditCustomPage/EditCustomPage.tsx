@@ -131,6 +131,19 @@ export default function EditCustomPage() {
     }, [ingredientList])
 
     const editCocktailHandler = async () => {
+        if (name === ""){
+            window.alert("칵테일의 이름을 입력해주세요.")
+            return
+        }else if(introduction === ""){
+            window.alert("칵테일의 설명을 입력해주세요.")
+            return    
+        }else if(recipe === ""){
+            window.alert("칵테일의 만드는 방법을 입력해주세요.")
+            return
+        }else if(expectedColor === "NaNNaNNaN"){
+            window.alert("칵테일의 색을 예측할 수 있게 재료를 더 추가해주세요.")
+            return
+        }
         if (userState.user?.id !== null && userState.token !== null) {
             const ingredients = ingredientList.map((ingr, ind) => {
                 return { ...ingr, amount: ingr.amount, unit: ingr.recipe_unit }
@@ -138,7 +151,7 @@ export default function EditCustomPage() {
             const data: PostForm = {
                 cocktail: {
                     name: name,
-                    name_eng: nameEng,
+                    name_eng: (nameEng) ? nameEng : null,
                     image: (image)? image.url:"https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
                     introduction: introduction,
                     recipe: recipe,
@@ -152,8 +165,16 @@ export default function EditCustomPage() {
                 token: userState.token
             }
             const response = await dispatch(editCocktail({ data: data, id: Number(id) }))
-            navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
-        }
+            if (response.type === `${editCocktail.typePrefix}/fulfilled`) {
+                navigate(`/custom/${(response.payload as CocktailDetailType).id}`)        
+            }else{
+                if(response.payload === 9001){
+                    window.alert("중복되는 칵테일 이름입니다.")
+                }
+                else if(response.payload === 9002){
+                    window.alert("중복되는 칵테일 영어 이름입니다.")
+                }
+            }        }
     }
 
     const S3_config = {
