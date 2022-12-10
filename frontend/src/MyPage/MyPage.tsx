@@ -64,34 +64,6 @@ const MyPage = () => {
         }
     }, [])
 
-<<<<<<< HEAD
-    const buttonList: ButtonInfo[] = [{ name: 'My Ingredient', component: <MyIngredient /> },
-    { name: 'My Custom Cocktail', component: < MyCustomCocktail /> },
-    { name: 'My Favorites', component: <MyBookmark /> },
-    { name: 'My Comments', component: <MyComment /> },
-    { name: 'Info', component: <MyInfo /> }]
-
-    const [buttonClickState, setButtonClickState] = useState<string>("My Ingredient")
-    const onButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setButtonClickState(e.currentTarget.name)
-    }
-
-    return <div className={styles.main}>
-        <div className="list__navbar">
-            {/*<NavBar />*/}
-        </div>
-        <div className={styles.left}>
-            {buttonList.map((button) => <button key={button.name} name={button.name} onClick={onButtonClick} disabled={buttonClickState === button.name}>{button.name}</button>)}
-        </div>
-        <div className={styles.right}>
-            <div className={styles.right__inner}>
-                {/* 클릭된 버튼의 name으로 buttonList에서 component를 찾아 Render
-                    추후 항목이 추가되면 buttonList를 수정하면 됨.*/}
-                {buttonList.filter(button => button.name == buttonClickState)[0].component}
-            </div>
-        </div>
-    </div >
-=======
     return (
         <Stack direction="row" justifyContent="space-between" divider={<Divider orientation="vertical" flexItem />}>
             <NavBar />
@@ -113,7 +85,6 @@ const MyPage = () => {
             </Stack>
         </Stack >
     )
->>>>>>> c88171a (feat: Design add ingredient modal)
 }
 
 
