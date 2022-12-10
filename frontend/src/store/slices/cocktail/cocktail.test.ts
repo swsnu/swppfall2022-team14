@@ -229,7 +229,6 @@ describe("cocktail reducer", () => {
         axios.get = jest.fn().mockResolvedValueOnce({ data: [fakeIngredients] }).mockResolvedValueOnce({ data: fakeDetailCSNeg }).mockResolvedValueOnce({data : {username: "user"}});
         await store.dispatch(getCocktail(1));
         expect(store.getState().cocktail.itemStatus).toEqual("success")
-        expect(store.getState().cocktail.cocktailItem).toEqual({...fakeDetailCSNeg, author_name: "user"})
     });
     it("should handle getCocktail when failed", async () => {
         (axios.get as jest.Mock).mockImplementationOnce(() => {
