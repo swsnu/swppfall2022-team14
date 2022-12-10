@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.cocktail_list, name='cocktail list'),
+    path('init/', views.get_init_cocktail, name='get init cocktail'),
     path('post/', views.cocktail_post, name='cocktail post'),
     path('<int:pk>/', views.retrieve_cocktail, name='retrieve cocktail'),
     path('<int:pk>/edit/', views.cocktail_edit, name='cocktail edit'),

@@ -10,6 +10,9 @@ import React from 'react';
 import ListPage from "./ListPage/ListPage";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import {Divider, Stack} from "@mui/material";
+import NavBar from "./NavBar/NavBar";
+import MainPage from "./MainPage/MainPage";
 
 const darkTheme = createTheme({
   palette: {
@@ -43,14 +46,22 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<InitPage />} />
-            <Route path="/:type" element={<ListPage />} />
-            <Route path="/custom/:id/edit" element={<EditCustomPage />} />
-            <Route path='/custom/create' element={<CreateCustomPage />} />
-            <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
-            <Route path="/:type/:id" element={<ItemDetailPage />} />
-            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/*" element={<MainPage />} />
           </Routes>
         </BrowserRouter >
+        {/*<BrowserRouter>*/}
+        {/*  <Routes>*/}
+        {/*    <Stack direction="row" justifyContent="space-between" divider={<Divider orientation="vertical" flexItem />}>*/}
+        {/*      <NavBar />*/}
+        {/*      <Route path="/:type" element={<ListPage />} />*/}
+        {/*      <Route path="/custom/:id/edit" element={<EditCustomPage />} />*/}
+        {/*      <Route path='/custom/create' element={<CreateCustomPage />} />*/}
+        {/*      <Route path="/ingredient/:id" element={<IngredientDetailPage />} />*/}
+        {/*      <Route path="/:type/:id" element={<ItemDetailPage />} />*/}
+        {/*      <Route path="/mypage" element={<MyPage />} />*/}
+        {/*    </Stack>*/}
+        {/*  </Routes>*/}
+        {/*</BrowserRouter>*/}
       </div >
     </ThemeProvider>
   );

@@ -31,9 +31,8 @@ Object.defineProperty(window, "localStorage", { value: localStorageMock });
 const setLocalStorage = (id: string, data: string) => {
     window.localStorage.setItem(id, data);
 };
-const removeLocalStorage = (id: string) => {
-    window.localStorage.removeItem(id);
-};
+
+jest.spyOn(window, 'alert').mockImplementation(() => {});
 
 describe("user reducer", () => {
     let store: EnhancedStore<

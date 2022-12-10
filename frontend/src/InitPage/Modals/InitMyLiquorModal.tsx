@@ -1,10 +1,12 @@
-import { SetStateAction, Dispatch } from 'react';
+import {SetStateAction, Dispatch, useEffect} from 'react';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { selectIngredient } from '../../store/slices/ingredient/ingredient';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchMyIngredientList, selectIngredient} from '../../store/slices/ingredient/ingredient';
 import IngredientItem from '../../common/Components/IngredientItem';
 import Modal from '@mui/material/Modal';
 import { Grid, Stack } from "@mui/material";
+import {selectUser} from "../../store/slices/user/user";
+import {AppDispatch} from "../../store";
 
 const style = {
     position: 'absolute',
@@ -28,6 +30,15 @@ const InitMyLiqourModal = (props: prop) => {
 
     const { isOpen, setIsOpen } = props;
     const ingredientState = useSelector(selectIngredient)
+    const userState = useSelector(selectUser)
+    const dispatch = useDispatch<AppDispatch>()
+
+    useEffect(() => {
+        if (userState.isLogin && userState.user?.id !== null) {
+            dispatch(fetchMyIngredientList(userState.token))
+        }
+
+    }, [])
 
     return (
         <Modal 

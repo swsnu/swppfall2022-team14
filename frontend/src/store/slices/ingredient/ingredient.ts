@@ -53,7 +53,6 @@ const initialState: IngredientInfo = {
 export const fetchIngredientList = createAsyncThunk(
     "ingredient/fetchIngredientList", async () => {
         const response = await axios.get('/api/v1/ingredients/');
-        console.log(response.data)
         return response.data
     },
 )
@@ -66,7 +65,6 @@ export const fetchMyIngredientList = createAsyncThunk(
                 Authorization: `Token ${token}`,
             },
         });
-        console.log(response.data)
         return response.data
     },
 )
@@ -78,7 +76,6 @@ export const getRecommendIngredientList = createAsyncThunk(
                 Authorization: `Token ${token}`,
             },
         });
-        console.log(response.data)
         return response.data
     },
 )
@@ -99,7 +96,6 @@ export const postMyIngredients = createAsyncThunk(
         });
 
         // dispatch(fetchMyIngredientList())
-        console.log(response.data)
         return response.data
     },
 )
@@ -128,7 +124,6 @@ export const getIngredient = createAsyncThunk(
     "ingredient/getIngredient/",
     async (id: IngredientType["id"]) => {
         const response = await axios.get(`/api/v1/ingredients/${id}/`)
-        console.log(response.data)
         return response.data;
     }
 )

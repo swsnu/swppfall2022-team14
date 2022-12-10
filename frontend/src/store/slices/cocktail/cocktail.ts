@@ -88,8 +88,7 @@ export interface FilterParamType {
 export const fetchStandardCocktailList = createAsyncThunk(
     "cocktail/fetchStandardCocktailList", async (params: FilterParamType | null) => {
         if (!params) {
-            const response = await axios.get(`/api/v1/cocktails/?type=standard`);
-            console.log(response.data)
+            const response = await axios.get(`/api/v1/cocktails/init/?type=standard`);
             return response.data
         }
         else {
@@ -98,7 +97,6 @@ export const fetchStandardCocktailList = createAsyncThunk(
                     params: params
                 }
             );
-            console.log(response.data)
             return response.data
         }
 
@@ -108,8 +106,7 @@ export const fetchStandardCocktailList = createAsyncThunk(
 export const fetchCustomCocktailList = createAsyncThunk(
     "cocktail/fetchCustomCocktailList", async (params: FilterParamType | null) => {
         if (!params) {
-            const response = await axios.get(`/api/v1/cocktails/?type=custom`);
-            console.log(response.data)
+            const response = await axios.get(`/api/v1/cocktails/init/?type=custom`);
             return response.data
         }
         else {
@@ -118,7 +115,6 @@ export const fetchCustomCocktailList = createAsyncThunk(
                     params: params
                 }
             );
-            console.log(response.data)
             return response.data
         }
 
@@ -153,10 +149,8 @@ export const getCocktail = createAsyncThunk(
     "cocktail/getCocktail",
     async (id: CocktailItemType["id"]) => {
         const ingredient_response = await axios.get(`/api/v1/cocktails/${id}/ingredients/`)
-        console.log(ingredient_response.data)
 
         const response = await axios.get(`/api/v1/cocktails/${id}/`)
-        console.log(response.data)
 
         if (response.data.author_id > 0) {
             const author_response = await axios.get(`/api/v1/user/${response.data.author_id}/`);

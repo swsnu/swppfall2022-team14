@@ -99,9 +99,4 @@ describe("<InitMyLiquorModal />", () => {
     it("should render InitMyLiquorModal", () => {
         renderInitMyLiqourModal(stubIngredientInitialState);
     });
-    it("should close InitMyLiquorModal when close button clicked", () => {
-        renderInitMyLiqourModal(stubIngredientInitialStateEmpty);
-        const closeButton = screen.getByText("X");
-        fireEvent.click(closeButton);
-    });
 });

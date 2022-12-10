@@ -91,7 +91,6 @@ export const getUser = createAsyncThunk(
                 Authorization: `Token ${token}`,
             },
         });
-        console.log(response.data)
         return response.data
     }
 );
