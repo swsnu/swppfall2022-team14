@@ -35,7 +35,7 @@ const Item = (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | 
     }
 
     return (
-        <Card data-testid="item" sx={{ cursor: 'pointer', textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }}>
+        <Card data-testid="item" sx={{ textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }}>
             <Box onClick={onClickItem} sx={{ pt: '100%', position: 'relative', cursor: 'pointer' }}>
                 <StyledProductImg src={prop.image} />
             </Box>
