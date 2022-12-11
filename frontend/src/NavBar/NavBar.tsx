@@ -119,7 +119,7 @@ const NavBar = () => {
         <Stack direction="row" sx={{ boxShadow: "1px -20px 10px 5px #181818" }}>
             <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1 }}>
                 <Box component="span" sx={{ height: 80, p: 2 }}>
-                    <LocalBarIcon sx={{ fontSize: 50 }} />
+                    <LocalBarIcon onClick={handleHome} sx={{ cursor: 'pointer', fontSize: 50 }} />
                 </Box>
                 <Stack 
                     direction="row" justifyContent="center" alignItems="center" spacing={1} 
