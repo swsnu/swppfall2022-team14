@@ -47,7 +47,7 @@ const AddIngredientModal = (props: IProps) => {
     };
 
     useEffect(() => {
-        dispatch(fetchIngredientList())
+        dispatch(fetchIngredientList(null))
     }, [])
 
     return (
