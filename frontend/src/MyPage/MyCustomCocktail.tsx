@@ -34,6 +34,8 @@ const MyCustomCocktail = () => {
                             id={cocktail.id} 
                             tags={cocktail.tags} 
                             is_bookmarked={cocktail.is_bookmarked}
+                            ABV={cocktail.ABV}
+                            price_per_glass={cocktail.price_per_glass}
                         />
                     </Grid>
                 ))}
