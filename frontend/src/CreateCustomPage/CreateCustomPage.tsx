@@ -291,15 +291,18 @@ export default function CreateCustomPage() {
                     <input type="file" onChange={handleSelectFile} id='file' style={{ "display": "none" }} />
                     <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1 }}>
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, p: 2, bgcolor: 'primary.main', borderRadius: 3 }}>
-                            <Typography variant="body1">
-                                {isNaN(expectedABV) ? "재료를 입력하여 예상 도수를 알아보세요." : `예상 도수 ${expectedABV}%`}
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                재료를 추가하여 예상 도수, 가격, 색을 알아보세요.
                             </Typography>
                             <Typography variant="body1">
-                                예상 가격 {expectedPrice.toLocaleString()}원
+                                도수 {isNaN(expectedABV) ? 0 : expectedABV.toFixed(1)}%
+                            </Typography>
+                            <Typography variant="body1">
+                                가격 {expectedPrice.toLocaleString()}원
                             </Typography>
                             <Stack direction="row" spacing={0.75} alignItems="center" justifyContent="flex-start">
                                 <Typography variant="body1">
-                                    예상 색깔
+                                    색
                                 </Typography>
                                 <Box
                                     sx={{
