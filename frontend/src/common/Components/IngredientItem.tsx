@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router"
 import { CocktailDetailType } from "../../store/slices/cocktail/cocktail";
-import styles from './IngredientItem.module.scss'
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import { AppDispatch } from "../../store";
-import { deleteMyIngredients } from "../../store/slices/ingredient/ingredient";
+import { fetchMyIngredientList, deleteMyIngredients, postMyIngredients } from "../../store/slices/ingredient/ingredient";
 import {selectUser} from "../../store/slices/user/user";
 import { Box, Card, IconButton, Stack, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 
 const StyledProductImg = styled('img')({
     top: 0,
@@ -28,36 +28,50 @@ const IngredientItem = (prop: Pick<CocktailDetailType, "image" | "name" | "ABV" 
         navigate(`/ingredient/${prop.id}`)
     }
 
-    const onClickDelete = (e: any) => {
-        e.stopPropagation();
+    const onClickAdd = () => {
+        dispatch(postMyIngredients({ id: Number(userState.user?.id), ingredients: [prop.id], token: userState.token }))
+    }
+
+    const onClickDelete = () => {
         dispatch(deleteMyIngredients({ user_id: prop.user_id, ingredient_id: prop.id, token: userState.token }))
     }
 
     return (
         <Card 
-            onClick={onClickItem}
-            sx={{ cursor: 'pointer', textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }} data-testid="item"
+            sx={{ textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }} 
+            data-testid="item"
         >
             <Stack direction="row" alignItems="flex-start" justifyContent="flex-end" sx={{ height: 20 }}>
-                {prop.my_item && 
+                {prop.my_item ? 
                     <IconButton 
                         size="small"
                         data-testid="delete"
                         sx={{
                             mr: 1,
-                            mt: 0.5
+                            mt: 1
                         }}
                         onClick={onClickDelete}
                     >
-                        <RemoveIcon sx={{ fontSize: 16 }} />
+                        <RemoveIcon sx={{ fontSize: 20 }} />
+                    </IconButton> :
+                    <IconButton 
+                        size="small"
+                        data-testid="add"
+                        sx={{
+                            mr: 1,
+                            mt: 1
+                        }}
+                        onClick={onClickAdd}
+                    >
+                        <AddIcon sx={{ fontSize: 20 }} />
                     </IconButton>
                 }
             </Stack>
-            <Box sx={{ pt: '100%', position: 'relative' }}>
+            <Box onClick={onClickItem} sx={{ cursor: 'pointer', pt: '100%', position: 'relative' }}>
                 <StyledProductImg src={prop.image} />
             </Box>
             <Stack direction="row" spacing={2} sx={{ p: 3 }} justifyContent="space-between">
-                <Typography noWrap>
+                <Typography noWrap onClick={onClickItem} sx={{ cursor: 'pointer' }}>
                     {prop.name}
                 </Typography>
                 <Typography noWrap>

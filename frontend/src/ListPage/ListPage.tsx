@@ -11,11 +11,10 @@ import {
     FilterParamType,
     selectCocktail
 } from "../store/slices/cocktail/cocktail";
-import NavBar from "../NavBar/NavBar";
 import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
-import Ingr from "./Ingr/Ingr";
+import IngredientItem from "../common/Components/IngredientItem";
 import { selectUser } from '../store/slices/user/user';
-import { Grid, Container, Divider, Typography, Stack } from "@mui/material";
+import { Grid, Container, Typography, Stack } from "@mui/material";
 
 
 const ListPage = () => {
@@ -88,11 +87,13 @@ const ListPage = () => {
                     <Grid container spacing={3}>
                         {ingrList.map((ingredient) => 
                             <Grid key={ingredient.id} item xs={12} sm={6} md={3}>
-                                <Ingr 
+                                <IngredientItem 
                                     key={ingredient.id} 
                                     image={ingredient.image} 
                                     name={ingredient.name} 
                                     id={ingredient.id}
+                                    ABV={ingredient.ABV} 
+                                    my_item={ingrState.myIngredientList.map(ingr => ingr.id).includes(ingredient.id)}
                                 />
                             </Grid> 
                         )}

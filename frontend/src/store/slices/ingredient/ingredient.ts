@@ -98,14 +98,13 @@ export interface PostIngredientProps {
     token: string | null
 }
 export const postMyIngredients = createAsyncThunk(
-    "cocktail/postMyIngredientList", async (param: PostIngredientProps) => {
+    "cocktail/postMyIngredientList", async (param: PostIngredientProps, { dispatch }) => {
         const response = await axios.post(`/api/v1/store/`, param,{
             headers: {
                 Authorization: `Token ${param.token}`,
             },
         });
-
-        // dispatch(fetchMyIngredientList())
+        // dispatch(fetchMyIngredientList(param.token))
         return response.data
     },
 )
@@ -123,7 +122,7 @@ export const deleteMyIngredients = createAsyncThunk(
                 Authorization: `Token ${param.token}`,
             },
         });
-        dispatch(fetchMyIngredientList(param.token))
+        // dispatch(fetchMyIngredientList(param.token))
         return response.data
     },
 )
@@ -191,6 +190,11 @@ export const ingredientSlice = createSlice({
             for (let i = 0; i < added_cocktails.length; i++) {
                 state.myIngredientList.push(added_cocktails[i])
             }
+        });
+        builder.addCase(deleteMyIngredients.fulfilled, (state, action) => {
+            state.myIngredientList.splice(
+                state.myIngredientList.findIndex(function(ingr) {return ingr.id === action.payload.ingredient}), 1
+            )
         });
     },
 })
