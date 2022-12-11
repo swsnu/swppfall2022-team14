@@ -40,6 +40,7 @@ const emptyCommentState: CommentInfo = {
 const ingredient1: IngredientType = {
     id: 1,
     name: "INGREDIENT1",
+    name_eng: "ENG_INGREDIENT1",
     image: "IMAGE1",
     ABV: 0,
     price: 0,
@@ -50,6 +51,7 @@ const ingredient1: IngredientType = {
 const ingredient2: IngredientType = {
     id: 2,
     name: "INGREDIENT2",
+    name_eng: "ENG_INGREDIENT1",
     image: "IMAGE2",
     ABV: 0,
     price: 0,

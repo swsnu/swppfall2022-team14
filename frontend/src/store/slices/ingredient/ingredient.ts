@@ -8,6 +8,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 export interface IngredientType {
     id: number,
     name: string,
+    name_eng: string,
     image: string,
     ABV: number,
     price: number,
@@ -130,7 +131,7 @@ export const deleteMyIngredients = createAsyncThunk(
 
 
 export const getIngredient = createAsyncThunk(
-    "ingredient/getIngredient/",
+    "ingredient/getIngredient",
     async (id: IngredientType["id"]) => {
         const response = await axios.get(`/api/v1/ingredients/${id}/`)
         return response.data;

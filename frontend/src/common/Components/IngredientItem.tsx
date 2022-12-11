@@ -3,7 +3,7 @@ import { CocktailDetailType } from "../../store/slices/cocktail/cocktail";
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import { AppDispatch } from "../../store";
-import { fetchMyIngredientList, deleteMyIngredients, postMyIngredients } from "../../store/slices/ingredient/ingredient";
+import { deleteMyIngredients, postMyIngredients } from "../../store/slices/ingredient/ingredient";
 import {selectUser} from "../../store/slices/user/user";
 import { Box, Card, IconButton, Stack, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';

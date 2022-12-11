@@ -53,6 +53,7 @@ const stubCommentInitialState: CommentInfo = {
 const ingredient: IngredientType = {
     id: 2,
     name: "INGREDIENT2",
+    name_eng: "ENG_INGREDIENT1",
     image: "IMAGE2",
     ABV: 0,
     price: 0,

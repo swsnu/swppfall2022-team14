@@ -29,6 +29,7 @@ const stubIngredientInitialState: IngredientInfo = {
         {
             id: 1,
             name: 'INGREDIENT_NAME_1',
+            name_eng: "ENG_INGREDIENT1",
             image: 'INGREDIENT_IMAGE_1',
             introduction: 'INGREDIENT_INTRO_1',
             ABV: 40,
@@ -38,6 +39,7 @@ const stubIngredientInitialState: IngredientInfo = {
         {
             id: 2,
             name: 'INGREDIENT_NAME_2',
+            name_eng: "ENG_INGREDIENT1",
             image: 'INGREDIENT_IMAGE_2',
             introduction: 'INGREDIENT_INTRO_2',
             ABV: 20,

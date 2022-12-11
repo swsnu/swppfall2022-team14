@@ -240,15 +240,15 @@ export default function ItemDetailPage() {
                         </ImageListItem>
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1 }}>
                             <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, p: 2, bgcolor: 'primary.main', borderRadius: 3 }}>
-                                <div className={"rate_box"}>
-                                    <Rating value={Number(rateState.rate)} precision={0.1} readOnly />
-                                </div>
-                                <Typography variant="body1">
-                                    {cocktail.ABV.toFixed(1)}%
-                                </Typography>
-                                <Typography variant="body1">
-                                    {cocktail.price_per_glass.toLocaleString()}원
-                                </Typography>
+                                <Rating value={Number(rateState.rate)} precision={0.1} readOnly />
+                                <Stack spacing={1} alignItems="flex-start">
+                                    <Typography variant="body1">
+                                        {cocktail.ABV.toFixed(1)}%
+                                    </Typography>
+                                    <Typography variant="body1">
+                                        {cocktail.price_per_glass.toLocaleString()}원
+                                    </Typography>
+                                </Stack>
                                 <Box
                                     sx={{
                                         width: 10,
