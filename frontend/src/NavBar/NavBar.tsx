@@ -8,7 +8,7 @@ import { selectUser } from "../store/slices/user/user";
 import LoginModal from "../InitPage/Modals/LoginModal";
 import AddIngredientModal from "../common/Modals/AddIngredientModal";
 import { styled } from '@mui/material/styles';
-import { Box, ListItemIcon, ListItemButton, ListItemText, Stack, IconButton } from '@mui/material';
+import { Box, Button, Divider, ListItemIcon, ListItemButton, ListItemText, Stack, IconButton, Typography } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import KitchenIcon from '@mui/icons-material/Kitchen';
@@ -103,8 +103,8 @@ const NavBar = () => {
         }
     }
 
-    const handleAddIngr = () => {
-        setIsAddIngredientModalOpen(true)
+    const onIngredientClick = (id: number) => {
+        navigate(`/ingredient/${id}`)
     }
 
     useEffect(() => {
@@ -116,8 +116,8 @@ const NavBar = () => {
     },[openMyIngr])
 
     return (
-        <Stack direction="row">
-            <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1}}>
+        <Stack direction="row" sx={{ boxShadow: "1px -20px 10px 5px #181818" }}>
+            <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1 }}>
                 <Box component="span" sx={{ height: 80, p: 2 }}>
                     <LocalBarIcon sx={{ fontSize: 50 }} />
                 </Box>
@@ -168,16 +168,19 @@ const NavBar = () => {
                 <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
                 {<AddIngredientModal isOpen={isAddIngredientModalOpen} setIsOpen={setIsAddIngredientModalOpen} user_id={Number(userState.user?.id)} />}
             </Stack>
+            <Divider orientation="vertical" flexItem />
             {openMyIngr &&
-                <Stack justifyContent="flex-start" sx={{ width: 200, minWidth: 200, maxWidth: 270, px: 1}}>
-                    <div className="nav__side-util">
-                        <button onClick={handleAddIngr}>ADD</button>
-                    </div>
-                    {ingredientState.myIngredientList.map(ingredient =>
-                        <div key={ingredient.id} className="nav__side-ingr">
-                            <div className="nav__side-ingr-name">{ingredient.name}</div>
-                            <div className="nav__side-ingr-abv">{ingredient.ABV}</div>
-                        </div>
+                <Stack spacing={4} alignItems="center" justifyContent="flex-start" sx={{ width: 160, px: 2, py: 10 }}>
+                    {ingredientState.myIngredientList.map((ingredient) =>
+                        <Button
+                            key={ingredient.id}
+                            sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.5, textAlign: 'center' }}
+                            onClick={() => onIngredientClick(ingredient.id)}
+                        >
+                            <Typography fontSize={12} color='text.primary'>
+                                {ingredient.name}
+                            </Typography>
+                        </Button>
                     )}
                 </Stack>
             }
