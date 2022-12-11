@@ -71,7 +71,6 @@ export const logoutUser = createAsyncThunk(
         })
             .then(function (response) {
                 dispatch(userActions.logoutUser());
-                alert("로그아웃이 성공적으로 수행되었습니다.")
                 return response.data
             })
             .catch(function () {
@@ -92,6 +91,21 @@ export const getUser = createAsyncThunk(
             },
         });
         return response.data
+    }
+);
+
+export const editUser = createAsyncThunk(
+    "user/editUser",
+    async (user: { token: string | null, org_password: string, password: string }, { dispatch }) => {
+        await axios.put('/api/v1/auth/me/', { org_password: user.org_password, password: user.password }, {
+            headers: {
+                Authorization: `Token ${user.token}`,
+            },
+        })
+            .then(function (response) {
+                dispatch(userActions.editUser())
+                return response.data
+            })
     }
 );
 
@@ -129,6 +143,13 @@ export const userSlice = createSlice({
             }
         },
         logoutUser: (
+            state,
+        ) => {
+            state.user = null;
+            state.token = null;
+            state.isLogin = false;
+        },
+        editUser: (
             state,
         ) => {
             state.user = null;

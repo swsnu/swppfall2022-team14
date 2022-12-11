@@ -1,9 +1,7 @@
-import { useState, SetStateAction, Dispatch, KeyboardEvent } from 'react';
+import { useState, SetStateAction, Dispatch } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from './LoginModal.module.scss'
-import { toast } from 'react-toastify';
 import { AppDispatch } from '../../store';
-import { loginUser, logoutUser, registerUser, selectUser } from '../../store/slices/user/user';
+import { loginUser, registerUser, selectUser } from '../../store/slices/user/user';
 import React from 'react';
 import Modal from '@mui/material/Modal';
 import { Button, Stack, TextField, Typography } from "@mui/material";
@@ -30,12 +28,14 @@ const LoginModal = (props: prop) => {
 
     const [loginId, setLoginId] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
+    const [pwConfirm, setPwConfirm] = useState<string>("")
     const [isLoginMode, setIsLoginMode] = useState(true)
     const [errorText, setErrorText] = useState('');
 
     const onClickMode = () => {
         setLoginId('');
         setLoginPassword('');
+        setPwConfirm('');
         setErrorText('');
         setIsLoginMode(!isLoginMode);
     }
@@ -59,6 +59,35 @@ const LoginModal = (props: prop) => {
         }
     };
 
+    const onChangeId = async (id: string) => {
+        setLoginId(id)
+
+        if (checkID(id)) {
+            setErrorText("")
+        } else {
+            setErrorText("아이디의 형식을 다시 확인해주세요")
+        }
+    }
+
+    const onChangePw = async (pw: string) => {
+        setLoginPassword(pw)
+
+        if (checkPW(pw)) {
+            setErrorText("")
+        } else {
+            setErrorText("비밀번호의 형식을 다시 확인해주세요")
+        }
+    }
+
+    const onChangePwConfirm = async (pw: string) => {
+        setPwConfirm(pw)
+
+        if (loginPassword === pw) {
+            setErrorText("")
+        } else {
+            setErrorText("비밀번호가 일치하지 않습니다.")
+        }
+    }
 
     const onClickLogin = async () => {
         if (loginId !== '' && loginPassword !== '')  {
@@ -73,30 +102,22 @@ const LoginModal = (props: prop) => {
     };
 
     const onClickRegister = async () => {
-
         const data = {
             username: loginId,
             password: loginPassword
-        }
-        if (!checkID(data.username)) {
-            setErrorText("아이디 형식 오류")
-            return
-        }
-        if (!checkPW(data.password)) {
-            setErrorText("비밀번호 형식 오류")
-            return
         }
 
         const result = await dispatch(registerUser(data))
         if (result.type === `${registerUser.typePrefix}/fulfilled`) {
             onClickMode()
         } else {
-            setErrorText("계정 생성 실패");
+            setErrorText("중복된 아이디입니다.");
         }
     };
     const onClickClose = () => {
         setLoginId('');
         setLoginPassword('');
+        setPwConfirm('');
         setIsOpen(false)
     }
 
@@ -109,9 +130,9 @@ const LoginModal = (props: prop) => {
                 <TextField 
                     label="아이디" 
                     variant="standard" 
-                    helperText="2-10자의 영문과 숫자, 일부 특수문자(., _, -)만 입력 가능합니다."
+                    helperText={!isLoginMode && "2-10자의 영문과 숫자, 일부 특수문자(., _, -)만 입력 가능합니다."}
                     value={loginId} 
-                    onChange={(e) => {setLoginId(e.target.value); setErrorText('');}}
+                    onChange={(e) => {onChangeId(e.target.value)}}
                     onKeyPress={onKeyPress}
                     sx={{
                         '& label.Mui-focused': {
@@ -130,10 +151,10 @@ const LoginModal = (props: prop) => {
                 <TextField 
                     label="비밀번호" 
                     variant="standard" 
-                    helperText={<> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
+                    helperText={!isLoginMode && <> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
                     type="password" 
                     value={loginPassword} 
-                    onChange={(e) => {setLoginPassword(e.target.value); setErrorText('');}}
+                    onChange={(e) => {onChangePw(e.target.value)}}
                     onKeyPress={onKeyPress}
                     sx={{
                         '& label.Mui-focused': {
@@ -149,6 +170,28 @@ const LoginModal = (props: prop) => {
                         },
                     }}
                 />
+                {!isLoginMode && 
+                    <TextField 
+                        label="비밀번호 확인" 
+                        variant="standard" 
+                        type="password" 
+                        value={pwConfirm} 
+                        onChange={(e) => onChangePwConfirm(e.target.value)}
+                        sx={{
+                            '& label.Mui-focused': {
+                                color: 'secondary.light',
+                            },
+                            '& .MuiInput-underline:after': {
+                                borderBottomColor: 'secondary.light',
+                            },
+                            '& .MuiOutlinedInput-root': {
+                                '&.Mui-focused fieldset': {
+                                    borderColor: 'secondary.light',
+                                },
+                            },
+                        }}
+                    />
+                }
                 {isLoginMode ? 
                     <Button variant="text" onClick={onClickLogin}
                         sx={{
@@ -166,12 +209,17 @@ const LoginModal = (props: prop) => {
                         </Typography>
                     </Button> : 
                     <Button variant="text" onClick={onClickRegister}
+                        disabled={!checkID(loginId) || !checkPW(loginPassword) || loginPassword !== pwConfirm}
                         sx={{
                             bgcolor: 'primary.dark',
                             borderRadius: 3,
                             boxShadow: 3,
                             '&:hover': {
                                 backgroundColor: 'secondary.main',
+                                boxShadow: 2,
+                            },
+                            '&:disabled': {
+                                backgroundColor: 'secondary.dark',
                                 boxShadow: 2,
                             },
                         }}

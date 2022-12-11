@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, HttpResponseNotFound
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import check_password
 from django.views.decorators.csrf import ensure_csrf_cookie
 import json
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -92,21 +93,18 @@ def retrieve_my_info(request):
         user = request.user
         if user.is_authenticated:
             req_data = json.loads(request.body.decode())
-            password = req_data['password']
-            nickname = req_data['nickname']
-            intro = req_data['intro']
-            profile_img = req_data['profile_img']
 
-            user.set_password(password)
-            user.nickname = nickname
-            user.intro = intro
-            user.profile_img = profile_img
-            user.save()
+            if check_password(req_data['org_password'], user.password):
+                password = req_data['password']
 
-            login(request, user)
+                user.set_password(password)
+                user.save()
 
-            data = UserInfoSerializer(user).data
-            return JsonResponse(data, safe=False)
+                login(request, user)
+
+                data = UserInfoSerializer(user).data
+                return JsonResponse(data, safe=False)
+
     elif request.method == 'DELETE':
         user = request.user
 

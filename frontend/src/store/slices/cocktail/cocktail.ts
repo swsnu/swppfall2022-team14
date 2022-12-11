@@ -94,7 +94,7 @@ export const fetchStandardCocktailList = createAsyncThunk(
         else {
             const response = await axios.get(`/api/v1/cocktails/?type=standard`,
                 {
-                    params: params
+                    params: params,
                 }
             );
             return response.data

@@ -161,10 +161,10 @@ const InitPage = () => {
         <Stack spacing={2} sx={{ width: 1, pl: 2, pr: 3, py: 2 }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <LocalBarIcon sx={{ ml: 13, fontSize: 50 }} />
-                <Typography variant="h3">
-                    {"Top 15 Cocktails"}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <Typography variant="h3" sx={{ ml: 7 }}>
+                    Top 15 Cocktails
                 </Typography>
-                <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end">
+                <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end" sx={{ width: 150 }}>
                     {loginState && isOpenProfile ? (
                         <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
                             <IconButton data-testid="my page" onClick={onClickMyPage}>
@@ -247,6 +247,7 @@ const InitPage = () => {
                             type={cocktail.type} 
                             id={cocktail.id} 
                             tags={cocktail.tags} 
+                            is_bookmarked={cocktail.is_bookmarked}
                         />
                     </Grid>
                 )}

@@ -62,8 +62,22 @@ const ListPage = () => {
         setIngrList(ingrState.ingredientList)
     }, [ingrState.ingredientList])
 
-    if (pageStatus === "loading") return <div></div> // Loading Window
-    else if (pageStatus === "failed") return <div></div> // Failed Window
+    if (pageStatus === "loading") {
+        return (
+            <>
+                {/*<NavBar />*/}
+                <Stack spacing={2} sx={{ width: 1, p: 3 }} />
+            </>
+        )
+    }
+    else if (pageStatus === "failed") {
+        return (
+            <>
+                {/*<NavBar />*/}
+                <Stack spacing={2} sx={{ width: 1, p: 3 }} />
+            </>
+        )
+    }
     else return (
         <>
             {/*<NavBar />*/}
@@ -95,6 +109,7 @@ const ListPage = () => {
                                     type={cocktail.type}
                                     id={cocktail.id}
                                     tags={cocktail.tags}
+                                    is_bookmarked={cocktail.is_bookmarked}
                                 />
                             </Grid>
                         )}

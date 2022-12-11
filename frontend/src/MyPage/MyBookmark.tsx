@@ -3,10 +3,9 @@ import React from 'react';
 import { fetchMyBookmarkCocktailList, selectCocktail } from "../store/slices/cocktail/cocktail"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
-import styles from "./MyPage.module.scss"
 import Item from "../common/Components/Item";
 import { selectUser } from "../store/slices/user/user";
-
+import { Grid, Stack } from "@mui/material";
 
 const MyBookmark = () => {
 
@@ -19,17 +18,25 @@ const MyBookmark = () => {
         }
     }, [])
 
-    return <>
-        <div className={styles['right__header--comment']}>
-            <div className={styles.right__sort}>sort</div>
-        </div>
-        <div className={styles.right__main}>
-            {cocktailState.listStatus !== 'success' ? "" : cocktailState.cocktailList.map(cocktail => {
-                return <Item key={cocktail.id} image={cocktail.image}
-                    name={cocktail.name} rate={cocktail.rate} type={cocktail.type} id={cocktail.id} tags={cocktail.tags} />;
-            })}
-        </div>
-    </>
+    return (
+        <Stack sx={{ width: 1, py: 2 }}>
+            <Grid container columns={4} spacing={3} sx={{ px: 1 }}>
+                {(cocktailState.listStatus !== 'success' ? [] : cocktailState.cocktailList).map((cocktail) => (
+                    <Grid key={cocktail.id} item xs={1}>
+                        <Item 
+                            image={cocktail.image}
+                            name={cocktail.name} 
+                            rate={cocktail.rate} 
+                            type={cocktail.type} 
+                            id={cocktail.id} 
+                            tags={cocktail.tags} 
+                            is_bookmarked={cocktail.is_bookmarked}
+                        />
+                    </Grid>
+                ))}
+            </Grid>
+        </Stack>
+    )
 }
 
 
