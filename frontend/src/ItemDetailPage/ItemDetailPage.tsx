@@ -12,7 +12,7 @@ import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
 import { selectUser } from "../store/slices/user/user";
 import {postRate, editRate, deleteRate, getMyRate, selectRate, updateRate} from "../store/slices/rate/rate";
-import { Box, Button, Checkbox, ImageListItem, Divider, IconButton, Modal, Rating, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, FormGroup, ImageListItem, Divider, IconButton, Modal, Rating, Stack, TextField, Typography } from "@mui/material";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import EditIcon from '@mui/icons-material/Edit';
@@ -84,6 +84,8 @@ export default function ItemDetailPage() {
             }
             dispatch(postComment(data));
             setContent("")
+        } else {
+            setIsLoginOpen(true)
         }
     }
 
@@ -156,11 +158,35 @@ export default function ItemDetailPage() {
             <>
                 {/*<NavBar />*/}
                 <Stack alignItems="flex-start" spacing={2} sx={{ width: 1, p: 3 }}>
-                    <Stack alignItems="flex-start" spacing={0.5} sx={{ width: 1 }}>
-                        <Typography variant="h2">
+                    <Stack 
+                        alignItems="flex-start" spacing={0.5} 
+                        sx={(theme) => ({ 
+                            width: 1 ,
+                            [theme.breakpoints.down('md')]: {
+                                pl: 4
+                            },
+                        })}
+                    >
+                        <Typography 
+                            variant="h2"
+                            sx={(theme) => ({ 
+                                [theme.breakpoints.down('sm')]: {
+                                    fontSize: 30
+                                },
+                            })}
+                        >
                             {cocktail.name}
                         </Typography>
-                        <Typography variant="h6" sx={{ pl: 1 }}>
+                        <Typography 
+                            variant="h6" 
+                            sx={(theme) => ({ 
+                                pl: 1,
+                                [theme.breakpoints.down('sm')]: {
+                                    pl: 0.5,
+                                    fontSize: 15
+                                },
+                            })}
+                        >
                             {cocktail.name_eng}
                         </Typography>
                     </Stack>
@@ -265,7 +291,7 @@ export default function ItemDetailPage() {
                                 Recipe:
                             </Typography>
                             <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, px: 2 }}>
-                                <Stack direction="row" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
+                                <FormGroup row sx={{ gap: 1, width: 1 }}>
                                     {cocktail.ingredients?.map((ingre) => {
                                         return (
                                             <Button
@@ -284,7 +310,7 @@ export default function ItemDetailPage() {
                                             </Button>
                                         )
                                     })}
-                                </Stack>
+                                </FormGroup>
                                 <Typography variant="body2" align='left' sx={{ whiteSpace: 'pre-wrap' }}>
                                     {cocktail.recipe}
                                 </Typography>

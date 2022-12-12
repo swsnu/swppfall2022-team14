@@ -17,8 +17,8 @@ const MainPage = () => {
     const [isOpenNavBar, setIsOpenNavBar] = useState(true)
 
     useEffect(() => {
-        setIsOpenNavBar(true)
-    })
+        window.addEventListener('resize', () => setIsOpenNavBar(true))
+    }, [])
 
     return(
         <Stack direction="row" alignItems="stretch" justifyContent="flex-start">
@@ -71,7 +71,6 @@ const MainPage = () => {
                         position: 'absolute',
                     },
                 })}
-                onClick={() => setIsOpenNavBar(false)}
             >
                 <Routes>
                     <Route path="/:type" element={<ListPage />} />

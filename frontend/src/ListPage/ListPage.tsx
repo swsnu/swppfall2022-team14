@@ -26,6 +26,7 @@ const ListPage = () => {
     const userState = useSelector(selectUser)
     const [list, setList] = useState<CocktailItemType[]>([])
     const [ingrList, setIngrList] = useState<IngredientType[]>([])
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
     const location = useLocation()
 
     const pageStatus = type === 'ingredient' ? ingrState.listStatus : cocktailState.listStatus
