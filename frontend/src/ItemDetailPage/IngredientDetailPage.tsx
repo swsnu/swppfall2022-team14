@@ -59,11 +59,35 @@ export default function IngredientDetailPage() {
             <>
                 {/*<NavBar />*/}
                 <Stack alignItems="flex-start" spacing={2} sx={{ width: 1, p: 3 }}>
-                    <Stack alignItems="flex-start" spacing={0.5} sx={{ width: 1 }}>
-                        <Typography variant="h2">
+                    <Stack 
+                        alignItems="flex-start" spacing={0.5} 
+                        sx={(theme) => ({ 
+                            width: 1 ,
+                            [theme.breakpoints.down('md')]: {
+                                pl: 4
+                            },
+                        })}
+                    >
+                        <Typography 
+                            variant="h2"
+                            sx={(theme) => ({ 
+                                [theme.breakpoints.down('sm')]: {
+                                    fontSize: 30
+                                },
+                            })}
+                        >
                             {ingredient.name}
                         </Typography>
-                        <Typography variant="h6" sx={{ pl: 1 }}>
+                        <Typography 
+                            variant="h6" 
+                            sx={(theme) => ({ 
+                                pl: 1,
+                                [theme.breakpoints.down('sm')]: {
+                                    pl: 0.5,
+                                    fontSize: 15
+                                },
+                            })}
+                        >
                             {ingredient.name_eng}
                         </Typography>
                     </Stack>
