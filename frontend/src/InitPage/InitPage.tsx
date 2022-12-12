@@ -35,14 +35,11 @@ import LocalBarIcon from '@mui/icons-material/LocalBar';
 import {useSearchParams} from "react-router-dom";
 
 
-const StyledItem = styled(ListItemButton)(({ theme }) => ({
+const StyledItem = styled(ListItemButton)({
     position: 'relative',
-    justifyContent: "flex-start",
+    justifyContent: "center",
     gap: 10,
-    [theme.breakpoints.down('md')]: {
-        fontSize: 10,
-    },
-}));
+});
 
 const StyledItemIcon = styled(ListItemIcon)({
     width: 22,
@@ -321,7 +318,7 @@ const InitPage = () => {
                     </Stack>
                 </Grid>
                 <Grid item sm={1} xs={2}>
-                    <Stack direction="row" spacing={1} justifyContent="flex-end" sx={{ width: 1 }}>
+                    <Stack direction="row" spacing={1} alignItems="stretch" justifyContent="flex-end" sx={{ width: 1, height: 1 }}>
                         <Stack direction="row" spacing={1} justifyContent="flex-end">
                             <Stack direction="row" alignItems='center' sx={{ pl: 2, pr: 1, bgcolor: 'primary.main', borderRadius: 4 }}>
                                 <TextField 
@@ -349,7 +346,15 @@ const InitPage = () => {
                                 onClick={onClickFilter}
                                 sx={{ px: 2, bgcolor: 'primary.main', borderRadius: 4 }}
                             >
-                                <ListItemText disableTypography primary="필터 검색" />
+                                <ListItemText 
+                                    disableTypography 
+                                    primary="필터 검색"
+                                    sx={(theme) => ({ 
+                                        [theme.breakpoints.down('md')]: {
+                                            display: 'none'
+                                        },
+                                    })}
+                                />
                                 <StyledItemIcon>
                                     <FilterAltIcon />
                                 </StyledItemIcon>
