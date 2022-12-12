@@ -18,7 +18,7 @@ class Cocktail(models.Model):
         CUSTOM = 'CS', ('Custom Cocktail')
 
     # REGEX Example : _type1_type2_type3
-    filter_type_REGEX = RegexValidator(r'(_[a-z|A-Z|ㄱ-ㅎ|가-힣|0-9]+)*')
+    filter_type_REGEX = RegexValidator(r'[a-z|A-Z|ㄱ-ㅎ|가-힣|0-9]*')
 
     filter_type_one = models.CharField(
         max_length=50, null=True, validators=[filter_type_REGEX])

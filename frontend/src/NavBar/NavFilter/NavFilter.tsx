@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import './NavFilter.scss'
 import { Button, Stack, FormGroup, TextField, Typography } from '@mui/material';
 
-interface ParamList {
+export interface ParamList {
     name: string;
     label: string;
 }

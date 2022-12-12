@@ -11,7 +11,7 @@ import NavBar from "../NavBar/NavBar";
 import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
 import { selectUser } from "../store/slices/user/user";
-import {postRate, editRate, deleteRate, getMyRate, selectRate, updateRate} from "../store/slices/rate/rate";
+import { postRate, editRate, deleteRate, getMyRate, selectRate, updateRate } from "../store/slices/rate/rate";
 import { Box, Button, Checkbox, ImageListItem, Divider, IconButton, Modal, Rating, Stack, TextField, Typography } from "@mui/material";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -39,7 +39,7 @@ export default function ItemDetailPage() {
 
     const [rateOpen, setRateOpen] = useState(false);
     const handleRateOpen = () => {
-        if(userState.isLogin){
+        if (userState.isLogin) {
             setRateOpen(true)
         }
         else {
@@ -54,7 +54,7 @@ export default function ItemDetailPage() {
     const isCustom = cocktail?.type === "CS";
 
     useEffect(() => {
-        if(userState.isLogin){
+        if (userState.isLogin) {
             const data = {
                 cocktail_id: Number(id),
                 token: userState.token
@@ -171,13 +171,13 @@ export default function ItemDetailPage() {
                         <Stack direction="row" justifyContent="flex-end">
                             {(Number(userState.user?.id) === cocktail.author_id && isCustom) &&
                                 <IconButton onClick={() => deleteCocktailHandler()}
-                                data-testid={"delete_button"}>
+                                    data-testid={"delete_button"}>
                                     <DeleteIcon />
                                 </IconButton>
                             }
                             {(Number(userState.user?.id) === cocktail.author_id && isCustom) &&
                                 <IconButton onClick={() => navigate(`/custom/${id}/edit`)}
-                                data-testid={"edit_button"}>
+                                    data-testid={"edit_button"}>
                                     <EditIcon />
                                 </IconButton>
                             }
@@ -243,6 +243,11 @@ export default function ItemDetailPage() {
                                 <div className={"rate_box"}>
                                     <Rating value={Number(rateState.rate)} precision={0.1} readOnly />
                                 </div>
+
+                                <Typography variant="body1">
+                                    {cocktail.filter_type_one} 칵테일, {cocktail.filter_type_two}
+                                </Typography>
+
                                 <Typography variant="body1">
                                     {cocktail.ABV.toFixed(1)}%
                                 </Typography>
@@ -277,7 +282,7 @@ export default function ItemDetailPage() {
                                                 <Typography color='text.primary'>
                                                     {ingre.name}
                                                     &nbsp;
-                                                    {ingre.amount && ingre.amount} 
+                                                    {ingre.amount && ingre.amount}
                                                     &nbsp;
                                                     {ingre.amount && ingre.recipe_unit}
                                                 </Typography>
