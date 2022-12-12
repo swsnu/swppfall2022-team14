@@ -32,7 +32,8 @@ import LiquorIcon from '@mui/icons-material/Liquor';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
-import {useSearchParams} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { HexColorPicker } from "react-colorful";
 
 
 const StyledItem = styled(ListItemButton)({
@@ -55,8 +56,11 @@ export interface Filterparam {
     type_one: string[],
     type_two: string[],
     type_three: string[],
-    available_only: boolean
+    available_only: boolean,
+    color: string | null
 }
+
+
 
 const InitPage = () => {
 
@@ -66,7 +70,7 @@ const InitPage = () => {
     const dispatch = useDispatch<AppDispatch>()
 
     const loginState = userState.isLogin;
-    const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [], available_only: false })
+    const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [], available_only: false, color: "000000" })
     const [input, setInput] = useState('')
 
     const request_param = { filter_param: filterParam, name_param: input }
@@ -90,10 +94,10 @@ const InitPage = () => {
     }
     const [isInitMyLiqourOpen, setIsInitMyLiqourOpen] = useState(false);
     const onClickMyLiqour = () => {
-        if(userState.isLogin && userState.user?.id !== null){
+        if (userState.isLogin && userState.user?.id !== null) {
             setIsInitMyLiqourOpen(true)
         }
-        else{
+        else {
             setIsLoginOpen(true)
         }
 
@@ -104,10 +108,10 @@ const InitPage = () => {
     }
     const onClickSearch = () => {
         // TODO : give params with filter information
-        if (searchParams.get('type') === 'custom'){
+        if (searchParams.get('type') === 'custom') {
             navigate(`/custom`, { state: request_param })
         }
-        else{
+        else {
             navigate(`/standard`, { state: request_param })
         }
     }
@@ -120,10 +124,10 @@ const InitPage = () => {
 
         if (toggle === 'standard') {
             setIsStandard(true)
-            setSearchParams({type: ''})
+            setSearchParams({ type: '' })
         } else if (toggle === 'custom') {
             setIsStandard(false)
-            setSearchParams({type: "custom"})
+            setSearchParams({ type: "custom" })
         } else {
             onClickRecommendButton()
         }
@@ -173,12 +177,12 @@ const InitPage = () => {
                             <IconButton data-testid="logout" onClick={onClickLogout}>
                                 <LogoutIcon />
                             </IconButton>
-                        </Stack> 
+                        </Stack>
                     ) : null}
-                    {loginState ? 
+                    {loginState ?
                         <IconButton data-testid="my profile" size="large" onClick={onClickProfile}>
                             <AccountCircleIcon fontSize="large" />
-                        </IconButton> : 
+                        </IconButton> :
                         <IconButton data-testid="login" onClick={onClickLogin}>
                             <LoginIcon />
                         </IconButton>
@@ -203,8 +207,8 @@ const InitPage = () => {
                 </ToggleButtonGroup>
                 <Stack direction="row" spacing={1} alignItems='stretch'>
                     <Stack direction="row" alignItems='center' sx={{ pl: 2, pr: 1, bgcolor: 'primary.main', borderRadius: 4 }}>
-                        <TextField 
-                            placeholder="검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                        <TextField
+                            placeholder="검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)}
                             sx={{
                                 '& label.Mui-focused': {
                                     color: 'secondary.light',
@@ -217,7 +221,7 @@ const InitPage = () => {
                                         borderColor: 'secondary.light',
                                     },
                                 },
-                            }}    
+                            }}
                         />
                         <IconButton data-testid="search" onClick={onClickSearch}>
                             <SearchIcon />
@@ -237,16 +241,16 @@ const InitPage = () => {
             </Stack>
             {isOpenFilter ? <Filter setUrlParams={setFilterParam} onClickSearch={onClickSearch} input={input} setInput={setInput} /> : null}
             <Grid container spacing={3} columns={5} sx={{ width: 1, pr: 2 }}>
-                {cocktailState.cocktailList.map((cocktail) => 
+                {cocktailState.cocktailList.map((cocktail) =>
                     <Grid key={cocktail.id} item xs={1}>
-                        <Item 
-                            key={cocktail.id} 
+                        <Item
+                            key={cocktail.id}
                             image={cocktail.image}
-                            name={cocktail.name} 
-                            rate={cocktail.rate} 
-                            type={cocktail.type} 
-                            id={cocktail.id} 
-                            tags={cocktail.tags} 
+                            name={cocktail.name}
+                            rate={cocktail.rate}
+                            type={cocktail.type}
+                            id={cocktail.id}
+                            tags={cocktail.tags}
                             is_bookmarked={cocktail.is_bookmarked}
                         />
                     </Grid>

@@ -12,9 +12,10 @@ from .models import Cocktail
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework import permissions, authentication
 from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer, CocktailUpdateSerializer
-
-
+from .utils import color_similarity, order_queryset_by_id
+from django.db.models import Case, When
 # FILTER FUNCTIONS HERE
+
 
 def process_text_param(request, filter_q):
     text = request.query_params.get("name_param", None)
@@ -123,6 +124,16 @@ def cocktail_list(request):
             return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
 
         cocktails = Cocktail.objects.filter(filter_q)
+
+        # calculate color similarity locally if needed
+        filter_color = request.query_params.get("color")
+        if filter_color is not None:
+
+            color_sort_id = [cocktail.id for cocktail in sorted(cocktails, key=lambda cocktail: color_similarity(
+                cocktail.color, filter_color))]
+
+            cocktails = order_queryset_by_id(cocktails, color_sort_id)
+
         data = CocktailListSerializer(cocktails, many=True, context={
                                       'user': request.user}).data
         return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
@@ -148,7 +159,7 @@ def cocktail_post(request):
         serializer = CocktailPostSerializer(
             data=data, context={"request": request})
         print(serializer.initial_data["name_eng"])
-        
+
         if not serializer.is_valid():
             err = serializer.errors
             # return first error
@@ -302,6 +313,7 @@ def retrieve_my_cocktail(request):
                                   'user': request.user}).data
     return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
 
+
 @api_view(['DELETE'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -319,6 +331,7 @@ def delete_cocktail(request, pk):
     cocktail.delete()
     return HttpResponse(status=204)
 
+
 @api_view(['GET'])
 def get_init_cocktail(request):
 
@@ -331,7 +344,8 @@ def get_init_cocktail(request):
     else:
         return HttpResponseBadRequest('Cocktail type is \'custom\' or \'standard\'')
 
-    cocktails = Cocktail.objects.filter(filter_q).order_by('-rate','name')[:15]
+    cocktails = Cocktail.objects.filter(
+        filter_q).order_by('-rate', 'name')[:15]
     data = CocktailListSerializer(cocktails, many=True, context={
-                                      'user': request.user}).data
+        'user': request.user}).data
     return JsonResponse({"cocktails": data, "count": cocktails.count()}, safe=False)
