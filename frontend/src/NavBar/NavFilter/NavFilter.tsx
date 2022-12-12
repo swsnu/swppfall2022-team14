@@ -24,11 +24,11 @@ export interface Iprops {
 
 const NavFilter = (prop: Iprops) => {
     const themeList: ThemeList[] = [
-        { label: "Theme1", filters: [{ type: "typeOne", name: "CL" }, { type: "typeThree", name: "weak" }] },
-        { label: "Theme2", filters: [{ type: "typeOne", name: "TP" }, { type: "typeThree", name: "medium" }, { type: "typeTwo", name: "LONG" }] }
+        { label: "Theme1", filters: [{ type: "typeOne", name: "클래식" }, { type: "typeThree", name: "weak" }] },
+        { label: "Theme2", filters: [{ type: "typeOne", name: "트로피컬" }, { type: "typeThree", name: "medium" }, { type: "typeTwo", name: "롱 드링크" }] }
     ]
-    const typeOneList: ParamList[] = [{ name: "CL", label: "클래식" }, { name: "TP", label: "트로피컬" }]
-    const typeTwoList: ParamList[] = [{ name: "LONG", label: "롱드링크" }, { name: "SHORT", label: "숏드링크" }, { name: "SHOT", label: "샷" }]
+    const typeOneList: ParamList[] = [{ name: "클래식", label: "클래식" }, { name: "트로피컬", label: "트로피컬" }]
+    const typeTwoList: ParamList[] = [{ name: "롱 드링크", label: "롱드링크" }, { name: "숏 드링크", label: "숏드링크" }, { name: "샷", label: "샷" }]
     const typeThreeList: ParamList[] = [{ name: "weak", label: "15도 이하" }, { name: "medium", label: "15 ~ 30도" }, { name: "strong", label: "30 ~ 40도" }, { name: "extreme", label: "40도 이상" }]
     const [typeParam, setTypeParam] = useState<
         {

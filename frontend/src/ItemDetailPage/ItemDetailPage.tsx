@@ -245,7 +245,7 @@ export default function ItemDetailPage() {
                                 </div>
 
                                 <Typography variant="body1">
-                                    {cocktail.filter_type_one} 칵테일, {cocktail.filter_type_two}
+                                    {cocktail.filter_type_one} {cocktail.filter_type_one ? "칵테일" : null} {cocktail.filter_type_one && cocktail.filter_type_two ? "," : null} {cocktail.filter_type_two}
                                 </Typography>
 
                                 <Typography variant="body1">

@@ -144,6 +144,8 @@ export default function CreateCustomPage() {
                     tags: tagList,
                     author_id: Number(userState.user?.id),
                     ingredients: ingredients,
+                    filter_type_one: typeOne,
+                    filter_type_two: typeTwo
                 },
                 token: userState.token
             }
