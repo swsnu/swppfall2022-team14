@@ -262,7 +262,7 @@ const NavFilter = (prop: Iprops) => {
                         onClick={onUseColorClick}
                     >
                         <Typography variant="caption" color='text.primary'>
-                            색상 유사도 적용 {useColor ? "ON" : "OFF"}
+                            색상 유사도 기반 정렬 {useColor ? "ON" : "OFF"}
                         </Typography>
                     </Button>
                     <HexColorPicker color={color} onChange={setColor}></HexColorPicker>
