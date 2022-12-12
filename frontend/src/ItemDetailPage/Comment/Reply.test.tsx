@@ -41,6 +41,8 @@ const commentAuthor: CommentType = {
         author_id: 1,
         rate: 1,
         is_bookmarked: false,
+        ABV: 10,
+        price_per_glass: 10,
     },
     author_id: 1,
     author_name: "username",
@@ -61,6 +63,8 @@ const commentOther: CommentType = {
         author_id: 1,
         rate: 1,
         is_bookmarked: false,
+        ABV: 10,
+        price_per_glass: 10,
     },
     author_id: 2,
     author_name: "username",
@@ -128,6 +132,8 @@ describe("<Reply />", () => {
             author_id: 1,
             rate: 1,
             is_bookmarked: false,
+            ABV: 10,
+            price_per_glass: 10,
         }
 
         render(
@@ -158,6 +164,8 @@ describe("<Reply />", () => {
             author_id: 1,
             rate: 1,
             is_bookmarked: false,
+            ABV: 10,
+            price_per_glass: 10,
         }
 
         render(
@@ -186,6 +194,8 @@ describe("<Reply />", () => {
             author_id: 1,
             rate: 1,
             is_bookmarked: false,
+            ABV: 10,
+            price_per_glass: 10,
         }
 
         render(
@@ -217,6 +227,8 @@ describe("<Reply />", () => {
             author_id: 1,
             rate: 1,
             is_bookmarked: false,
+            ABV: 10,
+            price_per_glass: 10,
         }
 
         render(

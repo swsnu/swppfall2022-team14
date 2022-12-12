@@ -6,17 +6,8 @@ import { getRecommendIngredientList, selectIngredient, postMyIngredients } from 
 import { selectUser } from '../../store/slices/user/user';
 import { useNavigate } from 'react-router';
 import Modal from '@mui/material/Modal';
-import { Box, Button, Card, FormGroup, Grid, IconButton, Stack, Typography } from "@mui/material";
-import { styled } from '@mui/material/styles';
+import { Box, Button, Card, FormGroup, Grid, IconButton, ImageListItem, Stack, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-
-const StyledProductImg = styled('img')({
-    top: 0,
-    width: '100%',
-    height: '100%',
-    objectFit: 'fill',
-    position: 'absolute',
-});
 
 const style = {
     position: 'absolute',
@@ -51,13 +42,18 @@ const RecommendModal = (props: prop) => {
 
 
     const navigate = useNavigate()
+
     const onClickCocktailName = (id: number, type: string) => {
         if (type === 'ST') navigate(`/standard/${id}`)
         else if (type === 'CS') navigate(`/custom/${id}`)
     }
 
-    const onClickAdd = (ingredient_id: number) => {
-        dispatch(postMyIngredients({ id: Number(userState.user?.id), ingredients: [ingredient_id], token: userState.token }))
+    const onClickItem = (id: number) => {
+        navigate(`/ingredient/${id}`)
+    }
+
+    const onClickAdd = async (ingredient_id: number) => {
+        await dispatch(postMyIngredients({ id: Number(userState.user?.id), ingredients: [ingredient_id], token: userState.token }))
         dispatch(getRecommendIngredientList(userState.token))
     }
 
@@ -68,13 +64,15 @@ const RecommendModal = (props: prop) => {
             onClose={() => setIsOpen(false)}
         >
             <Stack spacing={2} sx={style}>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} columns={4}>
                     {ingredientState.recommendIngredientList.map((ingredient) => (
-                        <Grid key={ingredient.id} item xs={12} sm={6} md={3}>
+                        <Grid key={ingredient.id} item md={1} sm={2} xs={4}>
                             <Card 
-                                sx={{ height: 1, textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main' }}
+                                sx={{ 
+                                    width: 1, textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main',
+                                }} 
                             >
-                                <Stack direction="row" alignItems="flex-start" justifyContent="flex-end">
+                                <Stack direction="row" alignItems="flex-start" justifyContent="flex-end" sx={{ width: 1, height: 20 }}>
                                     <IconButton 
                                         size="small"
                                         data-testid="add"
@@ -88,41 +86,91 @@ const RecommendModal = (props: prop) => {
                                     </IconButton>
                                 </Stack>
                                 <Box 
-                                    sx={{ pt: '100%', position: 'relative' }}
-                                    onClick={() => navigate(`/ingredient/${ingredient.id}`)}
+                                    sx={(theme) => ({
+                                        [theme.breakpoints.down('sm')]: {
+                                            display: 'flex',
+                                            pb: 2,
+                                        },
+                                    })}
                                 >
-                                    <StyledProductImg src={ingredient.image} />
+                                    <ImageListItem 
+                                        onClick={() => onClickItem(ingredient.id)} 
+                                        sx={(theme) => ({ 
+                                            width: 1, aspectRatio: 1, cursor: 'pointer', 
+                                            [theme.breakpoints.down('sm')]: {
+                                                width: 0.4,
+                                                mx: 1,
+                                            },
+                                        })}
+                                    >
+                                        <img 
+                                            src={ingredient.image} 
+                                            loading="lazy" 
+                                            style={{
+                                                aspectRatio: 1
+                                            }} 
+                                        />
+                                    </ImageListItem>
+                                    <Box 
+                                        justifyContent="space-between"
+                                        sx={(theme) => ({ 
+                                            width: 1, p: 3, display: 'flex',
+                                            [theme.breakpoints.down('sm')]: {
+                                                width: 0.6,
+                                                p: 2,
+                                                pb: 0,
+                                                mt: 2,
+                                                display: 'block',
+                                                textAlign: 'right',
+                                            },
+                                        })}
+                                    >
+                                        <Typography 
+                                            noWrap onClick={() => onClickItem(ingredient.id)} 
+                                            sx={(theme) => ({ 
+                                                cursor: 'pointer',
+                                                [theme.breakpoints.down('sm')]: {
+                                                    mb: 2,
+                                                },
+                                            })}
+                                        >
+                                            {ingredient.name}
+                                        </Typography>
+                                        <Typography noWrap>
+                                            {ingredient.ABV}%
+                                        </Typography>
+                                    </Box>
                                 </Box>
-                                <Stack direction="row" spacing={2} sx={{ p: 2 }} justifyContent="space-between">
-                                    <Typography noWrap>
-                                        {ingredient.name}
-                                    </Typography>
-                                    <Typography noWrap>
-                                        {ingredient.ABV}%
-                                    </Typography>
-                                </Stack>
                                 {ingredientState.availableCocktails.find(info => info?.ingredient_id === ingredient.id) ? 
-                                    <Stack spacing={1} sx={{ p: 2 }}>
-                                        <Typography fontSize={12} noWrap>
+                                    <FormGroup row sx={{ gap: 1, p: 2 }}>
+                                        <Typography 
+                                            fontSize={12} noWrap
+                                            sx={(theme) => ({ 
+                                                width: 1,
+                                                [theme.breakpoints.down('sm')]: {
+                                                    width: 'fit-content',
+                                                    mt: 0.25,
+                                                    mr: 0.25,
+                                                },
+                                            })}
+                                        >
                                             이것만 있으면!
                                         </Typography>
-                                        <FormGroup row sx={{ gap: 1 }}>
-                                            {ingredientState.availableCocktails
-                                                .find(info => info.ingredient_id === ingredient.id)?.cocktails
-                                                .map(cocktail => (
-                                                <Button
-                                                    key={cocktail.id}
-                                                    size="small"
-                                                    sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
-                                                    onClick={() => onClickCocktailName(cocktail.id, cocktail.type)}
-                                                >
-                                                    <Typography variant="caption" color='text.primary'>
-                                                        {cocktail.name}
-                                                    </Typography>
-                                                </Button>
-                                            ))}
-                                        </FormGroup>
-                                    </Stack> : 
+                                        {ingredientState.availableCocktails
+                                            .find(info => info.ingredient_id === ingredient.id)?.cocktails
+                                            .map(cocktail => (
+                                            <Button
+                                                key={cocktail.id}
+                                                size="small"
+                                                sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                                onClick={() => onClickCocktailName(cocktail.id, cocktail.type)}
+                                            >
+                                                <Typography variant="caption" color='text.primary'>
+                                                    {cocktail.name}
+                                                </Typography>
+                                            </Button>
+                                        ))}
+                                    </FormGroup> : 
                                     <Typography sx={{ p: 2 }} fontSize={12} noWrap>
                                         일반적으로 많이 들어가는 재료
                                     </Typography>

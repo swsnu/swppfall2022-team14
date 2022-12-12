@@ -53,6 +53,7 @@ const stubCommentInitialState: CommentInfo = {
 const ingredient: IngredientType = {
     id: 2,
     name: "INGREDIENT2",
+    name_eng: "ENG_INGREDIENT1",
     image: "IMAGE2",
     ABV: 0,
     price: 0,
@@ -110,7 +111,7 @@ const renderNavBar = (user: UserInfo) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<NavBar />} />
+                <Route path="/" element={<NavBar isOpenNavBar={true} />} />
             </Routes>
         </MemoryRouter>,
         {

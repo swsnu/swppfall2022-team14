@@ -62,6 +62,7 @@ const fakeCocktailItemCS: CocktailDetailType = {
     ingredients: [{
         id: 1,
         name: "iname",
+        name_eng: "ENG_INGREDIENT1",
         image: "iimg",
         ABV: 1,
         price: 1,
@@ -95,6 +96,7 @@ const fakeCocktailItemST: CocktailDetailType = {
     ingredients: [{
         id: 1,
         name: "iname",
+        name_eng: "ENG_INGREDIENT1",
         image: "iimg",
         ABV: 1,
         price: 1,
@@ -121,6 +123,8 @@ const commentNotParent: CommentType = {
         author_id: 1,
         rate: 1,
         is_bookmarked: false,
+        ABV: 10,
+        price_per_glass: 10,
     },
     author_id: 1,
     author_name: "username",
@@ -163,6 +167,7 @@ const notBookmarkedCocktailItem: CocktailDetailType = {
     ingredients: [{
         id: 1,
         name: "iname",
+        name_eng: "ENG_INGREDIENT1",
         image: "iimg",
         ABV: 1,
         price: 1,
@@ -202,6 +207,8 @@ const commentAuthor: CommentType = {
         author_id: 1,
         rate: 1,
         is_bookmarked: false,
+        ABV: 10,
+        price_per_glass: 10,
     },
     author_id: 1,
     author_name: "username",

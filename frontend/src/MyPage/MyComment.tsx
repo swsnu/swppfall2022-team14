@@ -20,7 +20,20 @@ const MyComment = () => {
     }, [])
 
     return (
-        <Stack spacing={5} sx={{ width: 0.7 }}>
+        <Stack 
+            spacing={5} 
+            sx={(theme) => ({ 
+                width: 0.7,
+                [theme.breakpoints.down('md')]: {
+                    pl: 6,
+                    width: 0.9,
+                },
+                [theme.breakpoints.down('sm')]: {
+                    pl: 3,
+                    width: 0.9,
+                },
+            })}
+        >
             {[...commentState.commentList].reverse().map((comment) => (
                 <ShortComment 
                     key={comment.id} 

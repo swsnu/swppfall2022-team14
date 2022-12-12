@@ -6,6 +6,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.16",
+    "@mui/lab": "^5.0.0-alpha.111",
     "@mui/material": "^5.10.16",
     "@reduxjs/toolkit": "^1.8.6",
     "@testing-library/jest-dom": "^5.16.5",
@@ -90,7 +91,5 @@
       "!src/common/utils/*"
     ]
   },
-
   "proxy": "https://qualla.kro.kr/"
-
 }

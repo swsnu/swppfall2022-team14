@@ -40,6 +40,8 @@ const standard_cocktail1_item: CocktailItemType = {
     author_id: null,
     rate: 0,
     is_bookmarked: false,
+    ABV: 10,
+    price_per_glass: 10,
 }
 
 const custom_cocktail1_item: CocktailItemType = {
@@ -51,6 +53,8 @@ const custom_cocktail1_item: CocktailItemType = {
     author_id: 1,
     rate: 0,
     is_bookmarked: false,
+    ABV: 10,
+    price_per_glass: 10,
 }
 
 const stubInitialStandardCocktaiState: CocktailInfo = {
@@ -75,6 +79,7 @@ const emptyCommentState: CommentInfo = {
 const ingredient: IngredientType = {
     id: 1,
     name: "INGREDIENT1",
+    name_eng: "ENG_INGREDIENT1",
     image: "IMAGE1",
     ABV: 0,
     price: 0,
