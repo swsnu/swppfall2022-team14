@@ -9,7 +9,6 @@ import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } fr
 import { useDispatch, useSelector } from "react-redux"
 import { logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
-import { fetchMyIngredientList } from "../store/slices/ingredient/ingredient";
 import RecommendModal from "./Modals/RecommendModal";
 import { styled } from '@mui/material/styles';
 import {
@@ -32,7 +31,7 @@ import LiquorIcon from '@mui/icons-material/Liquor';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
-import {useSearchParams} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 
 const StyledItem = styled(ListItemButton)({
@@ -90,10 +89,10 @@ const InitPage = () => {
     }
     const [isInitMyLiqourOpen, setIsInitMyLiqourOpen] = useState(false);
     const onClickMyLiqour = () => {
-        if(userState.isLogin && userState.user?.id !== null){
+        if (userState.isLogin && userState.user?.id !== null) {
             setIsInitMyLiqourOpen(true)
         }
-        else{
+        else {
             setIsLoginOpen(true)
         }
 
@@ -104,10 +103,10 @@ const InitPage = () => {
     }
     const onClickSearch = () => {
         // TODO : give params with filter information
-        if (searchParams.get('type') === 'custom'){
+        if (searchParams.get('type') === 'custom') {
             navigate(`/custom`, { state: request_param })
         }
-        else{
+        else {
             navigate(`/standard`, { state: request_param })
         }
     }
@@ -120,10 +119,10 @@ const InitPage = () => {
 
         if (toggle === 'standard') {
             setIsStandard(true)
-            setSearchParams({type: ''})
+            setSearchParams({ type: '' })
         } else if (toggle === 'custom') {
             setIsStandard(false)
-            setSearchParams({type: "custom"})
+            setSearchParams({ type: "custom" })
         } else {
             onClickRecommendButton()
         }
@@ -173,12 +172,12 @@ const InitPage = () => {
                             <IconButton data-testid="logout" onClick={onClickLogout}>
                                 <LogoutIcon />
                             </IconButton>
-                        </Stack> 
+                        </Stack>
                     ) : null}
-                    {loginState ? 
+                    {loginState ?
                         <IconButton data-testid="my profile" size="large" onClick={onClickProfile}>
                             <AccountCircleIcon fontSize="large" />
-                        </IconButton> : 
+                        </IconButton> :
                         <IconButton data-testid="login" onClick={onClickLogin}>
                             <LoginIcon />
                         </IconButton>
@@ -203,8 +202,8 @@ const InitPage = () => {
                 </ToggleButtonGroup>
                 <Stack direction="row" spacing={1} alignItems='stretch'>
                     <Stack direction="row" alignItems='center' sx={{ pl: 2, pr: 1, bgcolor: 'primary.main', borderRadius: 4 }}>
-                        <TextField 
-                            placeholder="검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                        <TextField
+                            placeholder="검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)}
                             sx={{
                                 '& label.Mui-focused': {
                                     color: 'secondary.light',
@@ -217,7 +216,7 @@ const InitPage = () => {
                                         borderColor: 'secondary.light',
                                     },
                                 },
-                            }}    
+                            }}
                         />
                         <IconButton data-testid="search" onClick={onClickSearch}>
                             <SearchIcon />
@@ -237,16 +236,16 @@ const InitPage = () => {
             </Stack>
             {isOpenFilter ? <Filter setUrlParams={setFilterParam} onClickSearch={onClickSearch} input={input} setInput={setInput} /> : null}
             <Grid container spacing={3} columns={5} sx={{ width: 1, pr: 2 }}>
-                {cocktailState.cocktailList.map((cocktail) => 
+                {cocktailState.cocktailList.map((cocktail) =>
                     <Grid key={cocktail.id} item xs={1}>
-                        <Item 
-                            key={cocktail.id} 
+                        <Item
+                            key={cocktail.id}
                             image={cocktail.image}
-                            name={cocktail.name} 
-                            rate={cocktail.rate} 
-                            type={cocktail.type} 
-                            id={cocktail.id} 
-                            tags={cocktail.tags} 
+                            name={cocktail.name}
+                            rate={cocktail.rate}
+                            type={cocktail.type}
+                            id={cocktail.id}
+                            tags={cocktail.tags}
                             is_bookmarked={cocktail.is_bookmarked}
                         />
                     </Grid>

@@ -3,7 +3,6 @@ import AddIngredientModal from "./Modals/AddIngredientModal"
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import NavBar from "../NavBar/NavBar";
 import {
     authPostCocktail,
     CocktailDetailType,
@@ -16,7 +15,7 @@ import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
 import S3 from 'react-aws-s3-typescript'
 import { v4 as uuid } from 'uuid'
-import { Button, ImageListItem, ImageListItemBar, Divider, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import { Button, ImageListItem, ImageListItemBar, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import RemoveIcon from '@mui/icons-material/Remove';
 
@@ -25,7 +24,6 @@ export interface Image {
     url: string;
 }
 import { calculateABV, calculateColor, calculatePrice } from "../common/utils/utils";
-import { ParamList } from "../NavBar/NavFilter/NavFilter";
 
 
 export default function CreateCustomPage() {

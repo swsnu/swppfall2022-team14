@@ -21,13 +21,13 @@ jest.mock("./Comment/Comment", () => (prop: CommentType) => (
 ));
 
 // eslint-disable-next-line react/display-name
-jest.mock("@mui/material/Rating/Rating", () => (props:RatingProps) => (
-    <input data-testid={'rating_button'}/>
+jest.mock("@mui/material/Rating/Rating", () => (props: RatingProps) => (
+    <input data-testid={'rating_button'} />
 ));
 
 // eslint-disable-next-line react/display-name
-jest.mock("@mui/material/TextField/TextField", () => (props:TextFieldProps) => (
-    <input onClick={props.onClick} onChange={props.onChange} data-testid={'add_comment_input'}/>
+jest.mock("@mui/material/TextField/TextField", () => (props: TextFieldProps) => (
+    <input onClick={props.onClick} onChange={props.onChange} data-testid={'add_comment_input'} />
 ));
 
 const loadingCocktail: CocktailInfo = {
@@ -74,7 +74,9 @@ const fakeCocktailItemCS: CocktailDetailType = {
     is_bookmarked: false,
     score: 1,
     name_eng: "",
-    color: ""
+    color: "",
+    filter_type_one: "",
+    filter_type_two: ""
 };
 
 const fakeCocktailItemST: CocktailDetailType = {
@@ -107,7 +109,9 @@ const fakeCocktailItemST: CocktailDetailType = {
     is_bookmarked: false,
     score: 1,
     name_eng: "",
-    color: ""
+    color: "",
+    filter_type_one: "",
+    filter_type_two: ""
 };
 
 const commentNotParent: CommentType = {
@@ -175,7 +179,9 @@ const notBookmarkedCocktailItem: CocktailDetailType = {
     is_bookmarked: true,
     score: 1,
     name_eng: "",
-    color: ""
+    color: "",
+    filter_type_one: "",
+    filter_type_two: ""
 };
 
 const notBookmarkedCocktail: CocktailInfo = {
@@ -377,15 +383,15 @@ describe("<ItemDetailPage />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        
+
         const inputBox = screen.getByTestId('add_comment_input')
         fireEvent.click(inputBox)
         const textfield = screen.getByTestId('add_comment_input')
-        fireEvent.change(textfield, { target: { value: "NEW_CONTENT" }})
+        fireEvent.change(textfield, { target: { value: "NEW_CONTENT" } })
         const addButton = screen.getByText("댓글")
         fireEvent.click(addButton)
         expect(mockDispatch).toBeCalledTimes(6)
-        
+
         fireEvent.click(inputBox)
         const cancelButton = screen.getByText("취소")
         fireEvent.click(cancelButton)
@@ -434,7 +440,7 @@ describe("<ItemDetailPage />", () => {
         fireEvent.click(rateButton)
         screen.getByText('해당 점수를 클릭하세요')
         const rating_button = screen.getAllByTestId('rating_button')[1]
-        fireEvent.change(rating_button, { target: { value: 1 }})
+        fireEvent.change(rating_button, { target: { value: 1 } })
         await waitFor(() => expect(mockDispatch).toBeCalledTimes(5))
     });
     it("should not set rate when not logged in", async () => {
