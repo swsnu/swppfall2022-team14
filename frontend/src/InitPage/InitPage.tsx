@@ -35,11 +35,14 @@ import LocalBarIcon from '@mui/icons-material/LocalBar';
 import {useSearchParams} from "react-router-dom";
 
 
-const StyledItem = styled(ListItemButton)({
+const StyledItem = styled(ListItemButton)(({ theme }) => ({
     position: 'relative',
     justifyContent: "flex-start",
     gap: 10,
-});
+    [theme.breakpoints.down('md')]: {
+        fontSize: 10,
+    },
+}));
 
 const StyledItemIcon = styled(ListItemIcon)({
     width: 22,
@@ -158,87 +161,210 @@ const InitPage = () => {
 
 
     return (
-        <Stack spacing={2} sx={{ width: 1, pl: 2, pr: 3, py: 2 }}>
+        <Stack 
+            spacing={2} 
+            sx={(theme) => ({ 
+                width: 1, pl: 2, pr: 3, py: 2,
+                [theme.breakpoints.down('sm')]: {
+                    pl: 0, pr: 1
+                },
+            })}
+        >
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <LocalBarIcon sx={{ ml: 13, fontSize: 50 }} />
-                <Typography variant="h3" sx={{ ml: 7 }}>
+                <LocalBarIcon 
+                    sx={(theme) => ({ 
+                        [theme.breakpoints.up('md')]: {
+                            ml: 13,
+                            fontSize: 50,
+                        },
+                        [theme.breakpoints.down('md')]: {
+                            ml: 3,
+                            fontSize: 40,
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            ml: 3,
+                            fontSize: 30,
+                        },
+                    })} 
+                />
+                <Typography 
+                    variant="h3" 
+                    sx={(theme) => ({ 
+                        [theme.breakpoints.up('md')]: {
+                            ml: 7,
+                        },
+                        [theme.breakpoints.down('md')]: {
+                            ml: 13,
+                            fontSize: 30,
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            ml: 6,
+                            fontSize: 20,
+                        },
+                    })}
+                >
                     Top 15 Cocktails
                 </Typography>
-                <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end" sx={{ width: 150 }}>
+                <Stack 
+                    direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end" 
+                    sx={(theme) => ({ 
+                        [theme.breakpoints.up('md')]: {
+                            width: 150
+                        },
+                        [theme.breakpoints.down('md')]: {
+                            width: 150
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            width: 90,
+                            marginRight: 1,
+                        },
+                    })}
+                >
                     {loginState && isOpenProfile ? (
                         <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
-                            <IconButton data-testid="my page" onClick={onClickMyPage}>
-                                <PersonOutlineIcon />
+                            <IconButton 
+                                data-testid="my page" 
+                                onClick={onClickMyPage}
+                                sx={(theme) => ({ 
+                                    [theme.breakpoints.down('sm')]: {
+                                        padding: 0.5
+                                    },
+                                })}
+                            >
+                                <PersonOutlineIcon 
+                                    sx={(theme) => ({ 
+                                        [theme.breakpoints.down('sm')]: {
+                                            fontSize: 15
+                                        },
+                                    })}
+                                />
                             </IconButton>
-                            <IconButton data-testid="logout" onClick={onClickLogout}>
-                                <LogoutIcon />
+                            <IconButton 
+                                data-testid="logout" onClick={onClickLogout}
+                                sx={(theme) => ({ 
+                                    [theme.breakpoints.down('sm')]: {
+                                        padding: 0.5
+                                    },
+                                })}
+                            >
+                                <LogoutIcon 
+                                    sx={(theme) => ({ 
+                                        [theme.breakpoints.down('sm')]: {
+                                            fontSize: 15
+                                        },
+                                    })}
+                                />
                             </IconButton>
                         </Stack> 
                     ) : null}
                     {loginState ? 
-                        <IconButton data-testid="my profile" size="large" onClick={onClickProfile}>
-                            <AccountCircleIcon fontSize="large" />
+                        <IconButton 
+                            data-testid="my profile" 
+                            size="large" 
+                            onClick={onClickProfile}
+                            sx={(theme) => ({ 
+                                [theme.breakpoints.down('sm')]: {
+                                    padding: 0.5,
+                                },
+                            })}
+                        >
+                            <AccountCircleIcon 
+                                fontSize="large"
+                                sx={(theme) => ({ 
+                                    [theme.breakpoints.down('sm')]: {
+                                        fontSize: 20
+                                    },
+                                })}
+                            />
                         </IconButton> : 
-                        <IconButton data-testid="login" onClick={onClickLogin}>
-                            <LoginIcon />
+                        <IconButton 
+                            data-testid="login" onClick={onClickLogin}
+                            sx={(theme) => ({ 
+                                [theme.breakpoints.down('sm')]: {
+                                    padding: 0.5,
+                                },
+                            })}
+                        >
+                            <LoginIcon 
+                                sx={(theme) => ({ 
+                                    [theme.breakpoints.down('sm')]: {
+                                        fontSize: 15
+                                    },
+                                })}
+                            />
                         </IconButton>
                     }
                 </Stack>
             </Stack>
-            <Stack direction="row" justifyContent="space-between" sx={{ pl: 3 }}>
-                <ToggleButtonGroup
-                    value={toggle}
-                    exclusive
-                    onChange={onClickToggle}
-                >
-                    <ToggleButton value="standard">
-                        스탠다드
-                    </ToggleButton>
-                    <ToggleButton value="custom">
-                        커스텀
-                    </ToggleButton>
-                    <ToggleButton value="ingredient">
-                        재료 추천
-                    </ToggleButton>
-                </ToggleButtonGroup>
-                <Stack direction="row" spacing={1} alignItems='stretch'>
-                    <Stack direction="row" alignItems='center' sx={{ pl: 2, pr: 1, bgcolor: 'primary.main', borderRadius: 4 }}>
-                        <TextField 
-                            placeholder="검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
-                            sx={{
-                                '& label.Mui-focused': {
-                                    color: 'secondary.light',
-                                },
-                                '& .MuiInput-underline:after': {
-                                    borderBottomColor: 'secondary.light',
-                                },
-                                '& .MuiOutlinedInput-root': {
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: 'secondary.light',
-                                    },
-                                },
-                            }}    
-                        />
-                        <IconButton data-testid="search" onClick={onClickSearch}>
-                            <SearchIcon />
-                        </IconButton>
+            <Grid 
+                container spacing={1} columns={2} 
+                sx={{ width: 1, px: 2 }}
+                justifyContent="space-between"
+            >
+                <Grid item sm={1} xs={2}>
+                    <Stack direction="row" spacing={1} justifyContent="flex-start" sx={{ width: 1 }}>
+                        <ToggleButtonGroup
+                            value={toggle}
+                            exclusive
+                            onChange={onClickToggle}
+                        >
+                            <ToggleButton value="standard">
+                                스탠다드
+                            </ToggleButton>
+                            <ToggleButton value="custom">
+                                커스텀
+                            </ToggleButton>
+                            <ToggleButton value="ingredient">
+                                재료 추천
+                            </ToggleButton>
+                        </ToggleButtonGroup>
                     </Stack>
-                    <StyledItem
-                        data-testid="filter"
-                        onClick={onClickFilter}
-                        sx={{ px: 2, bgcolor: 'primary.main', borderRadius: 4 }}
-                    >
-                        <ListItemText disableTypography primary="필터 검색" />
-                        <StyledItemIcon>
-                            <FilterAltIcon />
-                        </StyledItemIcon>
-                    </StyledItem>
-                </Stack>
-            </Stack>
+                </Grid>
+                <Grid item sm={1} xs={2}>
+                    <Stack direction="row" spacing={1} justifyContent="flex-end" sx={{ width: 1 }}>
+                        <Stack direction="row" spacing={1} justifyContent="flex-end">
+                            <Stack direction="row" alignItems='center' sx={{ pl: 2, pr: 1, bgcolor: 'primary.main', borderRadius: 4 }}>
+                                <TextField 
+                                    placeholder="검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                                    sx={{
+                                        '& label.Mui-focused': {
+                                            color: 'secondary.light',
+                                        },
+                                        '& .MuiInput-underline:after': {
+                                            borderBottomColor: 'secondary.light',
+                                        },
+                                        '& .MuiOutlinedInput-root': {
+                                            '&.Mui-focused fieldset': {
+                                                borderColor: 'secondary.light',
+                                            },
+                                        },
+                                    }}    
+                                />
+                                <IconButton data-testid="search" onClick={onClickSearch}>
+                                    <SearchIcon />
+                                </IconButton>
+                            </Stack>
+                            <StyledItem
+                                data-testid="filter"
+                                onClick={onClickFilter}
+                                sx={{ px: 2, bgcolor: 'primary.main', borderRadius: 4 }}
+                            >
+                                <ListItemText disableTypography primary="필터 검색" />
+                                <StyledItemIcon>
+                                    <FilterAltIcon />
+                                </StyledItemIcon>
+                            </StyledItem>
+                        </Stack>
+                    </Stack>
+                </Grid>
+            </Grid>
             {isOpenFilter ? <Filter setUrlParams={setFilterParam} onClickSearch={onClickSearch} input={input} setInput={setInput} /> : null}
-            <Grid container spacing={3} columns={5} sx={{ width: 1, pr: 2 }}>
+            <Grid 
+                container spacing={3} columns={15} 
+                sx={{ width: 1, pr: 2 }}
+            >
                 {cocktailState.cocktailList.map((cocktail) => 
-                    <Grid key={cocktail.id} item xs={1}>
+                    <Grid key={cocktail.id} item md={3} sm={5} xs={15}>
                         <Item 
                             key={cocktail.id} 
                             image={cocktail.image}
