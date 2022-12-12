@@ -26,6 +26,7 @@ const loadingIngredient: IngredientInfo = {
     ingredientItem: {
         id: 1,
         name: 'name',
+        name_eng: "ENG_INGREDIENT1",
         image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
         introduction: '소개',
         ABV: 42.4,
@@ -45,6 +46,7 @@ const failedIngredient: IngredientInfo = {
     ingredientItem: {
         id: 1,
         name: 'name',
+        name_eng: "ENG_INGREDIENT1",
         image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
         introduction: '소개',
         ABV: 42.4,
@@ -63,6 +65,7 @@ const noABVIngredient: IngredientInfo = {
     ingredientItem: {
         id: 1,
         name: 'name',
+        name_eng: "ENG_INGREDIENT1",
         image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
         introduction: '소개',
         ABV: 0,
@@ -81,6 +84,7 @@ const fakeIngredient: IngredientInfo = {
     ingredientItem: {
         id: 1,
         name: 'name',
+        name_eng: "ENG_INGREDIENT1",
         image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
         introduction: '소개',
         ABV: 42.4,

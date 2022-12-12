@@ -26,6 +26,8 @@ class CocktailListSerializer(serializers.ModelSerializer):
             "author_id",
             "is_bookmarked",
             "score",
+            "ABV",
+            "price_per_glass"
         )
 
     def get_tags(self, obj):

@@ -14,8 +14,10 @@ import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
 import S3 from 'react-aws-s3-typescript'
+
 import { v4 as uuid } from 'uuid'
-import { Button, ImageListItem, ImageListItemBar, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import { Button, ImageListItem, ImageListItemBar, FormGroup, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
+
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import RemoveIcon from '@mui/icons-material/Remove';
 
@@ -297,9 +299,13 @@ export default function CreateCustomPage() {
                     <input type="file" onChange={handleSelectFile} id='file' style={{ "display": "none" }} />
                     <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1 }}>
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, p: 2, bgcolor: 'primary.main', borderRadius: 3 }}>
+
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                재료를 추가하여 예상 도수, 가격, 색을 알아보세요.
+                            </Typography>
                             <Stack direction="row" sx={{ width: 0.9 }}>
                                 <Typography variant="body1" sx={{ width: 0.75 }} align="left">
-                                    {isNaN(expectedABV) ? "재료를 입력하여 예상 도수를 알아보세요." : `예상 도수 ${expectedABV}%`}
+                                    도수 {isNaN(expectedABV) ? 0 : expectedABV.toFixed(1)}%
                                 </Typography>
                                 <Typography variant="body1" sx={{ width: 0.15 }} align="left">
                                     어떤 느낌인가요?
@@ -338,7 +344,7 @@ export default function CreateCustomPage() {
                             </Stack>
                             <Stack direction="row" sx={{ width: 0.9 }}>
                                 <Typography variant="body1" sx={{ width: 0.75 }} align="left">
-                                    예상 가격 {expectedPrice.toLocaleString()}원
+                                    가격 {expectedPrice.toLocaleString()}원
                                 </Typography>
                                 <Typography variant="body1" sx={{ width: 0.15 }} align="left">
                                     용량
@@ -375,9 +381,10 @@ export default function CreateCustomPage() {
                                     })}
                                 </TextField>
                             </Stack>
+
                             <Stack direction="row" spacing={0.75} alignItems="center" justifyContent="flex-start">
                                 <Typography variant="body1">
-                                    예상 색깔
+                                    색
                                 </Typography>
                                 <Box
                                     sx={{
@@ -409,7 +416,7 @@ export default function CreateCustomPage() {
                                     },
                                 }}
                             />
-                        </Stack>
+                        </Stack >
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={1} sx={{ width: 1, px: 2 }}>
                             {[...ingredientList, { name: "", amount: undefined, unit: [""], recipe_unit: "" }].map((ingredient, idx) => {
                                 return (
@@ -537,9 +544,9 @@ export default function CreateCustomPage() {
                                 }}
                             />
                         </Stack>
-                    </Stack>
-                </Stack>
-                <Stack direction="row" alignItems="flex-end" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
+                    </Stack >
+                </Stack >
+                <FormGroup row sx={{ gap: 1, width: 1 }}>
                     {tagList.map((tagItem, idx) => {
                         return (
                             <Button
@@ -553,7 +560,7 @@ export default function CreateCustomPage() {
                             </Button>
                         )
                     })}
-                </Stack>
+                </FormGroup>
                 <TextField
                     label="태그"
                     variant="standard"

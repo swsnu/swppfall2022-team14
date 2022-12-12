@@ -8,7 +8,7 @@ import { selectUser } from "../store/slices/user/user";
 import LoginModal from "../InitPage/Modals/LoginModal";
 import AddIngredientModal from "../common/Modals/AddIngredientModal";
 import { styled } from '@mui/material/styles';
-import { Box, ListItemIcon, ListItemButton, ListItemText, Stack, IconButton } from '@mui/material';
+import { Box, Button, Divider, ListItemIcon, ListItemButton, ListItemText, Stack, IconButton, Typography } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import KitchenIcon from '@mui/icons-material/Kitchen';
@@ -18,7 +18,11 @@ import LiquorIcon from '@mui/icons-material/Liquor';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
 import {AppDispatch} from "../store";
+import AddIcon from '@mui/icons-material/Add';
 
+export interface NavBarType {
+    isOpenNavBar: boolean
+}
 
 const StyledItem = styled(ListItemButton)({
     height: 48,
@@ -37,7 +41,7 @@ const StyledItemIcon = styled(ListItemIcon)({
     minWidth: 10,
 });
 
-const NavBar = () => {
+const NavBar = (prop: NavBarType) => {
 
     const navigate = useNavigate()
     const userState = useSelector(selectUser)
@@ -51,6 +55,9 @@ const NavBar = () => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isAddIngredientModalOpen, setIsAddIngredientModalOpen] = useState(false);
 
+    const onClickAdd = () => {
+        setIsAddIngredientModalOpen(true)
+    }
     const handleST = () => {
         if (pop) {
             setPop(false)
@@ -103,8 +110,8 @@ const NavBar = () => {
         }
     }
 
-    const handleAddIngr = () => {
-        setIsAddIngredientModalOpen(true)
+    const onIngredientClick = (id: number) => {
+        navigate(`/ingredient/${id}`)
     }
 
     useEffect(() => {
@@ -116,10 +123,18 @@ const NavBar = () => {
     },[openMyIngr])
 
     return (
-        <Stack direction="row">
-            <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1}}>
+        prop.isOpenNavBar ?
+        <Stack 
+            direction="row" 
+            sx={{ 
+                boxShadow: "1px 2px 10px 5px #181818",
+                bgcolor: 'background.default',
+                paddingBottom: 2
+            }}    
+        >
+            <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1 }}>
                 <Box component="span" sx={{ height: 80, p: 2 }}>
-                    <LocalBarIcon sx={{ fontSize: 50 }} />
+                    <LocalBarIcon onClick={handleHome} sx={{ cursor: 'pointer', fontSize: 50 }} />
                 </Box>
                 <Stack 
                     direction="row" justifyContent="center" alignItems="center" spacing={1} 
@@ -168,20 +183,34 @@ const NavBar = () => {
                 <LoginModal isOpen={isLoginOpen} setIsOpen={setIsLoginOpen} />
                 {<AddIngredientModal isOpen={isAddIngredientModalOpen} setIsOpen={setIsAddIngredientModalOpen} user_id={Number(userState.user?.id)} />}
             </Stack>
+            <Divider orientation="vertical" flexItem />
             {openMyIngr &&
-                <Stack justifyContent="flex-start" sx={{ width: 200, minWidth: 200, maxWidth: 270, px: 1}}>
-                    <div className="nav__side-util">
-                        <button onClick={handleAddIngr}>ADD</button>
-                    </div>
-                    {ingredientState.myIngredientList.map(ingredient =>
-                        <div key={ingredient.id} className="nav__side-ingr">
-                            <div className="nav__side-ingr-name">{ingredient.name}</div>
-                            <div className="nav__side-ingr-abv">{ingredient.ABV}</div>
-                        </div>
-                    )}
+                <Stack spacing={3} alignItems="center" justifyContent="flex-start" sx={{ width: 160, px: 2, py: 3 }}>
+                    <Stack direction="row" justifyContent="flex-end" sx={{ width: 1, pr: 1 }}>
+                        <IconButton 
+                            size="small"
+                            onClick={onClickAdd}
+                        >
+                            <AddIcon sx={{ fontSize: 20 }} />
+                        </IconButton>
+                    </Stack>
+                    <Stack spacing={4} alignItems="center" justifyContent="flex-start" sx={{ width: 1 }}>
+                        {ingredientState.myIngredientList.map((ingredient) =>
+                            <Button
+                                key={ingredient.id}
+                                sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.5, textAlign: 'center' }}
+                                onClick={() => onIngredientClick(ingredient.id)}
+                            >
+                                <Typography fontSize={12} color='text.primary'>
+                                    {ingredient.name}
+                                </Typography>
+                            </Button>
+                        )}
+                    </Stack>
                 </Stack>
             }
-        </Stack>
+        </Stack> :
+        null
     )
 }
 

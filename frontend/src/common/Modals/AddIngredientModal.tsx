@@ -11,8 +11,7 @@ import {
 import { AppDispatch } from '../../store';
 import {selectUser} from "../../store/slices/user/user";
 import Modal from '@mui/material/Modal';
-import { Box, Card, Grid, Stack, TextField, Typography } from "@mui/material";
-import { styled } from '@mui/material/styles';
+import { Box, Card, Grid, ImageListItem, Stack, TextField, Typography } from "@mui/material";
 
 const style = {
     position: 'absolute',
@@ -26,14 +25,6 @@ const style = {
     p: 3,
     overflow: 'scroll',
 };
-
-const StyledProductImg = styled('img')({
-    top: 0,
-    width: '100%',
-    height: '100%',
-    objectFit: 'fill',
-    position: 'absolute',
-});
 
 interface prop {
     isOpen: boolean;
@@ -113,7 +104,7 @@ const AddIngredientModal = (props: prop) => {
                     {ingredientState.ingredientList
                         .filter(ingredient => is_not_my_ingredient_filter(ingredient))
                         .map((ingredient) => (
-                            <Grid key={ingredient.id} item xs={1}>
+                            <Grid key={ingredient.id} item md={1} sm={2} xs={4}>
                                 <Card 
                                     sx={{ 
                                         cursor: 'pointer',
@@ -129,17 +120,61 @@ const AddIngredientModal = (props: prop) => {
                                     }} 
                                     onClick={() => onClickIngredient(ingredient.id)}
                                 >
-                                    <Box sx={{ pt: '100%', position: 'relative' }}>
-                                        <StyledProductImg src={ingredient.image} />
+                                    <Box 
+                                        sx={(theme) => ({
+                                            [theme.breakpoints.down('sm')]: {
+                                                display: 'flex',
+                                                pb: 2,
+                                            },
+                                        })}
+                                    >
+                                        <ImageListItem 
+                                            sx={(theme) => ({ 
+                                                width: 1, aspectRatio: 1, cursor: 'pointer', 
+                                                [theme.breakpoints.down('sm')]: {
+                                                    width: 0.4,
+                                                    mx: 1,
+                                                },
+                                            })}
+                                        >
+                                            <img 
+                                                src={ingredient.image} 
+                                                loading="lazy" 
+                                                style={{
+                                                    aspectRatio: 1
+                                                }} 
+                                            />
+                                        </ImageListItem>
+                                        <Box 
+                                            justifyContent="space-between"
+                                            sx={(theme) => ({ 
+                                                width: 1, p: 3, display: 'flex',
+                                                [theme.breakpoints.down('sm')]: {
+                                                    width: 0.6,
+                                                    p: 2,
+                                                    pb: 0,
+                                                    mt: 2,
+                                                    display: 'block',
+                                                    textAlign: 'right',
+                                                },
+                                            })}
+                                        >
+                                            <Typography 
+                                                noWrap
+                                                sx={(theme) => ({ 
+                                                    cursor: 'pointer',
+                                                    [theme.breakpoints.down('sm')]: {
+                                                        mb: 2,
+                                                    },
+                                                })}
+                                            >
+                                                {ingredient.name}
+                                            </Typography>
+                                            <Typography noWrap>
+                                                {ingredient.ABV}%
+                                            </Typography>
+                                        </Box>
                                     </Box>
-                                    <Stack direction="row" spacing={2} sx={{ p: 3 }} justifyContent="space-between">
-                                        <Typography noWrap>
-                                            {ingredient.name}
-                                        </Typography>
-                                        <Typography noWrap>
-                                            {ingredient.ABV}%
-                                        </Typography>
-                                    </Stack>
                                 </Card>
                             </Grid>
                         ))

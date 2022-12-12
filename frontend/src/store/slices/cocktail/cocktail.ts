@@ -14,7 +14,9 @@ export interface CocktailItemType {
     tags: string[],
     author_id: number | null,
     rate: number,
-    is_bookmarked: boolean
+    is_bookmarked: boolean,
+    ABV: number,
+    price_per_glass: number,
 }
 
 export interface CocktailDetailType {

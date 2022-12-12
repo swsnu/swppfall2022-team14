@@ -36,7 +36,7 @@ import { useSearchParams } from "react-router-dom";
 
 const StyledItem = styled(ListItemButton)({
     position: 'relative',
-    justifyContent: "flex-start",
+    justifyContent: "center",
     gap: 10,
 });
 
@@ -157,29 +157,145 @@ const InitPage = () => {
 
 
     return (
-        <Stack spacing={2} sx={{ width: 1, pl: 2, pr: 3, py: 2 }}>
+        <Stack
+            spacing={2}
+            sx={(theme) => ({
+                width: 1, pl: 2, pr: 3, py: 2,
+                [theme.breakpoints.down('sm')]: {
+                    pl: 0, pr: 1
+                },
+            })}
+        >
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <LocalBarIcon sx={{ ml: 13, fontSize: 50 }} />
-                <Typography variant="h3" sx={{ ml: 7 }}>
+                <LocalBarIcon
+                    sx={(theme) => ({
+                        [theme.breakpoints.up('md')]: {
+                            ml: 13,
+                            fontSize: 50,
+                        },
+                        [theme.breakpoints.down('md')]: {
+                            ml: 3,
+                            fontSize: 40,
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            ml: 3,
+                            fontSize: 30,
+                        },
+                    })}
+                />
+                <Typography
+                    variant="h3"
+                    sx={(theme) => ({
+                        [theme.breakpoints.up('md')]: {
+                            ml: 7,
+                        },
+                        [theme.breakpoints.down('md')]: {
+                            ml: 13,
+                            fontSize: 30,
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            ml: 6,
+                            fontSize: 20,
+                        },
+                    })}
+                >
                     Top 15 Cocktails
                 </Typography>
-                <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end" sx={{ width: 150 }}>
+                <Stack
+                    direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end"
+                    sx={(theme) => ({
+                        [theme.breakpoints.up('md')]: {
+                            width: 150
+                        },
+                        [theme.breakpoints.down('md')]: {
+                            width: 150
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            width: 90,
+                            marginRight: 1,
+                        },
+                    })}
+                >
                     {loginState && isOpenProfile ? (
-                        <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
-                            <IconButton data-testid="my page" onClick={onClickMyPage}>
-                                <PersonOutlineIcon />
+                        <Stack
+                            direction="row" spacing={1} alignItems="center" justifyContent="flex-end"
+                            sx={(theme) => ({
+                                [theme.breakpoints.down('sm')]: {
+                                    mr: -0.5
+                                },
+                            })}
+                        >
+                            <IconButton
+                                data-testid="my page"
+                                onClick={onClickMyPage}
+                                sx={(theme) => ({
+                                    [theme.breakpoints.down('sm')]: {
+                                        padding: 0.5,
+                                        mr: -1
+                                    },
+                                })}
+                            >
+                                <PersonOutlineIcon
+                                    sx={(theme) => ({
+                                        [theme.breakpoints.down('sm')]: {
+                                            fontSize: 15
+                                        },
+                                    })}
+                                />
                             </IconButton>
-                            <IconButton data-testid="logout" onClick={onClickLogout}>
-                                <LogoutIcon />
+                            <IconButton
+                                data-testid="logout" onClick={onClickLogout}
+                                sx={(theme) => ({
+                                    [theme.breakpoints.down('sm')]: {
+                                        padding: 0.5
+                                    },
+                                })}
+                            >
+                                <LogoutIcon
+                                    sx={(theme) => ({
+                                        [theme.breakpoints.down('sm')]: {
+                                            fontSize: 15
+                                        },
+                                    })}
+                                />
                             </IconButton>
                         </Stack>
                     ) : null}
                     {loginState ?
-                        <IconButton data-testid="my profile" size="large" onClick={onClickProfile}>
-                            <AccountCircleIcon fontSize="large" />
+                        <IconButton
+                            data-testid="my profile"
+                            size="large"
+                            onClick={onClickProfile}
+                            sx={(theme) => ({
+                                [theme.breakpoints.down('sm')]: {
+                                    padding: 0.5,
+                                },
+                            })}
+                        >
+                            <AccountCircleIcon
+                                fontSize="large"
+                                sx={(theme) => ({
+                                    [theme.breakpoints.down('sm')]: {
+                                        fontSize: 20
+                                    },
+                                })}
+                            />
                         </IconButton> :
-                        <IconButton data-testid="login" onClick={onClickLogin}>
-                            <LoginIcon />
+                        <IconButton
+                            data-testid="login" onClick={onClickLogin}
+                            sx={(theme) => ({
+                                [theme.breakpoints.down('sm')]: {
+                                    padding: 0.5,
+                                },
+                            })}
+                        >
+                            <LoginIcon
+                                sx={(theme) => ({
+                                    [theme.breakpoints.down('sm')]: {
+                                        fontSize: 15
+                                    },
+                                })}
+                            />
                         </IconButton>
                     }
                 </Stack>
@@ -247,6 +363,8 @@ const InitPage = () => {
                             id={cocktail.id}
                             tags={cocktail.tags}
                             is_bookmarked={cocktail.is_bookmarked}
+                            ABV={cocktail.ABV}
+                            price_per_glass={cocktail.price_per_glass}
                         />
                     </Grid>
                 )}

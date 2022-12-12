@@ -24,7 +24,7 @@ const stubCommentInitialState: CommentInfo = {
 
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
-    myIngredientList: [{ id: 1, name: '1', image: '1', ABV: 1, price: 1, introduction: '1', unit: ['1'], color: "" }],
+    myIngredientList: [{ id: 1, name: '1', image: '1', ABV: 1, price: 1, introduction: '1', unit: ['1'], color: "", name_eng: "ENG_INGREDIENT1", }],
     recommendIngredientList: [],
     availableCocktails: [],
     ingredientItem: null,

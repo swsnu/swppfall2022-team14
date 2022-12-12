@@ -12,8 +12,6 @@ const MyCustomCocktail = () => {
     const cocktailState = useSelector(selectCocktail)
     const dispatch = useDispatch<AppDispatch>()
 
-    const navigate = useNavigate()
-
     const userState = useSelector(selectUser)
     useEffect(() => {
         if (userState.isLogin && userState.token) {
@@ -25,7 +23,7 @@ const MyCustomCocktail = () => {
         <Stack sx={{ width: 1, py: 2 }}>
             <Grid container columns={4} spacing={3} sx={{ px: 1 }}>
                 {(cocktailState.listStatus !== 'success' ? [] : cocktailState.cocktailList).map((cocktail) => (
-                    <Grid key={cocktail.id} item xs={1}>
+                    <Grid key={cocktail.id} item md={1} sm={2} xs={4}>
                         <Item 
                             image={cocktail.image}
                             name={cocktail.name} 
@@ -34,6 +32,8 @@ const MyCustomCocktail = () => {
                             id={cocktail.id} 
                             tags={cocktail.tags} 
                             is_bookmarked={cocktail.is_bookmarked}
+                            ABV={cocktail.ABV}
+                            price_per_glass={cocktail.price_per_glass}
                         />
                     </Grid>
                 ))}
