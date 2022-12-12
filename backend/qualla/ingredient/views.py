@@ -11,12 +11,21 @@ from rest_framework import permissions, authentication
 
 @api_view(['GET'])
 def ingredient_list(request):
+
+    filter_q = Q()
+    text = request.query_params.get("search", None)
+
     if request.method == 'GET':
-        ingredients = Ingredient.objects
-        data = IngredientListSerializer(ingredients, many=True).data
-        return JsonResponse({"Ingredients": data, "count": ingredients.count()}, safe=False)
-    # else:
-    #     return HttpResponseNotAllowed(['GET'])
+
+        if (text is not None and text != ""):
+            filter_q.add(Q(name__contains=text), Q.AND)
+            ingredients = Ingredient.objects.filter(filter_q)
+            data = IngredientListSerializer(ingredients, many=True).data
+            return JsonResponse({"Ingredients": data, "count": ingredients.count()}, safe=False)
+        else:
+            ingredients = Ingredient.objects
+            data = IngredientListSerializer(ingredients, many=True).data
+            return JsonResponse({"Ingredients": data, "count": ingredients.count()}, safe=False)
 
 
 @api_view(['GET'])
