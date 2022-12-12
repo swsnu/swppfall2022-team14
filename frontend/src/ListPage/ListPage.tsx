@@ -18,6 +18,45 @@ import { selectUser } from '../store/slices/user/user';
 import { Grid, Container, Divider, Typography, Stack } from "@mui/material";
 
 
+function filterParamsToSentence(filterParam: FilterParamType | null) {
+
+    if (!filterParam)
+        return ""
+
+    const { type_one, type_two, type_three } = filterParam;
+
+
+
+    let sentence = ""
+    if (type_one.length === 2)
+        sentence += "클래식한 혹은 여름 느낌의"
+    else if (type_one.length === 1)
+        if (type_one[0] === "클래식")
+            sentence += "클래식한"
+        else if (type_one[0] === "트로피컬")
+            sentence += "여름 느낌의"
+
+
+
+    if (type_three.length > 0 && sentence !== "")
+        sentence += ", "
+    else
+        sentence += " "
+
+    if (type_three[0] === "weak")
+        sentence += "가볍게 마시는 "
+    else if (type_three[0] === "medium")
+        sentence += "은은하게 취하는 "
+    else if (type_three[0] === "strong")
+        sentence += "도수 높은 "
+    else if (type_three[0] == "extreme")
+        sentence += "주당을 위한 "
+
+    sentence += "칵테일들"
+
+    return sentence
+}
+
 const ListPage = () => {
 
     const dispatch = useDispatch<AppDispatch>()
@@ -28,7 +67,7 @@ const ListPage = () => {
     const [list, setList] = useState<CocktailItemType[]>([])
     const [ingrList, setIngrList] = useState<IngredientType[]>([])
     const location = useLocation()
-
+    const [filterParam, setFilterParam] = useState<FilterParamType | null>(null)
     const pageStatus = type === 'ingredient' ? ingrState.listStatus : cocktailState.listStatus
 
     useEffect(() => {
@@ -41,6 +80,7 @@ const ListPage = () => {
             available_only: location.state.filter_param.available_only,
             color: location.state.filter_param.color
         }
+        setFilterParam(param)
 
         if (type === 'standard')
             dispatch(fetchStandardCocktailList(param))
@@ -80,8 +120,8 @@ const ListPage = () => {
         <>
             {/*<NavBar />*/}
             <Container sx={{ py: 3 }} >
-                <Typography variant="h4" sx={{ mb: 3 }}>
-                    search filters
+                <Typography variant="h4" sx={{ mb: 3 }} fontFamily="Hi Melody" color="#BC953B">
+                    {filterParamsToSentence(filterParam)}
                 </Typography>
                 {type === 'ingredient' ?
                     <Grid container spacing={3}>
