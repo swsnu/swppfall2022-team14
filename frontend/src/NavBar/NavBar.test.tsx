@@ -111,7 +111,7 @@ const renderNavBar = (user: UserInfo) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
-                <Route path="/" element={<NavBar />} />
+                <Route path="/" element={<NavBar isOpenNavBar={true} />} />
             </Routes>
         </MemoryRouter>,
         {

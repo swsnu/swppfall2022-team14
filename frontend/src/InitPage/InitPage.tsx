@@ -9,7 +9,6 @@ import { fetchCustomCocktailList, fetchStandardCocktailList, selectCocktail } fr
 import { useDispatch, useSelector } from "react-redux"
 import { logoutUser, selectUser } from '../store/slices/user/user';
 import { AppDispatch } from "../store"
-import { fetchMyIngredientList } from "../store/slices/ingredient/ingredient";
 import RecommendModal from "./Modals/RecommendModal";
 import { styled } from '@mui/material/styles';
 import {

@@ -19,6 +19,9 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
 import {AppDispatch} from "../store";
 
+export interface NavBarType {
+    isOpenNavBar: boolean
+}
 
 const StyledItem = styled(ListItemButton)({
     height: 48,
@@ -37,7 +40,7 @@ const StyledItemIcon = styled(ListItemIcon)({
     minWidth: 10,
 });
 
-const NavBar = () => {
+const NavBar = (prop: NavBarType) => {
 
     const navigate = useNavigate()
     const userState = useSelector(selectUser)
@@ -116,7 +119,15 @@ const NavBar = () => {
     },[openMyIngr])
 
     return (
-        <Stack direction="row" sx={{ boxShadow: "1px -20px 10px 5px #181818" }}>
+        prop.isOpenNavBar ?
+        <Stack 
+            direction="row" 
+            sx={{ 
+                boxShadow: "1px 2px 10px 5px #181818",
+                bgcolor: 'background.default',
+                paddingBottom: 2
+            }}    
+        >
             <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1 }}>
                 <Box component="span" sx={{ height: 80, p: 2 }}>
                     <LocalBarIcon onClick={handleHome} sx={{ cursor: 'pointer', fontSize: 50 }} />
@@ -184,7 +195,8 @@ const NavBar = () => {
                     )}
                 </Stack>
             }
-        </Stack>
+        </Stack> :
+        null
     )
 }
 
