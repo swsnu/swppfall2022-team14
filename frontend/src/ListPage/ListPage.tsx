@@ -15,8 +15,8 @@ import NavBar from "../NavBar/NavBar";
 import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
 import Ingr from "./Ingr/Ingr";
 import { selectUser } from '../store/slices/user/user';
-import { Grid, Container, Divider, Typography, Stack } from "@mui/material";
-
+import { Grid, Container, Divider, Typography, Stack, Box } from "@mui/material";
+import LocalBarIcon from '@mui/icons-material/LocalBar';
 
 function filterParamsToSentence(filterParam: FilterParamType | null) {
 
@@ -121,7 +121,9 @@ const ListPage = () => {
             {/*<NavBar />*/}
             <Container sx={{ py: 3 }} >
                 <Typography variant="h4" sx={{ mb: 3 }} fontFamily="Hi Melody" color="#BC953B">
-                    {filterParamsToSentence(filterParam)}
+                    {filterParamsToSentence(filterParam)} {filterParam?.color ? <Box component="span" sx={{ height: 100, p: 2 }}>
+                        <LocalBarIcon sx={{ fontSize: 40, color: filterParam?.color }} />
+                    </Box> : null}
                 </Typography>
                 {type === 'ingredient' ?
                     <Grid container spacing={3}>
