@@ -9,7 +9,7 @@ interface ParamList {
 }
 
 interface FilterType {
-    type: "typeOne"|"typeTwo"|"typeThree";
+    type: "typeOne" | "typeTwo" | "typeThree";
     name: string;
 }
 
@@ -30,22 +30,22 @@ export interface Iprops {
 const Filter = (prop: Iprops) => {
 
     const themeList: ThemeList[] = [
-        {label: "Theme1", filters: [{type: "typeOne", name:"CL"}, {type:"typeThree", name:"weak"}]}, 
-        {label: "Theme2", filters: [{type: "typeOne", name:"TP"}, {type:"typeThree", name:"medium"}, {type:"typeTwo", name:"LONG"}]}
+        { label: "Theme1", filters: [{ type: "typeOne", name: "클래식" }, { type: "typeThree", name: "weak" }] },
+        { label: "Theme2", filters: [{ type: "typeOne", name: "트로피컬" }, { type: "typeThree", name: "medium" }, { type: "typeTwo", name: "롱 드링크" }] }
     ]
-    const typeOneList: ParamList[] = [{ name: "CL", label: "클래식" }, { name: "TP", label: "트로피컬" }]
-    const typeTwoList: ParamList[] = [{ name: "LONG", label: "롱드링크" }, { name: "SHORT", label: "숏드링크" }, { name: "SHOT", label: "샷" }]
+    const typeOneList: ParamList[] = [{ name: "클래식", label: "클래식" }, { name: "트로피컬", label: "트로피컬" }]
+    const typeTwoList: ParamList[] = [{ name: "롱 드링크", label: "롱드링크" }, { name: "숏 드링크", label: "숏드링크" }, { name: "샷", label: "샷" }]
     const typeThreeList: ParamList[] = [{ name: "weak", label: "15도 이하" }, { name: "medium", label: "15 ~ 30도" }, { name: "strong", label: "30 ~ 40도" }, { name: "extreme", label: "40도 이상" }]
     const [typeParam, setTypeParam] = useState<
-    {
-        typeOne: string[],
-        typeTwo: string[],
-        typeThree: string[],
-    }>({
-        typeOne: [],
-        typeTwo: [],
-        typeThree: [],
-    })
+        {
+            typeOne: string[],
+            typeTwo: string[],
+            typeThree: string[],
+        }>({
+            typeOne: [],
+            typeTwo: [],
+            typeThree: [],
+        })
     const [availableOnly, setAvailableOnly] = useState<boolean>(false)
     const url_params = {
         type_one: typeParam.typeOne,
@@ -54,25 +54,25 @@ const Filter = (prop: Iprops) => {
         available_only: availableOnly
     }
     const onTypeClick = (param_type: string, type_name: string) => {
-        if(param_type === "typeOne"){
+        if (param_type === "typeOne") {
             const param = typeParam.typeOne
-            if (!param.includes(type_name)){
-                setTypeParam({...typeParam, typeOne:param.concat(type_name)})
+            if (!param.includes(type_name)) {
+                setTypeParam({ ...typeParam, typeOne: param.concat(type_name) })
             }
             else
-                setTypeParam({...typeParam, typeOne:param.filter(value => value != type_name)})
-        }else if(param_type === "typeTwo"){
+                setTypeParam({ ...typeParam, typeOne: param.filter(value => value != type_name) })
+        } else if (param_type === "typeTwo") {
             const param = typeParam.typeTwo
             if (!param.includes(type_name))
-                setTypeParam({...typeParam, typeTwo:param.concat(type_name)})
+                setTypeParam({ ...typeParam, typeTwo: param.concat(type_name) })
             else
-                setTypeParam({...typeParam, typeTwo:param.filter(value => value != type_name)})
-        }else{
+                setTypeParam({ ...typeParam, typeTwo: param.filter(value => value != type_name) })
+        } else {
             const param = typeParam.typeThree
             if (param.includes(type_name))
-                setTypeParam({...typeParam, typeThree:[]})
+                setTypeParam({ ...typeParam, typeThree: [] })
             else
-                setTypeParam({...typeParam, typeThree:[type_name]})
+                setTypeParam({ ...typeParam, typeThree: [type_name] })
         }
     }
 
@@ -80,12 +80,12 @@ const Filter = (prop: Iprops) => {
         const typeOne = [];
         const typeTwo = [];
         let typeThree = "";
-        for(const filter of filters.filters){
-            if(filter.type === "typeOne"){
+        for (const filter of filters.filters) {
+            if (filter.type === "typeOne") {
                 typeOne.push(filter.name)
-            }else if(filter.type === "typeTwo"){
+            } else if (filter.type === "typeTwo") {
                 typeTwo.push(filter.name)
-            }else{
+            } else {
                 typeThree = filter.name
             }
         }
@@ -108,8 +108,8 @@ const Filter = (prop: Iprops) => {
                 <FormGroup row sx={{ gap: 1 }}>
                     {themeList.map((type) => {
                         return (
-                            <Button 
-                                key={type.label} 
+                            <Button
+                                key={type.label}
                                 size="small"
                                 sx={{ bgcolor: 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                                 onClick={() => onThemeClick(type)}
@@ -123,8 +123,8 @@ const Filter = (prop: Iprops) => {
                 </FormGroup>
             </Stack>
             {[
-                { title: "Type 1", list: typeOneList  , typeParamList: typeParam.typeOne  , name: "typeOne"   },
-                { title: "Type 2", list: typeTwoList  , typeParamList: typeParam.typeTwo  , name: "typeTwo"   },
+                { title: "Type 1", list: typeOneList, typeParamList: typeParam.typeOne, name: "typeOne" },
+                { title: "Type 2", list: typeTwoList, typeParamList: typeParam.typeTwo, name: "typeTwo" },
                 { title: "Type 3", list: typeThreeList, typeParamList: typeParam.typeThree, name: "typeThree" },
             ].map((filter) => {
                 return (
@@ -136,8 +136,8 @@ const Filter = (prop: Iprops) => {
                         <FormGroup row sx={{ gap: 1 }}>
                             {filter.list.map((type) => {
                                 return (
-                                    <Button 
-                                        key={type.label} 
+                                    <Button
+                                        key={type.label}
                                         size="small"
                                         sx={{ bgcolor: filter.typeParamList.includes(type.name) ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                                         onClick={() => onTypeClick(filter.name, type.name)}
@@ -158,7 +158,7 @@ const Filter = (prop: Iprops) => {
                 </Typography>
                 <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
                 <FormGroup row sx={{ gap: 1 }}>
-                    <Button 
+                    <Button
                         size="small"
                         sx={{ bgcolor: availableOnly ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                         onClick={() => setAvailableOnly(!availableOnly)}
@@ -170,8 +170,8 @@ const Filter = (prop: Iprops) => {
                 </FormGroup>
             </Stack>
             <Stack spacing={2} alignItems="stretch">
-                <TextField 
-                    label="추가 검색어" variant="standard" value={prop.input} onChange={(e) => prop.setInput(e.target.value)} 
+                <TextField
+                    label="추가 검색어" variant="standard" value={prop.input} onChange={(e) => prop.setInput(e.target.value)}
                     sx={{
                         '& label.Mui-focused': {
                             color: 'secondary.light',
@@ -184,11 +184,11 @@ const Filter = (prop: Iprops) => {
                                 borderColor: 'secondary.light',
                             },
                         },
-                    }}    
+                    }}
                 />
-                <Button variant="contained" onClick={prop.onClickSearch} 
+                <Button variant="contained" onClick={prop.onClickSearch}
                     sx={{
-                        bgcolor: 'primary.dark', 
+                        bgcolor: 'primary.dark',
                         borderRadius: 5,
                         boxShadow: 3,
                         '&:hover': {

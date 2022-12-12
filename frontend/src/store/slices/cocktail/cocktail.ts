@@ -22,13 +22,15 @@ export interface CocktailItemType {
 export interface CocktailDetailType {
     id: number,
     name: string,
-    name_eng: string,
-    color: string,
     image: string,
+    name_eng: string,
     introduction: string,
     recipe: string,
     ABV: number,
-    price_per_glass: number
+    price_per_glass: number,
+    color: string,
+    filter_type_one: string,
+    filter_type_two: string,
     tags: string[],
     type: "CS" | "ST",
     author_id: number | null,
@@ -46,7 +48,7 @@ export interface IngredientPostType extends Omit<IngredientType, 'unit'> {
     amount: string;
 }
 
-export interface CocktailPostType extends Omit<CocktailDetailType, "id" | "type" | "author_name" | "name_eng" |"created_at" | "updated_at" | "rate" | "is_bookmarked" | "score" | "ingredients"> {
+export interface CocktailPostType extends Omit<CocktailDetailType, "id" | "type" | "author_name" | "name_eng" | "created_at" | "updated_at" | "rate" | "is_bookmarked" | "score" | "ingredients"> {
     name_eng: string | null
     ingredients: IngredientPostType[];
 
@@ -154,6 +156,7 @@ export const getCocktail = createAsyncThunk(
 
         const response = await axios.get(`/api/v1/cocktails/${id}/`)
 
+        console.log(response.data)
         if (response.data.author_id > 0) {
             const author_response = await axios.get(`/api/v1/user/${response.data.author_id}/`);
             return { ...response.data, ingredients: ingredient_response.data, author_name: author_response.data.username };
@@ -175,7 +178,7 @@ export const postCocktail = createAsyncThunk(
 export const authPostCocktail = createAsyncThunk(
     "cocktail/postCocktail",
     async (cocktail: PostForm, { dispatch, rejectWithValue }) => {
-        try{
+        try {
             const response = await axios.post<CocktailDetailType>('/api/v1/cocktails/post/', cocktail.cocktail, {
                 headers: {
                     Authorization: `Token ${cocktail.token}`,
@@ -183,7 +186,7 @@ export const authPostCocktail = createAsyncThunk(
             });
             dispatch(cocktailActions.addCocktail(response.data));
             return response.data
-        }catch(error: any){
+        } catch (error: any) {
             return rejectWithValue(error.response.data["code"])
         }
     }
@@ -192,7 +195,7 @@ export const authPostCocktail = createAsyncThunk(
 export const editCocktail = createAsyncThunk(
     "cocktail/editCocktail",
     async (cocktail: { data: PostForm, id: number }, { dispatch, rejectWithValue }) => {
-        try{
+        try {
             const response = await axios.put<CocktailDetailType>(`/api/v1/cocktails/${cocktail.id}/edit/`, cocktail.data.cocktail, {
                 headers: {
                     Authorization: `Token ${cocktail.data.token}`
@@ -200,7 +203,7 @@ export const editCocktail = createAsyncThunk(
             });
             dispatch(cocktailActions.editCocktail(response.data));
             return response.data
-        }catch(error: any){
+        } catch (error: any) {
             return rejectWithValue(error.response.data["code"])
         }
     }
