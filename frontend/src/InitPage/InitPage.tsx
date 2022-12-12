@@ -32,6 +32,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
 import { useSearchParams } from "react-router-dom";
+import { HexColorPicker } from "react-colorful";
 
 
 const StyledItem = styled(ListItemButton)({
@@ -54,8 +55,11 @@ export interface Filterparam {
     type_one: string[],
     type_two: string[],
     type_three: string[],
-    available_only: boolean
+    available_only: boolean,
+    color: string | null
 }
+
+
 
 const InitPage = () => {
 
@@ -65,7 +69,7 @@ const InitPage = () => {
     const dispatch = useDispatch<AppDispatch>()
 
     const loginState = userState.isLogin;
-    const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [], available_only: false })
+    const [filterParam, setFilterParam] = useState<Filterparam>({ type_one: [], type_two: [], type_three: [], available_only: false, color: "000000" })
     const [input, setInput] = useState('')
 
     const request_param = { filter_param: filterParam, name_param: input }

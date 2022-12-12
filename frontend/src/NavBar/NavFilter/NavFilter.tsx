@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import './NavFilter.scss'
 import { Button, Stack, FormGroup, TextField, Typography } from '@mui/material';
+import { HexColorPicker } from 'react-colorful';
 
 export interface ParamList {
     name: string;
@@ -30,6 +31,8 @@ const NavFilter = (prop: Iprops) => {
     const typeOneList: ParamList[] = [{ name: "클래식", label: "클래식" }, { name: "트로피컬", label: "트로피컬" }]
     const typeTwoList: ParamList[] = [{ name: "롱 드링크", label: "롱드링크" }, { name: "숏 드링크", label: "숏드링크" }, { name: "샷", label: "샷" }]
     const typeThreeList: ParamList[] = [{ name: "weak", label: "15도 이하" }, { name: "medium", label: "15 ~ 30도" }, { name: "strong", label: "30 ~ 40도" }, { name: "extreme", label: "40도 이상" }]
+    const [color, setColor] = useState<string>("000000")
+    const [useColor, setUseColor] = useState<boolean>(false)
     const [typeParam, setTypeParam] = useState<
         {
             typeOne: string[],
@@ -47,7 +50,8 @@ const NavFilter = (prop: Iprops) => {
         type_one: typeParam.typeOne,
         type_two: typeParam.typeTwo,
         type_three: typeParam.typeThree,
-        available_only: availableOnly
+        available_only: availableOnly,
+        color: useColor ? color : null
     }
 
     const request_param = { filter_param: url_params, name_param: input }
@@ -103,11 +107,19 @@ const NavFilter = (prop: Iprops) => {
             typeThree: [typeThree],
         })
     }
+
+    const onUseColorClick = () => {
+        setUseColor(!useColor)
+    }
+
+
     const onKeyPress = (e: { key: string; }) => {
         if (e.key == 'Enter') {
             onClickSearch();
         }
     };
+
+
 
     if (prop.type === 'IG') {
         return (
@@ -242,6 +254,18 @@ const NavFilter = (prop: Iprops) => {
                             </Typography>
                         </Button>
                     </FormGroup>
+                </Stack>
+                <Stack spacing={1}>
+                    <Button
+                        size="small"
+                        sx={{ bgcolor: useColor ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                        onClick={onUseColorClick}
+                    >
+                        <Typography variant="caption" color='text.primary'>
+                            색상 유사도 적용 {useColor ? "ON" : "OFF"}
+                        </Typography>
+                    </Button>
+                    <HexColorPicker color={color} onChange={setColor}></HexColorPicker>
                 </Stack>
                 <Button variant="contained" onClick={onClickSearch}
                     sx={{

@@ -38,10 +38,9 @@ const ListPage = () => {
             type_two: location.state.filter_param.type_two,
             type_three: location.state.filter_param.type_three,
             name_param: location.state.name_param,
-            available_only: location.state.filter_param.available_only
+            available_only: location.state.filter_param.available_only,
+            color: location.state.filter_param.color
         }
-
-
 
         if (type === 'standard')
             dispatch(fetchStandardCocktailList(param))
@@ -86,15 +85,15 @@ const ListPage = () => {
                 </Typography>
                 {type === 'ingredient' ?
                     <Grid container spacing={3}>
-                        {ingrList.map((ingredient) => 
+                        {ingrList.map((ingredient) =>
                             <Grid key={ingredient.id} item xs={12} sm={6} md={3}>
-                                <Ingr 
-                                    key={ingredient.id} 
-                                    image={ingredient.image} 
-                                    name={ingredient.name} 
+                                <Ingr
+                                    key={ingredient.id}
+                                    image={ingredient.image}
+                                    name={ingredient.name}
                                     id={ingredient.id}
                                 />
-                            </Grid> 
+                            </Grid>
                         )}
                     </Grid> :
                     <Grid container spacing={3}>

@@ -2,7 +2,8 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import React from 'react';
 import { Filterparam } from "../InitPage";
 import { Divider, Button, Stack, FormGroup, TextField, Typography } from '@mui/material';
-
+import { HexColorPicker } from "react-colorful";
+import "./Filter.css";
 interface ParamList {
     name: string;
     label: string;
@@ -32,10 +33,13 @@ const Filter = (prop: Iprops) => {
     const themeList: ThemeList[] = [
         { label: "Theme1", filters: [{ type: "typeOne", name: "클래식" }, { type: "typeThree", name: "weak" }] },
         { label: "Theme2", filters: [{ type: "typeOne", name: "트로피컬" }, { type: "typeThree", name: "medium" }, { type: "typeTwo", name: "롱 드링크" }] }
+
     ]
     const typeOneList: ParamList[] = [{ name: "클래식", label: "클래식" }, { name: "트로피컬", label: "트로피컬" }]
     const typeTwoList: ParamList[] = [{ name: "롱 드링크", label: "롱드링크" }, { name: "숏 드링크", label: "숏드링크" }, { name: "샷", label: "샷" }]
     const typeThreeList: ParamList[] = [{ name: "weak", label: "15도 이하" }, { name: "medium", label: "15 ~ 30도" }, { name: "strong", label: "30 ~ 40도" }, { name: "extreme", label: "40도 이상" }]
+    const [color, setColor] = useState<string>("000000")
+    const [useColor, setUseColor] = useState<boolean>(false)
     const [typeParam, setTypeParam] = useState<
         {
             typeOne: string[],
@@ -51,7 +55,8 @@ const Filter = (prop: Iprops) => {
         type_one: typeParam.typeOne,
         type_two: typeParam.typeTwo,
         type_three: typeParam.typeThree,
-        available_only: availableOnly
+        available_only: availableOnly,
+        color: useColor ? color : null
     }
     const onTypeClick = (param_type: string, type_name: string) => {
         if (param_type === "typeOne") {
@@ -96,9 +101,13 @@ const Filter = (prop: Iprops) => {
         })
     }
 
-    useEffect(() => prop.setUrlParams(url_params), [typeParam, availableOnly])
+    const onUseColorClick = () => {
+        setUseColor(!useColor)
+    }
 
-    return (
+    useEffect(() => prop.setUrlParams(url_params), [typeParam, availableOnly, useColor, color])
+
+    return (<div style={{ "display": "flex" }}>
         <Stack spacing={2} alignItems='flex-start' sx={{ pl: 3 }}>
             <Stack direction="row" spacing={1}>
                 <Typography variant="body1">
@@ -201,6 +210,22 @@ const Filter = (prop: Iprops) => {
                 </Button>
             </Stack>
         </Stack >
+        <Stack direction="row" spacing={1}>
+            <Typography variant="body1">
+                <Button
+                    size="small"
+                    sx={{ bgcolor: useColor ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                    onClick={onUseColorClick}
+                >
+                    <Typography variant="caption" color='text.primary'>
+                        색상 유사도 적용 {useColor ? "ON" : "OFF"}
+                    </Typography>
+                </Button>
+            </Typography>
+            <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
+            <HexColorPicker color={color} onChange={setColor}></HexColorPicker>
+        </Stack>
+    </div >
     )
 }
 

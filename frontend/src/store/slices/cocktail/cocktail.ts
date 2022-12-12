@@ -83,8 +83,8 @@ export interface FilterParamType {
     type_two: string[];
     type_three: string[];
     name_param: string[];
-    available_only: boolean
-    // my_ingredient_id_list: number[];
+    available_only: boolean;
+    color: string | null;
 }
 
 export const fetchStandardCocktailList = createAsyncThunk(
@@ -94,6 +94,7 @@ export const fetchStandardCocktailList = createAsyncThunk(
             return response.data
         }
         else {
+            console.log(params)
             const response = await axios.get(`/api/v1/cocktails/?type=standard`,
                 {
                     params: params,
