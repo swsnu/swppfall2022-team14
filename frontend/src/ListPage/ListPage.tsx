@@ -84,9 +84,9 @@ const ListPage = () => {
                     search filters
                 </Typography>
                 {type === 'ingredient' ?
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} columns={4}>
                         {ingrList.map((ingredient) => 
-                            <Grid key={ingredient.id} item xs={12} sm={6} md={3}>
+                            <Grid key={ingredient.id} item md={1} sm={2} xs={4}>
                                 <IngredientItem 
                                     key={ingredient.id} 
                                     image={ingredient.image} 
@@ -98,9 +98,9 @@ const ListPage = () => {
                             </Grid> 
                         )}
                     </Grid> :
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} columns={4}>
                         {list.map((cocktail) =>
-                            <Grid key={cocktail.id} item xs={12} sm={6} md={3}>
+                            <Grid key={cocktail.id} item md={1} sm={2} xs={4}>
                                 <Item
                                     key={cocktail.id}
                                     image={cocktail.image}
