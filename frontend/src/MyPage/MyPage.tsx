@@ -52,7 +52,7 @@ const MyPage = () => {
     const dispatch = useDispatch<AppDispatch>()
     useEffect(() => {
 
-        dispatch(fetchIngredientList())
+        dispatch(fetchIngredientList(null))
         if (!userState.isLogin) {
             navigate(-1)
             console.log("먼저 로그인 해주세요")

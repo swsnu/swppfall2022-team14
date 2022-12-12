@@ -42,14 +42,13 @@ const ListPage = () => {
         }
 
 
-        if (userState.isLogin)
-            dispatch(fetchMyIngredientList(userState.token))
+
         if (type === 'standard')
             dispatch(fetchStandardCocktailList(param))
         else if (type === 'custom')
             dispatch(fetchCustomCocktailList(param))
         else if (type === 'ingredient')
-            dispatch(fetchIngredientList())
+            dispatch(fetchIngredientList(null))
 
     }, [location])
 

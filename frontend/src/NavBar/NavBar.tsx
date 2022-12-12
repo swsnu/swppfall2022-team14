@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './NavBar.scss'
 import NavFilter from "./NavFilter/NavFilter";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { useNavigate } from "react-router";
-import { selectIngredient } from '../store/slices/ingredient/ingredient';
+import {fetchMyIngredientList, selectIngredient} from '../store/slices/ingredient/ingredient';
 import { selectUser } from "../store/slices/user/user";
 import LoginModal from "../InitPage/Modals/LoginModal";
 import AddIngredientModal from "../common/Modals/AddIngredientModal";
@@ -17,6 +17,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import LiquorIcon from '@mui/icons-material/Liquor';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
+import {AppDispatch} from "../store";
 
 
 const StyledItem = styled(ListItemButton)({
@@ -41,6 +42,8 @@ const NavBar = () => {
     const navigate = useNavigate()
     const userState = useSelector(selectUser)
     const ingredientState = useSelector(selectIngredient)
+
+    const dispatch = useDispatch<AppDispatch>()
 
     const [openMyIngr, setOpenMyIngr] = useState(false)
     const [curFilter, setCurFilter] = useState('ST')
@@ -103,6 +106,14 @@ const NavBar = () => {
     const handleAddIngr = () => {
         setIsAddIngredientModalOpen(true)
     }
+
+    useEffect(() => {
+        if(openMyIngr){
+            if (userState.isLogin){
+                dispatch(fetchMyIngredientList(userState.token))
+            }
+        }
+    },[openMyIngr])
 
     return (
         <Stack direction="row">

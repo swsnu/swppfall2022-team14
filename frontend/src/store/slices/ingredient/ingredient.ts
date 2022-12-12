@@ -51,9 +51,19 @@ const initialState: IngredientInfo = {
 }
 
 export const fetchIngredientList = createAsyncThunk(
-    "ingredient/fetchIngredientList", async () => {
-        const response = await axios.get('/api/v1/ingredients/');
-        return response.data
+    "ingredient/fetchIngredientList", async (params: string | null) => {
+        if(!params){
+            const response = await axios.get('/api/v1/ingredients/');
+            return response.data
+        }
+        else{
+            const response = await axios.get('/api/v1/ingredients/',{
+                params: {
+                    search: params
+                },
+            });
+            return response.data
+        }
     },
 )
 

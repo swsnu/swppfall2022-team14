@@ -1,7 +1,13 @@
-import { useState, SetStateAction, Dispatch } from 'react';
+import {useState, SetStateAction, Dispatch, useEffect} from 'react';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IngredientType, PostIngredientProps, postMyIngredients, selectIngredient } from '../../store/slices/ingredient/ingredient';
+import {
+    fetchIngredientList,
+    IngredientType,
+    PostIngredientProps,
+    postMyIngredients,
+    selectIngredient
+} from '../../store/slices/ingredient/ingredient';
 import { AppDispatch } from '../../store';
 import {selectUser} from "../../store/slices/user/user";
 import Modal from '@mui/material/Modal';
@@ -68,6 +74,10 @@ const AddIngredientModal = (props: prop) => {
         setNewIngredients([])
         setIsOpen(false);
     }
+
+    useEffect(() => {
+        dispatch(fetchIngredientList(input))
+    },[input])
 
     return (
         <Modal 
