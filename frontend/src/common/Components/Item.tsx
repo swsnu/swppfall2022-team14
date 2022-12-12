@@ -4,7 +4,7 @@ import { AppDispatch } from "../../store";
 import React from 'react';
 import { CocktailItemType, toggleBookmark } from "../../store/slices/cocktail/cocktail";
 import { selectUser } from "../../store/slices/user/user";
-import { Box, Card, Checkbox, ImageListItem, Typography, Stack, Rating } from "@mui/material";
+import { Box, Card, Checkbox, FormGroup, ImageListItem, Typography, Stack, Rating } from "@mui/material";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 
@@ -82,7 +82,7 @@ const Item = (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | 
                         {prop.price_per_glass.toLocaleString()}원
                     </Typography>
                 </Stack>
-                <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={1} sx={{ height: 30 }}>
+                <FormGroup row sx={{ gap: 1, width: 1 }}>
                     {prop.tags.slice(0, 2).map((tag) =>
                         <Box 
                             key={tag} 
@@ -93,7 +93,7 @@ const Item = (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | 
                             </Typography>
                         </Box>
                     )}
-                </Stack>
+                </FormGroup>
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Typography 
                         noWrap

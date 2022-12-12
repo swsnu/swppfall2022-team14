@@ -318,7 +318,7 @@ export default function ItemDetailPage() {
                         </Stack>
                     </Stack>
                     <Divider flexItem />
-                    <Stack direction="row" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
+                    <FormGroup row sx={{ gap: 1, width: 1, px: 1 }}>
                         {cocktail.tags.map((tag, idx) => {
                             return (
                                 <Typography key={`${tag}_${idx}`} variant="body2" align='left'>
@@ -326,7 +326,7 @@ export default function ItemDetailPage() {
                                 </Typography>
                             )
                         })}
-                    </Stack>
+                    </FormGroup>
                     {cocktail.tags.length !== 0 && <Divider flexItem />}
                     <Stack spacing={1} sx={{ width: 1, pt: 2 }}>
                         <Typography variant="h6" align='left'>

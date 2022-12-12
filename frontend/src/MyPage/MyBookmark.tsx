@@ -22,7 +22,7 @@ const MyBookmark = () => {
         <Stack sx={{ width: 1, py: 2 }}>
             <Grid container columns={4} spacing={3} sx={{ px: 1 }}>
                 {(cocktailState.listStatus !== 'success' ? [] : cocktailState.cocktailList).map((cocktail) => (
-                    <Grid key={cocktail.id} item xs={1}>
+                    <Grid key={cocktail.id} item md={1} sm={2} xs={4}>
                         <Item 
                             image={cocktail.image}
                             name={cocktail.name} 

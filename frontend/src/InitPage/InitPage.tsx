@@ -217,13 +217,21 @@ const InitPage = () => {
                     })}
                 >
                     {loginState && isOpenProfile ? (
-                        <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
+                        <Stack 
+                            direction="row" spacing={1} alignItems="center" justifyContent="flex-end"
+                            sx={(theme) => ({ 
+                                [theme.breakpoints.down('sm')]: {
+                                    mr: -0.5
+                                },
+                            })}
+                        >
                             <IconButton 
                                 data-testid="my page" 
                                 onClick={onClickMyPage}
                                 sx={(theme) => ({ 
                                     [theme.breakpoints.down('sm')]: {
-                                        padding: 0.5
+                                        padding: 0.5,
+                                        mr: -1
                                     },
                                 })}
                             >
@@ -293,12 +301,12 @@ const InitPage = () => {
                 </Stack>
             </Stack>
             <Grid 
-                container spacing={1} columns={2} 
+                container spacing={1} columns={2}
                 sx={{ width: 1, px: 2 }}
                 justifyContent="space-between"
             >
-                <Grid item sm={1} xs={2}>
-                    <Stack direction="row" spacing={1} justifyContent="flex-start" sx={{ width: 1 }}>
+                <Grid item md={1} sm={2} xs={2}>
+                    <Stack direction="row" spacing={1} justifyContent="flex-start" sx={{ width: 1, mt: 1 }}>
                         <ToggleButtonGroup
                             value={toggle}
                             exclusive
@@ -316,8 +324,8 @@ const InitPage = () => {
                         </ToggleButtonGroup>
                     </Stack>
                 </Grid>
-                <Grid item sm={1} xs={2}>
-                    <Stack direction="row" spacing={1} alignItems="stretch" justifyContent="flex-end" sx={{ width: 1, height: 1 }}>
+                <Grid item md={1} sm={2} xs={2}>
+                    <Stack direction="row" spacing={1} alignItems="stretch" justifyContent="flex-end" sx={{ width: 1, height: 1, mt: 1 }}>
                         <Stack direction="row" spacing={1} justifyContent="flex-end">
                             <Stack direction="row" alignItems='center' sx={{ pl: 2, pr: 1, bgcolor: 'primary.main', borderRadius: 4 }}>
                                 <TextField 

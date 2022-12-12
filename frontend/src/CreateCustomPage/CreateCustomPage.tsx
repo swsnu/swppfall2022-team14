@@ -3,7 +3,6 @@ import AddIngredientModal from "./Modals/AddIngredientModal"
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
-import NavBar from "../NavBar/NavBar";
 import {
     authPostCocktail,
     CocktailDetailType,
@@ -16,7 +15,7 @@ import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
 import S3 from 'react-aws-s3-typescript'
 import {v4 as uuid} from 'uuid'
-import { Button, ImageListItem, ImageListItemBar, Divider, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import { Button, ImageListItem, ImageListItemBar, FormGroup, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import RemoveIcon from '@mui/icons-material/Remove';
 
@@ -464,7 +463,7 @@ export default function CreateCustomPage() {
                         </Stack>
                     </Stack>
                 </Stack>
-                <Stack direction="row" alignItems="flex-end" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
+                <FormGroup row sx={{ gap: 1, width: 1 }}>
                     {tagList.map((tagItem, idx) => {
                         return (
                             <Button 
@@ -478,7 +477,7 @@ export default function CreateCustomPage() {
                             </Button>
                         )
                     })}
-                </Stack>
+                </FormGroup>
                 <TextField
                     label="태그"
                     variant="standard"

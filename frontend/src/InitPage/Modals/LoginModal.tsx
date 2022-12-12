@@ -6,7 +6,7 @@ import React from 'react';
 import Modal from '@mui/material/Modal';
 import { Button, Stack, TextField, Typography } from "@mui/material";
 
-const style = {
+const style = (theme: any) => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -16,7 +16,10 @@ const style = {
     boxShadow: 24,
     p: 3,
     overflow: 'scroll',
-};
+    [theme.breakpoints.down('md')]: {
+        width: 0.8,
+    },
+});
 
 export interface prop {
     isOpen: boolean;

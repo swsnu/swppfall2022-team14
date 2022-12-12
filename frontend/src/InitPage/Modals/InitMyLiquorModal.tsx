@@ -48,7 +48,7 @@ const InitMyLiqourModal = (props: prop) => {
             <Stack sx={style}>
                 <Grid container columns={4} spacing={3}>
                     {ingredientState.myIngredientList.map(ingredient => (
-                        <Grid key={ingredient.id} item xs={1}>
+                        <Grid key={ingredient.id} item md={1} sm={2} xs={4}>
                             <IngredientItem 
                                 key={ingredient.id} 
                                 image={ingredient.image} 

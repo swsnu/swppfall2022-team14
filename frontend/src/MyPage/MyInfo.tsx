@@ -7,7 +7,7 @@ import { editUser, selectUser } from "../store/slices/user/user";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import Modal from '@mui/material/Modal';
 
-const style = {
+const style = (theme: any) => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -17,7 +17,10 @@ const style = {
     boxShadow: 24,
     p: 3,
     overflow: 'scroll',
-};
+    [theme.breakpoints.down('md')]: {
+        width: 0.8,
+    },
+});
 
 export interface prop {
     open: boolean;

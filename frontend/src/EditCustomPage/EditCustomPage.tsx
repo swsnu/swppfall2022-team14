@@ -11,7 +11,7 @@ import { selectUser } from "../store/slices/user/user";
 import { calculateABV, calculateColor, calculatePrice } from "../common/utils/utils";
 import S3 from 'react-aws-s3-typescript'
 import {v4 as uuid} from 'uuid'
-import { Button, ImageListItem, ImageListItemBar, Divider, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import { Button, ImageListItem, ImageListItemBar, FormGroup, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import RemoveIcon from '@mui/icons-material/Remove';
 
@@ -483,7 +483,7 @@ export default function EditCustomPage() {
                             </Stack>
                         </Stack>
                     </Stack>
-                    <Stack direction="row" alignItems="flex-end" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
+                    <FormGroup row sx={{ gap: 1, width: 1 }}>
                         {tagList.map((tagItem, idx) => {
                             return (
                                 <Button 
@@ -497,7 +497,7 @@ export default function EditCustomPage() {
                                 </Button>
                             )
                         })}
-                    </Stack>
+                    </FormGroup>
                     <TextField
                         label="태그"
                         variant="standard"

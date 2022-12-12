@@ -18,6 +18,7 @@ import LiquorIcon from '@mui/icons-material/Liquor';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
 import {AppDispatch} from "../store";
+import AddIcon from '@mui/icons-material/Add';
 
 export interface NavBarType {
     isOpenNavBar: boolean
@@ -54,6 +55,9 @@ const NavBar = (prop: NavBarType) => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isAddIngredientModalOpen, setIsAddIngredientModalOpen] = useState(false);
 
+    const onClickAdd = () => {
+        setIsAddIngredientModalOpen(true)
+    }
     const handleST = () => {
         if (pop) {
             setPop(false)
@@ -181,18 +185,28 @@ const NavBar = (prop: NavBarType) => {
             </Stack>
             <Divider orientation="vertical" flexItem />
             {openMyIngr &&
-                <Stack spacing={4} alignItems="center" justifyContent="flex-start" sx={{ width: 160, px: 2, py: 10 }}>
-                    {ingredientState.myIngredientList.map((ingredient) =>
-                        <Button
-                            key={ingredient.id}
-                            sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.5, textAlign: 'center' }}
-                            onClick={() => onIngredientClick(ingredient.id)}
+                <Stack spacing={3} alignItems="center" justifyContent="flex-start" sx={{ width: 160, px: 2, py: 3 }}>
+                    <Stack direction="row" justifyContent="flex-end" sx={{ width: 1, pr: 1 }}>
+                        <IconButton 
+                            size="small"
+                            onClick={onClickAdd}
                         >
-                            <Typography fontSize={12} color='text.primary'>
-                                {ingredient.name}
-                            </Typography>
-                        </Button>
-                    )}
+                            <AddIcon sx={{ fontSize: 20 }} />
+                        </IconButton>
+                    </Stack>
+                    <Stack spacing={4} alignItems="center" justifyContent="flex-start" sx={{ width: 1 }}>
+                        {ingredientState.myIngredientList.map((ingredient) =>
+                            <Button
+                                key={ingredient.id}
+                                sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.5, textAlign: 'center' }}
+                                onClick={() => onIngredientClick(ingredient.id)}
+                            >
+                                <Typography fontSize={12} color='text.primary'>
+                                    {ingredient.name}
+                                </Typography>
+                            </Button>
+                        )}
+                    </Stack>
                 </Stack>
             }
         </Stack> :
