@@ -14,29 +14,32 @@ import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
 import S3 from 'react-aws-s3-typescript'
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid } from 'uuid'
 import { Button, ImageListItem, ImageListItemBar, FormGroup, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import RemoveIcon from '@mui/icons-material/Remove';
 
 export interface Image {
-    key:string;
-    url:string;
+    key: string;
+    url: string;
 }
 import { calculateABV, calculateColor, calculatePrice } from "../common/utils/utils";
 
 
 export default function CreateCustomPage() {
+    const typeOneList: string[] = ["클래식", "트로피컬"]
+    const typeTwoList: string[] = ["롱 드링크", "숏 드링크", "샷"]
     const [name, setName] = useState<string>("");
     const [nameEng, setNameEng] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
     const [recipe, setRecipe] = useState<string>("");
     const [tagList, setTagList] = useState<string[]>([]);
     const [tagItem, setTagItem] = useState<string>("");
-    const [image, setImage] = useState<Image|null>(null);
-    
-    const [expectedABV, setExpectedABV] = useState<number>(0);  // Temporary
-    const [expectedPrice, setExpectedPrice] = useState<number>(0);  // Temporary
+    const [image, setImage] = useState<Image | null>(null);
+    const [typeOne, setTypeOne] = useState<string>("");
+    const [typeTwo, setTypeTwo] = useState<string>("");
+    const [expectedABV, setExpectedABV] = useState<number>(0);
+    const [expectedPrice, setExpectedPrice] = useState<number>(0);
     const [expectedColor, setExpectedColor] = useState<string>('');
 
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
@@ -67,7 +70,7 @@ export default function CreateCustomPage() {
                 if (idx !== selectedIdx) {
                     return ingredient;
                 } else {
-                    return { ...ingredient, amount: changedAmount.replace(/\D/g,'').replace(/^0+/, '') } as IngredientPrepareType;
+                    return { ...ingredient, amount: changedAmount.replace(/\D/g, '').replace(/^0+/, '') } as IngredientPrepareType;
                 }
             })
         );
@@ -104,19 +107,19 @@ export default function CreateCustomPage() {
     }
 
     const createCocktailHandler = async () => {
-        if (name === ""){
+        if (name === "") {
             window.alert("칵테일의 이름을 입력해주세요.")
             return
-        }else if(introduction === ""){
+        } else if (introduction === "") {
             window.alert("칵테일의 설명을 입력해주세요.")
-            return    
-        }else if(recipe === ""){
+            return
+        } else if (recipe === "") {
             window.alert("칵테일의 만드는 방법을 입력해주세요.")
             return
-        }else if(ingredientList.length === 0){
+        } else if (ingredientList.length === 0) {
             window.alert("칵테일의 재료를 추가해주세요.")
             return
-        }else if(ingredientList.find(ingre => ingre.amount === '')){
+        } else if (ingredientList.find(ingre => ingre.amount === '')) {
             window.alert("칵테일 재료의 양을 기재해주세요.")
             return
         }
@@ -137,23 +140,25 @@ export default function CreateCustomPage() {
                     tags: tagList,
                     author_id: Number(userState.user?.id),
                     ingredients: ingredients,
+                    filter_type_one: typeOne,
+                    filter_type_two: typeTwo
                 },
                 token: userState.token
             }
             const response = await dispatch(authPostCocktail(data))
             if (response.type === `${authPostCocktail.typePrefix}/fulfilled`) {
-                navigate(`/custom/${(response.payload as CocktailDetailType).id}`)        
-            }else{
-                if(response.payload === 9001){
+                navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
+            } else {
+                if (response.payload === 9001) {
                     window.alert("중복되는 칵테일 이름입니다.")
                 }
-                else if(response.payload === 9002){
+                else if (response.payload === 9002) {
                     window.alert("중복되는 칵테일 영어 이름입니다.")
                 }
             }
         }
     }
-    
+
     const S3_config = {
         bucketName: process.env.REACT_APP_BUCKET_NAME!,
         region: "ap-northeast-2",
@@ -161,25 +166,25 @@ export default function CreateCustomPage() {
         secretAccessKey: process.env.REACT_APP_SECRET!,
     }
 
-    const handleSelectFile = async (e:React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.files){
+    const handleSelectFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
             const file = e.target.files[0]
             if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
                 const S3Client = new S3(S3_config)
                 // delete previous image
-                if(image !== null){
+                if (image !== null) {
                     await S3Client.deleteFile(image.key)
                 }
-                
+
                 // upload file and setImage(S3 Link)
                 const fileName = 'cocktail' + '/' + uuid()
                 const response = await S3Client.uploadFile(file, fileName)
-                if(response.status == 204){
-                    setImage({key: response.key, url: response.location})
+                if (response.status == 204) {
+                    setImage({ key: response.key, url: response.location })
                 }
-            }else{
+            } else {
                 alert('이미지 파일(jpeg, png, jpg)만 업로드 가능합니다.')
-                e.target.files=null
+                e.target.files = null
             }
         }
     }
@@ -200,10 +205,10 @@ export default function CreateCustomPage() {
         <>
             {/*<NavBar />*/}
             <Stack alignItems="flex-start" spacing={2} sx={{ width: 1, p: 3 }}>
-                <TextField 
-                    label="칵테일 이름" 
-                    variant="standard" 
-                    value={name} 
+                <TextField
+                    label="칵테일 이름"
+                    variant="standard"
+                    value={name}
                     onChange={(e) => setName(e.target.value)}
                     sx={{
                         '& label.Mui-focused': {
@@ -220,11 +225,11 @@ export default function CreateCustomPage() {
                     }}
                 />
                 <Stack direction="row" justifyContent="space-between" sx={{ width: 1 }}>
-                    <TextField 
-                        label="영어 이름 (선택)" 
-                        variant="standard" 
+                    <TextField
+                        label="영어 이름 (선택)"
+                        variant="standard"
                         size="small"
-                        value={nameEng} 
+                        value={nameEng}
                         onChange={(e) => setNameEng(e.target.value)}
                         sx={{
                             '& label.Mui-focused': {
@@ -259,8 +264,8 @@ export default function CreateCustomPage() {
                         <img
                             src={
                                 image ?
-                                image.url :
-                                "https://cdn.pixabay.com/photo/2015/07/16/06/48/bahama-mama-847225_1280.jpg"
+                                    image.url :
+                                    "https://cdn.pixabay.com/photo/2015/07/16/06/48/bahama-mama-847225_1280.jpg"
                             }
                             style={{ borderRadius: 20, height: 'auto' }}
                             loading="lazy"
@@ -270,9 +275,9 @@ export default function CreateCustomPage() {
                                 background: "rgba(0,0,0,0)"
                             }}
                             actionIcon={
-                                <IconButton 
-                                    size="small" 
-                                    sx={{ 
+                                <IconButton
+                                    size="small"
+                                    sx={{
                                         bgcolor: "primary.main", m: 1, px: 0.8, boxShadow: 3,
                                         '&:hover': {
                                             backgroundColor: 'primary.light',
@@ -293,12 +298,84 @@ export default function CreateCustomPage() {
                             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                 재료를 추가하여 예상 도수, 가격, 색을 알아보세요.
                             </Typography>
-                            <Typography variant="body1">
-                                도수 {isNaN(expectedABV) ? 0 : expectedABV.toFixed(1)}%
-                            </Typography>
-                            <Typography variant="body1">
-                                가격 {expectedPrice.toLocaleString()}원
-                            </Typography>
+                            <Stack direction="row" sx={{ width: 0.9 }}>
+                                <Typography variant="body1" sx={{ width: 0.75 }} align="left">
+                                    도수 {isNaN(expectedABV) ? 0 : expectedABV.toFixed(1)}%
+                                </Typography>
+                                <Typography variant="body1" sx={{ width: 0.15 }} align="left">
+                                    어떤 느낌인가요?
+                                </Typography>
+                                <TextField
+                                    variant="standard"
+                                    select
+                                    value={typeOne}
+                                    onChange={(e) => {
+                                        setTypeOne(e.target.value);
+                                    }}
+                                    size="small"
+                                    sx={{
+                                        width: 0.15,
+                                        '& label.Mui-focused': {
+                                            color: 'secondary.light',
+                                        },
+                                        '& .MuiInput-underline:after': {
+                                            borderBottomColor: 'secondary.light',
+                                        },
+                                        '& .MuiOutlinedInput-root': {
+                                            '&.Mui-focused fieldset': {
+                                                borderColor: 'secondary.light',
+                                            },
+                                        },
+                                    }}
+                                >
+                                    {typeOneList.map((typeone) => {
+                                        return (
+                                            <MenuItem key={typeone} value={typeone}>
+                                                {typeone}
+                                            </MenuItem>
+                                        )
+                                    })}
+                                </TextField>
+                            </Stack>
+                            <Stack direction="row" sx={{ width: 0.9 }}>
+                                <Typography variant="body1" sx={{ width: 0.75 }} align="left">
+                                    가격 {expectedPrice.toLocaleString()}원
+                                </Typography>
+                                <Typography variant="body1" sx={{ width: 0.15 }} align="left">
+                                    용량
+                                </Typography>
+                                <TextField
+                                    variant="standard"
+                                    select
+                                    value={typeTwo}
+                                    onChange={(e) => {
+                                        setTypeTwo(e.target.value);
+                                    }}
+                                    size="small"
+                                    sx={{
+                                        width: 0.15,
+                                        '& label.Mui-focused': {
+                                            color: 'secondary.light',
+                                        },
+                                        '& .MuiInput-underline:after': {
+                                            borderBottomColor: 'secondary.light',
+                                        },
+                                        '& .MuiOutlinedInput-root': {
+                                            '&.Mui-focused fieldset': {
+                                                borderColor: 'secondary.light',
+                                            },
+                                        },
+                                    }}
+                                >
+                                    {typeTwoList.map((typetwo) => {
+                                        return (
+                                            <MenuItem key={typetwo} value={typetwo}>
+                                                {typetwo}
+                                            </MenuItem>
+                                        )
+                                    })}
+                                </TextField>
+                            </Stack>
                             <Stack direction="row" spacing={0.75} alignItems="center" justifyContent="flex-start">
                                 <Typography variant="body1">
                                     색
@@ -466,8 +543,8 @@ export default function CreateCustomPage() {
                 <FormGroup row sx={{ gap: 1, width: 1 }}>
                     {tagList.map((tagItem, idx) => {
                         return (
-                            <Button 
-                                key={`${tagItem}_${idx}`} 
+                            <Button
+                                key={`${tagItem}_${idx}`}
                                 sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                                 onClick={() => onDeleteTagItem(tagItem)}
                             >
