@@ -273,25 +273,29 @@ const LoginModal = (props: prop) => {
                         </Typography>
                     </Button>
                 }
-                <Stack direction="row" alignItems='flex-end' justifyContent='space-between'>
+                <Stack direction="row" spacing={1} alignItems='flex-end' justifyContent='space-between'>
                     <Typography 
                         color='error.main' 
                         variant='body2'
+                        sx={{ width: 0.6 }}
                     >
                         {errorText}
                     </Typography>
                     <Typography 
                         color='text.primary' 
                         variant='body2'
+                        align="right"
                         onClick={onClickMode}
                         sx={{
+                            width: 0.4, 
+                            'word-break': 'keep-all',
                             cursor: 'pointer',
                             '&:hover': {
                                 color: 'text.secondary',
                             },
                         }}
                     >
-                        {isLoginMode ? "회원가입하러 가기" : "로그인하러 가기"}
+                        {isLoginMode ? "회원가입 하러가기" : "로그인 하러가기"}
                     </Typography>
                 </Stack>
             </Stack>

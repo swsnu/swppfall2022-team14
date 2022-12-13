@@ -29,25 +29,14 @@ const MyPage = () => {
         { name: '나만의 칵테일', value: 'My Custom Cocktail', component: <MyCustomCocktail /> },
         { name: '즐겨찾기', value: 'My Favorites', component: <MyBookmark /> },
         { name: '나의 댓글', value: 'My Comments', component: <MyComment /> },
-        { name: '나의 정보', value: 'Info', component: <MyInfo open={isOpen} onClose={() => setIsOpen(false)} /> }
+        { name: '나의 정보', value: 'Info', component: <></> }
     ]
     const [toggle, setToggle] = useState<string>(buttonList[0].value)
-
-    useEffect(() => {
-        if (toggle === buttonList[4].value) {
-            setIsOpen(true)
-        }
-    }, [toggle])
-
-    useEffect(() => {
-        if (isOpen === false) {
-            setToggle(buttonList[0].value)
-        }
-    }, [isOpen])
     
     const userState = useSelector(selectUser)
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
+
     useEffect(() => {
 
         dispatch(fetchIngredientList(null))
@@ -61,6 +50,19 @@ const MyPage = () => {
             dispatch(fetchMyCocktailList(userState.token))
         }
     }, [])
+
+    const onClickToggle = (
+        event: React.MouseEvent<HTMLElement>,
+        toggle: string | null,
+    ) => {
+        if (toggle === null) return;
+
+        if (toggle !== buttonList[4].value) {
+            setToggle(toggle);
+        } else {
+            setIsOpen(true);
+        }
+    }
 
     return (
         <>
@@ -78,7 +80,7 @@ const MyPage = () => {
                     <ToggleButtonGroup
                         value={toggle}
                         exclusive
-                        onChange={(e, t) => setToggle(t)}
+                        onChange={onClickToggle}
                     >
                         {buttonList.map((button) => (
                             <ToggleButton key={button.value} value={button.value}>
@@ -88,6 +90,7 @@ const MyPage = () => {
                     </ToggleButtonGroup>
                 </Stack>
                 {buttonList.find(button => button.value === toggle)?.component}
+                <MyInfo open={isOpen} onClose={() => setIsOpen(false)} />
             </Stack>
         </>
     )

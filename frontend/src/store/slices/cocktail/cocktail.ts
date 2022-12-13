@@ -93,7 +93,13 @@ export interface FilterParamType {
 export const fetchStandardCocktailList = createAsyncThunk(
     "cocktail/fetchStandardCocktailList", async (data:{params: FilterParamType | null, token: string|null}) => {
         if (!data.params) {
-            const response = await axios.get(`/api/v1/cocktails/init/?type=standard`);
+            const response = await axios.get(`/api/v1/cocktails/init/?type=standard`,
+                {
+                    headers: (data.token)?{
+                        Authorization: `Token ${data.token}`,
+                    }:undefined
+                }
+            );
             return response.data
         }
         else {
@@ -114,7 +120,13 @@ export const fetchStandardCocktailList = createAsyncThunk(
 export const fetchCustomCocktailList = createAsyncThunk(
     "cocktail/fetchCustomCocktailList", async (data:{params: FilterParamType | null, token: string|null}) => {
         if (!data.params) {
-            const response = await axios.get(`/api/v1/cocktails/init/?type=custom`);
+            const response = await axios.get(`/api/v1/cocktails/init/?type=custom`,
+                {
+                    headers: (data.token)?{
+                        Authorization: `Token ${data.token}`,
+                    }:undefined
+                }
+            );
             return response.data
         }
         else {

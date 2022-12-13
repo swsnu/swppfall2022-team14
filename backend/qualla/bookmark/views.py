@@ -21,7 +21,8 @@ def bookmarked_cocktails_by_user(request):
     cocktails = [
         bookmark.cocktail for bookmark in user_bookmark]
 
-    data = CocktailListSerializer(cocktails, many=True).data
+    data = CocktailListSerializer(cocktails, many=True, context={
+        'user': request.user}).data
     return JsonResponse({"cocktails": data, "count": len(cocktails)}, safe=False)
 
 
