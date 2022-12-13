@@ -45,9 +45,9 @@ const ListPage = () => {
 
 
         if (type === 'standard')
-            dispatch(fetchStandardCocktailList(param))
+            dispatch(fetchStandardCocktailList({params:param, token:userState.token}))
         else if (type === 'custom')
-            dispatch(fetchCustomCocktailList(param))
+            dispatch(fetchCustomCocktailList({params:param, token:userState.token}))
         else if (type === 'ingredient')
             dispatch(fetchIngredientList(null))
 

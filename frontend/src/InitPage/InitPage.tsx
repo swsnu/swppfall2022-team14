@@ -148,10 +148,10 @@ const InitPage = () => {
         const type = searchParams.get('type')
         if (type == 'custom') {
             setToggle('custom')
-            dispatch(fetchCustomCocktailList(null))
+            dispatch(fetchCustomCocktailList({params: null, token:null}))
         } else {
             setToggle('standard')
-            dispatch(fetchStandardCocktailList(null))
+            dispatch(fetchStandardCocktailList({params: null, token:null}))
         }
     }, [searchParams])
 

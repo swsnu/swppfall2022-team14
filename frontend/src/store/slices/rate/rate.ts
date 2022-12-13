@@ -104,12 +104,7 @@ export const RateSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(updateRate.fulfilled, (state, action) => {
-            if(action.payload === null){
-                state.rate = 0;
-            }
-            else{
-                state.rate = Number(action.payload);
-            }
+            state.rate = Number(action.payload);
         });
     }
 });
