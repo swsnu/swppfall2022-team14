@@ -17,6 +17,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ClipLoader } from 'react-spinners';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -128,7 +129,12 @@ export default function ItemDetailPage() {
         return (
             <>
                 {/*<NavBar />*/}
-                <Stack spacing={2} sx={{ width: 1, p: 3 }} />
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <ClipLoader
+                        color='primary.light'
+                        loading 
+                    />
+                </Stack>
             </>
         )
     }
@@ -136,8 +142,13 @@ export default function ItemDetailPage() {
         return (
             <>
                 {/*<NavBar />*/}
-                <Stack spacing={2} sx={{ width: 1, p: 3 }}>
-                    Non existing cocktail
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <Typography 
+                        variant="h6" 
+                        color="primary.light"
+                    >
+                        서버로부터 정보를 불러오지 못하였습니다.
+                    </Typography>
                 </Stack>
             </>
         )
@@ -147,8 +158,13 @@ export default function ItemDetailPage() {
         return (
             <>
                 {/*<NavBar />*/}
-                <Stack spacing={2} sx={{ width: 1, p: 3 }}>
-                    Type mismatch
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <Typography 
+                        variant="h6" 
+                        color="primary.light"
+                    >
+                        칵테일 타입이 일치하지 않습니다.
+                    </Typography>
                 </Stack>
             </>
         )

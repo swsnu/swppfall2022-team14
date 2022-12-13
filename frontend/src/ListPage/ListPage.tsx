@@ -17,6 +17,7 @@ import { selectUser } from '../store/slices/user/user';
 import { Grid, Container, Typography, Stack } from "@mui/material";
 import LocalBarRoundedIcon from '@mui/icons-material/LocalBarRounded';
 import "@fontsource/hi-melody";
+import { ClipLoader } from 'react-spinners';
 
 function filterParamsToSentence(filterParam: FilterParamType | null) {
 
@@ -110,7 +111,12 @@ const ListPage = () => {
         return (
             <>
                 {/*<NavBar />*/}
-                <Stack spacing={2} sx={{ width: 1, p: 3 }} />
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <ClipLoader
+                        color='primary.light'
+                        loading 
+                    />
+                </Stack>
             </>
         )
     }
@@ -118,7 +124,14 @@ const ListPage = () => {
         return (
             <>
                 {/*<NavBar />*/}
-                <Stack spacing={2} sx={{ width: 1, p: 3 }} />
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <Typography 
+                        variant="h6" 
+                        color="primary.light"
+                    >
+                        서버로부터 정보를 불러오지 못하였습니다.
+                    </Typography>
+                </Stack>
             </>
         )
     }

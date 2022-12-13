@@ -35,6 +35,7 @@
     "react-router-dom": "^6.4.2",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.0",
+    "react-spinners": "^0.13.7",
     "react-toastify": "^9.0.8",
     "redux": "^4.2.0",
     "sass": "^1.55.0",
@@ -95,5 +96,5 @@
       "!src/common/utils/*"
     ]
   },
-  "proxy": "http://127.0.0.1:8000"
+  "proxy": "https://qualla.kro.kr/"
 }
