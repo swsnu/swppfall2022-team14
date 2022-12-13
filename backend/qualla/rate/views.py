@@ -34,13 +34,14 @@ def rate_list_user(request, cocktail_id):
         user = request.user
         if user.is_authenticated:
             try:
-                rate = Rate.objects.get(
-                    cocktail_id=cocktail_id, user_id=user.id)
                 cocktail = Cocktail.objects.get(id=cocktail_id)
             except:
                 return JsonResponse(None, status=404, safe=False)
-
-            data = RateSerializer(rate).data['score']
+            try:
+                rate = Rate.objects.get(cocktail_id=cocktail_id, user_id=user.id)
+                data = RateSerializer(rate).data['score']
+            except Rate.DoesNotExist:
+                data = None
 
             rates = cocktail.rate_set.all()
             _data = RateSerializer(rates, many=True).data
