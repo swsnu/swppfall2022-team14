@@ -269,7 +269,7 @@ export default function ItemDetailPage() {
                                 <Rating value={Number(rateState.rate)} precision={0.1} readOnly />
                                 <Stack spacing={1} alignItems="flex-start">
                                     <Typography variant="body1">
-                                        {cocktail.filter_type_one} {cocktail.filter_type_one ? "칵테일" : null} {cocktail.filter_type_one && cocktail.filter_type_two ? "," : null} {cocktail.filter_type_two}
+                                        {cocktail.filter_type_one} {cocktail.filter_type_one ? "칵테일" : null}{cocktail.filter_type_one && cocktail.filter_type_two ? "," : null} {cocktail.filter_type_two}
                                     </Typography>
                                     <Typography variant="body1">
                                         {cocktail.ABV.toFixed(1)}%
