@@ -129,7 +129,8 @@ const NavBar = (prop: NavBarType) => {
             sx={{ 
                 boxShadow: "1px 2px 10px 5px #181818",
                 bgcolor: 'background.default',
-                paddingBottom: 2
+                paddingBottom: 2,
+                overflow: "auto",
             }}    
         >
             <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1 }}>
