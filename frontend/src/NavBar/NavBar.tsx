@@ -64,6 +64,7 @@ const NavBar = (prop: NavBarType) => {
             setCurFilter('ST')
         } else {
             setPop(false)
+            setCurFilter('')
         }        
     }
     const handleCS = () => {
@@ -72,6 +73,7 @@ const NavBar = (prop: NavBarType) => {
             setCurFilter('CS')
         } else {
             setPop(false)
+            setCurFilter('')
         }  
     }
     const handleIG = () => {
@@ -80,6 +82,7 @@ const NavBar = (prop: NavBarType) => {
             setCurFilter('IG')
         } else {
             setPop(false)
+            setCurFilter('')
         }  
     }
     const handleUpload = () => {

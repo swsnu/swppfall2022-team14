@@ -76,6 +76,7 @@ const MainPage = () => {
             </Stack>
             <Box
                 sx={(theme) => ({
+                    width: 1,
                     zIndex: 1,
                     [theme.breakpoints.down('md')]: {
                         position: 'absolute',

@@ -31,7 +31,7 @@ const NavFilter = (prop: Iprops) => {
     const typeOneList: ParamList[] = [{ name: "클래식", label: "클래식" }, { name: "트로피컬", label: "트로피컬" }]
     const typeTwoList: ParamList[] = [{ name: "롱 드링크", label: "롱드링크" }, { name: "숏 드링크", label: "숏드링크" }, { name: "샷", label: "샷" }]
     const typeThreeList: ParamList[] = [{ name: "weak", label: "15도 이하" }, { name: "medium", label: "15 ~ 30도" }, { name: "strong", label: "30 ~ 40도" }, { name: "extreme", label: "40도 이상" }]
-    const [color, setColor] = useState<string>("000000")
+    const [color, setColor] = useState<string>("#000000")
     const [useColor, setUseColor] = useState<boolean>(false)
     const [typeParam, setTypeParam] = useState<
         {

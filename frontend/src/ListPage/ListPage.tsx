@@ -14,8 +14,9 @@ import {
 import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
 import IngredientItem from "../common/Components/IngredientItem";
 import { selectUser } from '../store/slices/user/user';
-import { Grid, Container, Typography, Stack, Box } from "@mui/material";
-import LocalBarIcon from '@mui/icons-material/LocalBar';
+import { Grid, Container, Typography, Stack } from "@mui/material";
+import LocalBarRoundedIcon from '@mui/icons-material/LocalBarRounded';
+import "@fontsource/hi-melody";
 
 function filterParamsToSentence(filterParam: FilterParamType | null) {
 
@@ -124,11 +125,40 @@ const ListPage = () => {
     else return (
         <>
             {/*<NavBar />*/}
-            <Container sx={{ py: 3 }} >
-                <Typography variant="h4" sx={{ mb: 3 }} fontFamily="Hi Melody" color="#BC953B" align="center">
-                    {(type !== "ingredient" && cocktailState.cocktailList.length === 0) ? "No Cocktails" : filterParamsToSentence(filterParam)}
-                    {filterParam?.color ? <LocalBarIcon sx={{ fontSize: 40, color: filterParam?.color, ml: 2, }} /> : null}
-                </Typography>
+            <Container sx={{ width: 1, py: 3 }}>
+                <Stack
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="flex-end"
+                    sx={{
+                        width: 1,
+                        mb: 3,
+                    }}
+                >
+                    <Typography 
+                        variant="h4" 
+                        fontFamily="Hi Melody" 
+                        color="#BC953B"
+                        sx={{
+                            height: 50,
+                        }}
+                    >
+                        {(type !== "ingredient" && cocktailState.cocktailList.length === 0) ? 
+                            "No Cocktails" : 
+                            filterParamsToSentence(filterParam)
+                        }
+                    </Typography>
+                    {filterParam?.color && 
+                        <LocalBarRoundedIcon 
+                            sx={{ 
+                                fontSize: 20, 
+                                color: filterParam?.color, 
+                                ml: 2, 
+                                mb: 2.5,
+                            }} 
+                        />
+                    }
+                </Stack>
                 {type === 'ingredient' ?
                     <Grid container spacing={3} columns={4}>
                         {ingrList.map((ingredient) =>
