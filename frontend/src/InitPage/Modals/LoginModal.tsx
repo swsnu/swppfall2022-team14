@@ -188,8 +188,9 @@ const LoginModal = (props: prop) => {
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
+                                    tabIndex={-1}
                                     onClick={onClickShowPassword}
-                                    >
+                                >
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
                             </InputAdornment>
@@ -225,8 +226,9 @@ const LoginModal = (props: prop) => {
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
+                                        tabIndex={-1}
                                         onClick={onClickShowPasswordConfirm}
-                                        >
+                                    >
                                         {showPasswordConfirm ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
