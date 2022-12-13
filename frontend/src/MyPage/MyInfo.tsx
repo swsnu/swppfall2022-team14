@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from '../store';
 import { editUser, selectUser } from "../store/slices/user/user";
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import { Button, FormControl, FormHelperText, IconButton, Input, InputLabel, InputAdornment, Stack, TextField, Typography } from "@mui/material";
 import Modal from '@mui/material/Modal';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const style = (theme: any) => ({
     position: 'absolute',
@@ -39,6 +41,9 @@ const MyInfo = (props: prop) => {
     const [newPw, setNewPw] = useState<string>("")
     const [pwConfirm, setPwConfirm] = useState<string>("")
     const [errorText, setErrorText] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
     const checkPW = (asValue: string) => {
         const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
@@ -53,6 +58,18 @@ const MyInfo = (props: prop) => {
         } else {
             setErrorText("비밀번호의 형식을 다시 확인해주세요")
         }
+    }
+
+    const onClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    }
+
+    const onClickShowNewPassword = () => {
+        setShowNewPassword(!showNewPassword);
+    }
+
+    const onClickShowPasswordConfirm = () => {
+        setShowPasswordConfirm(!showPasswordConfirm);
     }
 
     const onChangePwConfirm = async (pw: string) => {
@@ -108,12 +125,8 @@ const MyInfo = (props: prop) => {
                             },
                         }}
                     />
-                    <TextField 
-                        label="기존 비밀번호" 
-                        variant="standard" 
-                        type="password" 
-                        value={pw} 
-                        onChange={(e) => setPw(e.target.value)}
+                    <FormControl 
+                        variant="standard"
                         sx={{
                             '& label.Mui-focused': {
                                 color: 'secondary.light',
@@ -127,14 +140,26 @@ const MyInfo = (props: prop) => {
                                 },
                             },
                         }}
-                    />
-                    <TextField 
-                        label="새로운 비밀번호" 
-                        variant="standard" 
-                        type="password" 
-                        value={newPw} 
-                        helperText={<> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
-                        onChange={(e) => onChangePw(e.target.value)}
+                    >
+                        <InputLabel>기존 비밀번호</InputLabel>
+                        <Input 
+                            type={showPassword ? "text" : "password"}
+                            value={pw} 
+                            onChange={(e) => {setPw(e.target.value)}}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        tabIndex={-1}
+                                        onClick={onClickShowPassword}
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                        />
+                    </FormControl>
+                    <FormControl 
+                        variant="standard"
                         sx={{
                             '& label.Mui-focused': {
                                 color: 'secondary.light',
@@ -148,13 +173,29 @@ const MyInfo = (props: prop) => {
                                 },
                             },
                         }}
-                    />
-                    <TextField 
-                        label="비밀번호 확인" 
-                        variant="standard" 
-                        type="password" 
-                        value={pwConfirm} 
-                        onChange={(e) => onChangePwConfirm(e.target.value)}
+                    >
+                        <InputLabel>새로운 비밀번호</InputLabel>
+                        <Input 
+                            type={showPassword ? "text" : "password"}
+                            value={newPw} 
+                            onChange={(e) => {onChangePw(e.target.value)}}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        tabIndex={-1}
+                                        onClick={onClickShowPassword}
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                        />
+                        <FormHelperText>
+                            {<> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl 
+                        variant="standard"
                         sx={{
                             '& label.Mui-focused': {
                                 color: 'secondary.light',
@@ -168,7 +209,27 @@ const MyInfo = (props: prop) => {
                                 },
                             },
                         }}
-                    />
+                    >
+                        <InputLabel>비밀번호 확인</InputLabel>
+                        <Input 
+                            type={showPassword ? "text" : "password"}
+                            value={pwConfirm} 
+                            onChange={(e) => {onChangePwConfirm(e.target.value)}}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        tabIndex={-1}
+                                        onClick={onClickShowPassword}
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                        />
+                        <FormHelperText>
+                            {<> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
+                        </FormHelperText>
+                    </FormControl>
                 </Stack>
                 <Stack direction="row" alignItems="flex-end" justifyContent="space-between">
                     <Typography 

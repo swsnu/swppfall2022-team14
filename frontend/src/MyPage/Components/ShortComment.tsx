@@ -1,8 +1,6 @@
-import styles from './ShortComment.module.scss'
 import React from 'react';
-import { useNavigate } from 'react-router';
 import { CocktailItemType } from '../../store/slices/cocktail/cocktail';
-import { ImageListItem, Link, Stack, Typography } from "@mui/material";
+import { FormGroup, ImageListItem, Link, Stack, Typography } from "@mui/material";
 
 export interface CommentType {
     id: number
@@ -48,7 +46,7 @@ const ShortComment = (prop: CommentType) => {
                         {prop.content}
                     </Typography>
                     <Stack spacing={1} alignItems="flex-start">
-                        <Stack direction="row">
+                        <FormGroup row>
                             <Link 
                                 href={cocktail_url} 
                                 underline="always" 
@@ -59,7 +57,7 @@ const ShortComment = (prop: CommentType) => {
                             <Typography>
                                 에 남긴 댓글
                             </Typography>
-                        </Stack>
+                        </FormGroup>
                         <Typography fontSize={12}>
                             {updated_at.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}
                             :

@@ -50,7 +50,7 @@ const NavBar = (prop: NavBarType) => {
     const dispatch = useDispatch<AppDispatch>()
 
     const [openMyIngr, setOpenMyIngr] = useState(false)
-    const [curFilter, setCurFilter] = useState('ST')
+    const [curFilter, setCurFilter] = useState('')
     const [pop, setPop] = useState(false)
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isAddIngredientModalOpen, setIsAddIngredientModalOpen] = useState(false);
@@ -59,28 +59,31 @@ const NavBar = (prop: NavBarType) => {
         setIsAddIngredientModalOpen(true)
     }
     const handleST = () => {
-        if (pop) {
+        if (curFilter != 'ST') {
+            setPop(true)
+            setCurFilter('ST')
+        } else {
             setPop(false)
-            return
-        }
-        setPop(true)
-        setCurFilter('ST')
+            setCurFilter('')
+        }        
     }
     const handleCS = () => {
-        if (pop) {
+        if (curFilter != 'CS') {
+            setPop(true)
+            setCurFilter('CS')
+        } else {
             setPop(false)
-            return
-        }
-        setPop(true)
-        setCurFilter('CS')
+            setCurFilter('')
+        }  
     }
     const handleIG = () => {
-        if (pop) {
+        if (curFilter != 'IG') {
+            setPop(true)
+            setCurFilter('IG')
+        } else {
             setPop(false)
-            return
-        }
-        setPop(true)
-        setCurFilter('IG')
+            setCurFilter('')
+        }  
     }
     const handleUpload = () => {
         if (userState.isLogin) {
@@ -129,7 +132,8 @@ const NavBar = (prop: NavBarType) => {
             sx={{ 
                 boxShadow: "1px 2px 10px 5px #181818",
                 bgcolor: 'background.default',
-                paddingBottom: 2
+                paddingBottom: 2,
+                overflow: "auto",
             }}    
         >
             <Stack justifyContent="flex-start" sx={{ width: 270, minWidth: 270, maxWidth: 270, px: 1 }}>

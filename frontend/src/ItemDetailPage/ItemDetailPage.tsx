@@ -17,6 +17,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ClipLoader } from 'react-spinners';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -128,7 +129,12 @@ export default function ItemDetailPage() {
         return (
             <>
                 {/*<NavBar />*/}
-                <Stack spacing={2} sx={{ width: 1, p: 3 }} />
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <ClipLoader
+                        color='primary.light'
+                        loading 
+                    />
+                </Stack>
             </>
         )
     }
@@ -136,8 +142,13 @@ export default function ItemDetailPage() {
         return (
             <>
                 {/*<NavBar />*/}
-                <Stack spacing={2} sx={{ width: 1, p: 3 }}>
-                    Non existing cocktail
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <Typography 
+                        variant="h6" 
+                        color="primary.light"
+                    >
+                        서버로부터 정보를 불러오지 못하였습니다.
+                    </Typography>
                 </Stack>
             </>
         )
@@ -147,8 +158,13 @@ export default function ItemDetailPage() {
         return (
             <>
                 {/*<NavBar />*/}
-                <Stack spacing={2} sx={{ width: 1, p: 3 }}>
-                    Type mismatch
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <Typography 
+                        variant="h6" 
+                        color="primary.light"
+                    >
+                        칵테일 타입이 일치하지 않습니다.
+                    </Typography>
                 </Stack>
             </>
         )
@@ -191,7 +207,7 @@ export default function ItemDetailPage() {
                         </Typography>
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" sx={{ width: 1 }}>
-                        <Typography sx={{ color: 'primary.light' }} variant="body2">
+                        <Typography sx={{ color: 'primary.light' }} variant="body2" align="left">
                             {isCustom && `created by ${cocktail.author_name}`}
                         </Typography>
                         <Stack direction="row" justifyContent="flex-end">
@@ -269,7 +285,7 @@ export default function ItemDetailPage() {
                                 <Rating value={Number(rateState.rate)} precision={0.1} readOnly />
                                 <Stack spacing={1} alignItems="flex-start">
                                     <Typography variant="body1">
-                                        {cocktail.filter_type_one} {cocktail.filter_type_one ? "칵테일" : null} {cocktail.filter_type_one && cocktail.filter_type_two ? "," : null} {cocktail.filter_type_two}
+                                        {cocktail.filter_type_one} {cocktail.filter_type_one ? "칵테일" : null}{cocktail.filter_type_one && cocktail.filter_type_two ? "," : null} {cocktail.filter_type_two}
                                     </Typography>
                                     <Typography variant="body1">
                                         {cocktail.ABV.toFixed(1)}%
@@ -290,6 +306,33 @@ export default function ItemDetailPage() {
                                     {cocktail.introduction}
                                 </Typography>
                             </Stack>
+                        </Stack>
+                    </Stack>
+                    <Box display="flex" sx={{ width: 1 }}>
+                        <Box
+                            sx={(theme) => ({
+                                [theme.breakpoints.down('sm')]: {
+                                    display: 'none',
+                                },
+                                [theme.breakpoints.up('sm')]: {
+                                    width: 0.25,
+                                },
+                            })}
+                        />
+                        <Stack 
+                            alignItems="flex-start" 
+                            justifyContent="flex-start" 
+                            spacing={1} 
+                            sx={(theme) => ({
+                                pr: 2,
+                                [theme.breakpoints.down('sm')]: {
+                                    width: 1,
+                                },
+                                [theme.breakpoints.up('sm')]: {
+                                    width: 0.75
+                                },
+                            })}
+                        >
                             <Typography variant="subtitle1">
                                 Recipe:
                             </Typography>
@@ -319,7 +362,7 @@ export default function ItemDetailPage() {
                                 </Typography>
                             </Stack>
                         </Stack>
-                    </Stack>
+                    </Box>
                     <Divider flexItem />
                     <FormGroup row sx={{ gap: 1, width: 1, px: 1 }}>
                         {cocktail.tags.map((tag, idx) => {
