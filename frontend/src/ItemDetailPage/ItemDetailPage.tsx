@@ -191,7 +191,7 @@ export default function ItemDetailPage() {
                         </Typography>
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" sx={{ width: 1 }}>
-                        <Typography sx={{ color: 'primary.light' }} variant="body2">
+                        <Typography sx={{ color: 'primary.light' }} variant="body2" align="left">
                             {isCustom && `created by ${cocktail.author_name}`}
                         </Typography>
                         <Stack direction="row" justifyContent="flex-end">
@@ -290,6 +290,33 @@ export default function ItemDetailPage() {
                                     {cocktail.introduction}
                                 </Typography>
                             </Stack>
+                        </Stack>
+                    </Stack>
+                    <Box display="flex" sx={{ width: 1 }}>
+                        <Box
+                            sx={(theme) => ({
+                                [theme.breakpoints.down('sm')]: {
+                                    display: 'none',
+                                },
+                                [theme.breakpoints.up('sm')]: {
+                                    width: 0.25,
+                                },
+                            })}
+                        />
+                        <Stack 
+                            alignItems="flex-start" 
+                            justifyContent="flex-start" 
+                            spacing={1} 
+                            sx={(theme) => ({
+                                pr: 2,
+                                [theme.breakpoints.down('sm')]: {
+                                    width: 1,
+                                },
+                                [theme.breakpoints.up('sm')]: {
+                                    width: 0.75
+                                },
+                            })}
+                        >
                             <Typography variant="subtitle1">
                                 Recipe:
                             </Typography>
@@ -319,7 +346,7 @@ export default function ItemDetailPage() {
                                 </Typography>
                             </Stack>
                         </Stack>
-                    </Stack>
+                    </Box>
                     <Divider flexItem />
                     <FormGroup row sx={{ gap: 1, width: 1, px: 1 }}>
                         {cocktail.tags.map((tag, idx) => {
