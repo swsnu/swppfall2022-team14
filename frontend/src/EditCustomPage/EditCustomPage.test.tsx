@@ -27,7 +27,7 @@ const stubIngredientInitialState: IngredientInfo = {
             introduction: 'INGREDIENT_INTRO_2',
             ABV: 20,
             price: 100,
-            unit: ['oz'], 
+            unit: ['oz'],
             color: ""
         },
     ],
@@ -67,14 +67,16 @@ const stubCocktailInitialState: CocktailInfo = {
                 introduction: 'INGREDIENT_INTRO_1',
                 ABV: 40,
                 price: 200,
-                unit: ['oz', 'ml'], 
-                color: "", 
+                unit: ['oz', 'ml'],
+                color: "",
                 amount: "1 oz",
                 recipe_unit: ""
             },
         ],
         is_bookmarked: false,
-        score: 1
+        score: 1,
+        filter_type_one: "",
+        filter_type_two: "",
     },
     itemStatus: "success",
     listStatus: "success",
@@ -143,7 +145,7 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-jest.spyOn(window, 'alert').mockImplementation(() => {});
+jest.spyOn(window, 'alert').mockImplementation(() => { });
 
 const renderEditCustomPage = (status = "success", isLogin: boolean = true, isUserNull: boolean = false, isCocktailNull: boolean = false) => {
     renderWithProviders(
