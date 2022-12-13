@@ -50,7 +50,7 @@ const NavBar = (prop: NavBarType) => {
     const dispatch = useDispatch<AppDispatch>()
 
     const [openMyIngr, setOpenMyIngr] = useState(false)
-    const [curFilter, setCurFilter] = useState('ST')
+    const [curFilter, setCurFilter] = useState('')
     const [pop, setPop] = useState(false)
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isAddIngredientModalOpen, setIsAddIngredientModalOpen] = useState(false);
