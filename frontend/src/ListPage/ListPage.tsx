@@ -38,7 +38,8 @@ const ListPage = () => {
             type_two: location.state.filter_param.type_two,
             type_three: location.state.filter_param.type_three,
             name_param: location.state.name_param,
-            available_only: location.state.filter_param.available_only
+            available_only: location.state.filter_param.available_only,
+            color: location.state.filter_param.color
         }
 
 
@@ -86,17 +87,17 @@ const ListPage = () => {
                 </Typography>
                 {type === 'ingredient' ?
                     <Grid container spacing={3} columns={4}>
-                        {ingrList.map((ingredient) => 
+                        {ingrList.map((ingredient) =>
                             <Grid key={ingredient.id} item md={1} sm={2} xs={4}>
-                                <IngredientItem 
-                                    key={ingredient.id} 
-                                    image={ingredient.image} 
-                                    name={ingredient.name} 
+                                <IngredientItem
+                                    key={ingredient.id}
+                                    image={ingredient.image}
+                                    name={ingredient.name}
                                     id={ingredient.id}
-                                    ABV={ingredient.ABV} 
+                                    ABV={ingredient.ABV}
                                     my_item={ingrState.myIngredientList.map(ingr => ingr.id).includes(ingredient.id)}
                                 />
-                            </Grid> 
+                            </Grid>
                         )}
                     </Grid> :
                     <Grid container spacing={3} columns={4}>

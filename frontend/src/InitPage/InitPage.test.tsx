@@ -28,7 +28,7 @@ jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "imag
 
 // eslint-disable-next-line react/display-name
 jest.mock("./Components/Filter", () => (prop: FilterProp) => {
-    const mockFilterParam: Filterparam = { type_one: [], type_two: [], type_three: [], available_only: false }
+    const mockFilterParam: Filterparam = { type_one: [], type_two: [], type_three: [], available_only: false, color: "aaaaaa" }
     return (
         <div data-testid="spyFilter">
             <div className="filter__title">Type 1</div>

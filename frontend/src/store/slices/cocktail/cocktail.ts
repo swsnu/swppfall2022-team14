@@ -86,7 +86,8 @@ export interface FilterParamType {
     type_three: string[];
     name_param: string[];
     available_only: boolean
-    // my_ingredient_id_list: number[];
+    color: string | null;
+
 }
 
 export const fetchStandardCocktailList = createAsyncThunk(
