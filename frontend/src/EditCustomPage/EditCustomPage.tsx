@@ -232,7 +232,10 @@ export default function EditCustomPage() {
                         variant="standard"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        sx={{
+                        sx={(theme) => ({
+                            [theme.breakpoints.down('md')]: {
+                                ml: 4
+                            },
                             '& label.Mui-focused': {
                                 color: 'secondary.light',
                             },
@@ -244,7 +247,7 @@ export default function EditCustomPage() {
                                     borderColor: 'secondary.light',
                                 },
                             },
-                        }}
+                        })}
                     />
                     <Stack direction="row" justifyContent="space-between" sx={{ width: 1 }}>
                         <TextField
@@ -253,7 +256,10 @@ export default function EditCustomPage() {
                             size="small"
                             value={nameEng}
                             onChange={(e) => setNameEng(e.target.value)}
-                            sx={{
+                            sx={(theme) => ({
+                                [theme.breakpoints.down('md')]: {
+                                    ml: 4
+                                },
                                 '& label.Mui-focused': {
                                     color: 'secondary.light',
                                 },
@@ -265,7 +271,7 @@ export default function EditCustomPage() {
                                         borderColor: 'secondary.light',
                                     },
                                 },
-                            }}
+                            })}
                         />
                         <Button variant="contained" onClick={editCocktailHandler}
                             sx={{

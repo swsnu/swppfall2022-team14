@@ -210,7 +210,10 @@ export default function CreateCustomPage() {
                     variant="standard"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    sx={{
+                    sx={(theme) => ({
+                        [theme.breakpoints.down('md')]: {
+                            ml: 4
+                        },
                         '& label.Mui-focused': {
                             color: 'secondary.light',
                         },
@@ -222,7 +225,7 @@ export default function CreateCustomPage() {
                                 borderColor: 'secondary.light',
                             },
                         },
-                    }}
+                    })}
                 />
                 <Stack direction="row" justifyContent="space-between" sx={{ width: 1 }}>
                     <TextField
@@ -231,7 +234,10 @@ export default function CreateCustomPage() {
                         size="small"
                         value={nameEng}
                         onChange={(e) => setNameEng(e.target.value)}
-                        sx={{
+                        sx={(theme) => ({
+                            [theme.breakpoints.down('md')]: {
+                                ml: 4
+                            },
                             '& label.Mui-focused': {
                                 color: 'secondary.light',
                             },
@@ -243,7 +249,7 @@ export default function CreateCustomPage() {
                                     borderColor: 'secondary.light',
                                 },
                             },
-                        }}
+                        })}
                     />
                     <Button variant="contained" onClick={createCocktailHandler}
                         sx={{
