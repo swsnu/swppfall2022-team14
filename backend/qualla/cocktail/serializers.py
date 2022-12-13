@@ -26,6 +26,8 @@ class CocktailListSerializer(serializers.ModelSerializer):
             "author_id",
             "is_bookmarked",
             "score",
+            "ABV",
+            "price_per_glass"
         )
 
     def get_tags(self, obj):
@@ -84,6 +86,8 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
             'updated_at',
             "is_bookmarked",
             "score",
+            "filter_type_one",
+            "filter_type_two"
         )
 
     def get_tags(self, obj):
@@ -119,10 +123,6 @@ class CocktailDetailSerializer(serializers.ModelSerializer):
 
 class CocktailPostSerializer(serializers.ModelSerializer):
     image = serializers.CharField(max_length=500, default="default_img.png")
-    # name_eng = serializers.CharField(max_length=50, default=None)
-    # ABV = serializers.FloatField(default=random.uniform(10.0, 50.0))
-    # price_per_glass = serializers.FloatField(
-    #     default=random.randint(10, 100)*1000)
 
     class Meta:
         model = Cocktail
@@ -136,7 +136,9 @@ class CocktailPostSerializer(serializers.ModelSerializer):
             "ABV",
             "price_per_glass",
             "author_id",
-            "type"
+            "type",
+            "filter_type_one",
+            "filter_type_two"
         )
 
 

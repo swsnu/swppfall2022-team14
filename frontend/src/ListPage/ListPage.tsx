@@ -1,6 +1,6 @@
 import './ListPage.scss'
 import React, { useEffect, useState } from 'react';
-import Item from "./Item/Item";
+import Item from "../common/Components/Item";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
 import { useLocation, useParams } from "react-router";
@@ -11,11 +11,10 @@ import {
     FilterParamType,
     selectCocktail
 } from "../store/slices/cocktail/cocktail";
-import NavBar from "../NavBar/NavBar";
 import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
-import Ingr from "./Ingr/Ingr";
+import IngredientItem from "../common/Components/IngredientItem";
 import { selectUser } from '../store/slices/user/user';
-import { Grid, Container, Divider, Typography, Stack } from "@mui/material";
+import { Grid, Container, Typography, Stack } from "@mui/material";
 
 
 const ListPage = () => {
@@ -27,6 +26,7 @@ const ListPage = () => {
     const userState = useSelector(selectUser)
     const [list, setList] = useState<CocktailItemType[]>([])
     const [ingrList, setIngrList] = useState<IngredientType[]>([])
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
     const location = useLocation()
 
     const pageStatus = type === 'ingredient' ? ingrState.listStatus : cocktailState.listStatus
@@ -84,21 +84,24 @@ const ListPage = () => {
                     search filters
                 </Typography>
                 {type === 'ingredient' ?
-                    <Grid container spacing={3}>
+
+                    <Grid container spacing={3} columns={4}>
                         {ingrList.map((ingredient) =>
-                            <Grid key={ingredient.id} item xs={12} sm={6} md={3}>
-                                <Ingr
+                            <Grid key={ingredient.id} item md={1} sm={2} xs={4}>
+                                <IngredientItem
                                     key={ingredient.id}
                                     image={ingredient.image}
                                     name={ingredient.name}
                                     id={ingredient.id}
+                                    ABV={ingredient.ABV}
+                                    my_item={ingrState.myIngredientList.map(ingr => ingr.id).includes(ingredient.id)}
                                 />
                             </Grid>
                         )}
                     </Grid> :
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} columns={4}>
                         {list.map((cocktail) =>
-                            <Grid key={cocktail.id} item xs={12} sm={6} md={3}>
+                            <Grid key={cocktail.id} item md={1} sm={2} xs={4}>
                                 <Item
                                     key={cocktail.id}
                                     image={cocktail.image}
@@ -108,6 +111,8 @@ const ListPage = () => {
                                     id={cocktail.id}
                                     tags={cocktail.tags}
                                     is_bookmarked={cocktail.is_bookmarked}
+                                    ABV={cocktail.ABV}
+                                    price_per_glass={cocktail.price_per_glass}
                                 />
                             </Grid>
                         )}

@@ -26,7 +26,7 @@ const stubCommentInitialState: CommentInfo = {
 const stubIngredientInitialState: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
-    recommendIngredientList: [{ id: 1, name: '1', image: '1', ABV: 1, price: 1, introduction: '1', unit: ['1'], color: "" }],
+    recommendIngredientList: [{ id: 1, name: '1', image: '1', ABV: 1, price: 1, introduction: '1', unit: ['1'], color: "", name_eng: "ENG_INGREDIENT1", }],
     availableCocktails: [{ ingredient_id: 1, cocktails: [{ name: 'cocktail1', type: 'ST', id: 1 }, { name: 'cocktail2', type: 'CS', id: 2 }, { name: 'cocktail3', type: 'NOTHING', id: 3 }] }],
     ingredientItem: null,
     itemStatus: "loading",
@@ -35,7 +35,7 @@ const stubIngredientInitialState: IngredientInfo = {
 const stubIngredientInitialState2: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
-    recommendIngredientList: [{ id: 1, name: '1', image: '1', ABV: 1, price: 1, introduction: '1', unit: ['1'], color: "" }],
+    recommendIngredientList: [{ id: 1, name: '1', image: '1', ABV: 1, price: 1, introduction: '1', unit: ['1'], color: "", name_eng: "ENG_INGREDIENT1", }],
     availableCocktails: [],
     ingredientItem: null,
     itemStatus: "loading",

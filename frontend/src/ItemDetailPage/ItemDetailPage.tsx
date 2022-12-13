@@ -11,8 +11,8 @@ import NavBar from "../NavBar/NavBar";
 import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
 import { selectUser } from "../store/slices/user/user";
-import {postRate, editRate, deleteRate, getMyRate, selectRate, updateRate} from "../store/slices/rate/rate";
-import { Box, Button, Checkbox, ImageListItem, Divider, IconButton, Modal, Rating, Stack, TextField, Typography } from "@mui/material";
+import { postRate, editRate, deleteRate, getMyRate, selectRate, updateRate } from "../store/slices/rate/rate";
+import { Box, Button, Checkbox, FormGroup, ImageListItem, Divider, IconButton, Modal, Rating, Stack, TextField, Typography } from "@mui/material";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import EditIcon from '@mui/icons-material/Edit';
@@ -39,7 +39,7 @@ export default function ItemDetailPage() {
 
     const [rateOpen, setRateOpen] = useState(false);
     const handleRateOpen = () => {
-        if(userState.isLogin){
+        if (userState.isLogin) {
             setRateOpen(true)
         }
         else {
@@ -54,7 +54,7 @@ export default function ItemDetailPage() {
     const isCustom = cocktail?.type === "CS";
 
     useEffect(() => {
-        if(userState.isLogin){
+        if (userState.isLogin) {
             const data = {
                 cocktail_id: Number(id),
                 token: userState.token
@@ -84,6 +84,8 @@ export default function ItemDetailPage() {
             }
             dispatch(postComment(data));
             setContent("")
+        } else {
+            setIsLoginOpen(true)
         }
     }
 
@@ -156,11 +158,35 @@ export default function ItemDetailPage() {
             <>
                 {/*<NavBar />*/}
                 <Stack alignItems="flex-start" spacing={2} sx={{ width: 1, p: 3 }}>
-                    <Stack alignItems="flex-start" spacing={0.5} sx={{ width: 1 }}>
-                        <Typography variant="h2">
+                    <Stack
+                        alignItems="flex-start" spacing={0.5}
+                        sx={(theme) => ({
+                            width: 1,
+                            [theme.breakpoints.down('md')]: {
+                                pl: 4
+                            },
+                        })}
+                    >
+                        <Typography
+                            variant="h2"
+                            sx={(theme) => ({
+                                [theme.breakpoints.down('sm')]: {
+                                    fontSize: 30
+                                },
+                            })}
+                        >
                             {cocktail.name}
                         </Typography>
-                        <Typography variant="h6" sx={{ pl: 1 }}>
+                        <Typography
+                            variant="h6"
+                            sx={(theme) => ({
+                                pl: 1,
+                                [theme.breakpoints.down('sm')]: {
+                                    pl: 0.5,
+                                    fontSize: 15
+                                },
+                            })}
+                        >
                             {cocktail.name_eng}
                         </Typography>
                     </Stack>
@@ -171,13 +197,13 @@ export default function ItemDetailPage() {
                         <Stack direction="row" justifyContent="flex-end">
                             {(Number(userState.user?.id) === cocktail.author_id && isCustom) &&
                                 <IconButton onClick={() => deleteCocktailHandler()}
-                                data-testid={"delete_button"}>
+                                    data-testid={"delete_button"}>
                                     <DeleteIcon />
                                 </IconButton>
                             }
                             {(Number(userState.user?.id) === cocktail.author_id && isCustom) &&
                                 <IconButton onClick={() => navigate(`/custom/${id}/edit`)}
-                                data-testid={"edit_button"}>
+                                    data-testid={"edit_button"}>
                                     <EditIcon />
                                 </IconButton>
                             }
@@ -240,15 +266,18 @@ export default function ItemDetailPage() {
                         </ImageListItem>
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1 }}>
                             <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, p: 2, bgcolor: 'primary.main', borderRadius: 3 }}>
-                                <div className={"rate_box"}>
-                                    <Rating value={Number(rateState.rate)} precision={0.1} readOnly />
-                                </div>
-                                <Typography variant="body1">
-                                    {cocktail.ABV.toFixed(1)}%
-                                </Typography>
-                                <Typography variant="body1">
-                                    {cocktail.price_per_glass.toLocaleString()}원
-                                </Typography>
+                                <Rating value={Number(rateState.rate)} precision={0.1} readOnly />
+                                <Stack spacing={1} alignItems="flex-start">
+                                    <Typography variant="body1">
+                                        {cocktail.filter_type_one} {cocktail.filter_type_one ? "칵테일" : null} {cocktail.filter_type_one && cocktail.filter_type_two ? "," : null} {cocktail.filter_type_two}
+                                    </Typography>
+                                    <Typography variant="body1">
+                                        {cocktail.ABV.toFixed(1)}%
+                                    </Typography>
+                                    <Typography variant="body1">
+                                        {cocktail.price_per_glass.toLocaleString()}원
+                                    </Typography>
+                                </Stack>
                                 <Box
                                     sx={{
                                         width: 10,
@@ -265,7 +294,7 @@ export default function ItemDetailPage() {
                                 Recipe:
                             </Typography>
                             <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, px: 2 }}>
-                                <Stack direction="row" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
+                                <FormGroup row sx={{ gap: 1, width: 1 }}>
                                     {cocktail.ingredients?.map((ingre) => {
                                         return (
                                             <Button
@@ -277,14 +306,14 @@ export default function ItemDetailPage() {
                                                 <Typography color='text.primary'>
                                                     {ingre.name}
                                                     &nbsp;
-                                                    {ingre.amount && ingre.amount} 
+                                                    {ingre.amount && ingre.amount}
                                                     &nbsp;
                                                     {ingre.amount && ingre.recipe_unit}
                                                 </Typography>
                                             </Button>
                                         )
                                     })}
-                                </Stack>
+                                </FormGroup>
                                 <Typography variant="body2" align='left' sx={{ whiteSpace: 'pre-wrap' }}>
                                     {cocktail.recipe}
                                 </Typography>
@@ -292,7 +321,7 @@ export default function ItemDetailPage() {
                         </Stack>
                     </Stack>
                     <Divider flexItem />
-                    <Stack direction="row" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
+                    <FormGroup row sx={{ gap: 1, width: 1, px: 1 }}>
                         {cocktail.tags.map((tag, idx) => {
                             return (
                                 <Typography key={`${tag}_${idx}`} variant="body2" align='left'>
@@ -300,7 +329,7 @@ export default function ItemDetailPage() {
                                 </Typography>
                             )
                         })}
-                    </Stack>
+                    </FormGroup>
                     {cocktail.tags.length !== 0 && <Divider flexItem />}
                     <Stack spacing={1} sx={{ width: 1, pt: 2 }}>
                         <Typography variant="h6" align='left'>

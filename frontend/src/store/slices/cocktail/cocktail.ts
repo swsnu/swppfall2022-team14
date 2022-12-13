@@ -14,19 +14,23 @@ export interface CocktailItemType {
     tags: string[],
     author_id: number | null,
     rate: number,
-    is_bookmarked: boolean
+    is_bookmarked: boolean,
+    ABV: number,
+    price_per_glass: number,
 }
 
 export interface CocktailDetailType {
     id: number,
     name: string,
-    name_eng: string,
-    color: string,
     image: string,
+    name_eng: string,
     introduction: string,
     recipe: string,
     ABV: number,
-    price_per_glass: number
+    price_per_glass: number,
+    color: string,
+    filter_type_one: string,
+    filter_type_two: string,
     tags: string[],
     type: "CS" | "ST",
     author_id: number | null,
@@ -153,6 +157,7 @@ export const getCocktail = createAsyncThunk(
 
         const response = await axios.get(`/api/v1/cocktails/${id}/`)
 
+        console.log(response.data)
         if (response.data.author_id > 0) {
             const author_response = await axios.get(`/api/v1/user/${response.data.author_id}/`);
             return { ...response.data, ingredients: ingredient_response.data, author_name: author_response.data.username };

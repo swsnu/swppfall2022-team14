@@ -6,7 +6,7 @@ import React from 'react';
 import Modal from '@mui/material/Modal';
 import { Button, Stack, TextField, Typography } from "@mui/material";
 
-const style = {
+const style = (theme: any) => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -16,7 +16,10 @@ const style = {
     boxShadow: 24,
     p: 3,
     overflow: 'scroll',
-};
+    [theme.breakpoints.down('md')]: {
+        width: 0.8,
+    },
+});
 
 export interface prop {
     isOpen: boolean;
@@ -62,7 +65,7 @@ const LoginModal = (props: prop) => {
     const onChangeId = async (id: string) => {
         setLoginId(id)
 
-        if (checkID(id)) {
+        if (checkID(id) || isLoginMode) {
             setErrorText("")
         } else {
             setErrorText("아이디의 형식을 다시 확인해주세요")
@@ -72,7 +75,7 @@ const LoginModal = (props: prop) => {
     const onChangePw = async (pw: string) => {
         setLoginPassword(pw)
 
-        if (checkPW(pw)) {
+        if (checkPW(pw) || isLoginMode) {
             setErrorText("")
         } else {
             setErrorText("비밀번호의 형식을 다시 확인해주세요")

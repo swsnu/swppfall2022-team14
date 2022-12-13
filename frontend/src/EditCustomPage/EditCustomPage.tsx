@@ -5,25 +5,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
 import { CocktailDetailType, IngredientPrepareType, editCocktail, getCocktail, selectCocktail, PostForm } from "../store/slices/cocktail/cocktail";
 import './EditCustomPage.scss';
-import NavBar from "../NavBar/NavBar";
 import React from 'react';
 import { IngredientType } from "../store/slices/ingredient/ingredient";
 import { selectUser } from "../store/slices/user/user";
 import { calculateABV, calculateColor, calculatePrice } from "../common/utils/utils";
 import S3 from 'react-aws-s3-typescript'
-import {v4 as uuid} from 'uuid'
-import { Button, ImageListItem, ImageListItemBar, Divider, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import { v4 as uuid } from 'uuid'
+import { Button, ImageListItem, ImageListItemBar, FormGroup, IconButton, Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import RemoveIcon from '@mui/icons-material/Remove';
 
 export interface Image {
-    key:string;
-    url:string;
+    key: string;
+    url: string;
 }
 
 export default function EditCustomPage() {
     const { id } = useParams();
 
+    const typeOneList: string[] = ["클래식", "트로피컬"]
+    const typeTwoList: string[] = ["롱 드링크", "숏 드링크", "샷"]
     const [name, setName] = useState<string>("");
     const [nameEng, setNameEng] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
@@ -33,6 +34,8 @@ export default function EditCustomPage() {
     const [expectedABV, setExpectedABV] = useState<number>(123);  // Temporary
     const [expectedPrice, setExpectedPrice] = useState<number>(0);  // Temporary
     const [expectedColor, setExpectedColor] = useState<string>('');
+    const [typeOne, setTypeOne] = useState<string>("");
+    const [typeTwo, setTypeTwo] = useState<string>("");
 
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
@@ -40,7 +43,7 @@ export default function EditCustomPage() {
 
     const cocktailState = useSelector(selectCocktail);
     const cocktail = cocktailState.cocktailItem;
-    const [image, setImage] = useState<Image|null>(null);
+    const [image, setImage] = useState<Image | null>(null);
     const dispatch = useDispatch<AppDispatch>();
     const userState = useSelector(selectUser)
 
@@ -63,8 +66,10 @@ export default function EditCustomPage() {
             setNameEng(cocktail.name_eng);
             setIngredientList(cocktail.ingredients);
             const url = cocktail.image.split('/')
-            const key = url[url.length-2] + url[url.length-1].split('.')[0]
-            setImage({url: cocktail.image, key: key});
+            const key = url[url.length - 2] + url[url.length - 1].split('.')[0]
+            setImage({ url: cocktail.image, key: key });
+            setTypeOne(cocktail.filter_type_one);
+            setTypeTwo(cocktail.filter_type_two);
         }
     }, [cocktail]);
 
@@ -131,19 +136,19 @@ export default function EditCustomPage() {
     }, [ingredientList])
 
     const editCocktailHandler = async () => {
-        if (name === ""){
+        if (name === "") {
             window.alert("칵테일의 이름을 입력해주세요.")
             return
-        }else if(introduction === ""){
+        } else if (introduction === "") {
             window.alert("칵테일의 설명을 입력해주세요.")
-            return    
-        }else if(recipe === ""){
+            return
+        } else if (recipe === "") {
             window.alert("칵테일의 만드는 방법을 입력해주세요.")
             return
-        }else if(ingredientList.length === 0){
+        } else if (ingredientList.length === 0) {
             window.alert("칵테일의 재료를 추가해주세요.")
             return
-        }else if(ingredientList.find(ingre => ingre.amount === '')){
+        } else if (ingredientList.find(ingre => ingre.amount === '')) {
             window.alert("칵테일 재료의 양을 기재해주세요.")
             return
         }
@@ -155,7 +160,7 @@ export default function EditCustomPage() {
                 cocktail: {
                     name: name,
                     name_eng: (nameEng) ? nameEng : null,
-                    image: (image)? image.url:"https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
+                    image: (image) ? image.url : "https://izzycooking.com/wp-content/uploads/2021/05/White-Russian-683x1024.jpg",
                     introduction: introduction,
                     recipe: recipe,
                     ABV: expectedABV,
@@ -164,20 +169,23 @@ export default function EditCustomPage() {
                     tags: tagList,
                     author_id: Number(userState.user?.id),
                     ingredients: ingredients,
+                    filter_type_one: typeOne,
+                    filter_type_two: typeTwo
                 },
                 token: userState.token
             }
             const response = await dispatch(editCocktail({ data: data, id: Number(id) }))
             if (response.type === `${editCocktail.typePrefix}/fulfilled`) {
-                navigate(`/custom/${(response.payload as CocktailDetailType).id}`)        
-            }else{
-                if(response.payload === 9001){
+                navigate(`/custom/${(response.payload as CocktailDetailType).id}`)
+            } else {
+                if (response.payload === 9001) {
                     window.alert("중복되는 칵테일 이름입니다.")
                 }
-                else if(response.payload === 9002){
+                else if (response.payload === 9002) {
                     window.alert("중복되는 칵테일 영어 이름입니다.")
                 }
-            }        }
+            }
+        }
     }
 
     const S3_config = {
@@ -187,25 +195,25 @@ export default function EditCustomPage() {
         secretAccessKey: process.env.REACT_APP_SECRET!,
     }
 
-    const handleSelectFile = async (e:React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.files){
+    const handleSelectFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
             const file = e.target.files[0]
             if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
                 const S3Client = new S3(S3_config)
                 // delete previous image
-                if(image !== null){
+                if (image !== null) {
                     await S3Client.deleteFile(image.key)
                 }
-                
+
                 // upload file and setImage(S3 Link)
                 const fileName = 'cocktail' + '/' + uuid()
                 const response = await S3Client.uploadFile(file, fileName)
-                if(response.status == 204){
-                    setImage({key: response.key, url: response.location})
+                if (response.status == 204) {
+                    setImage({ key: response.key, url: response.location })
                 }
-            }else{
+            } else {
                 alert('이미지 파일(jpeg, png, jpg)만 업로드 가능합니다.')
-                e.target.files=null
+                e.target.files = null
             }
         }
     }
@@ -221,10 +229,10 @@ export default function EditCustomPage() {
             <>
                 {/*<NavBar />*/}
                 <Stack alignItems="flex-start" spacing={2} sx={{ width: 1, p: 3 }}>
-                    <TextField 
-                        label="칵테일 이름" 
-                        variant="standard" 
-                        value={name} 
+                    <TextField
+                        label="칵테일 이름"
+                        variant="standard"
+                        value={name}
                         onChange={(e) => setName(e.target.value)}
                         sx={{
                             '& label.Mui-focused': {
@@ -241,11 +249,11 @@ export default function EditCustomPage() {
                         }}
                     />
                     <Stack direction="row" justifyContent="space-between" sx={{ width: 1 }}>
-                        <TextField 
-                            label="영어 이름 (선택)" 
-                            variant="standard" 
+                        <TextField
+                            label="영어 이름 (선택)"
+                            variant="standard"
                             size="small"
-                            value={nameEng} 
+                            value={nameEng}
                             onChange={(e) => setNameEng(e.target.value)}
                             sx={{
                                 '& label.Mui-focused': {
@@ -280,8 +288,8 @@ export default function EditCustomPage() {
                             <img
                                 src={
                                     image ?
-                                    image.url :
-                                    "https://cdn.pixabay.com/photo/2015/07/16/06/48/bahama-mama-847225_1280.jpg"
+                                        image.url :
+                                        "https://cdn.pixabay.com/photo/2015/07/16/06/48/bahama-mama-847225_1280.jpg"
                                 }
                                 style={{ borderRadius: 20, height: 'auto' }}
                                 loading="lazy"
@@ -291,9 +299,9 @@ export default function EditCustomPage() {
                                     background: "rgba(0,0,0,0)"
                                 }}
                                 actionIcon={
-                                    <IconButton 
-                                        size="small" 
-                                        sx={{ 
+                                    <IconButton
+                                        size="small"
+                                        sx={{
                                             bgcolor: "primary.main", m: 1, px: 0.8, boxShadow: 3,
                                             '&:hover': {
                                                 backgroundColor: 'primary.light',
@@ -311,16 +319,92 @@ export default function EditCustomPage() {
                         <input type="file" onChange={handleSelectFile} id='file' style={{ "display": "none" }} />
                         <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1 }}>
                             <Stack alignItems="flex-start" justifyContent="flex-start" spacing={2} sx={{ width: 1, p: 2, bgcolor: 'primary.main', borderRadius: 3 }}>
-                                <Typography variant="body1">
-                                    {isNaN(expectedABV) ? "재료를 입력하여 예상 도수를 알아보세요." : `예상 도수 ${expectedABV}%`}
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    재료를 추가하여 예상 도수, 가격, 색을 알아보세요.
                                 </Typography>
-                                <Typography variant="body1">
-                                    예상 가격 {expectedPrice.toLocaleString()}원
-                                </Typography>
+                                <Stack direction="row" sx={{ width: 0.9 }}>
+                                    <Typography variant="body1" sx={{ width: 0.75 }} align="left">
+                                        도수 {isNaN(expectedABV) ? 0 : expectedABV.toFixed(1)}%
+                                    </Typography>
+                                    <Typography variant="body1" sx={{ width: 0.15 }} align="left">
+                                        어떤 느낌인가요?
+                                    </Typography>
+                                    <TextField
+                                        variant="standard"
+                                        select
+                                        value={typeOne}
+                                        onChange={(e) => {
+                                            setTypeOne(e.target.value);
+                                        }}
+                                        size="small"
+                                        sx={{
+                                            width: 0.15,
+                                            '& label.Mui-focused': {
+                                                color: 'secondary.light',
+                                            },
+                                            '& .MuiInput-underline:after': {
+                                                borderBottomColor: 'secondary.light',
+                                            },
+                                            '& .MuiOutlinedInput-root': {
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: 'secondary.light',
+                                                },
+                                            },
+                                        }}
+                                    >
+                                        {typeOneList.map((typeone) => {
+                                            return (
+                                                <MenuItem key={typeone} value={typeone}>
+                                                    {typeone}
+                                                </MenuItem>
+                                            )
+                                        })}
+                                    </TextField>
+                                </Stack>
+                                <Stack direction="row" sx={{ width: 0.9 }}>
+                                    <Typography variant="body1" sx={{ width: 0.75 }} align="left">
+                                        가격 {expectedPrice.toLocaleString()}원
+                                    </Typography>
+                                    <Typography variant="body1" sx={{ width: 0.15 }} align="left">
+                                        용량
+                                    </Typography>
+                                    <TextField
+                                        variant="standard"
+                                        select
+                                        value={typeTwo}
+                                        onChange={(e) => {
+                                            setTypeTwo(e.target.value);
+                                        }}
+                                        size="small"
+                                        sx={{
+                                            width: 0.15,
+                                            '& label.Mui-focused': {
+                                                color: 'secondary.light',
+                                            },
+                                            '& .MuiInput-underline:after': {
+                                                borderBottomColor: 'secondary.light',
+                                            },
+                                            '& .MuiOutlinedInput-root': {
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: 'secondary.light',
+                                                },
+                                            },
+                                        }}
+                                    >
+                                        {typeTwoList.map((typetwo) => {
+                                            return (
+                                                <MenuItem key={typetwo} value={typetwo}>
+                                                    {typetwo}
+                                                </MenuItem>
+                                            )
+                                        })}
+                                    </TextField>
+                                </Stack>
                                 <Stack direction="row" spacing={0.75} alignItems="center" justifyContent="flex-start">
                                     <Typography variant="body1">
-                                        예상 색깔
+                                        색
                                     </Typography>
+
                                     <Box
                                         sx={{
                                             width: 10,
@@ -481,11 +565,11 @@ export default function EditCustomPage() {
                             </Stack>
                         </Stack>
                     </Stack>
-                    <Stack direction="row" alignItems="flex-end" justifyContent="flex-start" spacing={1} sx={{ width: 1 }}>
+                    <FormGroup row sx={{ gap: 1, width: 1 }}>
                         {tagList.map((tagItem, idx) => {
                             return (
-                                <Button 
-                                    key={`${tagItem}_${idx}`} 
+                                <Button
+                                    key={`${tagItem}_${idx}`}
                                     sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
                                     onClick={() => onDeleteTagItem(tagItem)}
                                 >
@@ -495,7 +579,7 @@ export default function EditCustomPage() {
                                 </Button>
                             )
                         })}
-                    </Stack>
+                    </FormGroup>
                     <TextField
                         label="태그"
                         variant="standard"

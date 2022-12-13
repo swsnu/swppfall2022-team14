@@ -15,7 +15,7 @@ describe("<Item />", () => {
 
     it("should render cocktail without errors", () => {
         render(        
-            <Item image="IMAGE1" name="ST_COCKTAIL" rate={0} id={1} type="ST" tags={["TAG1"]} is_bookmarked={true} />
+            <Item image="IMAGE1" name="ST_COCKTAIL" rate={0} id={1} type="ST" tags={["TAG1"]} is_bookmarked={true} ABV={10} price_per_glass={10} />
         );
         screen.getByText("ST_COCKTAIL");
         screen.getByText("#TAG1");
@@ -23,7 +23,7 @@ describe("<Item />", () => {
 
     it("should handle click standard item", async () => {
         const { container } = render(        
-            <Item image="IMAGE1" name="ST_COCKTAIL" rate={0} id={1} type="ST" tags={[]} is_bookmarked={true} />
+            <Item image="IMAGE1" name="ST_COCKTAIL" rate={0} id={1} type="ST" tags={[]} is_bookmarked={true} ABV={10} price_per_glass={10} />
         );
         const element = screen.getByTestId("item")
         fireEvent.click(element)
@@ -32,7 +32,7 @@ describe("<Item />", () => {
 
     it("should handle click custom item", async () => {
         const { container } = render(        
-            <Item image="IMAGE1" name="CS_COCKTAIL" rate={0} id={2} type="CS" tags={[]} is_bookmarked={true} />
+            <Item image="IMAGE1" name="CS_COCKTAIL" rate={0} id={2} type="CS" tags={[]} is_bookmarked={true} ABV={10} price_per_glass={10} />
         );
         const element = screen.getByTestId("item")
         fireEvent.click(element)

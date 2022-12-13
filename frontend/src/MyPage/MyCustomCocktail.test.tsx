@@ -36,6 +36,8 @@ const custom_cocktail1_item: CocktailItemType = {
     author_id: 1,
     rate: 0,
     is_bookmarked: false,
+    ABV: 10,
+    price_per_glass: 10,
 }
 
 const cocktaiState: CocktailInfo = {

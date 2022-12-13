@@ -43,15 +43,16 @@ def process_get_list_params(request, filter_q):
         "type_three[]", None)  # 도수
 
     try:
-        assert (all([x in ['CL', 'TP'] for x in filter_type_one_list]) and
-                all([x in ['LONG', 'SHORT', 'SHOT'] for x in filter_type_two_list])), "Invalid Filter Type"
+        assert (all([x in ['클래식', '트로피컬'] for x in filter_type_one_list]) and
+                all([x in ['롱 드링크', '숏 드링크', '샷'] for x in filter_type_two_list])), "Invalid Filter Type"
     except AssertionError:
         raise AssertionError
 
-    for _type in filter_type_one_list:
-        filter_q.add(Q(filter_type_one__contains=_type), Q.AND)
-    for _type in filter_type_two_list:
-        filter_q.add(Q(filter_type_two__contains=_type), Q.AND)
+    if filter_type_one_list is not None and len(filter_type_one_list) != 0:
+        filter_q.add(Q(filter_type_one__in=filter_type_one_list), Q.AND)
+
+    if filter_type_two_list is not None and len(filter_type_two_list) != 0:
+        filter_q.add(Q(filter_type_two__in=filter_type_two_list), Q.AND)
 
     if len(filter_type_ABV) != 0:
         try:
