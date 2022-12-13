@@ -63,7 +63,6 @@ export default function ItemDetailPage() {
             setScore(rateState.myRate)
         }
         dispatch(getCocktail(Number(id)));
-        dispatch(updateRate(Number(id)));
         dispatch(fetchCommentListByCocktailId(Number(id)));
     }, []);
 
@@ -72,7 +71,7 @@ export default function ItemDetailPage() {
             setScore(rateState.myRate);
             dispatch(updateRate(Number(id)));
         }
-    }, [cocktail]);
+    }, [cocktail,rateState.myRate]);
 
     const createCommentHandler = () => {
         if (userState.isLogin && userState.token !== null) {
