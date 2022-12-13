@@ -59,28 +59,28 @@ const NavBar = (prop: NavBarType) => {
         setIsAddIngredientModalOpen(true)
     }
     const handleST = () => {
-        if (pop) {
+        if (curFilter != 'ST') {
+            setPop(true)
+            setCurFilter('ST')
+        } else {
             setPop(false)
-            return
-        }
-        setPop(true)
-        setCurFilter('ST')
+        }        
     }
     const handleCS = () => {
-        if (pop) {
+        if (curFilter != 'CS') {
+            setPop(true)
+            setCurFilter('CS')
+        } else {
             setPop(false)
-            return
-        }
-        setPop(true)
-        setCurFilter('CS')
+        }  
     }
     const handleIG = () => {
-        if (pop) {
+        if (curFilter != 'IG') {
+            setPop(true)
+            setCurFilter('IG')
+        } else {
             setPop(false)
-            return
-        }
-        setPop(true)
-        setCurFilter('IG')
+        }  
     }
     const handleUpload = () => {
         if (userState.isLogin) {
