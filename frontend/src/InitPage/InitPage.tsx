@@ -115,14 +115,16 @@ const InitPage = () => {
 
     const onClickToggle = (
         event: React.MouseEvent<HTMLElement>,
-        toggle: 'standard' | 'custom' | 'ingredient',
+        toggle: 'standard' | 'custom' | 'ingredient' | null,
     ) => {
-        setToggle(toggle)
+        if (toggle === null) return;
 
         if (toggle === 'standard') {
+            setToggle(toggle)
             setIsStandard(true)
             setSearchParams({ type: '' })
         } else if (toggle === 'custom') {
+            setToggle(toggle)
             setIsStandard(false)
             setSearchParams({ type: "custom" })
         } else {
@@ -154,7 +156,7 @@ const InitPage = () => {
             setToggle('standard')
             dispatch(fetchStandardCocktailList({params: null, token: userState.token}))
         }
-    }, [searchParams])
+    }, [searchParams, loginState])
 
 
 
@@ -251,6 +253,11 @@ const InitPage = () => {
                         <IconButton
                             data-testid="login" onClick={onClickLogin}
                             sx={(theme) => ({
+                                [theme.breakpoints.up('sm')]: {
+                                    padding: 1,
+                                    mt: 1,
+                                    mr: 1,
+                                },
                                 [theme.breakpoints.down('sm')]: {
                                     padding: 1,
                                     ml: 10,
