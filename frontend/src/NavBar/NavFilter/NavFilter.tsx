@@ -9,7 +9,7 @@ interface ParamList {
 }
 
 interface FilterType {
-    type: "typeOne" | "typeTwo" | "typeThree";
+    type: "typeOne" | "typeTwo" | "typeThree" | "color";
     name: string;
 }
 
@@ -24,8 +24,9 @@ export interface Iprops {
 
 const NavFilter = (prop: Iprops) => {
     const themeList: ThemeList[] = [
-        { label: "Theme1", filters: [{ type: "typeOne", name: "클래식" }, { type: "typeThree", name: "weak" }] },
-        { label: "Theme2", filters: [{ type: "typeOne", name: "트로피컬" }, { type: "typeThree", name: "medium" }, { type: "typeTwo", name: "롱 드링크" }] }
+        { label: "여름 느낌의", filters: [{ type: "typeOne", name: "트로피컬" }, { type: "typeTwo", name: "롱 드링크" }, { type: "typeThree", name: "weak" }, { type: "color", name: "1751da" }] },
+        { label: "강렬한 한 잔", filters: [{ type: "typeOne", name: "클래식" }, { type: "typeTwo", name: "숏 드링크" }, { type: "typeTwo", name: "샷" }, { type: "typeThree", name: "extreme" }] },
+        { label: "근본이 있는", filters: [{ type: "typeOne", name: "클래식" }, { type: "typeTwo", name: "숏 드링크" }, { type: "color", name: "da8c17" }] }
     ]
     const typeOneList: ParamList[] = [{ name: "클래식", label: "클래식" }, { name: "트로피컬", label: "트로피컬" }]
     const typeTwoList: ParamList[] = [{ name: "롱 드링크", label: "롱드링크" }, { name: "숏 드링크", label: "숏드링크" }, { name: "샷", label: "샷" }]
@@ -96,14 +97,18 @@ const NavFilter = (prop: Iprops) => {
                 typeOne.push(filter.name)
             } else if (filter.type === "typeTwo") {
                 typeTwo.push(filter.name)
-            } else {
+            } else if (filter.type === "typeThree") {
                 typeThree = filter.name
+            } else if (filter.type === "color") {
+                setColor(filter.name)
+                setUseColor(true)
             }
+
         }
         setTypeParam({
             typeOne: typeOne,
             typeTwo: typeTwo,
-            typeThree: [typeThree],
+            typeThree: typeThree === "" ? [] : [typeThree],
         })
     }
     const onUseColorClick = () => {
