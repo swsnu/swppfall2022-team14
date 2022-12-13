@@ -153,12 +153,12 @@ describe("cocktail reducer", () => {
     it("should handle fetchStandardCocktailList", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: { cocktails: [fakeCocktailItemST] } });
         const mockFilterParam: FilterParamType = { type_one: [], type_two: [], type_three: [], name_param: [], available_only: true }
-        await store.dispatch(fetchStandardCocktailList(mockFilterParam));
+        await store.dispatch(fetchStandardCocktailList({params: mockFilterParam, token:null}));
         expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemST])
     });
     it("should handle fetchStandardCocktailList no params", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: { cocktails: [fakeCocktailItemST] } });
-        await store.dispatch(fetchStandardCocktailList(null));
+        await store.dispatch(fetchStandardCocktailList({params: null, token:null}));
         expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemST])
     });
     it("should handle fetchStandardCocktailList when failed", async () => {
@@ -172,18 +172,18 @@ describe("cocktail reducer", () => {
             };
         });
         const mockFilterParam: FilterParamType = { type_one: [], type_two: [], type_three: [], name_param: [], available_only: true }
-        await store.dispatch(fetchStandardCocktailList(mockFilterParam));
+        await store.dispatch(fetchStandardCocktailList({params: mockFilterParam, token:null}));
         expect(store.getState().cocktail.listStatus).toEqual('failed')
     });
     it("should handle fetchCustomCocktailList", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: { cocktails: [fakeCocktailItemCS] } });
         const mockFilterParam: FilterParamType = { type_one: [], type_two: [], type_three: [], name_param: [], available_only: true }
-        await store.dispatch(fetchCustomCocktailList(mockFilterParam));
+        await store.dispatch(fetchCustomCocktailList({params: mockFilterParam, token:null}));
         expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
     it("should handle fetchCustomCocktailList no params", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: { cocktails: [fakeCocktailItemCS] } });
-        await store.dispatch(fetchCustomCocktailList(null));
+        await store.dispatch(fetchCustomCocktailList({params: null, token:null}));
         expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
     it("should handle fetchCustomCocktailList when failed", async () => {
@@ -197,7 +197,7 @@ describe("cocktail reducer", () => {
             };
         });
         const mockFilterParam: FilterParamType = { type_one: [], type_two: [], type_three: [], name_param: [], available_only: true }
-        await store.dispatch(fetchCustomCocktailList(mockFilterParam));
+        await store.dispatch(fetchCustomCocktailList({params: mockFilterParam, token:null}));
         expect(store.getState().cocktail.listStatus).toEqual('failed')
     });
     it("should handle fetchMyCocktailList", async () => {

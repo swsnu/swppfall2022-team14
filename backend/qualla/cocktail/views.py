@@ -3,6 +3,7 @@ from json import JSONDecodeError
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse, HttpResponse
 from django.db import IntegrityError
 from django.db.models import Q
+from cocktail.permissions import AvailableCocktailPermission
 from exception.errno import ErrorCode
 from exception.exception_response import ExceptionResponse
 from ingredient_prepare.models import IngredientPrepare
@@ -91,6 +92,8 @@ def get_only_available_cocktails(request, filter_q):
 
 
 @api_view(['GET'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([AvailableCocktailPermission])
 def cocktail_list(request):
     if request.method == 'GET':
 
