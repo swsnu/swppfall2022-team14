@@ -16,9 +16,11 @@ const MainPage = () => {
 
     const [isOpenNavBar, setIsOpenNavBar] = useState(true)
 
-    useEffect(() => {
-        window.addEventListener('resize', () => setIsOpenNavBar(true))
-    }, [])
+    window.addEventListener('resize', function() {
+        if (window.innerWidth >= 900) {
+            setIsOpenNavBar(true)
+        }
+    });
 
     return(
         <Stack direction="row" alignItems="stretch" justifyContent="flex-start">

@@ -92,5 +92,5 @@
       "!src/common/utils/*"
     ]
   },
-  "proxy": "https://qualla.kro.kr/"
+  "proxy": "http://127.0.0.1:8000"
 }
