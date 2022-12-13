@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import React from "react";
 import NavBar from "../NavBar/NavBar";
 import {Route, Routes} from "react-router-dom";
@@ -22,11 +22,19 @@ const MainPage = () => {
         }
     });
 
+    const onClickMain = () => {
+        if (window.innerWidth < 900) {
+            setIsOpenNavBar(false)
+        }
+    }
+
     return(
         <Stack direction="row" alignItems="stretch" justifyContent="flex-start">
             <Stack direction="row"
                 sx={{
                     zIndex: 2,
+                    height: 1,
+                    position: 'fixed',
                 }}
             >
                 <NavBar isOpenNavBar={isOpenNavBar} />
@@ -72,7 +80,12 @@ const MainPage = () => {
                     [theme.breakpoints.down('md')]: {
                         position: 'absolute',
                     },
+                    [theme.breakpoints.up('md')]: {
+                        position: 'relative',
+                        paddingLeft: 34,
+                    },
                 })}
+                onClick={onClickMain}
             >
                 <Routes>
                     <Route path="/:type" element={<ListPage />} />
