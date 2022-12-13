@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import './NavFilter.scss'
 import { Button, Stack, FormGroup, TextField, Typography } from '@mui/material';
-import { HexColorPicker } from 'react-colorful';
+import { SketchPicker } from 'react-color';
+
 interface ParamList {
     name: string;
     label: string;
@@ -251,16 +252,29 @@ const NavFilter = (prop: Iprops) => {
                     </FormGroup>
                 </Stack>
                 <Stack spacing={1}>
-                    <Button
-                        size="small"
-                        sx={{ bgcolor: useColor ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
-                        onClick={onUseColorClick}
-                    >
-                        <Typography variant="caption" color='text.primary'>
-                            색상 유사도 기반 정렬 {useColor ? "ON" : "OFF"}
-                        </Typography>
-                    </Button>
-                    <HexColorPicker color={color} onChange={setColor}></HexColorPicker>
+                    <Typography variant="body1">
+                        색상 기반 검색
+                    </Typography>
+                    <FormGroup row sx={{ gap: 1 }}>
+                        <Button
+                            size="small"
+                            sx={{ bgcolor: useColor ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                            onClick={onUseColorClick}
+                        >
+                            <Typography variant="caption" color='text.primary'>
+                                색상 유사도 기반 정렬
+                            </Typography>
+                        </Button>
+                    </FormGroup>
+                    {useColor &&
+                        <Stack alignItems="center" sx={{ pt: 0.5 }}>
+                            <SketchPicker
+                                disableAlpha
+                                color={color} 
+                                onChange={(c) => setColor(c.hex)}
+                            />
+                        </Stack>
+                    }
                 </Stack>
                 <Button variant="contained" onClick={onClickSearch}
                     sx={{
