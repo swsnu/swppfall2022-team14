@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import React from 'react';
 import { Filterparam } from "../InitPage";
-import { Divider, Button, Stack, FormGroup, TextField, Typography } from '@mui/material';
-import { HexColorPicker } from "react-colorful";
+import { Divider, Button, Box, Stack, FormGroup, TextField, Typography } from '@mui/material';
+import { SketchPicker } from 'react-color';
 
 interface ParamList {
     name: string;
@@ -113,123 +113,153 @@ const Filter = (prop: Iprops) => {
     useEffect(() => prop.setUrlParams(url_params), [typeParam, availableOnly, useColor, color])
 
     return (
-        <Stack direction="row">
-            <Stack spacing={2} alignItems='flex-start' sx={{ pl: 3 }}>
-                <Stack direction="row" spacing={1}>
-                    <Typography variant="body1">
-                        Theme
-                    </Typography>
-                    <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
-                    <FormGroup row sx={{ gap: 1 }}>
-                        {themeList.map((type) => {
-                            return (
-                                <Button
-                                    key={type.label}
-                                    size="small"
-                                    sx={{ bgcolor: 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
-                                    onClick={() => onThemeClick(type)}
-                                >
-                                    <Typography variant="caption" color='text.primary'>
-                                        {type.label}
-                                    </Typography>
-                                </Button>
-                            )
-                        })}
-                    </FormGroup>
-                </Stack>
-                {[
-                    { title: "Type 1", list: typeOneList, typeParamList: typeParam.typeOne, name: "typeOne" },
-                    { title: "Type 2", list: typeTwoList, typeParamList: typeParam.typeTwo, name: "typeTwo" },
-                    { title: "Type 3", list: typeThreeList, typeParamList: typeParam.typeThree, name: "typeThree" },
-                ].map((filter) => {
-                    return (
-                        <Stack direction="row" key={filter.title} spacing={1}>
-                            <Typography variant="body1">
-                                {filter.title}
-                            </Typography>
-                            <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
-                            <FormGroup row sx={{ gap: 1 }}>
-                                {filter.list.map((type) => {
-                                    return (
-                                        <Button
-                                            key={type.label}
-                                            size="small"
-                                            sx={{ bgcolor: filter.typeParamList.includes(type.name) ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
-                                            onClick={() => onTypeClick(filter.name, type.name)}
-                                        >
-                                            <Typography variant="caption" color='text.primary'>
-                                                {type.label}
-                                            </Typography>
-                                        </Button>
-                                    )
-                                })}
-                            </FormGroup>
-                        </Stack>
-                    )
+        
+        <Stack spacing={2} alignItems='flex-start' sx={{ pl: 3 }}>
+            <Box
+                sx={(theme) => ({
+                    display: 'flex',
+                    [theme.breakpoints.down('md')]: {
+                        display: 'block'
+                    },
                 })}
-                <Stack direction="row" spacing={1}>
-                    <Typography variant="body1">
-                        재료 기반 검색
-                    </Typography>
-                    <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
-                    <FormGroup row sx={{ gap: 1 }}>
-                        <Button
-                            size="small"
-                            sx={{ bgcolor: availableOnly ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
-                            onClick={() => setAvailableOnly(!availableOnly)}
-                        >
-                            <Typography variant="caption" color='text.primary'>
-                                만들 수 있는 칵테일만
-                            </Typography>
-                        </Button>
-                    </FormGroup>
-                </Stack>
-                <Stack spacing={2} alignItems="stretch">
-                    <TextField
-                        label="추가 검색어" variant="standard" value={prop.input} onChange={(e) => prop.setInput(e.target.value)}
-                        sx={{
-                            '& label.Mui-focused': {
-                                color: 'secondary.light',
-                            },
-                            '& .MuiInput-underline:after': {
-                                borderBottomColor: 'secondary.light',
-                            },
-                            '& .MuiOutlinedInput-root': {
-                                '&.Mui-focused fieldset': {
-                                    borderColor: 'secondary.light',
-                                },
-                            },
-                        }}
-                    />
-                    <Button variant="contained" onClick={prop.onClickSearch}
-                        sx={{
-                            bgcolor: 'primary.dark',
-                            borderRadius: 5,
-                            boxShadow: 3,
-                            '&:hover': {
-                                backgroundColor: 'action.hover',
-                                boxShadow: 2,
-                            },
-                        }}
-                    >
-                        검색
-                    </Button>
-                </Stack>
-            </Stack >
-            <Stack direction="row" spacing={1}>
-                <Typography variant="body1">
-                    <Button
-                        size="small"
-                        sx={{ bgcolor: useColor ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
-                        onClick={onUseColorClick}
-                    >
-                        <Typography variant="caption" color='text.primary'>
-                            색상 유사도 기반 정렬 {useColor ? "ON" : "OFF"}
+            >
+                <Box>
+                    <Stack direction="row" spacing={1} sx={{ pb: 2 }}>
+                        <Typography variant="body1">
+                            Theme
                         </Typography>
-                    </Button>
-                </Typography>
-                <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
-                <HexColorPicker color={color} onChange={setColor}></HexColorPicker>
+                        <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
+                        <FormGroup row sx={{ gap: 1 }}>
+                            {themeList.map((type) => {
+                                return (
+                                    <Button
+                                        key={type.label}
+                                        size="small"
+                                        sx={{ bgcolor: 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                        onClick={() => onThemeClick(type)}
+                                    >
+                                        <Typography variant="caption" color='text.primary'>
+                                            {type.label}
+                                        </Typography>
+                                    </Button>
+                                )
+                            })}
+                        </FormGroup>
+                    </Stack>
+                    {[
+                        { title: "Type 1", list: typeOneList, typeParamList: typeParam.typeOne, name: "typeOne" },
+                        { title: "Type 2", list: typeTwoList, typeParamList: typeParam.typeTwo, name: "typeTwo" },
+                        { title: "Type 3", list: typeThreeList, typeParamList: typeParam.typeThree, name: "typeThree" },
+                    ].map((filter) => {
+                        return (
+                            <Stack direction="row" key={filter.title} spacing={1} sx={{ pb: 2 }}>
+                                <Typography variant="body1">
+                                    {filter.title}
+                                </Typography>
+                                <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
+                                <FormGroup row sx={{ gap: 1 }}>
+                                    {filter.list.map((type) => {
+                                        return (
+                                            <Button
+                                                key={type.label}
+                                                size="small"
+                                                sx={{ bgcolor: filter.typeParamList.includes(type.name) ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                                onClick={() => onTypeClick(filter.name, type.name)}
+                                            >
+                                                <Typography variant="caption" color='text.primary'>
+                                                    {type.label}
+                                                </Typography>
+                                            </Button>
+                                        )
+                                    })}
+                                </FormGroup>
+                            </Stack>
+                        )
+                    })}
+                    <Stack direction="row" spacing={1} sx={{ pb: 2 }}>
+                        <Typography variant="body1">
+                            재료 기반 검색
+                        </Typography>
+                        <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
+                        <FormGroup row sx={{ gap: 1 }}>
+                            <Button
+                                size="small"
+                                sx={{ bgcolor: availableOnly ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                onClick={() => setAvailableOnly(!availableOnly)}
+                            >
+                                <Typography variant="caption" color='text.primary'>
+                                    만들 수 있는 칵테일만
+                                </Typography>
+                            </Button>
+                        </FormGroup>
+                    </Stack>
+                    <Stack direction="row" spacing={1}>
+                        <Typography variant="body1">
+                            색상 기반 검색
+                        </Typography>
+                        <Divider sx={{ pl: 1 }} orientation="vertical" flexItem />
+                        <FormGroup row sx={{ gap: 1 }}>
+                            <Button
+                                size="small"
+                                sx={{ bgcolor: useColor ? 'primary.light' : 'primary.dark', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                onClick={onUseColorClick}
+                            >
+                                <Typography variant="caption" color='text.primary'>
+                                    색상 유사도 기반 정렬
+                                </Typography>
+                            </Button>
+                        </FormGroup>
+                    </Stack>
+                </Box>
+                {useColor &&
+                    <Stack
+                        sx={(theme) => ({
+                            [theme.breakpoints.down('md')]: {
+                                pt: 2,
+                            },
+                            [theme.breakpoints.up('md')]: {
+                                pl: 3,
+                            },
+                        })}
+                    >
+                        <SketchPicker
+                            disableAlpha 
+                            color={color} 
+                            onChange={(c) => setColor(c.hex)}
+                        />
+                    </Stack>
+                }
+            </Box>
+            <Stack spacing={2} alignItems="stretch">
+                <TextField
+                    label="추가 검색어" variant="standard" value={prop.input} onChange={(e) => prop.setInput(e.target.value)}
+                    sx={{
+                        '& label.Mui-focused': {
+                            color: 'secondary.light',
+                        },
+                        '& .MuiInput-underline:after': {
+                            borderBottomColor: 'secondary.light',
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: 'secondary.light',
+                            },
+                        },
+                    }}
+                />
+                <Button variant="contained" onClick={prop.onClickSearch}
+                    sx={{
+                        bgcolor: 'primary.dark',
+                        borderRadius: 5,
+                        boxShadow: 3,
+                        '&:hover': {
+                            backgroundColor: 'action.hover',
+                            boxShadow: 2,
+                        },
+                    }}
+                >
+                    검색
+                </Button>
             </Stack>
         </Stack>
     )

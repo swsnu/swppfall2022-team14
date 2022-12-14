@@ -11,6 +11,7 @@ import LoginModal from "../InitPage/Modals/LoginModal";
 import { Box, ImageListItem, IconButton, Stack, Typography } from "@mui/material";
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import { ClipLoader } from 'react-spinners';
 
 export default function IngredientDetailPage() {
 
@@ -49,10 +50,32 @@ export default function IngredientDetailPage() {
     }
 
     if (ingredientState.itemStatus == "loading") {
-        return <div>Loading ..</div>
+        return (
+            <>
+                {/*<NavBar />*/}
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <ClipLoader
+                        color='primary.light'
+                        loading 
+                    />
+                </Stack>
+            </>
+        )
     }
     else if (ingredientState.itemStatus == "failed" || !ingredient) {
-        return <div>Non existing Ingredient</div>
+        return (
+            <>
+                {/*<NavBar />*/}
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <Typography 
+                        variant="h6" 
+                        color="primary.light"
+                    >
+                        서버로부터 정보를 불러오지 못하였습니다.
+                    </Typography>
+                </Stack>
+            </>
+        )
     }
     else {
         return (

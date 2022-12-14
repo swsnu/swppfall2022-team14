@@ -14,8 +14,10 @@ import {
 import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
 import IngredientItem from "../common/Components/IngredientItem";
 import { selectUser } from '../store/slices/user/user';
-import { Grid, Container, Typography, Stack, Box } from "@mui/material";
-import LocalBarIcon from '@mui/icons-material/LocalBar';
+import { Grid, Container, Typography, Stack } from "@mui/material";
+import LocalBarRoundedIcon from '@mui/icons-material/LocalBarRounded';
+import "@fontsource/hi-melody";
+import { ClipLoader } from 'react-spinners';
 
 function filterParamsToSentence(filterParam: FilterParamType | null) {
 
@@ -110,7 +112,12 @@ const ListPage = () => {
         return (
             <>
                 {/*<NavBar />*/}
-                <Stack spacing={2} sx={{ width: 1, p: 3 }} />
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <ClipLoader
+                        color='primary.light'
+                        loading
+                    />
+                </Stack>
             </>
         )
     }
@@ -118,18 +125,55 @@ const ListPage = () => {
         return (
             <>
                 {/*<NavBar />*/}
-                <Stack spacing={2} sx={{ width: 1, p: 3 }} />
+                <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
+                    <Typography
+                        variant="h6"
+                        color="primary.light"
+                    >
+                        서버로부터 정보를 불러오지 못하였습니다.
+                    </Typography>
+                </Stack>
             </>
         )
     }
     else return (
         <>
             {/*<NavBar />*/}
-            <Container sx={{ py: 3 }} >
-                <Typography variant="h4" sx={{ mb: 3 }} fontFamily="Hi Melody" color="#BC953B" align="center">
-                    {(type !== "ingredient" && cocktailState.cocktailList.length === 0) ? "No Cocktails" : filterParamsToSentence(filterParam)}
-                    {filterParam?.color ? <LocalBarIcon sx={{ fontSize: 40, color: filterParam.color, ml: 2, }} /> : null}
-                </Typography>
+            <Container sx={{ width: 1, py: 3 }}>
+                <Stack
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="flex-end"
+                    sx={{
+                        width: 1,
+                        mb: 3,
+                    }}
+                >
+                    <Typography
+                        variant="h4"
+                        fontFamily="Hi Melody"
+                        color="#BC953B"
+                        sx={{
+                            height: 50,
+                        }}
+                    >
+                        {(type !== "ingredient" && cocktailState.cocktailList.length === 0) ?
+                            "No Cocktails" :
+                            filterParamsToSentence(filterParam)
+                        }
+                    </Typography>
+                    {filterParam?.color &&
+                        <LocalBarRoundedIcon
+                            sx={{
+                                fontSize: 20,
+                                color: filterParam?.color,
+                                ml: 2,
+                                mb: 2.5,
+                            }}
+                        />
+                    }
+                </Stack>
+
                 {type === 'ingredient' ?
                     <Grid container spacing={3} columns={4}>
                         {ingrList.map((ingredient) =>
