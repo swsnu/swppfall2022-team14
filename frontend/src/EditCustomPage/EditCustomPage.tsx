@@ -33,8 +33,8 @@ export default function EditCustomPage() {
     const [expectedABV, setExpectedABV] = useState<number>(123);  // Temporary
     const [expectedPrice, setExpectedPrice] = useState<number>(0);  // Temporary
     const [expectedColor, setExpectedColor] = useState<string>('');
-    const [typeOne, setTypeOne] = useState<string>("");
-    const [typeTwo, setTypeTwo] = useState<string>("");
+    const [typeOne, setTypeOne] = useState<string | null>(null);
+    const [typeTwo, setTypeTwo] = useState<string | null>(null);
     const [ingredientList, setIngredientList] = useState<IngredientPrepareType[]>([]);
     const [isOpen, setOpen] = useState(false);
     const [newIngredient, setNewIngredient] = useState<IngredientType | null>(null);
@@ -57,7 +57,7 @@ export default function EditCustomPage() {
     // INITIALIZE
     useEffect(() => {
         if (cocktail) {
-            if(userState.user?.id != cocktail.author_id){
+            if (userState.user?.id != cocktail.author_id) {
                 navigate(-1)
                 alert("잘못된 접근입니다.")
             }
@@ -178,7 +178,7 @@ export default function EditCustomPage() {
                 token: userState.token
             }
 
-            if(userState.user?.id != cocktail?.author_id){
+            if (userState.user?.id != cocktail?.author_id) {
                 navigate(-1)
                 alert("잘못된 접근입니다.")
                 return
@@ -366,11 +366,11 @@ export default function EditCustomPage() {
                                     </Grid>
                                     <Grid item md={1} sm={2} xs={2}>
                                         <Stack spacing={1} alignItems="flex-start">
-                                            <Stack 
-                                                direction="row" 
-                                                justifyContent="flex-start" 
-                                                alignItems="center" 
-                                                sx={(theme) => ({ 
+                                            <Stack
+                                                direction="row"
+                                                justifyContent="flex-start"
+                                                alignItems="center"
+                                                sx={(theme) => ({
                                                     width: 1,
                                                     [theme.breakpoints.down('md')]: {
                                                         mt: 1.5,
@@ -378,10 +378,10 @@ export default function EditCustomPage() {
                                                     [theme.breakpoints.up('md')]: {
                                                         mt: -0.25,
                                                     },
-                                                })} 
+                                                })}
                                             >
-                                                <Typography 
-                                                    variant="body1" 
+                                                <Typography
+                                                    variant="body1"
                                                     sx={(theme) => ({
                                                         [theme.breakpoints.down('sm')]: {
                                                             width: 0.7,
@@ -427,8 +427,8 @@ export default function EditCustomPage() {
                                                 </TextField>
                                             </Stack>
                                             <Stack direction="row" justifyContent="flex-start" alignItems="center" sx={{ width: 1 }}>
-                                                <Typography 
-                                                    variant="body1" 
+                                                <Typography
+                                                    variant="body1"
                                                     sx={(theme) => ({
                                                         [theme.breakpoints.down('sm')]: {
                                                             width: 0.7,
@@ -511,10 +511,10 @@ export default function EditCustomPage() {
                                 },
                             })}
                         />
-                        <Stack 
-                            alignItems="flex-start" 
-                            justifyContent="flex-start" 
-                            spacing={1} 
+                        <Stack
+                            alignItems="flex-start"
+                            justifyContent="flex-start"
+                            spacing={1}
                             sx={(theme) => ({
                                 pr: 2,
                                 [theme.breakpoints.down('md')]: {
@@ -529,9 +529,9 @@ export default function EditCustomPage() {
                             {[...ingredientList, { name: "", amount: undefined, unit: [""], recipe_unit: "" }].map((ingredient, idx) => {
                                 return (
                                     <Stack key={ingredient.name} direction="row" spacing={1} alignItems="flex-end" justifyContent="space-between" sx={{ width: 1 }}>
-                                        <Stack 
-                                            key={ingredient.name} direction="row" spacing={1} alignItems="flex-end" justifyContent="flex-start" 
-                                            sx={{ 
+                                        <Stack
+                                            key={ingredient.name} direction="row" spacing={1} alignItems="flex-end" justifyContent="flex-start"
+                                            sx={{
                                                 width: 0.9,
                                             }}
                                         >
@@ -635,7 +635,7 @@ export default function EditCustomPage() {
                                         </Stack>
                                         {idx !== ingredientList.length &&
                                             <Stack direction="row" alignItems="center" justifyContent="flex-start" sx={{ width: 0.07 }}>
-                                                <IconButton 
+                                                <IconButton
                                                     data-testid="delete" size="small" onClick={() => onClickIngredientDelete(idx)}
                                                 >
                                                     <RemoveIcon fontSize="small" />

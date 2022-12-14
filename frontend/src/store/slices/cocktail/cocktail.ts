@@ -24,8 +24,8 @@ export interface CocktailDetailType {
     name: string,
     name_eng: string,
     color: string,
-    filter_type_one: string,
-    filter_type_two: string,
+    filter_type_one: string | null,
+    filter_type_two: string | null,
     image: string,
     introduction: string,
     recipe: string,
@@ -91,13 +91,13 @@ export interface FilterParamType {
 }
 
 export const fetchStandardCocktailList = createAsyncThunk(
-    "cocktail/fetchStandardCocktailList", async (data:{params: FilterParamType | null, token: string|null}) => {
+    "cocktail/fetchStandardCocktailList", async (data: { params: FilterParamType | null, token: string | null }) => {
         if (!data.params) {
             const response = await axios.get(`/api/v1/cocktails/init/?type=standard`,
                 {
-                    headers: (data.token)?{
+                    headers: (data.token) ? {
                         Authorization: `Token ${data.token}`,
-                    }:undefined
+                    } : undefined
                 }
             );
             return response.data
@@ -106,9 +106,9 @@ export const fetchStandardCocktailList = createAsyncThunk(
             const response = await axios.get(`/api/v1/cocktails/?type=standard`,
                 {
                     params: data.params,
-                    headers: (data.token)?{
+                    headers: (data.token) ? {
                         Authorization: `Token ${data.token}`,
-                    }:undefined
+                    } : undefined
                 }
             );
             return response.data
@@ -118,13 +118,13 @@ export const fetchStandardCocktailList = createAsyncThunk(
 )
 
 export const fetchCustomCocktailList = createAsyncThunk(
-    "cocktail/fetchCustomCocktailList", async (data:{params: FilterParamType | null, token: string|null}) => {
+    "cocktail/fetchCustomCocktailList", async (data: { params: FilterParamType | null, token: string | null }) => {
         if (!data.params) {
             const response = await axios.get(`/api/v1/cocktails/init/?type=custom`,
                 {
-                    headers: (data.token)?{
+                    headers: (data.token) ? {
                         Authorization: `Token ${data.token}`,
-                    }:undefined
+                    } : undefined
                 }
             );
             return response.data
@@ -133,9 +133,9 @@ export const fetchCustomCocktailList = createAsyncThunk(
             const response = await axios.get(`/api/v1/cocktails/?type=custom`,
                 {
                     params: data.params,
-                    headers: (data.token)?{
+                    headers: (data.token) ? {
                         Authorization: `Token ${data.token}`,
-                    }:undefined
+                    } : undefined
                 }
             );
             return response.data
