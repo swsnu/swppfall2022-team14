@@ -100,10 +100,6 @@ const MyInfo = (props: prop) => {
         }
     }
 
-    console.log(checkPW(pw))
-    console.log(checkPW(newPw))
-    console.log(pwConfirm)
-
     return (
         <Modal 
             open={open} 
