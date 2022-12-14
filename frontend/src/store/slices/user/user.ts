@@ -96,16 +96,20 @@ export const getUser = createAsyncThunk(
 
 export const editUser = createAsyncThunk(
     "user/editUser",
-    async (user: { token: string | null, org_password: string, password: string }, { dispatch }) => {
-        await axios.put('/api/v1/auth/me/', { org_password: user.org_password, password: user.password }, {
-            headers: {
-                Authorization: `Token ${user.token}`,
-            },
-        })
-            .then(function (response) {
-                dispatch(userActions.editUser())
-                return response.data
+    async (user: { token: string | null, org_password: string, password: string }, { dispatch, rejectWithValue }) => {
+        try{
+            await axios.put('/api/v1/auth/me/', { org_password: user.org_password, password: user.password }, {
+                headers: {
+                    Authorization: `Token ${user.token}`,
+                },
             })
+                .then(function (response) {
+                    dispatch(userActions.editUser())
+                    return response.data
+                })
+        } catch (error: any){
+            return rejectWithValue(error.response.data["code"])
+        }
     }
 );
 
