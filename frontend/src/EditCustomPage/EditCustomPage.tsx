@@ -57,6 +57,11 @@ export default function EditCustomPage() {
     // INITIALIZE
     useEffect(() => {
         if (cocktail) {
+            if(userState.user?.id != cocktail.author_id){
+                navigate(-1)
+                alert("잘못된 접근입니다.")
+            }
+
             setName(cocktail.name);
             setIntroduction(cocktail.introduction);
             setRecipe(cocktail.recipe);
@@ -172,6 +177,13 @@ export default function EditCustomPage() {
                 },
                 token: userState.token
             }
+
+            if(userState.user?.id != cocktail?.author_id){
+                navigate(-1)
+                alert("잘못된 접근입니다.")
+                return
+            }
+
             const response = await dispatch(editCocktail({ data: data, id: Number(id) }))
             if (response.type === `${editCocktail.typePrefix}/fulfilled`) {
                 navigate(`/custom/${(response.payload as CocktailDetailType).id}`)

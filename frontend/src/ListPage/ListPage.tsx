@@ -16,6 +16,7 @@ import IngredientItem from "../common/Components/IngredientItem";
 import { selectUser } from '../store/slices/user/user';
 import { Grid, Container, Typography, Stack, Box } from "@mui/material";
 import LocalBarIcon from '@mui/icons-material/LocalBar';
+import {useSearchParams} from "react-router-dom";
 
 function filterParamsToSentence(filterParam: FilterParamType | null) {
 
@@ -63,6 +64,7 @@ function filterParamsToSentence(filterParam: FilterParamType | null) {
 const ListPage = () => {
 
     const dispatch = useDispatch<AppDispatch>()
+    const [searchParams, setSearchParams] = useSearchParams();
     const { type } = useParams<string>()
     const cocktailState = useSelector(selectCocktail)
     const ingrState = useSelector(selectIngredient)
@@ -87,12 +89,16 @@ const ListPage = () => {
         setFilterParam(param)
 
 
-        if (type === 'standard')
+        if (type === 'standard'){
             dispatch(fetchStandardCocktailList({ params: param, token: userState.token }))
-        else if (type === 'custom')
+        }
+        else if (type === 'custom'){
             dispatch(fetchCustomCocktailList({ params: param, token: userState.token }))
-        else if (type === 'ingredient')
-            dispatch(fetchIngredientList(null))
+        }
+        else if (type === 'ingredient'){
+            const search = searchParams.get('search')
+            dispatch(fetchIngredientList(search))
+        }
 
     }, [location])
 

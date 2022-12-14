@@ -61,7 +61,7 @@ const NavFilter = (prop: Iprops) => {
             { state: request_param }
         )
         else if (prop.type === 'CS') navigate(`/custom`, { state: request_param })
-        else if (prop.type === 'IG') navigate(`/ingredient`)
+        else if (prop.type === 'IG') navigate(`/ingredient?search=${input}`)
     }
 
     const onTypeClick = (param_type: string, type_name: string) => {
