@@ -96,7 +96,6 @@ const ListPage = () => {
         else if (type === 'ingredient')
             dispatch(fetchIngredientList(null))
 
-        console.log(filterParam)
     }, [location])
 
 
