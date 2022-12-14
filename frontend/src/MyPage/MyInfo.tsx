@@ -94,7 +94,9 @@ const MyInfo = (props: prop) => {
             navigate('../')
             onClose()
         } else {
-            setErrorText("비밀번호가 일치하지 않습니다.");
+            if(result.payload === 10){
+                setErrorText("원래 비밀번호가 일치하지 않습니다.");
+            }
         }
     }
 
@@ -239,7 +241,7 @@ const MyInfo = (props: prop) => {
                         {errorText}
                     </Typography>
                     <Button variant="contained"
-                        disabled={!checkPW(pw) || newPw !== pwConfirm}
+                        disabled={!checkPW(newPw) || newPw !== pwConfirm}
                         onClick={onClickEdit}
                         sx={{
                             bgcolor: 'primary.dark',
