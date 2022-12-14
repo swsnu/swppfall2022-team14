@@ -18,6 +18,7 @@ import { Grid, Container, Typography, Stack } from "@mui/material";
 import LocalBarRoundedIcon from '@mui/icons-material/LocalBarRounded';
 import "@fontsource/hi-melody";
 import { ClipLoader } from 'react-spinners';
+import { useSearchParams } from 'react-router-dom';
 
 function filterParamsToSentence(filterParam: FilterParamType | null) {
 
@@ -65,6 +66,7 @@ function filterParamsToSentence(filterParam: FilterParamType | null) {
 const ListPage = () => {
 
     const dispatch = useDispatch<AppDispatch>()
+    const [searchParams, setSearchParams] = useSearchParams();
     const { type } = useParams<string>()
     const cocktailState = useSelector(selectCocktail)
     const ingrState = useSelector(selectIngredient)
@@ -89,12 +91,16 @@ const ListPage = () => {
         setFilterParam(param)
 
 
-        if (type === 'standard')
+        if (type === 'standard'){
             dispatch(fetchStandardCocktailList({ params: param, token: userState.token }))
-        else if (type === 'custom')
+        }
+        else if (type === 'custom'){
             dispatch(fetchCustomCocktailList({ params: param, token: userState.token }))
-        else if (type === 'ingredient')
-            dispatch(fetchIngredientList(null))
+        }
+        else if (type === 'ingredient'){
+            const search = searchParams.get('search')
+            dispatch(fetchIngredientList(search))
+        }
 
     }, [location])
 
@@ -187,6 +193,7 @@ const ListPage = () => {
                                 />
                             </Grid>
                         )}
+                        {ingrList.length === 0 ? <div>&nbsp;&nbsp;&nbsp; 검색 결과가 없습니다.</div> : null}
                     </Grid> :
                     <Grid container spacing={3} columns={4}>
                         {list.map((cocktail) =>

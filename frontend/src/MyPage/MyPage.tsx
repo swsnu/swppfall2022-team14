@@ -42,7 +42,7 @@ const MyPage = () => {
         dispatch(fetchIngredientList(null))
         if (!userState.isLogin) {
             navigate(-1)
-            console.log("먼저 로그인 해주세요")
+            alert("먼저 로그인 해주세요")
         }
         else dispatch(fetchMyIngredientList(userState.token))
 
