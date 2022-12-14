@@ -94,6 +94,7 @@ const ListPage = () => {
         else if (type === 'ingredient')
             dispatch(fetchIngredientList(null))
 
+        console.log(filterParam)
     }, [location])
 
 
@@ -127,7 +128,7 @@ const ListPage = () => {
             <Container sx={{ py: 3 }} >
                 <Typography variant="h4" sx={{ mb: 3 }} fontFamily="Hi Melody" color="#BC953B" align="center">
                     {(type !== "ingredient" && cocktailState.cocktailList.length === 0) ? "No Cocktails" : filterParamsToSentence(filterParam)}
-                    {filterParam?.color ? <LocalBarIcon sx={{ fontSize: 40, color: filterParam?.color, ml: 2, }} /> : null}
+                    {filterParam?.color ? <LocalBarIcon sx={{ fontSize: 40, color: filterParam.color, ml: 2, }} /> : null}
                 </Typography>
                 {type === 'ingredient' ?
                     <Grid container spacing={3} columns={4}>

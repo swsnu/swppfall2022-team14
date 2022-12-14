@@ -9,7 +9,7 @@ interface ParamList {
 }
 
 interface FilterType {
-    type: "typeOne" | "typeTwo" | "typeThree" | "color";
+    type: "typeOne" | "typeTwo" | "typeThree" | "color" | "noColor";
     name: string;
 }
 
@@ -24,8 +24,8 @@ export interface Iprops {
 
 const NavFilter = (prop: Iprops) => {
     const themeList: ThemeList[] = [
-        { label: "여름 느낌의", filters: [{ type: "typeOne", name: "트로피컬" }, { type: "typeTwo", name: "롱 드링크" }, { type: "typeThree", name: "weak" }, { type: "color", name: "1751da" }] },
-        { label: "강렬한 한 잔", filters: [{ type: "typeOne", name: "클래식" }, { type: "typeTwo", name: "숏 드링크" }, { type: "typeTwo", name: "샷" }, { type: "typeThree", name: "extreme" }] },
+        { label: "여름 느낌의", filters: [{ type: "typeOne", name: "트로피컬" }, { type: "typeTwo", name: "롱 드링크" }, { type: "typeThree", name: "weak" }, { type: "color", name: "33ffff" }] },
+        { label: "강렬한 한 잔", filters: [{ type: "typeOne", name: "클래식" }, { type: "typeTwo", name: "숏 드링크" }, { type: "typeTwo", name: "샷" }, { type: "typeThree", name: "extreme" }, { type: "noColor", name: "" }] },
         { label: "근본이 있는", filters: [{ type: "typeOne", name: "클래식" }, { type: "typeTwo", name: "숏 드링크" }, { type: "color", name: "da8c17" }] }
     ]
     const typeOneList: ParamList[] = [{ name: "클래식", label: "클래식" }, { name: "트로피컬", label: "트로피컬" }]
@@ -102,6 +102,9 @@ const NavFilter = (prop: Iprops) => {
             } else if (filter.type === "color") {
                 setColor(filter.name)
                 setUseColor(true)
+            } else if (filter.type === "noColor") {
+                setUseColor(false)
+                setColor("000000")
             }
 
         }
