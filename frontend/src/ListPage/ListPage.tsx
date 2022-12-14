@@ -114,7 +114,7 @@ const ListPage = () => {
                 <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
                     <ClipLoader
                         color='primary.light'
-                        loading 
+                        loading
                     />
                 </Stack>
             </>
@@ -125,8 +125,8 @@ const ListPage = () => {
             <>
                 {/*<NavBar />*/}
                 <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
-                    <Typography 
-                        variant="h6" 
+                    <Typography
+                        variant="h6"
                         color="primary.light"
                     >
                         서버로부터 정보를 불러오지 못하였습니다.
@@ -148,30 +148,31 @@ const ListPage = () => {
                         mb: 3,
                     }}
                 >
-                    <Typography 
-                        variant="h4" 
-                        fontFamily="Hi Melody" 
+                    <Typography
+                        variant="h4"
+                        fontFamily="Hi Melody"
                         color="#BC953B"
                         sx={{
                             height: 50,
                         }}
                     >
-                        {(type !== "ingredient" && cocktailState.cocktailList.length === 0) ? 
-                            "No Cocktails" : 
+                        {(type !== "ingredient" && cocktailState.cocktailList.length === 0) ?
+                            "No Cocktails" :
                             filterParamsToSentence(filterParam)
                         }
                     </Typography>
-                    {filterParam?.color && 
-                        <LocalBarRoundedIcon 
-                            sx={{ 
-                                fontSize: 20, 
-                                color: filterParam?.color, 
-                                ml: 2, 
+                    {filterParam?.color &&
+                        <LocalBarRoundedIcon
+                            sx={{
+                                fontSize: 20,
+                                color: filterParam?.color,
+                                ml: 2,
                                 mb: 2.5,
-                            }} 
+                            }}
                         />
                     }
                 </Stack>
+
                 {type === 'ingredient' ?
                     <Grid container spacing={3} columns={4}>
                         {ingrList.map((ingredient) =>
