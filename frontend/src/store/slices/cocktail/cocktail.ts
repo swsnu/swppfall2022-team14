@@ -229,12 +229,12 @@ export const editCocktail = createAsyncThunk(
 
 export const deleteCocktail = createAsyncThunk(
     "cocktail/deleteCocktail",
-    async (data: { cocktail_id: number, token: string }) => {
+    async (data: { cocktail_id: number, token: string }, { dispatch }) => {
         await axios.delete(`/api/v1/cocktails/${data.cocktail_id}/delete/`, {
             headers: {
                 Authorization: `Token ${data.token}`,
             },
-        });
+        }).then((response) => dispatch(fetchCustomCocktailList({ params: null, token: null })));
         return { cocktail_id: data.cocktail_id }
     }
 )
@@ -307,7 +307,7 @@ export const cocktailSlice = createSlice({
             state.listStatus = "failed";
         });
 
-        //MyCocktailList
+        //MyBookmarkList
         builder.addCase(fetchMyBookmarkCocktailList.fulfilled, (state, action) => {
             state.cocktailList = action.payload.cocktails;
             state.listStatus = "success";
@@ -318,6 +318,9 @@ export const cocktailSlice = createSlice({
         builder.addCase(fetchMyBookmarkCocktailList.rejected, (state) => {
             state.listStatus = "failed";
         });
+
+
+
 
         //CocktailItem
         builder.addCase(getCocktail.fulfilled, (state, action) => {
