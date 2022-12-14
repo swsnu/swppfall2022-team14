@@ -4,7 +4,9 @@ import { AppDispatch } from '../../store';
 import { loginUser, registerUser, selectUser } from '../../store/slices/user/user';
 import React from 'react';
 import Modal from '@mui/material/Modal';
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import { Button, FormControl, FormHelperText, IconButton, Input, InputLabel, InputAdornment, Stack, TextField, Typography } from "@mui/material";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const style = (theme: any) => ({
     position: 'absolute',
@@ -34,6 +36,8 @@ const LoginModal = (props: prop) => {
     const [pwConfirm, setPwConfirm] = useState<string>("")
     const [isLoginMode, setIsLoginMode] = useState(true)
     const [errorText, setErrorText] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
     const onClickMode = () => {
         setLoginId('');
@@ -61,6 +65,14 @@ const LoginModal = (props: prop) => {
             onClickLogin();
         }
     };
+
+    const onClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    }
+
+    const onClickShowPasswordConfirm = () => {
+        setShowPasswordConfirm(!showPasswordConfirm);
+    }
 
     const onChangeId = async (id: string) => {
         setLoginId(id)
@@ -157,14 +169,8 @@ const LoginModal = (props: prop) => {
                         },
                     }}
                 />
-                <TextField 
-                    label="비밀번호" 
-                    variant="standard" 
-                    helperText={!isLoginMode && <> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
-                    type="password" 
-                    value={loginPassword} 
-                    onChange={(e) => {onChangePw(e.target.value)}}
-                    onKeyPress={onKeyPress}
+                <FormControl 
+                    variant="standard"
                     sx={{
                         '& label.Mui-focused': {
                             color: 'secondary.light',
@@ -178,14 +184,31 @@ const LoginModal = (props: prop) => {
                             },
                         },
                     }}
-                />
+                >
+                    <InputLabel>비밀번호</InputLabel>
+                    <Input 
+                        type={showPassword ? "text" : "password"}
+                        value={loginPassword} 
+                        onChange={(e) => {onChangePw(e.target.value)}}
+                        onKeyPress={onKeyPress}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    tabIndex={-1}
+                                    onClick={onClickShowPassword}
+                                >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+                    <FormHelperText>
+                        {!isLoginMode && <> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
+                    </FormHelperText>
+                </FormControl>
                 {!isLoginMode && 
-                    <TextField 
-                        label="비밀번호 확인" 
-                        variant="standard" 
-                        type="password" 
-                        value={pwConfirm} 
-                        onChange={(e) => onChangePwConfirm(e.target.value)}
+                    <FormControl 
+                        variant="standard"
                         sx={{
                             '& label.Mui-focused': {
                                 color: 'secondary.light',
@@ -199,7 +222,25 @@ const LoginModal = (props: prop) => {
                                 },
                             },
                         }}
-                    />
+                    >
+                        <InputLabel>비밀번호 확인</InputLabel>
+                        <Input 
+                            type={showPasswordConfirm ? "text" : "password"}
+                            value={pwConfirm} 
+                            onChange={(e) => {onChangePwConfirm(e.target.value)}}
+                            onKeyPress={onKeyPress}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        tabIndex={-1}
+                                        onClick={onClickShowPasswordConfirm}
+                                    >
+                                        {showPasswordConfirm ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                        />
+                    </FormControl>
                 }
                 {isLoginMode ? 
                     <Button variant="text" onClick={onClickLogin}
@@ -238,25 +279,29 @@ const LoginModal = (props: prop) => {
                         </Typography>
                     </Button>
                 }
-                <Stack direction="row" alignItems='flex-end' justifyContent='space-between'>
+                <Stack direction="row" spacing={1} alignItems='flex-end' justifyContent='space-between'>
                     <Typography 
                         color='error.main' 
                         variant='body2'
+                        sx={{ width: 0.6 }}
                     >
                         {errorText}
                     </Typography>
                     <Typography 
                         color='text.primary' 
                         variant='body2'
+                        align="right"
                         onClick={onClickMode}
                         sx={{
+                            width: 0.4, 
+                            'word-break': 'keep-all',
                             cursor: 'pointer',
                             '&:hover': {
                                 color: 'text.secondary',
                             },
                         }}
                     >
-                        {isLoginMode ? "회원가입하러 가기" : "로그인하러 가기"}
+                        {isLoginMode ? "회원가입 하러가기" : "로그인 하러가기"}
                     </Typography>
                 </Stack>
             </Stack>

@@ -336,6 +336,7 @@ def delete_cocktail(request, pk):
 
 
 @api_view(['GET'])
+@authentication_classes([authentication.TokenAuthentication])
 def get_init_cocktail(request):
 
     filter_q = Q()

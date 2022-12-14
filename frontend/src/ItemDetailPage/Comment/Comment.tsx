@@ -199,6 +199,7 @@ const Comment = (props: AccessCommentType) => {
                                 onChange={(e) => setReplyContent(e.target.value)}
                                 multiline
                                 fullWidth 
+                                autoFocus
                             />
                             {openAddReply &&
                                 <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ width: 1 }}>

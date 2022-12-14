@@ -12,6 +12,7 @@ import { AppDispatch } from "../store"
 import RecommendModal from "./Modals/RecommendModal";
 import { styled } from '@mui/material/styles';
 import {
+    Box,
     Grid,
     IconButton,
     ListItemButton,
@@ -114,14 +115,16 @@ const InitPage = () => {
 
     const onClickToggle = (
         event: React.MouseEvent<HTMLElement>,
-        toggle: 'standard' | 'custom' | 'ingredient',
+        toggle: 'standard' | 'custom' | 'ingredient' | null,
     ) => {
-        setToggle(toggle)
+        if (toggle === null) return;
 
         if (toggle === 'standard') {
+            setToggle(toggle)
             setIsStandard(true)
             setSearchParams({ type: '' })
         } else if (toggle === 'custom') {
+            setToggle(toggle)
             setIsStandard(false)
             setSearchParams({ type: "custom" })
         } else {
@@ -148,12 +151,12 @@ const InitPage = () => {
         const type = searchParams.get('type')
         if (type == 'custom') {
             setToggle('custom')
-            dispatch(fetchCustomCocktailList({params: null, token:null}))
+            dispatch(fetchCustomCocktailList({params: null, token: userState.token}))
         } else {
             setToggle('standard')
-            dispatch(fetchStandardCocktailList({params: null, token:null}))
+            dispatch(fetchStandardCocktailList({params: null, token: userState.token}))
         }
-    }, [searchParams])
+    }, [searchParams, loginState])
 
 
 
@@ -167,18 +170,21 @@ const InitPage = () => {
                 },
             })}
         >
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
                 <LocalBarIcon
                     sx={(theme) => ({
                         [theme.breakpoints.up('md')]: {
+                            mt: 1,
                             ml: 13,
                             fontSize: 50,
                         },
                         [theme.breakpoints.down('md')]: {
+                            mt: 1.25,
                             ml: 3,
                             fontSize: 40,
                         },
                         [theme.breakpoints.down('sm')]: {
+                            mt: 1,
                             ml: 3,
                             fontSize: 30,
                         },
@@ -188,13 +194,16 @@ const InitPage = () => {
                     variant="h3"
                     sx={(theme) => ({
                         [theme.breakpoints.up('md')]: {
+                            mt: 1,
                             ml: 7,
                         },
                         [theme.breakpoints.down('md')]: {
+                            mt: 1.5,
                             ml: 13,
                             fontSize: 30,
                         },
                         [theme.breakpoints.down('sm')]: {
+                            mt: 1.25,
                             ml: 6,
                             fontSize: 20,
                         },
@@ -202,27 +211,75 @@ const InitPage = () => {
                 >
                     Top 15 Cocktails
                 </Typography>
-                <Stack
-                    direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end"
+                <Box
                     sx={(theme) => ({
+                        direction: 'rtl',
                         [theme.breakpoints.up('md')]: {
+                            display: 'flex',
                             width: 150
                         },
                         [theme.breakpoints.down('md')]: {
+                            display: 'flex',
                             width: 150
                         },
                         [theme.breakpoints.down('sm')]: {
+                            display: 'block',
                             width: 90,
                             marginRight: 1,
                         },
                     })}
                 >
+                    {loginState ?
+                        <IconButton
+                            data-testid="my profile"
+                            size="large"
+                            onClick={onClickProfile}
+                            sx={(theme) => ({
+                                [theme.breakpoints.down('sm')]: {
+                                    padding: 1,
+                                    ml: 10,
+                                },
+                            })}
+                        >
+                            <AccountCircleIcon
+                                fontSize="large"
+                                sx={(theme) => ({
+                                    [theme.breakpoints.down('sm')]: {
+                                        fontSize: 25
+                                    },
+                                })}
+                            />
+                        </IconButton> :
+                        <IconButton
+                            data-testid="login" onClick={onClickLogin}
+                            sx={(theme) => ({
+                                [theme.breakpoints.up('sm')]: {
+                                    padding: 1,
+                                    mt: 1,
+                                    mr: 1,
+                                },
+                                [theme.breakpoints.down('sm')]: {
+                                    padding: 1,
+                                    ml: 10,
+                                },
+                            })}
+                        >
+                            <LoginIcon
+                                sx={(theme) => ({
+                                    [theme.breakpoints.down('sm')]: {
+                                        fontSize: 20
+                                    },
+                                })}
+                            />
+                        </IconButton>
+                    }
                     {loginState && isOpenProfile ? (
                         <Stack
                             direction="row" spacing={1} alignItems="center" justifyContent="flex-end"
                             sx={(theme) => ({
+                                direction: 'ltr',
                                 [theme.breakpoints.down('sm')]: {
-                                    mr: -0.5
+                                    mr: 0.25
                                 },
                             })}
                         >
@@ -231,7 +288,7 @@ const InitPage = () => {
                                 onClick={onClickMyPage}
                                 sx={(theme) => ({
                                     [theme.breakpoints.down('sm')]: {
-                                        padding: 0.5,
+                                        padding: 1,
                                         mr: -1
                                     },
                                 })}
@@ -239,7 +296,7 @@ const InitPage = () => {
                                 <PersonOutlineIcon
                                     sx={(theme) => ({
                                         [theme.breakpoints.down('sm')]: {
-                                            fontSize: 15
+                                            fontSize: 20
                                         },
                                     })}
                                 />
@@ -248,58 +305,21 @@ const InitPage = () => {
                                 data-testid="logout" onClick={onClickLogout}
                                 sx={(theme) => ({
                                     [theme.breakpoints.down('sm')]: {
-                                        padding: 0.5
+                                        padding: 1
                                     },
                                 })}
                             >
                                 <LogoutIcon
                                     sx={(theme) => ({
                                         [theme.breakpoints.down('sm')]: {
-                                            fontSize: 15
+                                            fontSize: 20
                                         },
                                     })}
                                 />
                             </IconButton>
                         </Stack>
                     ) : null}
-                    {loginState ?
-                        <IconButton
-                            data-testid="my profile"
-                            size="large"
-                            onClick={onClickProfile}
-                            sx={(theme) => ({
-                                [theme.breakpoints.down('sm')]: {
-                                    padding: 0.5,
-                                },
-                            })}
-                        >
-                            <AccountCircleIcon
-                                fontSize="large"
-                                sx={(theme) => ({
-                                    [theme.breakpoints.down('sm')]: {
-                                        fontSize: 20
-                                    },
-                                })}
-                            />
-                        </IconButton> :
-                        <IconButton
-                            data-testid="login" onClick={onClickLogin}
-                            sx={(theme) => ({
-                                [theme.breakpoints.down('sm')]: {
-                                    padding: 0.5,
-                                },
-                            })}
-                        >
-                            <LoginIcon
-                                sx={(theme) => ({
-                                    [theme.breakpoints.down('sm')]: {
-                                        fontSize: 15
-                                    },
-                                })}
-                            />
-                        </IconButton>
-                    }
-                </Stack>
+                </Box>
             </Stack>
             <Grid
                 container spacing={1} columns={2}
