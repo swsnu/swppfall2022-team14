@@ -94,15 +94,9 @@ const MyInfo = (props: prop) => {
             navigate('../')
             onClose()
         } else {
-            if(result.payload === 10){
-                setErrorText("원래 비밀번호가 일치하지 않습니다.");
-            }
+            setErrorText("비밀번호가 일치하지 않습니다.");
         }
     }
-
-    console.log(checkPW(pw))
-    console.log(checkPW(newPw))
-    console.log(pwConfirm)
 
     return (
         <Modal 
@@ -245,7 +239,7 @@ const MyInfo = (props: prop) => {
                         {errorText}
                     </Typography>
                     <Button variant="contained"
-                        disabled={!checkPW(newPw) || newPw !== pwConfirm}
+                        disabled={!checkPW(pw) || newPw !== pwConfirm}
                         onClick={onClickEdit}
                         sx={{
                             bgcolor: 'primary.dark',

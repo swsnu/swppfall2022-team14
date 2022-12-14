@@ -4,8 +4,6 @@ from django.contrib.auth.hashers import check_password
 from django.views.decorators.csrf import ensure_csrf_cookie
 import json
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from exception.errno import ErrorCode
-from exception.exception_response import ExceptionResponse
 from .models import User
 from .serializers import UserInfoSerializer, UserNameSerializer
 from rest_framework.authtoken.models import Token
@@ -106,8 +104,6 @@ def retrieve_my_info(request):
 
                 data = UserInfoSerializer(user).data
                 return JsonResponse(data, safe=False)
-            else:
-                return ExceptionResponse(status=401, detail="password incorrect", code=ErrorCode.USER_PASSWORD_INCORRECT).to_response()
 
     elif request.method == 'DELETE':
         user = request.user
