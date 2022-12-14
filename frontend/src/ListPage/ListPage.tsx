@@ -149,6 +149,7 @@ const ListPage = () => {
                                 />
                             </Grid>
                         )}
+                        {ingrList.length === 0 ? <div>&nbsp;&nbsp;&nbsp; 검색 결과가 없습니다.</div> : null}
                     </Grid> :
                     <Grid container spacing={3} columns={4}>
                         {list.map((cocktail) =>
