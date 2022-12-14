@@ -123,6 +123,12 @@ export default function ItemDetailPage() {
         }
     }
 
+    const detectLogin = () => {
+        if(!userState.isLogin){
+            setIsLoginOpen(true)
+        }
+    }
+
     if (cocktailState.itemStatus == "loading") {
         return (
             <>
@@ -330,7 +336,7 @@ export default function ItemDetailPage() {
                         })}
                     </FormGroup>
                     {cocktail.tags.length !== 0 && <Divider flexItem />}
-                    <Stack spacing={1} sx={{ width: 1, pt: 2 }}>
+                    <Stack spacing={1} sx={{ width: 1, pt: 2 }} onClick={detectLogin}>
                         <Typography variant="h6" align='left'>
                             {userState.user?.username}
                         </Typography>

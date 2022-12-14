@@ -36,6 +36,12 @@ const Comment = (props: AccessCommentType) => {
     const [replyContent, setReplyContent] = useState<string>("")
     const [openSetting, setOpenSetting] = useState(false)
     const [openAddReply, setOpenAddReply] = useState(false);
+
+    const detectLogin = () => {
+        if(!userState.isLogin){
+            setIsLoginOpen(true)
+        }
+    }
     
     const nullStateHandler = () => {
         dispatch(commentActions.nullCommentState(props))
@@ -181,7 +187,7 @@ const Comment = (props: AccessCommentType) => {
                     (commentState.commentItem?.id == props.id && commentState.state == "REPLY") &&
                     <Stack direction="row" spacing={1} alignItems='flex-start' sx={{ width: 1, pt: 3, pl: 2 }}>
                         <SubdirectoryArrowRightIcon fontSize='small' />
-                        <Stack spacing={1} sx={{ width: 1 }}>
+                        <Stack spacing={1} sx={{ width: 1 }} onClick={detectLogin}>
                             <Typography variant="button" align='left'>
                                 {userState.user?.username}
                             </Typography>
