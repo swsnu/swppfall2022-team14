@@ -112,6 +112,12 @@ const LoginModal = (props: prop) => {
 
         const result = await dispatch(registerUser(data))
         if (result.type === `${registerUser.typePrefix}/fulfilled`) {
+            const result = await dispatch(loginUser(data));
+            if (result.type === `${loginUser.typePrefix}/fulfilled`) {
+                setIsOpen(false)
+            } else {
+                setErrorText("자동로그인 실패! 다시 로그인 해주세요");
+            }
             onClickMode()
         } else {
             setErrorText("중복된 아이디입니다.");
