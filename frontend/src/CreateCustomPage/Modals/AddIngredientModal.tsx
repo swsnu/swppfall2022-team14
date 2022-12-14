@@ -2,10 +2,10 @@ import './AddIngredientModal.scss'
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredientList, IngredientType, selectIngredient } from '../../store/slices/ingredient/ingredient';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { AppDispatch } from '../../store';
 import Modal from '@mui/material/Modal';
-import { Box, Card, Grid, Stack, Typography } from "@mui/material";
+import { Box, Card, Grid, Stack, TextField, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 
 const style = {
@@ -40,6 +40,7 @@ const AddIngredientModal = (props: IProps) => {
     const { isOpen, close, addedIngredientList, setNewIngrdient} = props;
     const ingredientState = useSelector(selectIngredient)
     const dispatch = useDispatch<AppDispatch>()
+    const [input, setInput] = useState<string>("")
 
     const onClickIngredient = (ingredient: IngredientType) => {
         setNewIngrdient(ingredient);
@@ -47,8 +48,8 @@ const AddIngredientModal = (props: IProps) => {
     };
 
     useEffect(() => {
-        dispatch(fetchIngredientList(null))
-    }, [])
+        dispatch(fetchIngredientList(input))
+    },[input])
 
     return (
         <Modal 
@@ -56,6 +57,30 @@ const AddIngredientModal = (props: IProps) => {
             onClose={close}
         >
             <Stack sx={style}>
+                <Stack 
+                    direction="row" justifyContent="flex-end"
+                    sx={{
+                        mr: 1,
+                        mb: 3
+                    }}
+                >
+                    <TextField 
+                        label="추가 검색어" variant="standard" value={input} onChange={(e) => setInput(e.target.value)} 
+                        sx={{
+                            '& label.Mui-focused': {
+                                color: 'secondary.light',
+                            },
+                            '& .MuiInput-underline:after': {
+                                borderBottomColor: 'secondary.light',
+                            },
+                            '& .MuiOutlinedInput-root': {
+                                '&.Mui-focused fieldset': {
+                                    borderColor: 'secondary.light',
+                                },
+                            },
+                        }}    
+                    />
+                </Stack>
                 <Grid container spacing={3}>
                     {ingredientState.ingredientList
                         .filter((ingredient) => !addedIngredientList.includes(ingredient.name))
