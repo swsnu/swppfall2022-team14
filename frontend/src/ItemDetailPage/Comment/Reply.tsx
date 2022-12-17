@@ -55,6 +55,7 @@ const Reply = (props: AccessCommentType) => {
                         {props.author_name}
                     </Typography>
                     <TextField 
+                        data-testid="edit_comment_input"
                         variant="standard" 
                         value={content}
                         onChange={(e) => setContent(e.target.value)}

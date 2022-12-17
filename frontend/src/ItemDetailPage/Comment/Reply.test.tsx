@@ -15,12 +15,14 @@ import { TextFieldProps } from "@mui/material";
 jest.mock("@mui/material/TextField/TextField", () => (props:TextFieldProps) => (
     <input onClick={props.onClick} onChange={props.onChange} data-testid={'edit_comment_input'} value={props.value as string}/>
 ));
+
 const emptyCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
     itemStatus: "loading",
     listStatus: "loading"
 }
+
 const emptyIngredient: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
@@ -30,6 +32,7 @@ const emptyIngredient: IngredientInfo = {
     recommendIngredientList: [],
     availableCocktails: []
 }
+
 const commentAuthor: CommentType = {
     id: 1,
     cocktail: {
@@ -52,6 +55,7 @@ const commentAuthor: CommentType = {
     parent_comment: null, // if null comment is root comment
     is_deleted: false
 }
+
 const commentOther: CommentType = {
     id: 2,
     cocktail: {
@@ -74,11 +78,13 @@ const commentOther: CommentType = {
     parent_comment: null, // if null comment is root comment
     is_deleted: false
 }
+
 const editComment: CommentInfo = {
     commentList: [commentAuthor, commentOther],
     commentItem: commentAuthor,
     state: "EDIT"
 }
+
 const stubUserInitialState: UserInfo = {
     user: {
         id: "TEST_ID",
@@ -91,15 +97,18 @@ const stubUserInitialState: UserInfo = {
     token: "TEST_TOKEN",
     isLogin: true
 };
+
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
 }
+
 const replyComment: CommentInfo = {
     commentList: [commentAuthor],
     commentItem: commentAuthor,
     state: "REPLY"
 };
+
 const commentEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: stubUserInitialState, rate: rateState });
 const commentNotLoginEditMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: editComment, user: { ...stubUserInitialState, isLogin: false, token: null }, rate: rateState });
 const commentReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: stubUserInitialState, rate: rateState });
@@ -109,6 +118,7 @@ jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
 }));
+
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
@@ -146,7 +156,7 @@ describe("<Reply />", () => {
             </Provider>
         );
 
-        const textField = screen.getByTestId("edit_comment_input")
+        const textField = screen.getByTestId("edit_comment_input").childNodes[0].childNodes[0];
         fireEvent.change(textField, { target: { value: "EDIT_CONTENT" } })
         const editButton = screen.getByText("수정");
         fireEvent.click(editButton)
@@ -208,13 +218,12 @@ describe("<Reply />", () => {
             </Provider>
         );
 
-        const textField = screen.getByTestId("edit_comment_input")
+        const textField = screen.getByTestId("edit_comment_input").childNodes[0].childNodes[0];
         fireEvent.change(textField, { target: { value: "EDIT_CONTENT" } })
         const editButton = screen.getByText("수정");
         fireEvent.click(editButton)
         expect(mockDispatch).toBeCalledTimes(0)
     });
-
     it("should render not edit state reply without errors", () => {
         const create = new Date()
         const update = new Date()
