@@ -7,7 +7,6 @@ import Comment from "./Comment/Comment";
 import './ItemDetailPage.scss';
 import React from 'react';
 import { fetchCommentListByCocktailId, postComment, selectComment } from "../store/slices/comment/comment";
-import NavBar from "../NavBar/NavBar";
 import axios from 'axios';
 import LoginModal from "../InitPage/Modals/LoginModal";
 import { selectUser } from "../store/slices/user/user";
@@ -36,7 +35,7 @@ export default function ItemDetailPage() {
     }
     const [content, setContent] = useState<string>("")
     const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false)
-    const [score, setScore] = useState<number | null>(0)
+    const [, setScore] = useState<number | null>(0)
 
     const [rateOpen, setRateOpen] = useState(false);
     const handleRateOpen = () => {
