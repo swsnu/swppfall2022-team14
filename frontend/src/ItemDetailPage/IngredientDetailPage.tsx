@@ -55,6 +55,7 @@ export default function IngredientDetailPage() {
                 {/*<NavBar />*/}
                 <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
                     <ClipLoader
+                        data-testid="load-button"
                         color='primary.light'
                         loading 
                     />
@@ -116,10 +117,10 @@ export default function IngredientDetailPage() {
                     </Stack>
                     <Stack direction="row" justifyContent="flex-end" sx={{ width: 1 }}>
                         {ingredientState.myIngredientList.map(ingr => ingr.id).includes(ingredient.id) ?
-                            <IconButton onClick={onClickDelete}>
+                            <IconButton data-testid="delete-ingredient" onClick={onClickDelete}>
                                 <RemoveIcon />
                             </IconButton> :
-                            <IconButton onClick={onClickAdd}>
+                            <IconButton data-testid="add-ingredient" onClick={onClickAdd}>
                                 <AddIcon />
                             </IconButton>
                         }
