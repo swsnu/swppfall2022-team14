@@ -259,14 +259,17 @@ const emptyUserInitailState: UserInfo = {
     token: null,
     isLogin: false
 };
+
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
 }
+
 const alreadyRatedState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: 5
 }
+
 const loadingMockStore = getMockStore({ cocktail: loadingCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: rateState });
 const failedMockStore = getMockStore({ cocktail: failedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: rateState });
 const emptyCommentMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState });
@@ -275,6 +278,7 @@ const itemDetailMockStore_ST = getMockStore({ cocktail: fakeStandardCocktail, in
 const notLoginMockStore = getMockStore({ cocktail: fakeCustomCocktail, ingredient: emptyIngredient, comment: fakeComment, user: emptyUserInitailState, rate: rateState });
 const notBookmarkedMockStore = getMockStore({ cocktail: notBookmarkedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: rateState });
 const alreadyRatedMockStore = getMockStore({ cocktail: notBookmarkedCocktail, ingredient: emptyIngredient, comment: fakeComment, user: stubUserInitialState, rate: alreadyRatedState });
+
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
@@ -288,6 +292,8 @@ jest.mock("react-redux", () => ({
 }));
 
 jest.spyOn(window, 'alert').mockImplementation(() => { console.log("alert") });
+
+jest.spyOn(console, 'error').mockImplementation(() => {});
 
 describe("<ItemDetailPage />", () => {
     beforeEach(() => {
@@ -304,7 +310,7 @@ describe("<ItemDetailPage />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        screen.getByText("Loading ..")
+        screen.getByTestId("load-button")
     });
     it("should render without errors failed Status", () => {
         render(
@@ -316,7 +322,7 @@ describe("<ItemDetailPage />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        screen.getByText("Non existing cocktail")
+        screen.getByText("서버로부터 정보를 불러오지 못하였습니다.")
     });
     it("should render without errors type Miss match1", () => {
         render(
@@ -328,7 +334,7 @@ describe("<ItemDetailPage />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        screen.getByText("Type mismatch")
+        screen.getByText("칵테일 타입이 일치하지 않습니다.")
     });
     it("should render without errors type Miss match2", () => {
         render(
@@ -340,7 +346,7 @@ describe("<ItemDetailPage />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        screen.getByText("Type mismatch")
+        screen.getByText("칵테일 타입이 일치하지 않습니다.")
     });
     it("should render without errors empty parent_comment", () => {
         render(
@@ -372,7 +378,7 @@ describe("<ItemDetailPage />", () => {
         fireEvent.click(ingredientItem)
         expect(mockNavigate).toHaveBeenCalledWith("/ingredient/1")
 
-        expect(mockDispatch).toBeCalledTimes(5)
+        expect(mockDispatch).toBeCalledTimes(4)
         const editButton = screen.getByTestId("edit_button")
         fireEvent.click(editButton)
         expect(mockNavigate).toHaveBeenCalledWith("/custom/1/edit")
@@ -393,18 +399,32 @@ describe("<ItemDetailPage />", () => {
 
         const inputBox = screen.getByTestId('add_comment_input')
         fireEvent.click(inputBox)
-        const textfield = screen.getByTestId('add_comment_input')
+        const textfield = screen.getByTestId('add_comment_input').childNodes[0].childNodes[0];
         fireEvent.change(textfield, { target: { value: "NEW_CONTENT" } })
         const addButton = screen.getByText("댓글")
         fireEvent.click(addButton)
-        expect(mockDispatch).toBeCalledTimes(6)
+        expect(mockDispatch).toBeCalledTimes(5)
 
         fireEvent.click(inputBox)
         const cancelButton = screen.getByText("취소")
         fireEvent.click(cancelButton)
         const _cancelButton = screen.queryByText("취소")
         expect(_cancelButton).toBeNull()
-    })
+    });
+    it("should render login modal when click create comment without login", async () => {
+        render(
+            <Provider store={notLoginMockStore}>
+                <MemoryRouter initialEntries={['/custom/1']}>
+                    <Routes>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const inputBox = screen.getByTestId('add_comment_input')
+        fireEvent.click(inputBox)
+    });
     it("should change bookmark button when bookmarked", async () => {
         render(
             <Provider store={notBookmarkedMockStore}>
@@ -417,7 +437,7 @@ describe("<ItemDetailPage />", () => {
         );
         const bookmarkButton = screen.getByTestId('bookmark_button');
         fireEvent.click(bookmarkButton)
-        expect(mockDispatch).toBeCalledTimes(6)
+        expect(mockDispatch).toBeCalledTimes(5)
     });
     it("should not add bookmark when not login", async () => {
         render(
@@ -431,7 +451,7 @@ describe("<ItemDetailPage />", () => {
         );
         const bookmarkButton = screen.getByTestId('bookmark_button');
         fireEvent.click(bookmarkButton)
-        expect(mockDispatch).toBeCalledTimes(4)
+        expect(mockDispatch).toBeCalledTimes(3)
     });
     it("should set rate when logged in", async () => {
         render(
@@ -445,10 +465,33 @@ describe("<ItemDetailPage />", () => {
         );
         const rateButton = screen.getByText("별점주기");
         fireEvent.click(rateButton)
-        screen.getByText('해당 점수를 클릭하세요')
-        const rating_button = screen.getAllByTestId('rating_button')[1]
-        fireEvent.change(rating_button, { target: { value: 1 } })
-        await waitFor(() => expect(mockDispatch).toBeCalledTimes(5))
+        screen.getByText('별점을 남겨주세요!')
+        const rating_button = screen.getByTestId('rating_button').childNodes[0].childNodes[1]
+        fireEvent.click(rating_button)
+        await waitFor(() => expect(mockDispatch).toBeCalledTimes(6))
+        const rateButton2 = screen.getByText("별점주기");
+        fireEvent.click(rateButton2)
+        screen.getByText('별점을 남겨주세요!')
+        const rating_button2 = screen.getByTestId('rating_button').childNodes[0].childNodes[1]
+        fireEvent.click(rating_button2)
+        await waitFor(() => expect(mockDispatch).toBeCalledTimes(8))
+    });
+    it("should set rate when logged in & already rated", async () => {
+        render(
+            <Provider store={alreadyRatedMockStore}>
+                <MemoryRouter initialEntries={['/standard/1']}>
+                    <Routes>
+                        <Route path="/:type/:id" element={<ItemDetailPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const rateButton = screen.getByText("별점주기");
+        fireEvent.click(rateButton)
+        screen.getByText('별점을 남겨주세요!')
+        const rating_button = screen.getByTestId('rating_button').childNodes[0].childNodes[1]
+        fireEvent.click(rating_button)
+        await waitFor(() => expect(mockDispatch).toBeCalledTimes(6))
     });
     it("should not set rate when not logged in", async () => {
         render(
@@ -462,22 +505,8 @@ describe("<ItemDetailPage />", () => {
         );
         const rateButton = screen.getByText("별점주기");
         fireEvent.click(rateButton)
-        const component = screen.queryByText('해당 점수를 클릭하세요')
+        const component = screen.queryByText('별점을 남겨주세요!')
         expect(component).toBeNull()
-        expect(mockDispatch).toBeCalledTimes(4)
-    });
-    it("should handle delete rate when logged in", async () => {
-        render(
-            <Provider store={alreadyRatedMockStore}>
-                <MemoryRouter initialEntries={['/standard/1']}>
-                    <Routes>
-                        <Route path="/:type/:id" element={<ItemDetailPage />} />
-                    </Routes>
-                </MemoryRouter>
-            </Provider>
-        );
-        const deleteRateButton = screen.getByText("별점삭제하기");
-        fireEvent.click(deleteRateButton)
-        expect(mockDispatch).toBeCalledTimes(6)
+        expect(mockDispatch).toBeCalledTimes(3)
     });
 })

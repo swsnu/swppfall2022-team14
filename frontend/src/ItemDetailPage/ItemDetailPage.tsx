@@ -84,8 +84,6 @@ export default function ItemDetailPage() {
             }
             dispatch(postComment(data));
             setContent("")
-        } else {
-            setIsLoginOpen(true)
         }
     }
 
@@ -136,6 +134,7 @@ export default function ItemDetailPage() {
                 {/*<NavBar />*/}
                 <Stack spacing={2} justifyContent="center" alignItems="center" sx={{ width: 1, pt: 20 }}>
                     <ClipLoader
+                        data-testid="load-button"
                         color='primary.light'
                         loading 
                     />
@@ -264,6 +263,7 @@ export default function ItemDetailPage() {
                                 >
                                     <Stack alignItems="center" justifyContent="space-between" spacing={2} sx={{ width: 1, height: 1 }}>
                                         <Rating
+                                            data-testid="rating_button"
                                             value={rateState.myRate}
                                             precision={0.5}
                                             onChange={(event, newValue) => {
@@ -384,6 +384,7 @@ export default function ItemDetailPage() {
                             {userState.user?.username}
                         </Typography>
                         <TextField
+                            data-testid="add_comment_input"
                             variant="standard"
                             placeholder="댓글 추가..."
                             onClick={() => setOpenAddComment(true)}
