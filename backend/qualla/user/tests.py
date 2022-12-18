@@ -81,9 +81,9 @@ class UserTestCase(TestCase):
     def test_retrieve_my_info_put(self):
 
         # put_info
-        response = self.client.put('/api/v1/auth/me/', json.dumps({'nickname': 'n_', 'password': 'login_', 'intro': 'intro', 'profile_img': 'img'}),
+        response = self.client.put('/api/v1/auth/me/', json.dumps({'nickname': 'n_', 'password': 'login_','org_password':'login_', 'intro': 'intro', 'profile_img': 'img'}),
                                    content_type='application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 401)
 
         # when logged out
         self.client.logout()
