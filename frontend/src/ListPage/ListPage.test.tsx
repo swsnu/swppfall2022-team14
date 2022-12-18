@@ -14,13 +14,13 @@ import { FilterParamType } from "../store/slices/cocktail/cocktail"
 import { RateInfo } from "../store/slices/rate/rate"
 
 // eslint-disable-next-line react/display-name
-jest.mock("./Item/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
+jest.mock("../common/Components/Item", () => (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | "id" | "tags">) => (
     <div data-testid={`spyComment_${prop.id}`}>
     </div>
 ));
 
 // eslint-disable-next-line react/display-name
-jest.mock("./Ingr/Ingr", () => (prop: Pick<IngredientType, "image" | "name" | "id">) => (
+jest.mock("../common/Components/IngredientItem", () => (prop: Pick<IngredientType, "image" | "name" | "id">) => (
     <div data-testid={`spyComment_${prop.id}`}>
     </div>
 ));
@@ -64,6 +64,13 @@ const stubInitialStandardCocktaiState: CocktailInfo = {
     listStatus: "success",
 }
 
+const emptyStandardCocktaiState: CocktailInfo = {
+    cocktailList: [],
+    cocktailItem: null,
+    itemStatus: "success",
+    listStatus: "success",
+}
+
 const stubInitialCustomCocktaiState: CocktailInfo = {
     cocktailList: [custom_cocktail1_item],
     cocktailItem: null,
@@ -76,6 +83,7 @@ const emptyCommentState: CommentInfo = {
     commentItem: null,
     state: null,
 }
+
 const ingredient: IngredientType = {
     id: 1,
     name: "INGREDIENT1",
@@ -98,6 +106,16 @@ const ingredientState: IngredientInfo = {
     listStatus: "success",
 }
 
+const myIngredientState: IngredientInfo = {
+    ingredientList: [ingredient],
+    myIngredientList: [ingredient],
+    recommendIngredientList: [],
+    availableCocktails: [],
+    ingredientItem: null,
+    itemStatus: "success",
+    listStatus: "success",
+}
+
 const stubUserInitialState: UserInfo = {
     user: {
         id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
@@ -110,12 +128,15 @@ const stubUserInitialState: UserInfo = {
     token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
     isLogin: (localStorage.getItem("token") !== null)
 }
+
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
 }
-const standardMockStore = getMockStore({ cocktail: stubInitialStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState, rate: rateState });
 
+const standardMockStore = getMockStore({ cocktail: stubInitialStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState, rate: rateState });
+const emptyStandardMockStore = getMockStore({ cocktail: emptyStandardCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState, rate: rateState });
+const myStandardMockStore = getMockStore({ cocktail: stubInitialStandardCocktaiState, ingredient: myIngredientState, comment: emptyCommentState, user: stubUserInitialState, rate: rateState });
 const customMockStore = getMockStore({ cocktail: stubInitialCustomCocktaiState, ingredient: ingredientState, comment: emptyCommentState, user: stubUserInitialState, rate: rateState });
 
 jest.mock("react-redux", () => ({
@@ -123,30 +144,36 @@ jest.mock("react-redux", () => ({
     useDispatch: () => jest.fn()
 }));
 
-
-
-
+const searchParams = {
+    get: () => {}
+};
 jest.mock("react-router-dom", () => {
     return {
         ...jest.requireActual("react-router-dom"),
-        useLocation: () => {
-            return {
-                state: {
-                    filter_param: {
-                        type_one: ['a'],
-                        type_two: ['b'],
-                        type_three: ['c'],
-                        available_only: true
-                    },
-                    name_param: 'name'
-                }
-            }
-        }
+        useSearchParams: () => [searchParams]
     };
 });
+
+const location = {
+    state: {
+        filter_param: {
+            type_one: ["one"],
+            type_two: ["two"],
+            type_three: ["three"],
+            available_only: true,
+            color: ""
+        },
+        name_param: 'name'
+    }
+}
+jest.mock("react-router", () => ({
+    ...jest.requireActual("react-router"),
+    useLocation: () => (location)
+}));
+
 describe("<ListPage />", () => {
     beforeEach(() => {
-        // jest.clearAllMocks();
+        jest.clearAllMocks();
     });
 
     it("should render standard cocktail without errors", () => {
@@ -162,7 +189,18 @@ describe("<ListPage />", () => {
         const items = screen.getAllByTestId("spyComment_1");
         expect(items).toHaveLength(1);
     });
-
+    it("should render no standard cocktail without errors", () => {
+        render(
+            <Provider store={emptyStandardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        screen.getByText("No Cocktails");
+    });
     it("should render standard cocktail without errors", () => {
         render(
             <Provider store={customMockStore}>
@@ -176,7 +214,6 @@ describe("<ListPage />", () => {
         const items = screen.getAllByTestId("spyComment_2");
         expect(items).toHaveLength(1);
     });
-
     it("should render ingredients without errors", () => {
         render(
             <Provider store={customMockStore}>
@@ -190,7 +227,30 @@ describe("<ListPage />", () => {
         const items = screen.getAllByTestId("spyComment_1");
         expect(items).toHaveLength(1);
     });
-
+    it("should render my ingredients without errors", () => {
+        render(
+            <Provider store={myStandardMockStore}>
+                <MemoryRouter initialEntries={['/ingredient']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const items = screen.getAllByTestId("spyComment_1");
+        expect(items).toHaveLength(1);
+    });
+    it("should not render when wrong path", () => {
+        render(
+            <Provider store={customMockStore}>
+                <MemoryRouter initialEntries={['/error']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+    });
     it("should render list when pending axios without errors", () => {
         const stubCocktaiState: CocktailInfo = {
             cocktailList: [standard_cocktail1_item],
@@ -210,7 +270,6 @@ describe("<ListPage />", () => {
         );
         expect(container).toBeTruthy();
     });
-
     it("should handle filter search", () => {
 
 
@@ -247,11 +306,6 @@ describe("<ListPage />", () => {
         );
         expect(container).toBeTruthy();
     });
-
-
-
-
-
     it("should render list when failed axios without errors", () => {
         const stubCocktaiState: CocktailInfo = {
             cocktailList: [standard_cocktail1_item],
@@ -270,5 +324,129 @@ describe("<ListPage />", () => {
             </Provider>
         );
         expect(container).toBeTruthy();
+    });
+    it("should render type one filter", () => {
+        location.state.filter_param.type_one = ["클래식", "트로피컬"]
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        location.state.filter_param.type_one = ["클래식"]
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        location.state.filter_param.type_one = ["트로피컬"]
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        location.state.filter_param.type_one = ["잘못된 타입"]
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        location.state.filter_param.type_one = []
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+    });
+    it("should render type three filter", () => {
+        location.state.filter_param.type_three = []
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        location.state.filter_param.type_three = ["weak"]
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        location.state.filter_param.type_three = ["medium"]
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        location.state.filter_param.type_three = ["strong"]
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        location.state.filter_param.type_three = ["extreme"]
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+    });
+    it("should render color filter", () => {
+        location.state.filter_param.color = "ffffff"
+        render(
+            <Provider store={standardMockStore}>
+                <MemoryRouter initialEntries={['/standard']}>
+                    <Routes>
+                        <Route path="/:type" element={<ListPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
     });
 })

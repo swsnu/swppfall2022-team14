@@ -11,7 +11,7 @@ import {
     FilterParamType,
     selectCocktail
 } from "../store/slices/cocktail/cocktail";
-import { fetchIngredientList, fetchMyIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
+import { fetchIngredientList, IngredientType, selectIngredient } from "../store/slices/ingredient/ingredient";
 import IngredientItem from "../common/Components/IngredientItem";
 import { selectUser } from '../store/slices/user/user';
 import { Grid, Container, Typography, Stack } from "@mui/material";
@@ -21,13 +21,10 @@ import { ClipLoader } from 'react-spinners';
 import { useSearchParams } from 'react-router-dom';
 
 function filterParamsToSentence(filterParam: FilterParamType | null) {
-
     if (!filterParam)
         return ""
 
-    const { type_one, type_two, type_three } = filterParam;
-
-
+    const { type_one, type_three } = filterParam;
 
     let sentence = ""
     if (type_one.length === 2)
@@ -66,7 +63,7 @@ function filterParamsToSentence(filterParam: FilterParamType | null) {
 const ListPage = () => {
 
     const dispatch = useDispatch<AppDispatch>()
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, ] = useSearchParams();
     const { type } = useParams<string>()
     const cocktailState = useSelector(selectCocktail)
     const ingrState = useSelector(selectIngredient)
@@ -79,7 +76,6 @@ const ListPage = () => {
     const pageStatus = type === 'ingredient' ? ingrState.listStatus : cocktailState.listStatus
 
     useEffect(() => {
-
         const param: FilterParamType | null = (type === 'ingredient' || !location.state) ? null : {
             type_one: location.state.filter_param.type_one,
             type_two: location.state.filter_param.type_two,
@@ -102,7 +98,7 @@ const ListPage = () => {
             dispatch(fetchIngredientList(search))
         }
 
-    }, [location])
+    }, [])
 
 
     useEffect(() => {
