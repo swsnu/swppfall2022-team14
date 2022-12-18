@@ -93,7 +93,7 @@ describe("<MyIngredient />", () => {
 
     it("should handle add modal", async () => {
         render(<Provider store={mockLoggedInStore}><MyIngredient /></Provider>);
-        const addButton = screen.getByText("Add");
+        const addButton = screen.getByTestId("add_button");
         fireEvent.click(addButton)
         await waitFor(() => screen.getByTestId("spyModal"));
     });
