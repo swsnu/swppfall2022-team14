@@ -8,6 +8,7 @@ import InitMyLiqourModal from "./InitMyLiquorModal";
 import { UserInfo } from "../../store/slices/user/user";
 import React from 'react'
 import { RateInfo } from "../../store/slices/rate/rate";
+import userEvent from "@testing-library/user-event";
 
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
@@ -44,16 +45,18 @@ const stubIngredientInitialStateEmpty: IngredientInfo = {
 
 const stubUserInitialState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password: null,
-        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "TEST_ID",
+        username: "TEST_USERNAME",
+        password: "TEST_PASSWORD",
+        nickname: "TEST_NICKNAME",
+        intro: "TEST_INTRO",
+        profile_img: "TEST_PROFILE_IMG",
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
-}
+    token: "TEST_TOKEN",
+    isLogin: true
+};
+
+
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
     myRate: null
@@ -98,5 +101,7 @@ const renderInitMyLiqourModal = (ingredient: IngredientInfo) => {
 describe("<InitMyLiquorModal />", () => {
     it("should render InitMyLiquorModal", () => {
         renderInitMyLiqourModal(stubIngredientInitialState);
+        userEvent.click(document.body);
     });
+
 });

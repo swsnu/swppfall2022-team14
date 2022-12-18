@@ -381,6 +381,7 @@ export default function EditCustomPage() {
                                                 })}
                                             >
                                                 <Typography
+
                                                     variant="body1"
                                                     sx={(theme) => ({
                                                         [theme.breakpoints.down('sm')]: {
@@ -395,6 +396,7 @@ export default function EditCustomPage() {
                                                     어떤 느낌인가요?
                                                 </Typography>
                                                 <TextField
+                                                    data-testid="typeone"
                                                     variant="standard"
                                                     select
                                                     value={typeOne}
@@ -442,6 +444,7 @@ export default function EditCustomPage() {
                                                     용량
                                                 </Typography>
                                                 <TextField
+                                                    data-testid="typetwo"
                                                     variant="standard"
                                                     select
                                                     value={typeTwo}
@@ -537,6 +540,7 @@ export default function EditCustomPage() {
                                         >
                                             <TextField
                                                 label="재료"
+                                                data-testid="재료"
                                                 variant="standard"
                                                 value={ingredient.name}
                                                 onClick={() => (idx === ingredientList.length) && setOpen(true)}
@@ -567,6 +571,7 @@ export default function EditCustomPage() {
                                             />
                                             <TextField
                                                 label="양"
+                                                data-testid="양"
                                                 variant="standard"
                                                 value={ingredient.amount}
                                                 onChange={(event) => {
@@ -596,6 +601,7 @@ export default function EditCustomPage() {
                                             />
                                             <TextField
                                                 label="단위"
+                                                data-testid="단위"
                                                 variant="standard"
                                                 select
                                                 value={ingredient.recipe_unit}

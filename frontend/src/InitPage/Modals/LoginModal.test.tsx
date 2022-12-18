@@ -61,8 +61,8 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
-jest.spyOn(window, 'alert').mockImplementation(() => {});
-jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(window, 'alert').mockImplementation(() => { });
+jest.spyOn(console, 'error').mockImplementation(() => { });
 
 const renderLoginModal = () => {
     renderWithProviders(
@@ -96,7 +96,7 @@ describe("<LoginModal />", () => {
     });
     it("should render register inputs when register mode button clicked", async () => {
         renderLoginModal();
-        const registerModeButton = screen.getByText("회원가입하러 가기");
+        const registerModeButton = screen.getByText("회원가입 하러가기");
         fireEvent.click(registerModeButton);
         await screen.findByText("회원가입");
     });
@@ -109,51 +109,52 @@ describe("<LoginModal />", () => {
     it("should close login when confirmed", async () => {
         mockDispatch.mockReturnValueOnce({ type: "user/loginUser/fulfilled" });
         renderLoginModal();
-        const idInput = screen.getByLabelText("아이디");
-        fireEvent.change(idInput, { target: { value: "TEST_IDID" } });
-        const passwordInput = screen.getByLabelText("비밀번호");
-        fireEvent.change(passwordInput, { target: { value: "TEST_PASSWORD" } });
+        const idInput = screen.getByLabelText("아이디").querySelector("input");
+        if (idInput) fireEvent.change(idInput, { target: { value: "TEST_IDID" } });
+        const passwordInput = screen.getByTestId("password").querySelector("input");
+        if (passwordInput) fireEvent.change(passwordInput, { target: { value: "TEST_PASSWORD" } });
         const loginButton = screen.getByText("로그인");
         fireEvent.click(loginButton);
     });
     it("should close register when confirmed", async () => {
         mockDispatch.mockReturnValueOnce({ type: "user/registerUser/fulfilled" });
         renderLoginModal();
-        const registerModeButton = screen.getByText("회원가입하러 가기");
+        const registerModeButton = screen.getByText("회원가입 하러가기");
         fireEvent.click(registerModeButton);
         await screen.findByText("회원가입");
         const idInput = screen.getByLabelText("아이디");
         fireEvent.change(idInput, { target: { value: "test_idid" } });
-        const passwordInput = screen.getByLabelText("비밀번호");
-        fireEvent.change(passwordInput, { target: { value: "testpassw1234" } });
-        const registerButton = screen.getByText("회원가입");
+        const passwordInput = screen.getByTestId("password").querySelector("input");
+        if (passwordInput) fireEvent.change(passwordInput, { target: { value: "testpassw1234" } });
+        const registerButton = screen.getByTestId("register");
         fireEvent.click(registerButton);
+        fireEvent.keyPress(idInput, { key: "Enter", charCode: 13 });
     });
     it("should not login when id or password empty", async () => {
         renderLoginModal();
-        const idInput = screen.getByLabelText("아이디");
-        fireEvent.change(idInput, { target: { value: "test_idid" } });
+        const idInput = screen.getByLabelText("아이디").querySelector("input");
+        if (idInput) fireEvent.change(idInput, { target: { value: "test_idid" } });
     });
     it("should not register when id wrong", async () => {
         renderLoginModal();
-        const registerModeButton = screen.getByText("회원가입하러 가기");
+        const registerModeButton = screen.getByText("회원가입 하러가기");
         fireEvent.click(registerModeButton);
         await screen.findByText("회원가입");
         const idInput = screen.getByLabelText("아이디");
         fireEvent.change(idInput, { target: { value: "test_idididididididididid" } });
-        const registerButton = screen.getByText("회원가입");
+        const registerButton = screen.getByTestId("register");
         fireEvent.click(registerButton);
     });
     it("should not register when password wrong", async () => {
         renderLoginModal();
-        const registerModeButton = screen.getByText("회원가입하러 가기");
+        const registerModeButton = screen.getByText("회원가입 하러가기");
         fireEvent.click(registerModeButton);
         await screen.findByText("회원가입");
         const idInput = screen.getByLabelText("아이디");
         fireEvent.change(idInput, { target: { value: "test_idid" } });
-        const pwInput = screen.getByLabelText("비밀번호");
-        fireEvent.change(pwInput, { target: { value: "test_pw" } });
-        const registerButton = screen.getByText("회원가입");
+        const passwordInput = screen.getByTestId("password").querySelector("input");
+        if (passwordInput) fireEvent.change(passwordInput, { target: { value: "test_pw" } });
+        const registerButton = screen.getByTestId("register");
         fireEvent.click(registerButton);
     });
     it("should fail login when id or password wrong", async () => {
@@ -161,8 +162,10 @@ describe("<LoginModal />", () => {
         renderLoginModal();
         const idInput = screen.getByLabelText("아이디");
         fireEvent.change(idInput, { target: { value: "WRONG_ID" } });
-        const pwInput = screen.getByLabelText("비밀번호");
-        fireEvent.change(pwInput, { target: { value: "WRONG_PW" } });
+        const passwordInput = screen.getByTestId("password").querySelector("input");
+        if (passwordInput) fireEvent.change(passwordInput, { target: { value: "WRONG_PW" } });
+        const showPassword = screen.getByTestId("showPassword");
+        fireEvent.click(showPassword)
         const loginButton = screen.getByText("로그인");
         fireEvent.click(loginButton);
         await screen.findByText("아이디 또는 비밀번호가 일치하지 않습니다.");
@@ -170,24 +173,26 @@ describe("<LoginModal />", () => {
     it("should fail register when id or password wrong", async () => {
         mockDispatch.mockReturnValueOnce({ type: "user/registerUser/rejected" });
         renderLoginModal();
-        const registerModeButton = screen.getByText("회원가입하러 가기");
+        const registerModeButton = screen.getByText("회원가입 하러가기");
         fireEvent.click(registerModeButton);
         await screen.findByText("회원가입");
         const idInput = screen.getByLabelText("아이디");
         fireEvent.change(idInput, { target: { value: "test_idid" } });
-        const passwordInput = screen.getByLabelText("비밀번호");
-        fireEvent.change(passwordInput, { target: { value: "testpassw1234" } });
-        const registerButton = screen.getByText("회원가입");
+        const passwordInput = screen.getByTestId("password").querySelector("input");
+        if (passwordInput) fireEvent.change(passwordInput, { target: { value: "testpassw1234" } });
+        const pwConfirmInput = screen.getByTestId("pwconfirm").querySelector("input");
+        if (pwConfirmInput) fireEvent.change(pwConfirmInput, { target: { value: "testpassw1234" } });
+        const registerButton = screen.getByTestId("register");
         fireEvent.click(registerButton);
     });
     it("should close LoginModal when escape clicked", async () => {
         renderLoginModal();
         const idInput = screen.getByLabelText("아이디");
-        fireEvent.keyPress(idInput, { 
+        fireEvent.keyPress(idInput, {
             key: "Escape",
             code: "Escape",
             keyCode: 27,
-            charCode: 27 
+            charCode: 27
         });
     });
 });

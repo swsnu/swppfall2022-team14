@@ -200,7 +200,7 @@ describe("<EditCustomPage />", () => {
         fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
         const confirmButton = screen.getByText("수정");
         fireEvent.click(confirmButton);
-        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/custom/1"));
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(-1));
     });
     it("should operate onChangeAmount correctly", async () => {
         renderEditCustomPage();
@@ -211,6 +211,7 @@ describe("<EditCustomPage />", () => {
         const ingredientAmountInput2 = screen.getAllByLabelText("양")[1];
         fireEvent.change(ingredientAmountInput2, { target: { value: "5" } });
         fireEvent.change(ingredientAmountInput2, { target: { value: "0" } });
+
     });
     it("should operate onChangeIngredientUnit correctly", async () => {
         renderEditCustomPage();
@@ -266,6 +267,29 @@ describe("<EditCustomPage />", () => {
         renderEditCustomPage("success", true, true);
         const confirmButton = screen.getByText("수정");
         fireEvent.click(confirmButton);
+
+        const nameInput = screen.getByLabelText("칵테일 이름");
+        fireEvent.change(nameInput, { target: { value: "NAME" } });
+        const descriptionInput = screen.getByLabelText("설명");
+        fireEvent.change(descriptionInput, { target: { value: "DESCRIPTION" } });
+        const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
+        fireEvent.click(addIngredientButton);
+        const ingredientAmountInput = screen.getAllByLabelText("양")[0];
+        fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
+        const recipeInput = screen.getByLabelText("만드는 방법");
+        fireEvent.change(recipeInput, { target: { value: "RECIPE" } });
+        const tagInput = screen.getByLabelText("태그");
+        fireEvent.change(tagInput, { target: { value: "TAG" } })
+        fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
+        const ingredientInput = screen.getAllByLabelText("재료")[0].querySelector("input");
+        if (ingredientInput) fireEvent.click(ingredientInput);
+        fireEvent.click(confirmButton);
+        const ingredientUnitSelect = screen.getAllByTestId("단위")[0].querySelector("input");
+        if (ingredientUnitSelect) fireEvent.change(ingredientUnitSelect, { target: { value: "ml" } });
+        fireEvent.click(confirmButton);
+        const ingredientAmountSelect = screen.getAllByTestId("양")[0].querySelector("input");
+        if (ingredientAmountSelect) fireEvent.change(ingredientAmountSelect, { target: { value: "30" } });
+        fireEvent.click(confirmButton);
     });
     it("should not load when cocktail is null", async () => {
         renderEditCustomPage("success", true, false, true);
@@ -285,5 +309,48 @@ describe("<EditCustomPage />", () => {
             type: 'text/plain'
         });
         user.upload(FileUploadInput, file);
+    });
+    it("should handle value errors", async () => {
+        renderEditCustomPage();
+        const confirmButton = screen.getByText("수정");
+        fireEvent.click(confirmButton);
+        const nameInput = screen.getByLabelText("칵테일 이름");
+        fireEvent.change(nameInput, { target: { value: "NAME" } });
+        fireEvent.click(confirmButton);
+        const engNameInput = screen.getByLabelText("영어 이름 (선택)");
+        fireEvent.change(engNameInput, { target: { value: "NAME" } });
+        fireEvent.click(confirmButton);
+        const descriptionInput = screen.getByLabelText("설명");
+        fireEvent.change(descriptionInput, { target: { value: "DESCRIPTION" } });
+        fireEvent.click(confirmButton);
+        const addIngredientButton = screen.getAllByTestId("addIngredientButton")[0];
+        fireEvent.click(addIngredientButton);
+        fireEvent.click(confirmButton);
+        const ingredientAmountInput = screen.getAllByTestId("양")[0].querySelector("input");
+        if (ingredientAmountInput) fireEvent.change(ingredientAmountInput, { target: { value: "10" } });
+        fireEvent.click(confirmButton);
+        const recipeInput = screen.getByLabelText("만드는 방법");
+        fireEvent.change(recipeInput, { target: { value: "RECIPE" } });
+        fireEvent.click(confirmButton);
+        const tagInput = screen.getByLabelText("태그");
+        fireEvent.change(tagInput, { target: { value: "TAG" } })
+        fireEvent.keyPress(tagInput, { key: "Enter", charCode: 13 });
+        fireEvent.click(confirmButton);
+        const typeOne = screen.getByTestId("typeone").querySelector("input");
+        if (typeOne) fireEvent.change(typeOne, { target: { value: "트로피컬" } });
+        const typeTwo = screen.getByTestId("typetwo").querySelector("input");
+        if (typeTwo) fireEvent.change(typeTwo, { target: { value: "샷" } });
+
+
+        const ingredientInput = screen.getAllByLabelText("재료")[0].querySelector("input");
+        if (ingredientInput) fireEvent.click(ingredientInput);
+        fireEvent.click(confirmButton);
+        const ingredientUnitSelect = screen.getAllByTestId("단위")[0].querySelector("input");
+        if (ingredientUnitSelect) fireEvent.change(ingredientUnitSelect, { target: { value: "ml" } });
+        fireEvent.click(confirmButton);
+        const ingredientAmountSelect = screen.getAllByTestId("양")[0].querySelector("input");
+        if (ingredientAmountSelect) fireEvent.change(ingredientAmountSelect, { target: { value: "30" } });
+        fireEvent.click(confirmButton);
+
     });
 });

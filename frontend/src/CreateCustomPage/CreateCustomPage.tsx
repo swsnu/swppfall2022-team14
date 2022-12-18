@@ -361,6 +361,7 @@ export default function CreateCustomPage() {
                                                 어떤 느낌인가요?
                                             </Typography>
                                             <TextField
+                                                data-testid="typeone"
                                                 variant="standard"
                                                 select
                                                 value={typeOne}
@@ -408,6 +409,7 @@ export default function CreateCustomPage() {
                                                 용량
                                             </Typography>
                                             <TextField
+                                                data-testid="typetwo"
                                                 variant="standard"
                                                 select
                                                 value={typeTwo}
@@ -534,6 +536,7 @@ export default function CreateCustomPage() {
                                         <TextField
                                             label="양"
                                             variant="standard"
+                                            data-testid="양"
                                             value={ingredient.amount}
                                             onChange={(event) => {
                                                 onChangeAmount(idx, event.target.value);
@@ -565,6 +568,7 @@ export default function CreateCustomPage() {
                                             variant="standard"
                                             select
                                             value={ingredient.recipe_unit}
+                                            data-testid="단위"
                                             onChange={(e) => {
                                                 onChangeIngredientUnit(idx, e.target.value);
                                                 setExpectedABV(calculateABV(ingredientList));

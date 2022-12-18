@@ -59,21 +59,21 @@ const RecommendModal = (props: prop) => {
 
 
     return (
-        <Modal 
-            open={isOpen} 
+        <Modal
+            open={isOpen}
             onClose={() => setIsOpen(false)}
         >
             <Stack spacing={2} sx={style}>
                 <Grid container spacing={3} columns={4}>
                     {ingredientState.recommendIngredientList.map((ingredient) => (
                         <Grid key={ingredient.id} item md={1} sm={2} xs={4}>
-                            <Card 
-                                sx={{ 
+                            <Card
+                                sx={{
                                     width: 1, textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main',
-                                }} 
+                                }}
                             >
                                 <Stack direction="row" alignItems="flex-start" justifyContent="flex-end" sx={{ width: 1, height: 20 }}>
-                                    <IconButton 
+                                    <IconButton
                                         size="small"
                                         data-testid="add"
                                         sx={{
@@ -85,7 +85,7 @@ const RecommendModal = (props: prop) => {
                                         <AddIcon sx={{ fontSize: 20 }} />
                                     </IconButton>
                                 </Stack>
-                                <Box 
+                                <Box
                                     sx={(theme) => ({
                                         [theme.breakpoints.down('sm')]: {
                                             display: 'flex',
@@ -93,27 +93,27 @@ const RecommendModal = (props: prop) => {
                                         },
                                     })}
                                 >
-                                    <ImageListItem 
-                                        onClick={() => onClickItem(ingredient.id)} 
-                                        sx={(theme) => ({ 
-                                            width: 1, aspectRatio: 1, cursor: 'pointer', 
+                                    <ImageListItem
+                                        onClick={() => onClickItem(ingredient.id)}
+                                        sx={(theme) => ({
+                                            width: 1, aspectRatio: 1, cursor: 'pointer',
                                             [theme.breakpoints.down('sm')]: {
                                                 width: 0.4,
                                                 mx: 1,
                                             },
                                         })}
                                     >
-                                        <img 
-                                            src={ingredient.image} 
-                                            loading="lazy" 
+                                        <img
+                                            src={ingredient.image}
+                                            loading="lazy"
                                             style={{
                                                 aspectRatio: 1
-                                            }} 
+                                            }}
                                         />
                                     </ImageListItem>
-                                    <Box 
+                                    <Box
                                         justifyContent="space-between"
-                                        sx={(theme) => ({ 
+                                        sx={(theme) => ({
                                             width: 1, p: 3, display: 'flex',
                                             [theme.breakpoints.down('sm')]: {
                                                 width: 0.6,
@@ -125,9 +125,9 @@ const RecommendModal = (props: prop) => {
                                             },
                                         })}
                                     >
-                                        <Typography 
-                                            noWrap onClick={() => onClickItem(ingredient.id)} 
-                                            sx={(theme) => ({ 
+                                        <Typography
+                                            noWrap onClick={() => onClickItem(ingredient.id)}
+                                            sx={(theme) => ({
                                                 cursor: 'pointer',
                                                 [theme.breakpoints.down('sm')]: {
                                                     mb: 2,
@@ -141,11 +141,11 @@ const RecommendModal = (props: prop) => {
                                         </Typography>
                                     </Box>
                                 </Box>
-                                {ingredientState.availableCocktails.find(info => info?.ingredient_id === ingredient.id) ? 
+                                {ingredientState.availableCocktails.find(info => info?.ingredient_id === ingredient.id) ?
                                     <FormGroup row sx={{ gap: 1, p: 2 }}>
-                                        <Typography 
+                                        <Typography
                                             fontSize={12} noWrap
-                                            sx={(theme) => ({ 
+                                            sx={(theme) => ({
                                                 width: 1,
                                                 [theme.breakpoints.down('sm')]: {
                                                     width: 'fit-content',
@@ -159,18 +159,18 @@ const RecommendModal = (props: prop) => {
                                         {ingredientState.availableCocktails
                                             .find(info => info.ingredient_id === ingredient.id)?.cocktails
                                             .map(cocktail => (
-                                            <Button
-                                                key={cocktail.id}
-                                                size="small"
-                                                sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
-                                                onClick={() => onClickCocktailName(cocktail.id, cocktail.type)}
-                                            >
-                                                <Typography variant="caption" color='text.primary'>
-                                                    {cocktail.name}
-                                                </Typography>
-                                            </Button>
-                                        ))}
-                                    </FormGroup> : 
+                                                <Button
+                                                    key={cocktail.id}
+                                                    size="small"
+                                                    sx={{ bgcolor: 'primary.light', borderRadius: 5, px: 1, py: 0.2, textAlign: 'center' }}
+                                                    onClick={() => onClickCocktailName(cocktail.id, cocktail.type)}
+                                                >
+                                                    <Typography variant="caption" color='text.primary'>
+                                                        {cocktail.name}
+                                                    </Typography>
+                                                </Button>
+                                            ))}
+                                    </FormGroup> :
                                     <Typography sx={{ p: 2 }} fontSize={12} noWrap>
                                         일반적으로 많이 들어가는 재료
                                     </Typography>

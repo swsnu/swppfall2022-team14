@@ -123,5 +123,9 @@ describe("<RecommendModal />", () => {
     })
     it("should handle recommendation ingredients render branches", () => {
         renderRecommendModal(stubIngredientInitialState2);
+        const ingredient = screen.getByText("1");
+        fireEvent.click(ingredient);
+        const add = screen.getByTestId("add");
+        fireEvent.click(add);
     })
 });

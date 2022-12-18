@@ -3,11 +3,11 @@ import { Provider } from "react-redux";
 import IngredientItem from "./IngredientItem";
 import { getMockStore } from "../../test-utils/mock";
 import React from 'react';
-import {IngredientInfo} from "../../store/slices/ingredient/ingredient";
-import {UserInfo} from "../../store/slices/user/user";
-import {CommentInfo} from "../../store/slices/comment/comment";
-import {CocktailInfo} from "../../store/slices/cocktail/cocktail";
-import {RateInfo} from "../../store/slices/rate/rate";
+import { IngredientInfo } from "../../store/slices/ingredient/ingredient";
+import { UserInfo } from "../../store/slices/user/user";
+import { CommentInfo } from "../../store/slices/comment/comment";
+import { CocktailInfo } from "../../store/slices/cocktail/cocktail";
+import { RateInfo } from "../../store/slices/rate/rate";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
