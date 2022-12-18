@@ -94,7 +94,8 @@
       "!src/react-app-env.d.ts",
       "!src/reportWebVitals.ts",
       "!src/test-utils/*",
-      "!src/common/utils/*"
+      "!src/common/utils/*",
+      "!src/store/index.ts"
     ]
   },
   "proxy": "https://qualla.kro.kr/"

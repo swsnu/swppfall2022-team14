@@ -17,9 +17,9 @@ jest.mock("react-router", () => ({
     useNavigate: () => mockNavigate,
 }));
 
-jest.mock("@mui/material/Input/Input", () => (props: InputProps) => (
+jest.mock("@mui/material/Input", () => (props: InputProps) => (
     <div>
-        <input onChange={props.onChange} data-testid={'password_input'} />
+        <input onChange={props.onChange}  data-testid={'password_input'} />
         {props.endAdornment}
     </div>
 ));
