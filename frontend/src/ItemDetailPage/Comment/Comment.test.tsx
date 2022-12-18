@@ -17,12 +17,6 @@ jest.mock("./Reply", () => (prop: CommentType) => (
     </div>
 ));
 
-// eslint-disable-next-line react/display-name
-jest.mock("@mui/material/TextField/TextField", () => (props:TextFieldProps) => (
-    <input onClick={props.onClick} onChange={props.onChange} data-testid={'edit_comment_input'} value={props.value as string}/>
-));
-
-
 const emptyCocktail: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
@@ -109,7 +103,6 @@ const commentMore: CommentType = {
     is_deleted: false
 };
 
-
 const editComment: CommentInfo = {
     commentList: [commentAuthor, commentOther],
     commentItem: commentAuthor,
@@ -150,8 +143,8 @@ const commentNotLoginEditMockStore = getMockStore({ cocktail: emptyCocktail, ing
 const commentReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: stubUserInitialState, rate: rateState });
 const commentNotLoginReplyMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: replyComment, user: { ...stubUserInitialState, isLogin: false, token: null }, rate: rateState });
 const commentMoreMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: emptyIngredient, comment: moreComment, user: stubUserInitialState, rate: rateState });
-const mockNavigate = jest.fn();
 
+const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
@@ -162,6 +155,8 @@ jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
     useDispatch: () => mockDispatch,
 }));
+
+jest.spyOn(console, 'error').mockImplementation(() => {});
 
 describe("<Comment />", () => {
     beforeEach(() => {
@@ -196,7 +191,7 @@ describe("<Comment />", () => {
 
         const items = screen.getAllByTestId("spyReply_2");
         expect(items).toHaveLength(1);
-        const textField = screen.getByTestId("edit_comment_input")
+        const textField = screen.getByTestId("edit_comment_input").childNodes[0].childNodes[0];
         fireEvent.change(textField, { target: { value: "EDIT_CONTENT" } })
         const editButton = screen.getByText("수정");
         fireEvent.click(editButton)
@@ -228,13 +223,12 @@ describe("<Comment />", () => {
             </Provider>
         );
 
-        const textField = screen.getByTestId("edit_comment_input")
+        const textField = screen.getByTestId("edit_comment_input").childNodes[0].childNodes[0];
         fireEvent.change(textField, { target: { value: "EDIT_CONTENT" } })
         const editButton = screen.getByText("수정");
         fireEvent.click(editButton)
         expect(mockDispatch).toBeCalledTimes(0)
     });
-
     it("should handle edit comment", () => {
         const create = new Date()
         const update = new Date()
@@ -358,7 +352,7 @@ describe("<Comment />", () => {
         fireEvent.click(createReplyButton)
         expect(mockDispatch).toBeCalledTimes(1)
     
-        const replyTextField = screen.getByTestId("edit_comment_input")
+        const replyTextField = screen.getByTestId("edit_comment_input").childNodes[0].childNodes[0];
         fireEvent.click(replyTextField)
         fireEvent.change(replyTextField, { target: { value: "REPLY_CONTENT" } })
         
@@ -435,7 +429,7 @@ describe("<Comment />", () => {
         fireEvent.click(createReplyButton)
         expect(mockDispatch).toBeCalledTimes(1)
     
-        const replyTextField = screen.getByTestId("edit_comment_input")
+        const replyTextField = screen.getByTestId("edit_comment_input").childNodes[0].childNodes[0];
         fireEvent.click(replyTextField)
         fireEvent.change(replyTextField, { target: { value: "REPLY_CONTENT" } })
         

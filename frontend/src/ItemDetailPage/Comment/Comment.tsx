@@ -79,6 +79,7 @@ const Comment = (props: AccessCommentType) => {
                     {props.author_name}
                 </Typography>
                 <TextField 
+                    data-testid="edit_comment_input"
                     variant="standard" 
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
@@ -96,6 +97,7 @@ const Comment = (props: AccessCommentType) => {
                         </Typography>
                     </Button>
                     <Button 
+                        data-testid="edit_comment_button"
                         size="small"
                         sx={{ 
                             bgcolor: content ? 'primary.light' : 'background.default', borderRadius: 3, py: 1, textAlign: 'center',
@@ -192,6 +194,7 @@ const Comment = (props: AccessCommentType) => {
                                 {userState.user?.username}
                             </Typography>
                             <TextField 
+                                data-testid="edit_comment_input"
                                 variant="standard" 
                                 placeholder="댓글 추가..." 
                                 onClick={() => setOpenAddReply(true)}

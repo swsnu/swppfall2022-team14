@@ -16,11 +16,13 @@ const emptyCocktail: CocktailInfo = {
     itemStatus: "loading",
     listStatus: "loading"
 }
+
 const emptyComment: CommentInfo = {
     commentList: [],
     commentItem: null,
     state: null
 }
+
 const loadingIngredient: IngredientInfo = {
     ingredientList: [],
     ingredientItem: {
@@ -40,6 +42,7 @@ const loadingIngredient: IngredientInfo = {
     recommendIngredientList: [],
     availableCocktails: []
 }
+
 const failedIngredient: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
@@ -59,6 +62,7 @@ const failedIngredient: IngredientInfo = {
     recommendIngredientList: [],
     availableCocktails: []
 }
+
 const noABVIngredient: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
@@ -78,6 +82,7 @@ const noABVIngredient: IngredientInfo = {
     recommendIngredientList: [],
     availableCocktails: []
 }
+
 const fakeIngredient: IngredientInfo = {
     ingredientList: [],
     myIngredientList: [],
@@ -98,18 +103,74 @@ const fakeIngredient: IngredientInfo = {
     availableCocktails: []
 }
 
+const colorIngredient: IngredientInfo = {
+    ingredientList: [],
+    myIngredientList: [],
+    ingredientItem: {
+        id: 1,
+        name: 'name',
+        name_eng: "ENG_INGREDIENT1",
+        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
+        introduction: '소개',
+        ABV: 42.4,
+        price: 200,
+        unit: ['oz'],
+        color: "ffffff"
+    },
+    itemStatus: "",
+    listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
+}
+
+const myIngredient: IngredientInfo = {
+    ingredientList: [],
+    myIngredientList: [{
+        id: 1,
+        name: 'name',
+        name_eng: "ENG_INGREDIENT1",
+        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
+        introduction: '소개',
+        ABV: 42.4,
+        price: 200,
+        unit: ['oz'],
+        color: ""
+    }],
+    ingredientItem: {
+        id: 1,
+        name: 'name',
+        name_eng: "ENG_INGREDIENT1",
+        image: 'https://www.acouplecooks.com/wp-content/uploads/2021/03/Blue-Lagoon-Cocktail-007s.jpg',
+        introduction: '소개',
+        ABV: 42.4,
+        price: 200,
+        unit: ['oz'],
+        color: ""
+    },
+    itemStatus: "",
+    listStatus: "loading",
+    recommendIngredientList: [],
+    availableCocktails: []
+}
+
 const stubUserInitialState: UserInfo = {
     user: {
-        id: (localStorage.getItem("id") === null) ? null : localStorage.getItem("id"),
-        username: (localStorage.getItem("username") === null) ? null : localStorage.getItem("username"),
-        password: null,
-        nickname: (localStorage.getItem("nickname") === null) ? null : localStorage.getItem("nickname"),
-        intro: (localStorage.getItem("intro") === null) ? null : localStorage.getItem("intro"),
-        profile_img: (localStorage.getItem("profile_img") === null) ? null : localStorage.getItem("profile_img"),
+        id: "TEST_ID",
+        username: "TEST_USERNAME",
+        password: "TEST_PASSWORD",
+        nickname: "TEST_NICKNAME",
+        intro: "TEST_INTRO",
+        profile_img: "TEST_PROFILE_IMG",
     },
-    token: (localStorage.getItem("token") === null) ? null : localStorage.getItem("token"),
-    isLogin: (localStorage.getItem("token") !== null)
-}
+    token: "TEST_TOKEN",
+    isLogin: true
+};
+
+const emptyUserInitailState: UserInfo = {
+    user: null,
+    token: null,
+    isLogin: false
+};
 
 const rateState: RateInfo = {
     rate: { id: 1, user_id: 1, cocktail_id: 1, score: 1 },
@@ -120,18 +181,24 @@ const loadingMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: loa
 const failedMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: failedIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState })
 const noAVBIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: noABVIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState })
 const fakeIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: fakeIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState })
-
+const colorIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: colorIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState })
+const notLoginMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: fakeIngredient, comment: emptyComment, user: emptyUserInitailState, rate: rateState });
+const myIngredientMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: myIngredient, comment: emptyComment, user: stubUserInitialState, rate: rateState })
+const myNotLoginMockStore = getMockStore({ cocktail: emptyCocktail, ingredient: myIngredient, comment: emptyComment, user: emptyUserInitailState, rate: rateState });
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
 }));
+
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
     useDispatch: () => mockDispatch,
 }));
+
+jest.spyOn(console, 'error').mockImplementation(() => {});
 
 describe("<Comment />", () => {
     beforeEach(() => {
@@ -148,7 +215,7 @@ describe("<Comment />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        screen.getByText("Loading ..")
+        screen.getByTestId("load-button")
     });
     it("should render without errors failed Status", () => {
         const { container } = render(
@@ -160,9 +227,8 @@ describe("<Comment />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        screen.getByText("Non existing Ingredient")
+        screen.getByText("서버로부터 정보를 불러오지 못하였습니다.")
     });
-
     it("should render without errors empty parent_comment", () => {
         const { container } = render(
             <Provider store={fakeIngredientMockStore}>
@@ -173,10 +239,24 @@ describe("<Comment />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        const element = container.getElementsByClassName("main");
-        expect(element).toHaveLength(1);
         screen.getByText("소개")
+        const addButton = screen.getByTestId("add-ingredient")
+        fireEvent.click(addButton)
     });
+    it("should not add ingredient when not login", () => {
+        const { container } = render(
+            <Provider store={notLoginMockStore}>
+                <MemoryRouter initialEntries={['/ingredient/1']}>
+                    <Routes>
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        screen.getByText("소개")
+        const addButton = screen.getByTestId("add-ingredient")
+        fireEvent.click(addButton)
+    })
     it("should render without errors empty parent_comment & no ABV", () => {
         const { container } = render(
             <Provider store={noAVBIngredientMockStore}>
@@ -187,11 +267,48 @@ describe("<Comment />", () => {
                 </MemoryRouter>
             </Provider>
         );
-        const element = container.getElementsByClassName("main");
-        expect(element).toHaveLength(1);
         screen.getByText("소개")
         screen.getByText("도수 없음")
     });
+    it("should delete ingredient when click delete button", () => {
+        const { container } = render(
+            <Provider store={myIngredientMockStore}>
+                <MemoryRouter initialEntries={['/ingredient/1']}>
+                    <Routes>
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        screen.getByText("소개")
+        const deleteButton = screen.getByTestId("delete-ingredient")
+        fireEvent.click(deleteButton)
+    });
+    it("should not delete ingredient when not login", () => {
+        const { container } = render(
+            <Provider store={myNotLoginMockStore}>
+                <MemoryRouter initialEntries={['/ingredient/1']}>
+                    <Routes>
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        screen.getByText("소개")
+        const deleteButton = screen.getByTestId("delete-ingredient")
+        fireEvent.click(deleteButton)
+    });
+    it("should render color", () => {
+        const { container } = render(
+            <Provider store={colorIngredientMockStore}>
+                <MemoryRouter initialEntries={['/ingredient/1']}>
+                    <Routes>
+                        <Route path="/ingredient/:id" element={<IngredientDetailPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+    })
 })
 
 
