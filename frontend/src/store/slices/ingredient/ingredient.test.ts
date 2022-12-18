@@ -58,6 +58,11 @@ describe("ingredient reducer", () => {
         await store.dispatch(fetchIngredientList(null));
         expect(store.getState().ingredient.ingredientList).toEqual([fakeIngredient])
     });
+    it("should handle fetchIngredientList with params", async () => {
+        axios.get = jest.fn().mockResolvedValue({ data: { Ingredients: [fakeIngredient] } });
+        await store.dispatch(fetchIngredientList("params"));
+        expect(store.getState().ingredient.ingredientList).toEqual([fakeIngredient])
+    });
     it("should handle Error fetchIngredientList", async () => {
         axios.get = jest.fn().mockRejectedValue({ data: { Ingredients: [fakeIngredient] } });
         await store.dispatch(fetchIngredientList(null));

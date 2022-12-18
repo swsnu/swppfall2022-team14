@@ -6,6 +6,7 @@ import {
 import axios from "axios";
 import { ThunkMiddleware } from "redux-thunk";
 import reducer, {
+    editUser,
     UserInfo,
     UserType
 } from "./user";
@@ -117,5 +118,16 @@ describe("user reducer", () => {
         axios.get = jest.fn().mockResolvedValue({ data: user });
         const res = await store.dispatch(getUser("token"));
         expect(res.payload).toEqual(user)
+    });
+
+    it("should handle editUser", async () => {
+        axios.put = jest.fn().mockResolvedValue({ data: user });
+        const res = await store.dispatch(editUser({ token: "TOKEN", org_password: "PASSWORD1", password: "PASSWORD2" }));
+    });
+
+    it("should handle error editUser", async () => {
+        jest.spyOn(axios, "put").mockRejectedValueOnce({response: {data: {"code": 10}}});
+        const res = await store.dispatch(editUser({ token: "TOKEN", org_password: "PASSWORD1", password: "PASSWORD2" }));
+        expect(res.payload).toEqual(10)
     });
 });

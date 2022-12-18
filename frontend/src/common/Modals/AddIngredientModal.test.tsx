@@ -8,22 +8,20 @@ import { UserInfo } from "../../store/slices/user/user";
 import { getMockStore } from "../../test-utils/mock";
 import { Provider } from "react-redux";
 import { RateInfo } from "../../store/slices/rate/rate";
+import { TextFieldProps } from "@mui/material";
 
 const setIsOpen = jest.fn()
-
-// eslint-disable-next-line react/display-name
-jest.mock('react-modal', () => (props: { className: any, isOpen: boolean, onRequestClose: any, children: React.ReactNode }) => {
-
-    props.onRequestClose()
-    if (props.isOpen) return (<div data-testid={`spyModal_opened`}>{props.children}</div>)
-    else return (<div data-testid={`spyModal_closed`}></div>)
-})
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
     useDispatch: () => mockDispatch,
 }));
+
+// eslint-disable-next-line react/display-name
+jest.mock("@mui/material/TextField/TextField", () => (props: TextFieldProps) => (
+    <input onClick={props.onClick} onChange={props.onChange} data-testid={'search_keyword_input'} />
+));
 
 const emptyCocktaiState: CocktailInfo = {
     cocktailList: [],
@@ -94,35 +92,13 @@ describe("<AddIngredientModal />", () => {
         jest.clearAllMocks();
     });
 
-    it("should render modal closed without errors", () => {
-        const { container } = render(
-            <Provider store={mockLoggedInStore}>
-                <AddIngredientModal isOpen={false} setIsOpen={setIsOpen} user_id={4} />
-            </Provider>
-        );
-        expect(setIsOpen).toBeCalledWith(false)
-        screen.getByTestId("spyModal_closed");
-    });
-
     it("should render modal opened without errors", () => {
         const { container } = render(
             <Provider store={mockLoggedInStore}>
                 <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
             </Provider>
         );
-        screen.getByTestId("spyModal_opened");
-        screen.getByText("Add");
-    });
-
-    it("should handle close modal button", () => {
-        render(
-            <Provider store={mockLoggedInStore}>
-                <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
-            </Provider>
-        );
-        const button = screen.getByText("X")
-        fireEvent.click(button)
-        expect(setIsOpen).toBeCalledWith(false)
+        screen.getByText("추가 검색어");
     });
 
     it("should handle add ingredient", async () => {
@@ -131,19 +107,18 @@ describe("<AddIngredientModal />", () => {
                 <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
             </Provider>
         )
-        const button = screen.getByText("INGREDIENT1")
+        const button = screen.getByTestId("item_add")
         fireEvent.click(button)
-        await waitFor(() => expect(button).toBeDisabled());
-    })
+        fireEvent.click(button)
+    });
 
-    it("should handle add ingredient", async () => {
+    it("should handle search key word", async () => {
         render(
             <Provider store={mockLoggedInStore}>
                 <AddIngredientModal isOpen={true} setIsOpen={setIsOpen} user_id={4} />
             </Provider>
         )
-        const button = screen.getByText("Add")
-        fireEvent.click(button)
+        const element = screen.getByLabelText('추가 검색어');
+        fireEvent.change(element, { target: {value: "Ingredient"}})
     })
-
 })

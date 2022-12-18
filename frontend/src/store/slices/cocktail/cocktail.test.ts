@@ -264,9 +264,18 @@ describe("cocktail reducer", () => {
         await store.dispatch(authPostCocktail(fakeDetailOmit));
         //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });
-
+    it("should handle failed authPostCocktail", async () => {
+        jest.spyOn(axios, "post").mockRejectedValueOnce({response: {data: {"code": 10}}});
+        await store.dispatch(authPostCocktail(fakeDetailOmit));
+        //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
+    });
     it("should handle editCocktail", async () => {
         axios.put = jest.fn().mockResolvedValue({ data: fakeCocktailItemST });
+        await store.dispatch(editCocktail({ data: fakeDetailOmit, id: 11 }));
+        //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
+    });
+    it("should handle failed editCocktail", async () => {
+        jest.spyOn(axios, "put").mockRejectedValueOnce({response: {data: {"code": 10}}});
         await store.dispatch(editCocktail({ data: fakeDetailOmit, id: 11 }));
         //expect(store.getState().cocktail.cocktailList).toEqual([fakeCocktailItemCS])
     });

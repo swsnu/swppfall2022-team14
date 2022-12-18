@@ -27,7 +27,6 @@ const Item = (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | 
 
     return (
         <Card 
-            data-testid="item" 
             sx={(theme) => ({
                 width: 1, textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main',
                 [theme.breakpoints.down('sm')]: {
@@ -63,10 +62,11 @@ const Item = (prop: Pick<CocktailItemType, "image" | "name" | "rate" | "type" | 
                 })}
             >
                 <Stack direction="row" justifyContent="space-between">
-                    <Typography onClick={onClickItem} sx={{ cursor: 'pointer' }} noWrap>
+                    <Typography onClick={onClickItem} sx={{ cursor: 'pointer' }} noWrap data-testid="item" >
                         {prop.name}
                     </Typography>
                     <Checkbox
+                        data-testid="checkbox"
                         sx={{ mt: -1, mr: -1 }}
                         icon={<BookmarkBorderIcon sx={{ color: 'text.icon' }} />}
                         checkedIcon={<BookmarkIcon sx={{ color: 'text.icon' }} />}
