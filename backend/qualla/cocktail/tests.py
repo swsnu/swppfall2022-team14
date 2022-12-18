@@ -91,7 +91,8 @@ class CocktailTestCase(TestCase):
         ingredient_prepare.save()
         tag = Tag(id=1, content='test2')
         cocktail_tag = CocktailTag(cocktail=cocktail, tag=tag)
-        cocktail_post_data = json.dumps({"name": "0",
+        cocktail_post_data = json.dumps({"name": "0", 
+                                         "name_eng" : "eng",
                                          "image": "img",
                                          "introduction": "intro",
                                          "recipe": "rec",
@@ -100,11 +101,11 @@ class CocktailTestCase(TestCase):
                                          "author_id": 1,
                                          "type": "CS"})
 
-        cocktail_post_data_tag = json.dumps({'name': '1', 'image': 'img', 'introduction': 's', 'recipe': 'ss', 'ABV': 20,
+        cocktail_post_data_tag = json.dumps({'name': '1',"name_eng":"eng", 'image': 'img', 'introduction': 's', 'recipe': 'ss', 'ABV': 20,
                                             'price_per_glass': 80000, 'tags': ['test1'], 'author_id': 1, 'ingredients': [], 'type': 'CS'})
-        cocktail_post_data_ingredient = json.dumps({'name': '2', 'image': 'img', 'introduction': 's', 'recipe': 'ss', 'ABV': 20,
+        cocktail_post_data_ingredient = json.dumps({'name': '2',"name_eng":"eng", 'image': 'img', 'introduction': 's', 'recipe': 'ss', 'ABV': 20,
                                                     'price_per_glass': 80000, 'author_id': 1, 'ingredients': [{"id": 2}], 'type': 'CS'})
-        cocktail_post_data_ingredient_not = json.dumps({'name': '3', 'image': 'img', 'introduction': 's', 'recipe': 'ss', 'ABV': 20,
+        cocktail_post_data_ingredient_not = json.dumps({'name': '3',"name_eng":"eng", 'image': 'img', 'introduction': 's', 'recipe': 'ss', 'ABV': 20,
                                                         'price_per_glass': 80000, 'author_id': 1, 'ingredients': [{"id": 10}], 'type': 'CS'})
 
         # valid login
@@ -117,7 +118,7 @@ class CocktailTestCase(TestCase):
         self.assertEqual(response.status_code, 201)
         response = self.client.post(
             '/api/v1/cocktails/post/', cocktail_post_data_tag, content_type='application/json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 400)
         response = self.client.post(
             '/api/v1/cocktails/post/', cocktail_post_data_ingredient, content_type='application/json')
         self.assertEqual(response.status_code, 400)
@@ -149,6 +150,7 @@ class CocktailTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         cocktail_post_data = json.dumps({"name": "0",
+                                         "name_eng": "eng",
                                          "image": "img",
                                          "introduction": "intro",
                                          "recipe": "rec",
@@ -176,6 +178,7 @@ class CocktailTestCase(TestCase):
 
     def test_cocktail_edit(self):
         cocktail_post_data = json.dumps({"name": "0",
+                                         "name_eng": "eng",
                                          "image": "img",
                                          "introduction": "intro",
                                          "recipe": "rec",
