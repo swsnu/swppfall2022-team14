@@ -60,12 +60,14 @@ const MainPage = () => {
                 >
                     {isOpenNavBar ?
                         <KeyboardDoubleArrowLeftIcon 
+                            data-testid="close-button"
                             sx={{
                                 fontSize: 30
                             }}
                             onClick={() => setIsOpenNavBar(false)}
                         /> :
                         <KeyboardDoubleArrowRightIcon
+                            data-testid="open-button"
                             sx={{
                                 fontSize: 30
                             }}
@@ -75,6 +77,7 @@ const MainPage = () => {
                 </Box>
             </Stack>
             <Box
+                data-testid="main"
                 sx={(theme) => ({
                     width: 1,
                     zIndex: 1,
