@@ -8,6 +8,8 @@ import NavFilter from "./NavFilter";
 import { UserInfo } from "../../store/slices/user/user";
 import React from 'react';
 import { RateInfo } from "../../store/slices/rate/rate";
+import "jest-canvas-mock"
+
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
@@ -87,26 +89,26 @@ describe("<NavFilter />", () => {
         fireEvent.change(searchBar, { target: { value: "COCKTAIL" } });
         expect(searchBar).toHaveDisplayValue("COCKTAIL");
         fireEvent.keyPress(searchBar, { key: "Enter", code: 13, charCode: 13 });
-        expect(mockNavigate).toBeCalledWith("/standard", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "COCKTAIL" } })
+        expect(mockNavigate).toBeCalledWith("/standard", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] , "color": null}, "name_param": "COCKTAIL" } })
     });
 
     it("should handle click search button_st", async () => {
         renderNavFilter("ST");
         const searchButton = await screen.findByText("검색")
         fireEvent.click(searchButton)
-        expect(mockNavigate).toBeCalledWith("/standard", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "" } })
+        expect(mockNavigate).toBeCalledWith("/standard", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [], "color": null}, "name_param": "" } })
     });
     it("should handle click search button_cs", async () => {
         renderNavFilter("CS");
         const searchButton = await screen.findByText("검색")
         fireEvent.click(searchButton)
-        expect(mockNavigate).toBeCalledWith("/custom", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "" } })
+        expect(mockNavigate).toBeCalledWith("/custom", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [], "color": null }, "name_param": "" } })
     });
     it("should handle click search button_ig", async () => {
         renderNavFilter("IG");
         const searchButton = await screen.findByText("검색")
         fireEvent.click(searchButton)
-        expect(mockNavigate).toBeCalledWith("/ingredient")
+        expect(mockNavigate).toBeCalledWith("/ingredient?search=")
     });
     it("should handle click search button_invalid", async () => {
         renderNavFilter("INVALID");
@@ -138,8 +140,8 @@ describe("<NavFilter />", () => {
     });
     it("should handle theme click", () => {
         renderNavFilter("ST");
-        const themebutton1 = screen.getByText("Theme1")
-        const themebutton2 = screen.getByText("Theme2")
+        const themebutton1 = screen.getByText("여름 느낌의")
+        const themebutton2 = screen.getByText("강렬한 한 잔")
         fireEvent.click(themebutton1)
         fireEvent.click(themebutton2)
         fireEvent.change(themebutton1, { target: { checked: true } })
@@ -148,5 +150,10 @@ describe("<NavFilter />", () => {
         renderNavFilter("ST");
         const availableOnly = screen.getByText("만들 수 있는 칵테일만")
         fireEvent.click(availableOnly)
+    })
+    it("should handle color filter", () => {
+        renderNavFilter("ST");
+        const color_filter = screen.getByText("색상 유사도 기반 정렬")
+        fireEvent.click(color_filter)
     })
 });
