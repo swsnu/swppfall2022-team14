@@ -102,10 +102,12 @@ describe("<Filter />", () => {
     })
     it("should handle theme click", () => {
         renderFilter();
-        const themebutton1 = screen.getByText("Theme1")
-        const themebutton2 = screen.getByText("Theme2")
+        const themebutton1 = screen.getByText("여름 느낌의")
+        const themebutton2 = screen.getByText("근본이 있는")
+        const themebutton3 = screen.getByText("강렬한 한 잔")
         fireEvent.click(themebutton1)
         fireEvent.click(themebutton2)
+        fireEvent.click(themebutton3)
         fireEvent.change(themebutton1, { target: { checked: true } })
     })
     it("should handle available only feature", () => {

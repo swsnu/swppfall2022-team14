@@ -105,7 +105,7 @@ const LoginModal = (props: prop) => {
     }
 
     const onClickLogin = async () => {
-        if (loginId !== '' && loginPassword !== '')  {
+        if (loginId !== '' && loginPassword !== '') {
             const data = { username: loginId, password: loginPassword };
             const result = await dispatch(loginUser(data));
             if (result.type === `${loginUser.typePrefix}/fulfilled`) {
@@ -143,17 +143,17 @@ const LoginModal = (props: prop) => {
     }
 
     return (
-        <Modal 
-            open={isOpen} 
-            onClose={onClickClose} 
+        <Modal
+            open={isOpen}
+            onClose={onClickClose}
         >
             <Stack spacing={2} sx={style}>
-                <TextField 
-                    label="아이디" 
-                    variant="standard" 
+                <TextField
+                    label="아이디"
+                    variant="standard"
                     helperText={!isLoginMode && "2-10자의 영문과 숫자, 일부 특수문자(., _, -)만 입력 가능합니다."}
-                    value={loginId} 
-                    onChange={(e) => {onChangeId(e.target.value)}}
+                    value={loginId}
+                    onChange={(e) => { onChangeId(e.target.value) }}
                     onKeyPress={onKeyPress}
                     sx={{
                         '& label.Mui-focused': {
@@ -169,7 +169,7 @@ const LoginModal = (props: prop) => {
                         },
                     }}
                 />
-                <FormControl 
+                <FormControl
                     variant="standard"
                     sx={{
                         '& label.Mui-focused': {
@@ -186,14 +186,16 @@ const LoginModal = (props: prop) => {
                     }}
                 >
                     <InputLabel>비밀번호</InputLabel>
-                    <Input 
+                    <Input
                         type={showPassword ? "text" : "password"}
-                        value={loginPassword} 
-                        onChange={(e) => {onChangePw(e.target.value)}}
+                        data-testid="password"
+                        value={loginPassword}
+                        onChange={(e) => { onChangePw(e.target.value) }}
                         onKeyPress={onKeyPress}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
+                                    data-testid="showPassword"
                                     tabIndex={-1}
                                     onClick={onClickShowPassword}
                                 >
@@ -206,8 +208,8 @@ const LoginModal = (props: prop) => {
                         {!isLoginMode && <> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. <br /> 특수문자(!@#$%^&*)도 사용 가능합니다. </>}
                     </FormHelperText>
                 </FormControl>
-                {!isLoginMode && 
-                    <FormControl 
+                {!isLoginMode &&
+                    <FormControl
                         variant="standard"
                         sx={{
                             '& label.Mui-focused': {
@@ -224,10 +226,11 @@ const LoginModal = (props: prop) => {
                         }}
                     >
                         <InputLabel>비밀번호 확인</InputLabel>
-                        <Input 
+                        <Input
                             type={showPasswordConfirm ? "text" : "password"}
-                            value={pwConfirm} 
-                            onChange={(e) => {onChangePwConfirm(e.target.value)}}
+                            value={pwConfirm}
+                            data-testid="pwconfirm"
+                            onChange={(e) => { onChangePwConfirm(e.target.value) }}
                             onKeyPress={onKeyPress}
                             endAdornment={
                                 <InputAdornment position="end">
@@ -242,7 +245,7 @@ const LoginModal = (props: prop) => {
                         />
                     </FormControl>
                 }
-                {isLoginMode ? 
+                {isLoginMode ?
                     <Button variant="text" onClick={onClickLogin}
                         sx={{
                             bgcolor: 'primary.dark',
@@ -257,8 +260,9 @@ const LoginModal = (props: prop) => {
                         <Typography color='text.primary'>
                             로그인
                         </Typography>
-                    </Button> : 
+                    </Button> :
                     <Button variant="text" onClick={onClickRegister}
+                        data-testid="register"
                         disabled={!checkID(loginId) || !checkPW(loginPassword) || loginPassword !== pwConfirm}
                         sx={{
                             bgcolor: 'primary.dark',
@@ -280,20 +284,20 @@ const LoginModal = (props: prop) => {
                     </Button>
                 }
                 <Stack direction="row" spacing={1} alignItems='flex-end' justifyContent='space-between'>
-                    <Typography 
-                        color='error.main' 
+                    <Typography
+                        color='error.main'
                         variant='body2'
                         sx={{ width: 0.6 }}
                     >
                         {errorText}
                     </Typography>
-                    <Typography 
-                        color='text.primary' 
+                    <Typography
+                        color='text.primary'
                         variant='body2'
                         align="right"
                         onClick={onClickMode}
                         sx={{
-                            width: 0.4, 
+                            width: 0.4,
                             'word-break': 'keep-all',
                             cursor: 'pointer',
                             '&:hover': {

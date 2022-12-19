@@ -147,7 +147,7 @@ describe("<NavBar />", () => {
     it("should close NavFilter when another Filter is clicked", () => {
         renderNavBar(stubUserInitialState);
         // render(<NavFilter type={"IG"} />)
-        const standardButton = screen.getByText("Standard");        
+        const standardButton = screen.getByText("Standard");
         const customButton = screen.getByText("Custom");
         const ingredientButton = screen.getByText("Ingredient");
         fireEvent.click(standardButton);

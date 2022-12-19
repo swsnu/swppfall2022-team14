@@ -231,7 +231,7 @@ describe("<InitPage />", () => {
         fireEvent.click(typeButton);
         const searchButton = screen.getByTestId("search");
         fireEvent.click(searchButton);
-        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/standard", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "" } }));
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/standard", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [], "color": "aaaaaa" }, "name_param": "", } }));
     });
     it("should navigate to /custom with params when search button clicked (custom)", async () => {
         renderInitPage(false, stubUserInitialState);
@@ -245,7 +245,7 @@ describe("<InitPage />", () => {
         fireEvent.click(typeButton);
         const searchButton = screen.getByTestId("search");
         fireEvent.click(searchButton);
-        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/custom", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [] }, "name_param": "" } }));
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/standard", { "state": { "filter_param": { "available_only": false, "type_one": [], "type_three": [], "type_two": [], "color": "aaaaaa" }, "name_param": "" } }));
     });
     it("should render login modal when login button clicked", async () => {
         renderInitPage(true, stubUserInitialState);
@@ -302,7 +302,7 @@ describe("<InitPage />", () => {
         await screen.getByTestId("login");
     });
     it("should render my liquor modal when my liquor button clicked", async () => {
-        renderInitPage(true, stubUserInitialState);
+        renderInitPage(true, loggedInUserState);
         const myLiquorModalButton = screen.getByTestId("my liquor");
         fireEvent.click(myLiquorModalButton);
         await screen.findByTestId("spyInitMyLiquorModal");
