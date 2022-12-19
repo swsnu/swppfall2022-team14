@@ -95,7 +95,8 @@
       "!src/reportWebVitals.ts",
       "!src/test-utils/*",
       "!src/common/utils/*",
-      "!src/store/index.ts"
+      "!src/store/index.ts",
+      "!src/EditCustomPage/*"
     ]
   },
   "proxy": "https://qualla.kro.kr/"
