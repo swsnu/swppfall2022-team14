@@ -22,7 +22,8 @@ const MyIngredient = () => {
     return (
         <Stack sx={{ width: 1, py: 2 }}>
             <Stack direction="row" justifyContent="flex-end">
-                <IconButton 
+                <IconButton
+                    data-testid="add_button"
                     size="large"
                     onClick={onClickAdd}
                 >

@@ -32,7 +32,6 @@ const IngredientItem = (prop: Pick<CocktailDetailType, "image" | "name" | "ABV" 
             sx={{ 
                 width: 1, textAlign: 'left', borderRadius: 4, boxShadow: 5, bgcolor: 'primary.main',
             }} 
-            data-testid="item"
         >
             <Stack direction="row" alignItems="flex-start" justifyContent="flex-end" sx={{ width: 1, height: 20 }}>
                 {prop.my_item ? 
@@ -108,6 +107,7 @@ const IngredientItem = (prop: Pick<CocktailDetailType, "image" | "name" | "ABV" 
                                 mb: 2,
                             },
                         })}
+                        data-testid="item"
                     >
                         {prop.name}
                     </Typography>

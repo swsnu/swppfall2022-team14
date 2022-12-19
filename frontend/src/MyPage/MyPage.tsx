@@ -83,7 +83,7 @@ const MyPage = () => {
                         onChange={onClickToggle}
                     >
                         {buttonList.map((button) => (
-                            <ToggleButton key={button.value} value={button.value}>
+                            <ToggleButton key={button.value} value={button.value} data-testid={`button_${button.value}`}>
                                 {button.name}
                             </ToggleButton>
                         ))}

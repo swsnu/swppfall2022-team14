@@ -194,6 +194,7 @@ const NavBar = (prop: NavBarType) => {
                         <IconButton 
                             size="small"
                             onClick={onClickAdd}
+                            data-testid="add_icon"
                         >
                             <AddIcon sx={{ fontSize: 20 }} />
                         </IconButton>

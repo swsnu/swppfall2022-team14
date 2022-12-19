@@ -10,31 +10,11 @@ import { UserInfo } from "../store/slices/user/user";
 import React from 'react'
 import NavFilter from "./NavFilter/NavFilter"
 import { RateInfo } from "../store/slices/rate/rate";
+import "jest-canvas-mock"
+import { prop } from "../InitPage/Modals/LoginModal";
 
 // eslint-disable-next-line react/display-name
-// jest.mock("./NavFilter/NavFilter", () => (prop: NavFilterProp) => {
-//     if (prop.type === "IG") {
-//         return (
-//             <div data-testid="spyNavFilter">
-//                 <button className="navfilter__btn" >검색하기</button>
-//             </div >
-//         )
-//     } else {
-//         return (
-//             <div data-testid="spyNavFilter">
-//                 <div className="navfilter_wrap">
-//                     <div className="navfilter__title">Type 1</div>
-//                     <div className="navfilter__content">
-//                         <button>
-//                             클래식
-//                         </button>
-//                     </div>
-//                 </div>
-//                 <button className="navfilter__btn">검색하기</button>
-//             </div>
-//         )
-//     }
-// });
+jest.mock("../InitPage/Modals/LoginModal", () => (props: prop) => (<div/>));
 
 const stubCocktailInitialState: CocktailInfo = {
     cocktailList: [],
@@ -141,7 +121,7 @@ describe("<NavBar />", () => {
         const searchButton = screen.getByText("검색")
         fireEvent.click(searchButton);
         expect(mockNavigate).toHaveBeenCalledWith("/standard",
-            { "state": { "filter_param": { "available_only": false, "type_one": ["CL"], "type_three": [], "type_two": [] }, "name_param": "" } });
+            { "state": { "filter_param": { "available_only": false, "type_one": ["클래식"], "type_three": [], "type_two": [], "color": null }, "name_param": "" } });
     });
     it("should navigate to /custom with params when search button clickend (custom)", () => {
         renderNavBar(stubUserInitialState);
@@ -153,7 +133,7 @@ describe("<NavBar />", () => {
         const searchButton = screen.getByText("검색")
         fireEvent.click(searchButton);
         expect(mockNavigate).toHaveBeenCalledWith("/custom",
-            { "state": { "filter_param": { "available_only": false, "type_one": ["CL"], "type_three": [], "type_two": [] }, "name_param": "" } });
+            { "state": { "filter_param": { "available_only": false, "type_one": ["클래식"], "type_three": [], "type_two": [], "color": null }, "name_param": "" } });
     });
     it("should navigate to /ingredient with params when search button clickend (ingredient)", () => {
         renderNavBar(stubUserInitialState);
@@ -162,7 +142,7 @@ describe("<NavBar />", () => {
         fireEvent.click(ingredientButton);
         const searchButton = screen.getByText("검색")
         fireEvent.click(searchButton);
-        expect(mockNavigate).toHaveBeenCalledWith("/ingredient");
+        expect(mockNavigate).toHaveBeenCalledWith("/ingredient?search=");
     });
     it("should close NavFilter when another Filter is clicked", () => {
         renderNavBar(stubUserInitialState);
@@ -189,7 +169,7 @@ describe("<NavBar />", () => {
         renderNavBar(stubUserInitialState);
         const myLiquorButton = screen.getByTestId("MyIngr_button");
         fireEvent.click(myLiquorButton);
-        const addButton = await screen.findByText("ADD");
+        const addButton = await screen.findByTestId("add_icon");
         fireEvent.click(addButton)
     });
     it("should naviate to / when home button clicked", async () => {

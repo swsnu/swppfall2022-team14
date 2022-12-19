@@ -35,16 +35,6 @@ jest.mock("./MyComment", () => () => (
     </div>
 ));
 
-jest.mock("./MyInfo", () => () => (
-    <div data-testid={`spyMyInfo`}>
-    </div>
-));
-
-jest.mock("../NavBar/NavBar", () => () => (
-    <div data-testid={`spyNavBar`}>
-    </div>
-));
-
 const emptyCocktaiState: CocktailInfo = {
     cocktailList: [],
     cocktailItem: null,
@@ -95,28 +85,34 @@ const rateState: RateInfo = {
 const mockLoggedInStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: emptyIngredientState, comment: emptyCommentState, user: loggedInState, rate: rateState });
 const mockLoggedOutStore = getMockStore({ cocktail: emptyCocktaiState, ingredient: emptyIngredientState, comment: emptyCommentState, user: loggedOutState, rate: rateState });
 
+const mockAlert = jest.fn()
+global.alert = mockAlert
+
+
 describe("<MyPage />", () => {
     it("should render without errors", () => {
         render(<Provider store={mockLoggedInStore}><MyPage /></Provider>);
-        const navBar = screen.getAllByTestId("spyNavBar");
-        expect(navBar).toHaveLength(1);
         const myIngredient = screen.getAllByTestId("spyMyIngredient");
         expect(myIngredient).toHaveLength(1);
     });
 
     it("should handle view change button", () => {
         render(<Provider store={mockLoggedInStore}><MyPage /></Provider>);
-        const infoButton = screen.getByText("Info");
+        const infoButton = screen.getByTestId("button_My Favorites");
         fireEvent.click(infoButton);
-        const myInfo = screen.getAllByTestId("spyMyInfo");
+        const myInfo = screen.getAllByTestId("spyMyBookmark");
         expect(myInfo).toHaveLength(1);
     });
 
+    it("should handle view My Info modal", () => {
+        render(<Provider store={mockLoggedInStore}><MyPage /></Provider>);
+        const infoButton = screen.getByTestId("button_Info");
+        fireEvent.click(infoButton);
+    });
+
     it("should be redirected if not logged in", () => {
-        const mockConsoleLog = jest.fn()
-        console.log = mockConsoleLog
         render(<Provider store={mockLoggedOutStore}><MyPage /></Provider>);
         expect(mockNavigate).toBeCalledWith(-1)
-        expect(mockConsoleLog).toBeCalledWith("먼저 로그인 해주세요")
+        expect(mockAlert).toBeCalledWith("먼저 로그인 해주세요")
     });
 });

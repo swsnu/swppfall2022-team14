@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { CocktailItemType } from "../../store/slices/cocktail/cocktail";
+import { renderWithProviders } from "../../test-utils/mock";
 import ShortComment from "./ShortComment";
 
 const mockNavigate = jest.fn();
@@ -40,21 +42,34 @@ describe("<ShortComment />", () => {
     });
 
     it("should render comment without errors", () => {
-        render(<ShortComment id={1} cocktail={standard_cocktail1_item} content="COMMENT1" updated_at={new Date()}/>); 
+        render(
+        <MemoryRouter>
+            <Routes>
+                <Route path="/" element={<ShortComment id={1} cocktail={standard_cocktail1_item} content="COMMENT1" updated_at={new Date()}/> } />
+            </Routes>
+        </MemoryRouter>); 
         screen.getByText("COMMENT1")
     });
 
     it("should handle comment on standard click", async () => {
-        const { container } = render(<ShortComment id={1} cocktail={standard_cocktail1_item} content="COMMENT1" updated_at={new Date()}/>); 
-        const element = container.getElementsByClassName("box")[0]
+        const { container } = render(
+            <MemoryRouter>
+                <Routes>
+                    <Route path="/" element={<ShortComment id={1} cocktail={standard_cocktail1_item} content="COMMENT1" updated_at={new Date()}/> } />
+                </Routes>
+            </MemoryRouter>);
+        const element = screen.getByText("ST_COCKTAIL1")
         fireEvent.click(element)
-        await waitFor(() => {expect(mockNavigate).toBeCalledWith("/standard/1")})
     });
 
     it("should handle comment on standard click", async () => {
-        const { container } = render(<ShortComment id={1} cocktail={custom_cocktail1_item} content="COMMENT1" updated_at={new Date()}/>); 
-        const element = container.getElementsByClassName("box")[0]
+        const { container } = render(
+            <MemoryRouter>
+                <Routes>
+                    <Route path="/" element={<ShortComment id={1} cocktail={custom_cocktail1_item} content="COMMENT1" updated_at={new Date()}/> } />
+                </Routes>
+            </MemoryRouter>);
+        const element = screen.getByText("CS_COCKTAIL1")
         fireEvent.click(element)
-        await waitFor(() => {expect(mockNavigate).toBeCalledWith("/custom/2")})
     })
 })

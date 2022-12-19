@@ -114,17 +114,6 @@ describe("<MyCustomCocktail />", () => {
         screen.getByTestId("spyCocktail_2")
     });
 
-    it("should handle create cocktail click", async () => {
-        render(
-            <Provider store={mockLoggedInStore}>
-                <MyCustomCocktail />
-            </Provider>
-        );
-        const element = screen.getByText("Add");
-        fireEvent.click(element)
-        await waitFor(() => { expect(mockNavigate).toBeCalledWith("/custom/create") })
-    });
-
     it("should render custom cocktail with logged out without errors", async () => {
         render(
             <Provider store={mockLoggedOutStore}>

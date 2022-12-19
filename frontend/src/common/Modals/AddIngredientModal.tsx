@@ -106,6 +106,7 @@ const AddIngredientModal = (props: prop) => {
                         .map((ingredient) => (
                             <Grid key={ingredient.id} item md={1} sm={2} xs={4}>
                                 <Card 
+                                    data-testid="item_add"
                                     sx={{ 
                                         cursor: 'pointer',
                                         pt: 2,

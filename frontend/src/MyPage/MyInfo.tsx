@@ -42,8 +42,6 @@ const MyInfo = (props: prop) => {
     const [pwConfirm, setPwConfirm] = useState<string>("")
     const [errorText, setErrorText] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [showNewPassword, setShowNewPassword] = useState(false);
-    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
     const checkPW = (asValue: string) => {
         const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
@@ -62,14 +60,6 @@ const MyInfo = (props: prop) => {
 
     const onClickShowPassword = () => {
         setShowPassword(!showPassword);
-    }
-
-    const onClickShowNewPassword = () => {
-        setShowNewPassword(!showNewPassword);
-    }
-
-    const onClickShowPasswordConfirm = () => {
-        setShowPasswordConfirm(!showPasswordConfirm);
     }
 
     const onChangePwConfirm = async (pw: string) => {
@@ -112,7 +102,6 @@ const MyInfo = (props: prop) => {
                         variant="standard" 
                         value={id} 
                         disabled
-                        onChange={(e) => setId(e.target.value)}
                         sx={{
                             '& label.Mui-focused': {
                                 color: 'secondary.light',
@@ -151,6 +140,7 @@ const MyInfo = (props: prop) => {
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
+                                        data-testid="show_password_button"
                                         tabIndex={-1}
                                         onClick={onClickShowPassword}
                                     >
@@ -184,6 +174,7 @@ const MyInfo = (props: prop) => {
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
+                                        data-testid="show_password_button"
                                         tabIndex={-1}
                                         onClick={onClickShowPassword}
                                     >
@@ -220,6 +211,7 @@ const MyInfo = (props: prop) => {
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
+                                        data-testid="show_password_button"
                                         tabIndex={-1}
                                         onClick={onClickShowPassword}
                                     >
