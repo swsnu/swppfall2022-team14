@@ -145,9 +145,10 @@ jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 jest.spyOn(window, 'alert').mockImplementation(() => { });
 
-const renderEditCustomPage = (status = "success", isLogin: boolean = true, isUserNull: boolean = false, isCocktailNull: boolean = false) => {
+const renderEditCustomPage = (status = "success", isLogin = true, isUserNull = false, isCocktailNull = false) => {
     renderWithProviders(
         <MemoryRouter>
             <Routes>
