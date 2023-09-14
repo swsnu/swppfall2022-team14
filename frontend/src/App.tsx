@@ -10,7 +10,7 @@ import React from 'react';
 import ListPage from "./ListPage/ListPage";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import {Divider, Stack} from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import NavBar from "./NavBar/NavBar";
 import MainPage from "./MainPage/MainPage";
 
@@ -18,14 +18,14 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main : '#292929',
+      main: '#292929',
       light: '#606060',
-      dark : '#252525',
+      dark: '#252525',
     },
     secondary: {
-      main : '#313131',
+      main: '#313131',
       light: '#ffffff',
-      dark : '#111111'
+      dark: '#111111'
     },
     text: {
       primary: '#ffffff',
@@ -39,6 +39,7 @@ const darkTheme = createTheme({
 });
 
 function App() {
+
 
   return (
     <ThemeProvider theme={darkTheme}>
