@@ -26,6 +26,7 @@ def bookmarked_cocktails_by_user(request):
     return JsonResponse({"cocktails": data, "count": len(cocktails)}, safe=False)
 
 
+
 @api_view(['PUT'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
