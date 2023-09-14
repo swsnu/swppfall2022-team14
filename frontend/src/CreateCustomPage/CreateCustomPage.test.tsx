@@ -18,6 +18,7 @@ const stubCocktailInitialState: CocktailInfo = {
     listStatus: "loading",
 };
 
+
 const stubCommentInitialState: CommentInfo = {
     commentList: [],
     commentItem: null,
