@@ -22,7 +22,6 @@ def comment_list(request, cocktail_id):
         return JsonResponse({"comments": data, "count": comments.count()}, safe=False)
 
 
-
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
