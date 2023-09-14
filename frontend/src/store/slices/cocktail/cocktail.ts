@@ -90,6 +90,7 @@ export interface FilterParamType {
 
 }
 
+
 export const fetchStandardCocktailList = createAsyncThunk(
     "cocktail/fetchStandardCocktailList", async (data: { params: FilterParamType | null, token: string | null }) => {
         if (!data.params) {
