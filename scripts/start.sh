@@ -9,12 +9,12 @@ sudo pkill -f uwsgi -9
 cd $WORKING_DIR
 
 echo "[Deploy] : Install Requirements"
-python -m pip install --upgrade pip
+python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 
 echo "[Deploy] : Migrate"
-python manage.py makemigrations --settings=qualla.settings.production
-python manage.py migrate --settings=qualla.settings.production
+python3 manage.py makemigrations --settings=qualla.settings.production
+python3 manage.py migrate --settings=qualla.settings.production
 
 cd /home/ubuntu/
 
