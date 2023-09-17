@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
+    "https://tipsynight.site",
     "http://qualla.site.s3-website-ap-northeast-1.amazonaws.com",
     "http://qualla.site.s3-website-ap-n",
     "https://qualla.site",
