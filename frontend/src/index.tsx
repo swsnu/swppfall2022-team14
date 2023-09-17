@@ -11,8 +11,8 @@ import axios from 'axios';
 
 ReactModal.setAppElement('#root');
 // axios.defaults.baseURL = 'https://qualla.kro.kr/';
-// axios.defaults.baseURL = "https://tipsybackend.shop/"
-axios.defaults.baseURL = "http://ec2-13-125-227-250.ap-northeast-2.compute.amazonaws.com";
+axios.defaults.baseURL = "https://tipsybackend.shop/"
+// axios.defaults.baseURL = "http://ec2-13-125-227-250.ap-northeast-2.compute.amazonaws.com";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
