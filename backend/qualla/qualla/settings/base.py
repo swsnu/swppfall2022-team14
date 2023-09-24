@@ -42,12 +42,12 @@ INSTALLED_APPS = [
 ]
 
 RESTFRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [ # 기본적인 view 접근 권한 지정
+    'DEFAULT_PERMISSION_CLASSES': [  # 기본적인 view 접근 권한 지정
         'rest_framework.permissions.AllowAny'
         # AllowAny, IsAuthenticated, IsAdminUser 등 설정하지 않았을 때 적용될 퍼미션 지정
     ],
-	'DEFAULT_AUTHENTICATION_CLASSES': [
-    	'rest_framework.authentication.SessionAuthenticaiotn',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthenticaiotn',
         'rest_framework.authentication.BasicAuthenticaiotn',
         'rest_framework.authentication.TokenAuthentication',
     ],
@@ -66,6 +66,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "https://tipsynight.site",
     "http://qualla.site.s3-website-ap-northeast-1.amazonaws.com",
+    "http://qualla.s3.ap-northeast-2.amazonaws.com"
     "http://qualla.site.s3-website-ap-n",
     "https://qualla.site",
     "http://localhost:3000",
@@ -91,9 +92,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'qualla.wsgi.application'
-
-
-
 
 
 # Password validation
