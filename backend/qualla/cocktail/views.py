@@ -15,8 +15,16 @@ from rest_framework import permissions, authentication
 from .serializers import CocktailDetailSerializer, CocktailListSerializer, CocktailPostSerializer
 from .utils import color_similarity, order_queryset_by_id
 from django.db.models import Case, When
+from admin import download_csv
+from django.contrib import admin
 
-# FILTER FUNCTIONS HERE
+
+def get_view(request):
+    data = download_csv( admin.ModelAdmin, request, Cocktail.objects.all())
+
+    return HttpResponse (data, content_type='text/csv')
+
+## FILTER FUNCTIONS HERE ##
 
 
 def process_text_param(request, filter_q):
@@ -92,6 +100,8 @@ def get_only_available_cocktails(request, filter_q):
     else:
         filter_q.add(Q(id__in=available_cocktails_id), Q.AND)
 
+
+## END FILTER FUNCTIONS ##
 
 @api_view(['GET'])
 @authentication_classes([authentication.TokenAuthentication])
